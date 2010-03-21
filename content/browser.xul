@@ -6,7 +6,8 @@
   <script src="verticaltabs.js" type="application/javascript" />
 
   <stringbundleset id="stringbundleset">
-    <stringbundle id="verticaltabs-strings" src="chrome://verticaltabs/locale/overlay.properties"/>
+    <stringbundle id="verticaltabs-strings"
+                  src="chrome://verticaltabs/locale/overlay.properties"/>
   </stringbundleset>
 
 </overlay>

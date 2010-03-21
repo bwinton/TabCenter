@@ -1,8 +1,1 @@
-<!ENTITY verticaltabs.label "Your localized menuitem">
-<!ENTITY verticaltabsContext.label "Your Menuitem">
-<!ENTITY verticaltabsContext.accesskey "Y">
-<!ENTITY verticaltabsToolbarButton.label "Your Toolbar Button">
-<!ENTITY verticaltabsToolbarButton.tooltip "This is your toolbar button!">
-<!ENTITY verticaltabsSidebar.label "Your Sidebar">
-<!ENTITY verticaltabsToolbar.name  "example">
-<!ENTITY verticaltabsToolbar.label "This is an example toolbar. You can hide it under View &gt; toolbars &gt; &verticaltabsToolbar.name;">
+
