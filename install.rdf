@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+  <Description about="urn:mozilla:install-manifest">
+    <em:id>verticaltabs@philikon.de</em:id>
+    <em:type>2</em:type>
+    <em:name>Vertical Tabs</em:name>
+    <em:version>1.0</em:version>
+    <em:creator>Philipp von Weitershausen</em:creator>
+    <em:contributor></em:contributor>
+    <em:targetApplication>
+      <Description>
+        <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox -->
+        <em:minVersion>3.7a4pre</em:minVersion>
+        <em:maxVersion>3.7a4pre</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+  </Description>
+</RDF>

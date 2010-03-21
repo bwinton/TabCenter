@@ -1,0 +1,22 @@
+/* This is just an example.  You shouldn't do this. */
+#verticaltabs-hello
+{
+  color: red ! important;
+}
+#verticaltabs-toolbar-button
+{
+  list-style-image: url("chrome://verticaltabs/skin/toolbar-button.png");
+  -moz-image-region: rect(0px 24px 24px 0px);
+}
+#verticaltabs-toolbar-button:hover
+{
+  -moz-image-region: rect(24px 24px 48px  0px);
+}
+[iconsize="small"] #verticaltabs-toolbar-button
+{
+  -moz-image-region: rect( 0px 40px 16px 24px);
+}
+[iconsize="small"] #verticaltabs-toolbar-button:hover
+{
+  -moz-image-region: rect(24px 40px 40px 24px);
+}
