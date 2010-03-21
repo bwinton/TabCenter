@@ -9,3 +9,8 @@
 .tabbrowser-arrowscrollbox > .scrollbutton-down {
     visibility: collapse !important;
 }
+
+.tab-icon-image {
+    max-width: 16px;
+    max-height: 16px;
+}
