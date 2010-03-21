@@ -2,4 +2,4 @@ content   verticaltabs                 content/
 skin      verticaltabs   classic/1.0   skin/
 locale    verticaltabs   en-US         locale/en-US/
 
-overlay   chrome://browser/content/browser.xul   chrome://verticaltabs/content/ff-overlay.xul
+overlay   chrome://browser/content/browser.xul   chrome://verticaltabs/content/browser.xul

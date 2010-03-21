@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="chrome://verticaltabs/skin/overlay.css" type="text/css"?>
 <!DOCTYPE overlay SYSTEM "chrome://verticaltabs/locale/overlay.dtd">
-<overlay id="verticaltabs-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script src="overlay.js"/>
-  <script src="ff-overlay.js"/>
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+         id="verticaltabs-overlay">
+  <script src="verticaltabs.js" type="application/javascript" />
 
   <stringbundleset id="stringbundleset">
     <stringbundle id="verticaltabs-strings" src="chrome://verticaltabs/locale/overlay.properties"/>
   </stringbundleset>
-
-
-
 
 </overlay>
