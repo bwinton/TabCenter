@@ -1,0 +1,11 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+.tabbrowser-arrowscrollbox > scrollbox {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
+
+.tabbrowser-arrowscrollbox > .scrollbutton-up,
+.tabbrowser-arrowscrollbox > .scrollbutton-down {
+    visibility: collapse !important;
+}
