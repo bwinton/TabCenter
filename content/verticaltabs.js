@@ -1,13 +1,5 @@
 var VerticalTabs = {
 
-    handleEvent: function(event) {
-        switch (event.type) {
-        case 'DOMContentLoaded':
-            this.init();
-            return;
-        }
-    },
-
     init: function() {
         window.removeEventListener("DOMContentLoaded", this, false);
 
@@ -32,6 +24,38 @@ var VerticalTabs = {
         splitter.setAttribute("class", "chromeclass-extrachrome");
         contentbox.parentNode.insertBefore(splitter, contentbox);
 
+        // Initialise tabs
+		tabs.addEventListener('TabOpen', this, true);
+        for (let i=0; i < tabs.childNodes.length; i++) {
+            this.initTab(tabs.childNodes[i]);
+        }
+    },
+
+    initTab: function(aTab) {
+        aTab.setAttribute('align', 'stretch');
+        aTab.removeAttribute('maxwidth');
+        aTab.removeAttribute('minwidth');
+        aTab.removeAttribute('width');
+        aTab.removeAttribute('flex');
+        aTab.maxWidth = 65000;
+        aTab.minWidth = 0;
+    },
+
+    /*** Event handlers ***/
+
+    handleEvent: function(event) {
+        switch (event.type) {
+        case 'DOMContentLoaded':
+            this.init();
+            return;
+        case 'TabOpen':
+            this.onTabOpen(event);
+            return;
+        }
+    },
+
+    onTabOpen: function(aEvent) {
+        this.initTab(aEvent.originalTarget);
     }
 
 };
