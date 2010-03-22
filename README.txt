@@ -9,8 +9,12 @@ Goals:
 
 * Arrange tabs in groups (instead of arbitrary trees)
 
+* Some group-related features (collapse group, tab previews, etc.)
+
 * Very few other features and hopefully little or no preference settings
 
 * Native look and feel
 
 * No eval() hacks
+
+License: Mozilla Public License Version 1.1
