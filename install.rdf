@@ -6,7 +6,7 @@
     <em:name>Vertical Tabs</em:name>
     <em:version>1.0</em:version>
     <em:creator>Philipp von Weitershausen</em:creator>
-    <em:contributor></em:contributor>
+    <em:contributor>SHIMODA Hiroshi (creator of Tree Style Tab)</em:contributor>
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox -->
