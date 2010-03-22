@@ -7,8 +7,7 @@
   background: transparent !important;
   background-color: #d4dde5 !important;
 }
-#main-window:not([active="true"])
-.tabbrowser-tabs {
+.tabbrowser-tabs:-moz-window-inactive {
   background-color: #e8e8e8 !important;
 }
 
@@ -19,8 +18,7 @@
   background-image: none;
   background-color: #404040;
 }
-#main-window:not([active="true"])
-#verticaltabs-splitter {
+#verticaltabs-splitter:-moz-window-inactive {
   background-color: #868686;
 }
 
@@ -49,8 +47,7 @@
   border-top: 1px solid #94A1C0 !important;
   background: -moz-linear-gradient(top, #A0B0CF, #7386AB) repeat-x !important;
 }
-#main-window:not([active="true"])
-.tabbrowser-tab[selected="true"] {
+.tabbrowser-tab[selected="true"]:-moz-window-inactive {
   border-top: 1px solid #979797 !important;
   background: -moz-linear-gradient(top, #B4B4B4, #8A8A8A) repeat-x !important;  
 }
