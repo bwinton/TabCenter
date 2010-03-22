@@ -1,3 +1,6 @@
+/* TODO this should become a platform-specific CSS overlay */
+@import url("osx.css");
+
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 .tabbrowser-arrowscrollbox > scrollbox {
