@@ -64,8 +64,7 @@
 .tab-close-button:active image {
   opacity: 0.46;  /* turn black into #8a8a8a */
 }
-.tabbrowser-tab[selected="true"]
-.tab-close-button image {
+.tabbrowser-tab[selected="true"] .tab-close-button image {
   list-style-image: url("closetab-white.png");
   opacity: 1;
 }
@@ -91,4 +90,10 @@
   font-weight: bold !important;
   color: #ffffff !important;
   text-shadow: 0 1px #404040 !important;
+}
+
+
+.tab-drop-indicator {
+  margin-top: 0 !important;
+  list-style-image: url("dropmarker.png");
 }
