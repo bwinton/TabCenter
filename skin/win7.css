@@ -60,7 +60,12 @@
 
 /* Keep the close button at a safe distance from the tab label. */
 .tab-close-button {
-  margin-left: 3px;
+    margin-left: 3px;
+}
+
+/* Hide resizer in the new statusbar */
+#verticaltabs-statusbar resizer {
+    visibility: collapse;
 }
 
 /* New toolbar buttons in the new statusbar */
@@ -89,5 +94,5 @@
 
 /* Make Firefox's original status bar the same height */
 #status-bar {
-  height: 24px;
+  height: 26px;
 }
