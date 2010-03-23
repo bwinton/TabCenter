@@ -32,10 +32,12 @@ var VerticalTabs = {
         contentbox.parentNode.insertBefore(splitter, contentbox);
         splitter.addEventListener('mouseup', this, false);
 
-        // Monkey-patch new methods in
-        for (let attr in TabbrowserTabs) {
-            tabs[attr] = TabbrowserTabs[attr];
-        }
+        // New methods and event handlers for drag'n'drop.  The
+        // original tabbrowser naturally makes the assumption that
+        // stuff is laid out horizontally.
+        tabs._setEffectAllowedForDataTransfer
+            = TabbrowserTabs._setEffectAllowedForDataTransfer;
+        tabs.addEventListener('dragover', this, false);
 
         // Fix up each individual tab for vertical layout, including
         // ones that are opened later on.
@@ -77,6 +79,9 @@ var VerticalTabs = {
         case 'mouseup':
             this.onMouseUp(aEvent);
             return;
+        case 'dragover':
+            TabbrowserTabs.onDragOver(aEvent);
+            return;
         }
     },
 
@@ -113,7 +118,7 @@ var TabbrowserTabs = {
                  (sourceNode.ownerDocument.defaultView instanceof ChromeWindow &&
                   sourceNode.ownerDocument.documentElement.getAttribute("windowtype") == "navigator:browser"))) {
                 if (sourceNode.parentNode == this &&
-                    // Vertical Tabs: X -> Y, width -> height
+                    // CHANGE for Vertical Tabs: X -> Y, width -> height
                     (event.screenY >= sourceNode.boxObject.screenY &&
                      event.screenY <= (sourceNode.boxObject.screenY +
                                        sourceNode.boxObject.height))) {
@@ -131,6 +136,22 @@ var TabbrowserTabs = {
             }
         }
         return dt.effectAllowed = "none";
+    },
+
+    // Calculate the drop indocator's position for vertical tabs
+    onDragOver: function(aEvent) {
+        var tabs = document.getElementById("tabbrowser-tabs");
+        var ind = tabs._tabDropIndicator;
+        var newIndex = tabs._getDropIndex(aEvent);
+
+        var rect = tabs.getBoundingClientRect();
+        var tabRect = tabs.childNodes[newIndex].getBoundingClientRect();
+        var newMargin = tabRect.top - rect.top;
+
+        newMargin += ind.clientHeight / 2;
+        ind.style.MozTransform = "translate(0, " + Math.round(newMargin) + "px)";
+        ind.style.MozMarginStart = null;
+        ind.style.marginTop = null;
     }
 
 };
