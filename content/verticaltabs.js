@@ -35,6 +35,7 @@ var VerticalTabs = {
         // New methods and event handlers for drag'n'drop.  The
         // original tabbrowser naturally makes the assumption that
         // stuff is laid out horizontally.
+        tabs._getDropIndex = TabbrowserTabs._getDropIndex;
         tabs._setEffectAllowedForDataTransfer
             = TabbrowserTabs._setEffectAllowedForDataTransfer;
         tabs.addEventListener('dragover', this, false);
@@ -100,6 +101,16 @@ var VerticalTabs = {
 window.addEventListener("DOMContentLoaded", VerticalTabs, false);
 
 var TabbrowserTabs = {
+
+    _getDropIndex: function(event) {
+        var tabs = this.childNodes;
+        var tab = this._getDragTargetTab(event);
+        // CHANGE for Vertical Tabs: no ltr handling, X -> Y, width -> height
+        for (let i = tab ? tab._tPos : 0; i < tabs.length; i++)
+            if (event.screenY < tabs[i].boxObject.screenY + tabs[i].boxObject.height / 2) 
+                return i;
+        return tabs.length;
+    },
 
     _setEffectAllowedForDataTransfer: function(event) {
         var dt = event.dataTransfer;
