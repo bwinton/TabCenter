@@ -169,6 +169,7 @@ var TabbrowserTabs = {
         ind.style.MozTransform = "translate(0, " + Math.round(newMargin) + "px)";
         ind.style.MozMarginStart = null;
         ind.style.marginTop = null;
+        ind.style.maxWidth = rect.width + "px";
     }
 
 };
