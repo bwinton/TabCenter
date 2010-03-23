@@ -5,3 +5,4 @@ locale    verticaltabs   en-US         locale/en-US/
 overlay   chrome://browser/content/browser.xul   chrome://verticaltabs/content/browser.xul
 
 override  chrome://verticaltabs/skin/platform.css chrome://verticaltabs/skin/osx.css os=Darwin
+override  chrome://verticaltabs/skin/platform.css chrome://verticaltabs/skin/win7.css os=WINNT
