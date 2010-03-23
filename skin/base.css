@@ -18,3 +18,9 @@
     max-width: 16px;
     max-height: 16px;
 }
+
+/* Hide the original tab toolbar buttons */
+.tabs-newtab-button,
+.tabs-alltabs-button {
+  visibility: collapse;
+}

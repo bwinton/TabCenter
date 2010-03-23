@@ -98,12 +98,6 @@
   margin-top: -12px !important; /* height of the above image */
 }
 
-/* Hide the original tab toolbar buttons */
-.tabs-newtab-button,
-.tabs-alltabs-button {
-  visibility: collapse;
-}
-
 /* New toolbar buttons in the new statusbar */
 .verticaltabs-button {
   border-right: 1px solid #868686;
