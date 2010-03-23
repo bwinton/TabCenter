@@ -16,20 +16,18 @@ var VerticalTabs = {
         contentbox.appendChild(bottom);
 
         // Move the tabs next to the app content, make them vertical,
-        // restore their width from previous session, and place a
-        // splitter between them.
+        // and restore their width from previous session
+        var leftbox = document.getElementById("verticaltabs-box");
         var tabs = document.getElementById("tabbrowser-tabs");
-        contentbox.parentNode.insertBefore(tabs, contentbox);
+        leftbox.insertBefore(tabs, leftbox.firstChild);
         tabs.orient = "vertical";
         tabs.mTabstrip.orient = "vertical";
         tabs.tabbox.orient = "horizontal"; // probably not necessary
-        tabs.removeAttribute("flex");
         tabs.setAttribute("width", this.prefs.getIntPref('extensions.verticaltabs.width'));
 
-        var splitter = document.createElement("splitter");
-        splitter.setAttribute("id", "verticaltabs-splitter");
-        splitter.setAttribute("class", "chromeclass-extrachrome");
-        contentbox.parentNode.insertBefore(splitter, contentbox);
+        // Hook up event handler for splitter so that the width of the
+        // tab bar is persisted.
+        var splitter = document.getElementById("verticaltabs-splitter");
         splitter.addEventListener('mouseup', this, false);
 
         // New methods and event handlers for drag'n'drop.  The

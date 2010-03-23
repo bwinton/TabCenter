@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="chrome://verticaltabs/skin/verticaltabs.css" type="text/css"?>
-<!DOCTYPE overlay SYSTEM "chrome://verticaltabs/locale/overlay.dtd">
+<!DOCTYPE overlay SYSTEM "chrome://browser/locale/tabbrowser.dtd" >
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
          id="verticaltabs-overlay">
   <script src="verticaltabs.js" type="application/javascript" />
@@ -9,5 +9,28 @@
     <stringbundle id="verticaltabs-strings"
                   src="chrome://verticaltabs/locale/overlay.properties"/>
   </stringbundleset>
+
+  <hbox id="browser">
+    <vbox id="verticaltabs-box" insertbefore="appcontent">
+      <!-- tabs inserted here -->
+      <statusbar id="verticaltabs-statusbar"
+                 class="chromeclass-extrachrome">
+        <toolbarbutton id="verticaltabs-newtabbutton"
+                       class="verticaltabs-button"
+                       command="cmd_newNavigatorTab"
+                       tooltiptext="&newTabButton.tooltip;" />
+        <toolbarbutton id="verticaltabs-alltabsbutton"
+                       class="verticaltabs-button"
+                       command="Browser:ShowAllTabs"
+                       tooltiptext="&listAllTabs.label;" />
+      </statusbar>
+    </vbox>
+
+    <splitter id="verticaltabs-splitter"
+              class="chromeclass-extrachrome"
+              insertbefore="appcontent" />
+
+    <!-- appcontent with tabbrowser here -->
+  </hbox>
 
 </overlay>
