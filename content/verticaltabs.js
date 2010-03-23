@@ -149,15 +149,23 @@ var TabbrowserTabs = {
         return dt.effectAllowed = "none";
     },
 
-    // Calculate the drop indocator's position for vertical tabs
+    // Calculate the drop indocator's position for vertical tabs.
+    // Overwrites what the original 'dragover' event handler does
+    // towards the end.
     onDragOver: function(aEvent) {
         var tabs = document.getElementById("tabbrowser-tabs");
         var ind = tabs._tabDropIndicator;
         var newIndex = tabs._getDropIndex(aEvent);
-
         var rect = tabs.getBoundingClientRect();
-        var tabRect = tabs.childNodes[newIndex].getBoundingClientRect();
-        var newMargin = tabRect.top - rect.top;
+        var newMargin;
+
+        if (newIndex == tabs.childNodes.length) {
+            let tabRect = tabs.childNodes[newIndex-1].getBoundingClientRect();
+            newMargin = tabRect.bottom - rect.top;
+        } else {
+            let tabRect = tabs.childNodes[newIndex].getBoundingClientRect();
+            newMargin = tabRect.top - rect.top;
+        }
 
         newMargin += ind.clientHeight / 2;
         ind.style.MozTransform = "translate(0, " + Math.round(newMargin) + "px)";
