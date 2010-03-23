@@ -94,6 +94,6 @@
 
 
 .tab-drop-indicator {
-  margin-top: 0 !important;
   list-style-image: url("dropmarker.png");
+  margin-top: -12px !important; /* height of the above image */
 }
