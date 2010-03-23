@@ -32,8 +32,14 @@ var VerticalTabs = {
         contentbox.parentNode.insertBefore(splitter, contentbox);
         splitter.addEventListener('mouseup', this, false);
 
-        // Initialise tabs
-		tabs.addEventListener('TabOpen', this, true);
+        // Monkey-patch new methods in
+        for (let attr in TabbrowserTabs) {
+            tabs[attr] = TabbrowserTabs[attr];
+        }
+
+        // Fix up each individual tab for vertical layout, including
+        // ones that are opened later on.
+        tabs.addEventListener('TabOpen', this, true);
         for (let i=0; i < tabs.childNodes.length; i++) {
             this.initTab(tabs.childNodes[i]);
         }
@@ -87,3 +93,44 @@ var VerticalTabs = {
 };
 
 window.addEventListener("DOMContentLoaded", VerticalTabs, false);
+
+var TabbrowserTabs = {
+
+    _setEffectAllowedForDataTransfer: function(event) {
+        var dt = event.dataTransfer;
+        // Disallow dropping multiple items
+        if (dt.mozItemCount > 1)
+            return dt.effectAllowed = "none";
+
+        var types = dt.mozTypesAt(0);
+        var sourceNode = null;
+        // tabs are always added as the first type
+        if (types[0] == TAB_DROP_TYPE) {
+            var sourceNode = dt.mozGetDataAt(TAB_DROP_TYPE, 0);
+            if (sourceNode instanceof XULElement &&
+                sourceNode.localName == "tab" &&
+                (sourceNode.parentNode == this ||
+                 (sourceNode.ownerDocument.defaultView instanceof ChromeWindow &&
+                  sourceNode.ownerDocument.documentElement.getAttribute("windowtype") == "navigator:browser"))) {
+                if (sourceNode.parentNode == this &&
+                    // Vertical Tabs: X -> Y, width -> height
+                    (event.screenY >= sourceNode.boxObject.screenY &&
+                     event.screenY <= (sourceNode.boxObject.screenY +
+                                       sourceNode.boxObject.height))) {
+                    return dt.effectAllowed = "none";
+                }
+
+                return dt.effectAllowed = "copyMove";
+            }
+        }
+
+        for (let i = 0; i < this._supportedLinkDropTypes.length; i++) {
+            if (types.contains(this._supportedLinkDropTypes[i])) {
+                // Here we need to to do this manually
+                return dt.effectAllowed = dt.dropEffect = "link";
+            }
+        }
+        return dt.effectAllowed = "none";
+    }
+
+};
