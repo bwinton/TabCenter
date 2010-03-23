@@ -3,3 +3,5 @@ skin      verticaltabs   classic/1.0   skin/
 locale    verticaltabs   en-US         locale/en-US/
 
 overlay   chrome://browser/content/browser.xul   chrome://verticaltabs/content/browser.xul
+
+override  chrome://verticaltabs/skin/platform.css chrome://verticaltabs/skin/osx.css os=Darwin
