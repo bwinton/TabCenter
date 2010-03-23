@@ -1,15 +1,19 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
+/* Style the scrollbox for vertical arrangements */
 .tabbrowser-arrowscrollbox > scrollbox {
     overflow-x: hidden !important;
     overflow-y: auto !important;
 }
 
+/* Since we get an actual scrollbar in this vertical arrangement, we
+   don't need these extra scroll buttons. */
 .tabbrowser-arrowscrollbox > .scrollbutton-up,
 .tabbrowser-arrowscrollbox > .scrollbutton-down {
     visibility: collapse !important;
 }
 
+/* Ensure the tab favicon doesn't stretch. */
 .tab-icon-image {
     max-width: 16px;
     max-height: 16px;
