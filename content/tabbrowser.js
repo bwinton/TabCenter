@@ -1,4 +1,4 @@
-var TabbrowserTabs = {
+var VerticalTabsTabbrowserTabs = {
     /*
      * Patches for the tabbrowser-tabs object.  Necessary where the
      * original implementation assumes a horizontal layout.

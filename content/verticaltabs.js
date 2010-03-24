@@ -30,8 +30,8 @@ var VerticalTabs = {
         var splitter = document.getElementById("verticaltabs-splitter");
         splitter.addEventListener('mouseup', this, false);
 
-        TabbrowserTabs.init();
-        MultiSelect.init();
+        VerticalTabsTabbrowserTabs.init();
+        VerticalTabsMultiSelect.init();
 
         // Fix up each individual tab for vertical layout, including
         // ones that are opened later on.
