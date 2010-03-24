@@ -43,11 +43,13 @@
   border-top: 1px solid transparent !important;
 }
 
-.tabbrowser-tab[selected="true"] {
+.tabbrowser-tab[selected="true"],
+.tabbrowser-tab[multiselect="true"] {
   border-top: 1px solid #94A1C0 !important;
   background: -moz-linear-gradient(top, #A0B0CF, #7386AB) repeat-x !important;
 }
-.tabbrowser-tab[selected="true"]:-moz-window-inactive {
+.tabbrowser-tab[selected="true"]:-moz-window-inactive,
+.tabbrowser-tab[multiselect="true"]:-moz-window-inactive {
   border-top: 1px solid #979797 !important;
   background: -moz-linear-gradient(top, #B4B4B4, #8A8A8A) repeat-x !important;  
 }
@@ -64,7 +66,8 @@
 .tab-close-button:active image {
   opacity: 0.46;  /* turn black into #8a8a8a */
 }
-.tabbrowser-tab[selected="true"] .tab-close-button image {
+.tabbrowser-tab[selected="true"] .tab-close-button image,
+.tabbrowser-tab[multiselect="true"] .tab-close-button image {
   list-style-image: url("closetab-white.png");
   opacity: 1;
 }
@@ -86,11 +89,13 @@
   text-shadow: none !important;
   margin-bottom: 1px;
 }
-.tabbrowser-tab[selected="true"] .tab-text {
+.tabbrowser-tab[selected="true"] .tab-text,
+.tabbrowser-tab[multiselect="true"] .tab-text {
   font-weight: bold !important;
   color: #ffffff !important;
   text-shadow: 0 1px #404040 !important;
 }
+
 
 /* Drop indicator for drag'n'drop of tabs */
 .tab-drop-indicator {

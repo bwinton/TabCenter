@@ -27,7 +27,8 @@
     -moz-border-radius-bottomright: 3px !important;
 }
 
-.tabbrowser-tab[selected="true"] {
+.tabbrowser-tab[selected="true"],
+.tabbrowser-tab[multiselect="true"] {
     margin: 0 !important;
     padding: 0 !important;
 
@@ -41,7 +42,8 @@
     font-weight: normal;
     text-shadow: none;
 }
-.tabbrowser-tab[selected="true"]:-moz-window-inactive {
+.tabbrowser-tab[selected="true"]:-moz-window-inactive,
+.tabbrowser-tab[multiselect="true"]:-moz-window-inactive {
     border: 1px solid #dadada !important;
     background: -moz-linear-gradient(top, Window, #e6e6e6) repeat-x !important;
 }
