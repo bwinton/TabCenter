@@ -71,30 +71,11 @@ var VerticalTabs = {
 
     toggleMultiSelect: function(aTab) {
         if (aTab.selected) {
-            // Tricky because we're going to have to find another tab
-            // that's on multiselect to select.
+            let tab = this.findClosestMultiSelectedTab(aTab);
             let tabs = document.getElementById("tabbrowser-tabs");
-            let i = 1;
-            while ((aTab._tPos - i >= 0) ||
-                   (aTab._tPos + i < tabs.childNodes.length)) {
-                let tab;
-                if (aTab._tPos - i >= 0) {
-                    tab = tabs.childNodes[aTab._tPos - i];
-                    if (tab.getAttribute("multiselect") == "true") {
-                        tab.setAttribute("multiselect-noclear", "true");
-                        tabs.tabbrowser.selectedTab = tab;
-                        return;
-                    }
-                }
-                if (aTab._tPos + i < tabs.childNodes.length) {
-                    tab = tabs.childNodes[aTab._tPos + i];
-                    if (tab.getAttribute("multiselect") == "true") {
-                        tab.setAttribute("multiselect-noclear", "true");
-                        tabs.tabbrowser.selectedTab = tab;
-                        return;
-                    }
-                }
-                i++;
+            if (tab) {
+                tab.setAttribute("multiselect-noclear", "true");
+                tabs.tabbrowser.selectedTab = tab;
             }
             return;
         }
@@ -103,6 +84,30 @@ var VerticalTabs = {
         } else {
             aTab.setAttribute("multiselect", "true");
         }
+    },
+
+    findClosestMultiSelectedTab: function(aTab) {
+        var tabs = document.getElementById("tabbrowser-tabs");
+        var i = 1;
+        var tab;
+        while ((aTab._tPos - i >= 0) ||
+               (aTab._tPos + i < tabs.childNodes.length)) {
+            if (aTab._tPos - i >= 0) {
+                tab = tabs.childNodes[aTab._tPos - i];
+                if (tab.getAttribute("multiselect") == "true") {
+                    return tab;
+                }
+            }
+            if (aTab._tPos + i < tabs.childNodes.length) {
+                tab = tabs.childNodes[aTab._tPos + i];
+                if (tab.getAttribute("multiselect") == "true") {
+                    tab.setAttribute("multiselect-noclear", "true");
+                    return tab;
+                }
+            }
+            i++;
+        }
+        return null;
     },
 
     multiSpanSelect: function(aBeginTab, aEndTab) {
