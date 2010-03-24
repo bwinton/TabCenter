@@ -40,7 +40,6 @@ var VerticalTabs = {
 
         // Multiselect
         tabs.addEventListener('mousedown', this, true);
-        tabs.addEventListener('TabSelect', this, false);
 
         // Fix up each individual tab for vertical layout, including
         // ones that are opened later on.
@@ -69,9 +68,15 @@ var VerticalTabs = {
             }, 10, this);
 	},
 
-    multiSelect: function(aTab) {
-        // Clear the multiselect flag from the selected tab
-        aTab.setAttribute("multiselect", "true");
+    toggleMultiSelect: function(aTab) {
+        if (aTab.selected) {
+            return;
+        }
+        if (aTab.getAttribute("multiselect") == "true") {
+            aTab.removeAttribute("multiselect");
+        } else {
+            aTab.setAttribute("multiselect", "true");
+        }
     },
 
     multiSpanSelect: function(aBeginTab, aEndTab) {
@@ -83,7 +88,7 @@ var VerticalTabs = {
             [end, begin] = [begin, end];
         }
         for (let i=begin; i <= end; i++) {
-            this.multiSelect(tabs.childNodes[i]);
+            tabs.childNodes[i].setAttribute("multiselect", "true");
         }
     },
 
@@ -104,9 +109,6 @@ var VerticalTabs = {
         case 'TabOpen':
             this.onTabOpen(aEvent);
             return;
-        case 'TabSelect':
-            this.onTabSelect(aEvent);
-            return;
         case 'mouseup':
             this.onMouseUp(aEvent);
             return;
@@ -123,10 +125,6 @@ var VerticalTabs = {
         this.initTab(aEvent.originalTarget);
     },
 
-    onTabSelect: function(aEvent) {
-       aEvent.target.removeAttribute("multiselect");
-    },
-
     onMouseUp: function(aEvent) {
         if (aEvent.target.getAttribute("id") == "verticaltabs-splitter") {
             this.onTabbarResized();
@@ -140,15 +138,17 @@ var VerticalTabs = {
         if (aEvent.button != 0) {
             return;
         }
-        var tabs = document.getElementById("tabbrowser-tabs");
 
+        var tabs = document.getElementById("tabbrowser-tabs");
         // Check for Ctrl+click (multiselection).  On the Mac it's
         // Cmd+click which is represented by metaKey.  Ctrl+click won't be
         // possible on the Mac because that would be a right click (button 2)
         if (aEvent.ctrlKey || aEvent.metaKey) {
-            this.multiSelect(tabs.tabbrowser.selectedTab);
+            this.toggleMultiSelect(aEvent.target);
+            aEvent.stopPropagation();
         } else if (aEvent.shiftKey) {
             this.multiSpanSelect(tabs.tabbrowser.selectedTab, aEvent.target);
+            aEvent.stopPropagation();
         } else {
             this.clearMultiSelect();
         }
