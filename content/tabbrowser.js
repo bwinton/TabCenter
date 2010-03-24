@@ -1,4 +1,16 @@
 var TabbrowserTabs = {
+    /*
+     * Patches for the tabbrowser-tabs object.  Necessary where the
+     * original implementation assumes a horizontal layout.
+     */
+
+    init: function() {
+        var tabs = document.getElementById("tabbrowser-tabs");
+        tabs._getDropIndex = this._getDropIndex;
+        tabs._setEffectAllowedForDataTransfer
+            = this._setEffectAllowedForDataTransfer;
+        tabs.addEventListener('dragover', this.onDragOver, false);
+    },
 
     _getDropIndex: function(event) {
         var tabs = this.childNodes;
