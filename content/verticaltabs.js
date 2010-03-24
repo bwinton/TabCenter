@@ -40,6 +40,7 @@ var VerticalTabs = {
 
         // Multiselect
         tabs.addEventListener('mousedown', this, true);
+        tabs.addEventListener('TabSelect', this, false);
 
         // Fix up each individual tab for vertical layout, including
         // ones that are opened later on.
@@ -109,6 +110,9 @@ var VerticalTabs = {
         case 'TabOpen':
             this.onTabOpen(aEvent);
             return;
+        case 'TabSelect':
+            this.onTabSelect(aEvent);
+            return;
         case 'mouseup':
             this.onMouseUp(aEvent);
             return;
@@ -123,6 +127,10 @@ var VerticalTabs = {
 
     onTabOpen: function(aEvent) {
         this.initTab(aEvent.originalTarget);
+    },
+
+    onTabSelect: function(aEvent) {
+        this.clearMultiSelect();
     },
 
     onMouseUp: function(aEvent) {
@@ -149,7 +157,10 @@ var VerticalTabs = {
             let tabs = document.getElementById("tabbrowser-tabs");
             this.multiSpanSelect(tabs.tabbrowser.selectedTab, aEvent.target);
             aEvent.stopPropagation();
-        } else {
+        } else if (aEvent.target.selected) {
+            // Clicking on the already selected tab won't fire a
+            // TabSelect event, but we still want to deselect any
+            // other tabs.
             this.clearMultiSelect();
         }
     }
