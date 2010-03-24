@@ -139,7 +139,6 @@ var VerticalTabs = {
             return;
         }
 
-        var tabs = document.getElementById("tabbrowser-tabs");
         // Check for Ctrl+click (multiselection).  On the Mac it's
         // Cmd+click which is represented by metaKey.  Ctrl+click won't be
         // possible on the Mac because that would be a right click (button 2)
@@ -147,6 +146,7 @@ var VerticalTabs = {
             this.toggleMultiSelect(aEvent.target);
             aEvent.stopPropagation();
         } else if (aEvent.shiftKey) {
+            let tabs = document.getElementById("tabbrowser-tabs");
             this.multiSpanSelect(tabs.tabbrowser.selectedTab, aEvent.target);
             aEvent.stopPropagation();
         } else {
