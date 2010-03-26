@@ -70,6 +70,18 @@ var VerticalTabsMultiSelect = {
         }
     },
 
+    getMultiSelection: function() {
+        var tabs = document.getElementById("tabbrowser-tabs");
+        var results = [];
+        for (let i=0; i < tabs.childNodes.length; i++ ) {
+            let tab = tabs.childNodes[i];
+            if (tab.selected || (tab.getAttribute("multiselect") == "true")) {
+                results.push(tab);
+            }
+        }
+        return results;
+    },
+
     /*** Event handlers ***/
 
     handleEvent: function(aEvent) {
