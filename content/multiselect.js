@@ -14,6 +14,7 @@ var VerticalTabsMultiSelect = {
             let tab = this.findClosestMultiSelectedTab(aTab);
             let tabs = document.getElementById("tabbrowser-tabs");
             if (tab) {
+                // Prevent the tab switch from clearing the multiselection.
                 tab.setAttribute("multiselect-noclear", "true");
                 tabs.tabbrowser.selectedTab = tab;
             }
@@ -29,25 +30,24 @@ var VerticalTabsMultiSelect = {
     findClosestMultiSelectedTab: function(aTab) {
         var tabs = document.getElementById("tabbrowser-tabs");
         var i = 1;
-        var tab;
+        var tab = null;
         while ((aTab._tPos - i >= 0) ||
                (aTab._tPos + i < tabs.childNodes.length)) {
             if (aTab._tPos - i >= 0) {
                 tab = tabs.childNodes[aTab._tPos - i];
                 if (tab.getAttribute("multiselect") == "true") {
-                    return tab;
+                    break;
                 }
             }
             if (aTab._tPos + i < tabs.childNodes.length) {
                 tab = tabs.childNodes[aTab._tPos + i];
                 if (tab.getAttribute("multiselect") == "true") {
-                    tab.setAttribute("multiselect-noclear", "true");
-                    return tab;
+                    break;
                 }
             }
             i++;
         }
-        return null;
+        return tab;
     },
 
     multiSpanSelect: function(aBeginTab, aEndTab) {
