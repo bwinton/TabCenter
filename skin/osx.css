@@ -3,6 +3,7 @@
 /* Background colour for the tree sidebar (light blue when window is
    active, grey otherwise) */
 .tabbrowser-tabs {
+  margin: 0 !important;
   padding: 0 !important;
   background: transparent !important;
   background-color: #d4dde5 !important;

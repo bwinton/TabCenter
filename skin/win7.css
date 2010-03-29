@@ -1,6 +1,7 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 .tabbrowser-tabs {
+    margin: 0 !important;
     padding: 0 !important;
     background: transparent !important;
     background-color: rgb(238, 243, 250) !important; /* #sidebar uses this */
