@@ -73,12 +73,13 @@
   opacity: 1;
 }
 
+.tabbrowser-tab:not(:hover):not([selected="true"]) > .tab-close-button {
+  visibility: collapse !important;
+}
+
 /* Always display the favicon at 100% opacity */
 .tabbrowser-tab:not(:hover):not([selected="true"]) .tab-icon-image {
   opacity: 1.0 !important;
-}
-.tabbrowser-tab:not(:hover):not([selected="true"]) > .tab-close-button {
-  display: none !important;
 }
 
 /* Tab label is without special decoration except when selected: then

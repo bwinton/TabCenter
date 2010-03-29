@@ -61,6 +61,10 @@
     cursor: pointer !important;
 }
 
+.tabbrowser-tab:not(:hover):not([selected="true"]) > .tab-close-button {
+  visibility: collapse !important;
+}
+
 /* Keep the close button at a safe distance from the tab label. */
 .tab-close-button {
     margin-left: 3px;
