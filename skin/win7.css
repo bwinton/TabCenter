@@ -62,7 +62,7 @@
 }
 
 .tabbrowser-tab:not(:hover):not([selected="true"]) > .tab-close-button {
-  visibility: collapse !important;
+    visibility: collapse !important;
 }
 
 /* Keep the close button at a safe distance from the tab label. */
@@ -77,29 +77,29 @@
 
 /* New toolbar buttons in the new statusbar */
 .verticaltabs-button {
-  width: 24px;
-  height: 24px;
-  max-width: 24px;
-  max-height: 24px;
+    width: 24px;
+    height: 24px;
+    max-width: 24px;
+    max-height: 24px;
 }
 
 #verticaltabs-newtabbutton {
-  list-style-image: url("chrome://browser/skin/tabbrowser/newtab.png");
-  -moz-image-region: rect(0, 18px, 18px, 0);
+    list-style-image: url("chrome://browser/skin/tabbrowser/newtab.png");
+    -moz-image-region: rect(0, 18px, 18px, 0);
 }
 #verticaltabs-newtabbutton:hover:active {
-  -moz-image-region: rect(0, 36px, 18px, 18px);
+    -moz-image-region: rect(0, 36px, 18px, 18px);
 }
 
 #verticaltabs-alltabsbutton > .toolbarbutton-icon {
-  list-style-image: url("chrome://browser/skin/tabbrowser/alltabs.png");
-  -moz-image-region: rect(0, 14px, 20px, 0);
+    list-style-image: url("chrome://browser/skin/tabbrowser/alltabs.png");
+    -moz-image-region: rect(0, 14px, 20px, 0);
 }
 #verticaltabs-alltabsbutton:hover:active > .toolbarbutton-icon {
-  -moz-image-region: rect(0, 28px, 20px, 14px);
+    -moz-image-region: rect(0, 28px, 20px, 14px);
 }
 
 /* Make Firefox's original status bar the same height */
 #status-bar {
-  height: 26px;
+    height: 26px;
 }
