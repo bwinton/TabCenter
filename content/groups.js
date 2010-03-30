@@ -90,6 +90,8 @@ var VerticalTabsGroups = {
     convertTabToGroup: function(aGroup) {
         var groupLabel = document.createElement('label');
         var label = this.getTabValue(aGroup, this.kLabel);
+        // Can't set 'value' attribute, need text node to allow proper styling.
+        // See https://bugzilla.mozilla.org/show_bug.cgi?id=101800
         groupLabel.appendChild(document.createTextNode(label));
         groupLabel.setAttribute('class', this.kLabel);
 
