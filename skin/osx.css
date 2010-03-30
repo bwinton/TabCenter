@@ -149,3 +149,27 @@
 #status-bar {
     height: 22px;
 }
+
+
+/*** Group related styles ***/
+
+.tabbrowser-tab[verticaltabs-ingroup] {
+    padding-left: 20px !important;
+}
+
+.tabbrowser-tab[verticaltabs-group] .tab-icon-image,
+.tabbrowser-tab[verticaltabs-group] .tab-text,
+.tabbrowser-tab[verticaltabs-group] .tab-close-button {
+    visibility: collapse !important;
+}
+
+.tabbrowser-tab[verticaltabs-group] {
+    -moz-box-pack: start !important;
+}
+
+.verticaltabs-grouplabel {
+    color: #738192 !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    text-shadow: 0 1px #ffffff !important;
+}

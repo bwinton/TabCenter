@@ -32,6 +32,7 @@ var VerticalTabs = {
 
         VerticalTabsTabbrowserTabs.init();
         VerticalTabsMultiSelect.init();
+        VerticalTabsGroups.init();
 
         // Fix up each individual tab for vertical layout, including
         // ones that are opened later on.
