@@ -22,5 +22,5 @@
 /* Hide the original tab toolbar buttons */
 .tabs-newtab-button,
 .tabs-alltabs-button {
-  visibility: collapse;
+    visibility: collapse;
 }
