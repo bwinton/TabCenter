@@ -6,8 +6,8 @@
  * To make it work in the UI, tabs with multiselect="true" need to be
  * styled like selected tabs.
  * 
- * Use getMultiSelect() to obtain a list of selected tabs.  This
- * should be the only public API you'll ever need.
+ * Use getMultiSelect() to obtain a list of selected tabs.  For most
+ * cases this will be the only API you ever need.
  */
 var VTMultiSelect = {
 
@@ -16,6 +16,8 @@ var VTMultiSelect = {
         tabs.addEventListener('mousedown', this, true);
         tabs.addEventListener('TabSelect', this, false);
     },
+
+    /*** Public API ***/
 
     toggleMultiSelect: function(aTab) {
         if (aTab.selected) {
