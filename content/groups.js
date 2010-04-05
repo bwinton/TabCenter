@@ -10,7 +10,6 @@ var VerticalTabsGroups = {
     kInGroup: 'verticaltabs-ingroup',
     kChildren: 'verticaltabs-children',
     kLabel: 'verticaltabs-grouplabel',
-    kLabelTextbox: 'verticaltabs-grouplabel-textbox',
 
     tabsById: {},
 
@@ -58,6 +57,7 @@ var VerticalTabsGroups = {
 
     restoreTab: function(aTab) {
         // Restore tab attributes from session data
+        // kId is already restored in initTab()
         for each (let attr in [this.kGroup,
                                this.kInGroup,
                                this.kChildren,
@@ -66,10 +66,6 @@ var VerticalTabsGroups = {
             if (value) {
                 aTab.setAttribute(attr, value);
             }
-        }
-
-        if (this.getTabValue(aTab, this.kGroup) == "true") {
-            this.convertTabToGroup(aTab);
         }
     },
 
@@ -83,67 +79,18 @@ var VerticalTabsGroups = {
         var group = tabs.tabbrowser.addTab();
         this.setTabValue(group, this.kGroup, 'true');
         this.setTabValue(group, this.kChildren, '');
-        this.setTabValue(group, this.kLabel, aLabel);
-        this.convertTabToGroup(group);
-        this.editGroupLabel(group);
+
+        //XXX this doesn't work since the binding isn't made available
+        // synchronously :(
+/*
+        if (aLabel) {
+            this.setTabValue(group, this.kLabel, aLabel);
+            group.groupLabel = aLabel;
+        } else {
+            group.editLabel();
+        }
+*/
         return group;
-    },
-
-    convertTabToGroup: function(aGroup) {
-        var label = document.createElement('label');
-        var labelText = this.getTabValue(aGroup, this.kLabel);
-        // Can't set 'value' attribute, need text node to allow proper styling.
-        // See https://bugzilla.mozilla.org/show_bug.cgi?id=101800
-        label.appendChild(document.createTextNode(labelText));
-        label.setAttribute('class', this.kLabel);
-        label.addEventListener('dblclick', this, false);
-        var origLabel = document.getAnonymousElementByAttribute(
-            aGroup, "class", "tab-text");
-        origLabel.parentNode.insertBefore(label, origLabel.nextSibling);
-
-        var textbox = document.createElement('textbox');
-        textbox.setAttribute('class', this.kLabelTextbox);
-        textbox.value = label;
-        textbox.collapsed = true;
-        textbox.addEventListener('keypress', this, false);
-        origLabel.parentNode.insertBefore(textbox, origLabel.nextSibling);
-
-        //XXX TODO twisty
-    },
-
-    editGroupLabel: function(aGroup) {
-        if (!this.isGroup(aGroup)) {
-            return;
-        }
-        for each (let v in document.getAnonymousNodes(aGroup)) {
-            Cu.reportError(v.localName);
-        }
-        var label = document.getAnonymousElementByAttribute(
-            aGroup, "class", this.kLabel);
-        var textbox = document.getAnonymousElementByAttribute(
-            aGroup, "class", this.kLabelTextbox);
-        label.collapsed = true;
-        textbox.collapsed = false;
-        textbox.select();
-        textbox.focus();
-    },
-
-    finishEditingGroupLabel: function(aGroup) {
-        if (!this.isGroup(aGroup)) {
-            return;
-        }
-        var label = document.getAnonymousElementByAttribute(
-            aGroup, "class", this.kLabel);
-        var textbox = document.getAnonymousElementByAttribute(
-            aGroup, "class", this.kLabelTextbox);
-        var labelText = textbox.value.trim();
-        if (!labelText) {
-            return;
-        }
-        label.removeChild(label.firstChild);
-        label.appendChild(document.createTextNode(labelText));
-        label.collapsed = false;
-        textbox.collapsed = true;
     },
 
     getChildren: function(aGroup) {
@@ -178,7 +125,7 @@ var VerticalTabsGroups = {
 
     createGroupFromMultiSelect: function() {
         var tabs = document.getElementById("tabbrowser-tabs");
-        var group = this.addGroup('Group 1');
+        var group = this.addGroup();
         var children = VerticalTabsMultiSelect.getMultiSelection();
         for each (let tab in children) {
             this.addChild(group, tab);
@@ -190,9 +137,10 @@ var VerticalTabsGroups = {
         return (this.getTabValue(aTab, this.kGroup) == "true");
     },
 
+
     /*** Session Store API ***/
 
-
+    //XXX TODO use XPCOMUtils.defineLazyServiceGetter
     _sessionStore: null,
     get sessionStore() {
         if (!this._sessionStore) {
@@ -253,46 +201,14 @@ var VerticalTabsGroups = {
     handleEvent: function(aEvent) {
         switch (aEvent.type) {
         case 'TabOpen':
-            this.onTabOpen(aEvent);
+            this.initTab(aEvent.originalTarget);
             return;
         case 'TabClose':
-            this.onTabClose(aEvent);
+            this.destroyTab(aEvent.originalTarget);
             return;
         case 'SSTabRestoring':
-            this.onTabRestoring(aEvent);
+            this.restoreTab(aEvent.originalTarget);
             return;
-        case 'dblclick':
-            this.onDblClick(aEvent);
-            return;
-        case 'keypress':
-            this.onKeyPress(aEvent);
-            return;
-        }
-    },
-
-    onTabOpen: function(aEvent) {
-        this.initTab(aEvent.originalTarget);
-    },
-
-    onTabClose: function(aEvent) {
-        this.destroyTab(aEvent.originalTarget);
-    },
-
-    onTabRestoring: function(aEvent) {
-        this.restoreTab(aEvent.originalTarget);
-    },
-
-    onDblClick: function(aEvent) {
-        var group = aEvent.target.parentNode;
-        this.editGroupLabel(group);
-    },
-
-    onKeyPress: function(aEvent) {
-        if (aEvent.keyCode == aEvent.DOM_VK_ENTER ||
-            aEvent.keyCode == aEvent.DOM_VK_RETURN ||
-            aEvent.keyCode == aEvent.DOM_VK_ESCAPE) {
-            let group = aEvent.target.parentNode;
-            this.finishEditingGroupLabel(group);
         }
     }
 

@@ -1,0 +1,3 @@
+.tabbrowser-tab[verticaltabs-group] {
+    -moz-binding: url("chrome://verticaltabs/content/groups.xml");
+}

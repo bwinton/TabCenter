@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://verticaltabs/content/bindings.css" type="text/css"?>
 <?xml-stylesheet href="chrome://verticaltabs/skin/verticaltabs.css" type="text/css"?>
 <!DOCTYPE overlay SYSTEM "chrome://browser/locale/tabbrowser.dtd" >
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"

@@ -157,19 +157,30 @@
     padding-left: 20px !important;
 }
 
-.tabbrowser-tab[verticaltabs-group] .tab-icon-image,
-.tabbrowser-tab[verticaltabs-group] .tab-text,
-.tabbrowser-tab[verticaltabs-group] .tab-close-button {
-    visibility: collapse !important;
-}
-
 .tabbrowser-tab[verticaltabs-group] {
     -moz-box-pack: start !important;
 }
 
-.verticaltabs-grouplabel {
+.tabbrowser-tab[verticaltabs-group] .tab-text {
     color: #738192 !important;
     font-weight: bold !important;
     text-transform: uppercase !important;
     text-shadow: 0 1px #ffffff !important;
+}
+
+.verticaltabs-twisty-container {
+	-moz-box-pack: start;
+	-moz-box-align: center;
+}
+
+.verticaltabs-twisty {
+	list-style-image: url("chrome://verticaltabs/skin/twisty.png");
+	opacity: 0.38;
+}
+.tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-twisty {
+	-moz-transform: rotate(270deg);
+}
+
+.verticaltabs-twisty:active {
+	opacity: 1.0;
 }
