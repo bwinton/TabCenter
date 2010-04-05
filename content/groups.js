@@ -10,6 +10,7 @@ var VerticalTabsGroups = {
     kInGroup: 'verticaltabs-ingroup',
     kChildren: 'verticaltabs-children',
     kLabel: 'verticaltabs-grouplabel',
+    kLabelTextbox: 'verticaltabs-grouplabel-textbox',
 
     tabsById: {},
 
@@ -84,22 +85,65 @@ var VerticalTabsGroups = {
         this.setTabValue(group, this.kChildren, '');
         this.setTabValue(group, this.kLabel, aLabel);
         this.convertTabToGroup(group);
+        this.editGroupLabel(group);
         return group;
     },
 
     convertTabToGroup: function(aGroup) {
-        var groupLabel = document.createElement('label');
-        var label = this.getTabValue(aGroup, this.kLabel);
+        var label = document.createElement('label');
+        var labelText = this.getTabValue(aGroup, this.kLabel);
         // Can't set 'value' attribute, need text node to allow proper styling.
         // See https://bugzilla.mozilla.org/show_bug.cgi?id=101800
-        groupLabel.appendChild(document.createTextNode(label));
-        groupLabel.setAttribute('class', this.kLabel);
-
-        //XXX TODO twisty
-
+        label.appendChild(document.createTextNode(labelText));
+        label.setAttribute('class', this.kLabel);
+        label.addEventListener('dblclick', this, false);
         var origLabel = document.getAnonymousElementByAttribute(
             aGroup, "class", "tab-text");
-        origLabel.parentNode.insertBefore(groupLabel, origLabel.nextSibling);
+        origLabel.parentNode.insertBefore(label, origLabel.nextSibling);
+
+        var textbox = document.createElement('textbox');
+        textbox.setAttribute('class', this.kLabelTextbox);
+        textbox.value = label;
+        textbox.collapsed = true;
+        textbox.addEventListener('keypress', this, false);
+        origLabel.parentNode.insertBefore(textbox, origLabel.nextSibling);
+
+        //XXX TODO twisty
+    },
+
+    editGroupLabel: function(aGroup) {
+        if (!this.isGroup(aGroup)) {
+            return;
+        }
+        for each (let v in document.getAnonymousNodes(aGroup)) {
+            Cu.reportError(v.localName);
+        }
+        var label = document.getAnonymousElementByAttribute(
+            aGroup, "class", this.kLabel);
+        var textbox = document.getAnonymousElementByAttribute(
+            aGroup, "class", this.kLabelTextbox);
+        label.collapsed = true;
+        textbox.collapsed = false;
+        textbox.select();
+        textbox.focus();
+    },
+
+    finishEditingGroupLabel: function(aGroup) {
+        if (!this.isGroup(aGroup)) {
+            return;
+        }
+        var label = document.getAnonymousElementByAttribute(
+            aGroup, "class", this.kLabel);
+        var textbox = document.getAnonymousElementByAttribute(
+            aGroup, "class", this.kLabelTextbox);
+        var labelText = textbox.value.trim();
+        if (!labelText) {
+            return;
+        }
+        label.removeChild(label.firstChild);
+        label.appendChild(document.createTextNode(labelText));
+        label.collapsed = false;
+        textbox.collapsed = true;
     },
 
     getChildren: function(aGroup) {
@@ -217,6 +261,12 @@ var VerticalTabsGroups = {
         case 'SSTabRestoring':
             this.onTabRestoring(aEvent);
             return;
+        case 'dblclick':
+            this.onDblClick(aEvent);
+            return;
+        case 'keypress':
+            this.onKeyPress(aEvent);
+            return;
         }
     },
 
@@ -230,6 +280,20 @@ var VerticalTabsGroups = {
 
     onTabRestoring: function(aEvent) {
         this.restoreTab(aEvent.originalTarget);
+    },
+
+    onDblClick: function(aEvent) {
+        var group = aEvent.target.parentNode;
+        this.editGroupLabel(group);
+    },
+
+    onKeyPress: function(aEvent) {
+        if (aEvent.keyCode == aEvent.DOM_VK_ENTER ||
+            aEvent.keyCode == aEvent.DOM_VK_RETURN ||
+            aEvent.keyCode == aEvent.DOM_VK_ESCAPE) {
+            let group = aEvent.target.parentNode;
+            this.finishEditingGroupLabel(group);
+        }
     }
 
 };
