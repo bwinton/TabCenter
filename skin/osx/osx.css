@@ -61,7 +61,7 @@
 }
 
 .tab-close-button image {
-    list-style-image: url("closetab.png");
+    list-style-image: url("chrome://verticaltabs/skin/osx/closetab.png");
     opacity: 0.27;  /* turn black into #b9b9b9 */
 }
 .tab-close-button:active image {
@@ -69,7 +69,7 @@
 }
 .tabbrowser-tab[selected="true"] .tab-close-button image,
 .tabbrowser-tab[multiselect="true"] .tab-close-button image {
-    list-style-image: url("closetab-white.png");
+    list-style-image: url("chrome://verticaltabs/skin/osx/closetab-white.png");
     opacity: 1;
 }
 
@@ -101,7 +101,7 @@
 
 /* Drop indicator for drag'n'drop of tabs */
 .tab-drop-indicator {
-    list-style-image: url("dropmarker.png");
+    list-style-image: url("chrome://verticaltabs/skin/osx/dropmarker.png");
     margin-top: -12px !important; /* height of the above image */
 }
 
@@ -174,7 +174,7 @@
 }
 
 .verticaltabs-twisty {
-	list-style-image: url("chrome://verticaltabs/skin/twisty.png");
+	list-style-image: url("chrome://verticaltabs/skin/osx/twisty.png");
 	opacity: 0.38;
 }
 .tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-twisty {
