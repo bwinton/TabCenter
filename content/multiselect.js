@@ -1,4 +1,4 @@
-var VerticalTabsMultiSelect = {
+var VTMultiSelect = {
     /*
      * Support for "selecting" multiple tabs
      */

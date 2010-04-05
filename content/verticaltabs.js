@@ -1,8 +1,9 @@
 var VerticalTabs = {
-
-    prefs: Components.classes["@mozilla.org/preferences-service;1"]
-           .getService(Components.interfaces.nsIPrefBranch)
-           .QueryInterface(Components.interfaces.nsIPrefBranch2),
+    /*
+     * Vertical Tabs
+     *
+     * Main entry point of this add-on.
+     */
 
     init: function() {
         window.removeEventListener("DOMContentLoaded", this, false);
@@ -23,16 +24,16 @@ var VerticalTabs = {
         tabs.orient = "vertical";
         tabs.mTabstrip.orient = "vertical";
         tabs.tabbox.orient = "horizontal"; // probably not necessary
-        tabs.setAttribute("width", this.prefs.getIntPref('extensions.verticaltabs.width'));
+        tabs.setAttribute("width", Services.prefs.getIntPref('extensions.verticaltabs.width'));
 
         // Hook up event handler for splitter so that the width of the
         // tab bar is persisted.
         var splitter = document.getElementById("verticaltabs-splitter");
         splitter.addEventListener('mouseup', this, false);
 
-        VerticalTabsTabbrowserTabs.init();
-        VerticalTabsMultiSelect.init();
-        VerticalTabsGroups.init();
+        VTTabbrowserTabs.init();
+        VTMultiSelect.init();
+        VTGroups.init();
 
         // Fix up each individual tab for vertical layout, including
         // ones that are opened later on.
@@ -54,11 +55,10 @@ var VerticalTabs = {
 
 	onTabbarResized: function() {
         var tabs = document.getElementById("tabbrowser-tabs");
-        setTimeout(
-            function(self) {
-                self.prefs.setIntPref('extensions.verticaltabs.width',
+        setTimeout(function() {
+            Services.prefs.setIntPref('extensions.verticaltabs.width',
                                       tabs.boxObject.width);
-            }, 10, this);
+        }, 10);
 	},
 
     /*** Event handlers ***/
@@ -88,5 +88,61 @@ var VerticalTabs = {
     }
 
 };
-
 window.addEventListener("DOMContentLoaded", VerticalTabs, false);
+
+
+var VTTabDataStore = {
+     /*
+      * Persistently store tab attributes
+      *
+      * Heavily inspired by Tree Style Tab's TreeStyleTabUtils
+      */
+
+    getTabValue: function(aTab, aKey) {
+        var value = null;
+        try {
+            value = this.sessionStore.getTabValue(aTab, aKey);
+        } catch(ex) {
+            // Ignore
+        }
+        return value;
+    },
+ 
+    setTabValue: function(aTab, aKey, aValue) {
+        if (!aValue) {
+            this.deleteTabValue(aTab, aKey);
+        }
+
+        aTab.setAttribute(aKey, aValue);
+        try {
+            this.checkCachedSessionDataExpiration(aTab);
+            this.sessionStore.setTabValue(aTab, aKey, aValue);
+        } catch(ex) {
+            // Ignore
+        }
+    },
+ 
+    deleteTabValue: function(aTab, aKey) {
+        aTab.removeAttribute(aKey);
+        try {
+            this.checkCachedSessionDataExpiration(aTab);
+            this.sessionStore.setTabValue(aTab, aKey, '');
+            this.sessionStore.deleteTabValue(aTab, aKey);
+        }
+        catch(ex) {
+            // Ignore
+        }
+    },
+
+    // workaround for http://piro.sakura.ne.jp/latest/blosxom/mozilla/extension/treestyletab/2009-09-29_debug.htm
+    checkCachedSessionDataExpiration: function(aTab) {
+        var data = aTab.linkedBrowser.__SS_data;
+        if (data &&
+            data._tabStillLoading &&
+            aTab.getAttribute('busy') != 'true')
+            data._tabStillLoading = false;
+    }
+};
+XPCOMUtils.defineLazyServiceGetter(VTTabDataStore, "sessionStore",
+                                   "@mozilla.org/browser/sessionstore;1",
+                                   "nsISessionStore");

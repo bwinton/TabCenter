@@ -51,7 +51,7 @@
         this.mTextbox.addEventListener('keypress', this, false);
 
         // Synchronize with SessionStore
-        let label = this.getAttribute(VerticalTabsGroups.kLabel);
+        let label = this.getAttribute(VTGroups.kLabel);
         if (label) {
             this.groupLabel = label;
         }
@@ -66,7 +66,7 @@
           this.mTextbox.value = val;
 
           // Synchronize with SessionStore
-          VerticalTabsGroups.setTabValue(this, VerticalTabsGroups.kLabel, val);
+          VTTabDataStore.setTabValue(this, VTGroups.kLabel, val);
         ]]></setter>
       </property>
 
