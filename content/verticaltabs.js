@@ -1,9 +1,9 @@
+/*
+ * Vertical Tabs
+ *
+ * Main entry point of this add-on.
+ */
 var VerticalTabs = {
-    /*
-     * Vertical Tabs
-     *
-     * Main entry point of this add-on.
-     */
 
     init: function() {
         window.removeEventListener("DOMContentLoaded", this, false);
@@ -91,12 +91,12 @@ var VerticalTabs = {
 window.addEventListener("DOMContentLoaded", VerticalTabs, false);
 
 
+/*
+ * Persistently store tab attributes in the session store service.
+ *
+ * Heavily inspired by Tree Style Tab's TreeStyleTabUtils.
+ */
 var VTTabDataStore = {
-     /*
-      * Persistently store tab attributes
-      *
-      * Heavily inspired by Tree Style Tab's TreeStyleTabUtils
-      */
 
     getTabValue: function(aTab, aKey) {
         var value = null;
@@ -128,8 +128,7 @@ var VTTabDataStore = {
             this.checkCachedSessionDataExpiration(aTab);
             this.sessionStore.setTabValue(aTab, aKey, '');
             this.sessionStore.deleteTabValue(aTab, aKey);
-        }
-        catch(ex) {
+        } catch(ex) {
             // Ignore
         }
     },

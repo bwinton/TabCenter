@@ -1,8 +1,10 @@
+/*
+ * Patches for the tabbrowser-tabs object.
+ * 
+ * These are necessary where the original implementation assumes a
+ * horizontal layout.
+ */
 var VTTabbrowserTabs = {
-    /*
-     * Patches for the tabbrowser-tabs object.  Necessary where the
-     * original implementation assumes a horizontal layout.
-     */
 
     init: function() {
         var tabs = document.getElementById("tabbrowser-tabs");

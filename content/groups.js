@@ -1,7 +1,14 @@
+/*
+ * Functionality for grouping tabs.
+ * 
+ * Groups are implemented as a special kind of tab (see binding in
+ * group.xml) that isn't selectable.  There are a few advantages and
+ * disadvantages to this:
+ *   - Groups can be regular children of tabbrowser.tabContainer.
+ *   - The nsISessionStore service takes care of restoring groups.
+ *   - We have to make sure that groups don't behave like tabs at all.
+ */
 var VTGroups = {
-    /*
-     * Functionality for grouping tabs
-     */
 
     kId: 'verticaltabs-id',
     kGroup: 'verticaltabs-group',
@@ -9,6 +16,12 @@ var VTGroups = {
     kChildren: 'verticaltabs-children',
     kLabel: 'verticaltabs-grouplabel',
 
+    /*
+     * Hashmap (id -> tab) for easy access to tabs via id (assigned by us).
+     * 
+     * Necessary until https://bugzilla.mozilla.org/show_bug.cgi?id=529477
+     * is implemented.
+     */
     tabsById: {},
 
     init: function() {
@@ -54,8 +67,8 @@ var VTGroups = {
     },
 
     restoreTab: function(aTab) {
-        // Restore tab attributes from session data
-        // kId is already restored in initTab()
+        // Restore tab attributes from session data (this isn't done
+        // automatically).  kId is already restored in initTab()
         for each (let attr in [this.kGroup,
                                this.kInGroup,
                                this.kChildren,
@@ -71,6 +84,8 @@ var VTGroups = {
         return 'tab-<' + Date.now() + '-'
                + parseInt(Math.random() * 65000) + '>';
     },
+
+    /*** Public API ***/
 
     addGroup: function(aLabel) {        
         var tabs = document.getElementById("tabbrowser-tabs");

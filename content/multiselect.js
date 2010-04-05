@@ -1,7 +1,15 @@
+/*
+ * Support for "selecting" multiple tabs.
+ * 
+ * The idea is to this work for tabs exactly like it does for a
+ * regular list or tree widget: hold Ctrl/Cmd or Shift and click.
+ * To make it work in the UI, tabs with multiselect="true" need to be
+ * styled like selected tabs.
+ * 
+ * Use getMultiSelect() to obtain a list of selected tabs.  This
+ * should be the only public API you'll ever need.
+ */
 var VTMultiSelect = {
-    /*
-     * Support for "selecting" multiple tabs
-     */
 
     init: function() {
         var tabs = document.getElementById("tabbrowser-tabs");
@@ -70,6 +78,9 @@ var VTMultiSelect = {
         }
     },
 
+    /*
+     * Return a list of selected tabs.
+     */
     getMultiSelection: function() {
         var tabs = document.getElementById("tabbrowser-tabs");
         var results = [];
