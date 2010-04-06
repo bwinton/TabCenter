@@ -168,13 +168,13 @@
 }
 
 .verticaltabs-twisty {
-	list-style-image: url("chrome://verticaltabs/skin/osx/twisty.png");
-	opacity: 0.38;
+    list-style-image: url("chrome://verticaltabs/skin/osx/twisty.png");
+    opacity: 0.38;
 }
 .tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-twisty {
-	-moz-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
 }
 
 .verticaltabs-twisty:active {
-	opacity: 1.0;
+    opacity: 1.0;
 }
