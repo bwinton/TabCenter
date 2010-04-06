@@ -123,6 +123,8 @@
 }
 
 .verticaltabs-twisty {
+    margin-left: 4px !important;
+    margin-right: 2px !important;
 	list-style-image: url("chrome://verticaltabs/skin/win7/twisty.png");
 }
 
