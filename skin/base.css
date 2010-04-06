@@ -1,6 +1,6 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
-/* Style the scrollbox for vertical arrangements */
+/* Style the scrollbox for vertical arrangements. */
 .tabbrowser-arrowscrollbox > scrollbox {
     overflow-x: hidden !important;
     overflow-y: auto !important;
@@ -19,7 +19,7 @@
     max-height: 16px;
 }
 
-/* Hide the original tab toolbar buttons */
+/* Hide the original tab toolbar buttons. */
 .tabs-newtab-button,
 .tabs-alltabs-button {
     visibility: collapse;
