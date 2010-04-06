@@ -15,6 +15,7 @@ Goals:
 
 * Native look and feel
 
-* No eval() hacks
+* Readable and maintainable code, taking latest Mozilla practices into
+  account.  No eval() hacks.
 
 License: Mozilla Public License Version 1.1
