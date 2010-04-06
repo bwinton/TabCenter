@@ -1,12 +1,18 @@
 /*
  * Functionality for grouping tabs.
- * 
+ *
  * Groups are implemented as a special kind of tab (see binding in
  * group.xml) that isn't selectable.  There are a few advantages and
  * disadvantages to this:
- *   - Groups can be regular children of tabbrowser.tabContainer.
- *   - The nsISessionStore service takes care of restoring groups.
- *   - We have to make sure that groups don't behave like tabs at all.
+ *
+ *   - Groups can be regular children of tabbrowser.tabContainer
+ *     (cf. https://bugzilla.mozilla.org/show_bug.cgi?id=475142).
+ *
+ *   - The nsISessionStore service takes care of restoring groups and
+ *     their properties.
+ *
+ *   - But we have to make sure that groups don't behave like tabs at
+ *     all.
  */
 var VTGroups = {
 

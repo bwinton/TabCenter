@@ -21,6 +21,8 @@ var VTMultiSelect = {
 
     toggleMultiSelect: function(aTab) {
         if (aTab.selected) {
+            // Toggling a selected tab means we have to find another
+            // tab within the multiselection that we can select instead.
             let tab = this.findClosestMultiSelectedTab(aTab);
             let tabs = document.getElementById("tabbrowser-tabs");
             if (tab) {
