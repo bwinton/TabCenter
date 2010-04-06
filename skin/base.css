@@ -24,3 +24,9 @@
 .tabs-alltabs-button {
     visibility: collapse;
 }
+
+/* Ensure the twisty image doesn't stretch. */
+.verticaltabs-twisty-container {
+	-moz-box-pack: start;
+	-moz-box-align: center;
+}

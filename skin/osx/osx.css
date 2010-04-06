@@ -168,11 +168,6 @@
     text-shadow: 0 1px #ffffff !important;
 }
 
-.verticaltabs-twisty-container {
-	-moz-box-pack: start;
-	-moz-box-align: center;
-}
-
 .verticaltabs-twisty {
 	list-style-image: url("chrome://verticaltabs/skin/osx/twisty.png");
 	opacity: 0.38;

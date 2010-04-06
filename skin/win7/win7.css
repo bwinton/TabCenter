@@ -122,3 +122,8 @@
 
 .tabbrowser-tab[verticaltabs-group] .tab-text {
 }
+
+.verticaltabs-twisty {
+	list-style-image: url("chrome://verticaltabs/skin/win7/twisty.png");
+}
+
