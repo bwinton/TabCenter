@@ -115,6 +115,10 @@
 .tabbrowser-tab[verticaltabs-group] {
     -moz-box-pack: start !important;
 }
+.tabbrowser-tab[verticaltabs-group]:hover {
+    background: transparent !important;
+    border: 1px solid transparent !important;
+}
 
 .tabbrowser-tab[verticaltabs-group] .tab-text {
 }
