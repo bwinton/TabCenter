@@ -113,7 +113,6 @@
 }
 
 .tabbrowser-tab[verticaltabs-group] {
-    -moz-box-pack: start !important;
 }
 .tabbrowser-tab[verticaltabs-group]:hover {
     background: transparent !important;
