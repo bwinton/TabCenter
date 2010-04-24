@@ -126,7 +126,8 @@ var VTMultiSelect = {
     },
 
     onMouseDown: function(aEvent) {
-        if (aEvent.target.localName != "tab") {
+        var tab = aEvent.target;
+        if (tab.localName != "tab") {
             return;
         }
         if (aEvent.button != 0) {
@@ -137,18 +138,38 @@ var VTMultiSelect = {
         // Cmd+click which is represented by metaKey.  Ctrl+click won't be
         // possible on the Mac because that would be a right click (button 2)
         if (aEvent.ctrlKey || aEvent.metaKey) {
-            this.toggleMultiSelect(aEvent.target);
+            this.toggleMultiSelect(tab);
             aEvent.stopPropagation();
-        } else if (aEvent.shiftKey) {
-            let tabs = document.getElementById("tabbrowser-tabs");
-            this.multiSpanSelect(tabs.tabbrowser.selectedTab, aEvent.target);
-            aEvent.stopPropagation();
-        } else if (aEvent.target.selected) {
-            // Clicking on the already selected tab won't fire a
-            // TabSelect event, but we still want to deselect any
-            // other tabs.
-            this.clearMultiSelect();
+            return;
         }
+        if (aEvent.shiftKey) {
+            let tabs = document.getElementById("tabbrowser-tabs");
+            this.multiSpanSelect(tabs.tabbrowser.selectedTab, tab);
+            aEvent.stopPropagation();
+            return;
+        }
+
+        if (!tab.selected) {
+            return;
+        }
+        if (!tab.mOverCloseButton) {
+            // Clicking on the already selected tab won't fire a TabSelect
+            // event, but we still want to deselect any other tabs.
+            this.clearMultiSelect();
+            return;
+        }
+
+        // Ok, so we're closing the selected tab.  That means we have
+        // to find another tab within the multiselection that we can
+        // select instead.
+        let newtab = this.findClosestMultiSelectedTab(tab);
+        if (!newtab) {
+            return;
+        }
+        // Prevent the tab switch from clearing the multiselection.
+        newtab.setAttribute("multiselect-noclear", "true");
+        let tabs = document.getElementById("tabbrowser-tabs");
+        tabs.tabbrowser.selectedTab = newtab;
     },
 
     onTabSelect: function(aEvent) {
