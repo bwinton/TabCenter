@@ -152,9 +152,10 @@ var VTMultiSelect = {
     },
 
     onTabSelect: function(aEvent) {
-        if (aEvent.target.getAttribute("multiselect-noclear") == "true") {
-            aEvent.target.removeAttribute("multiselect");
-            aEvent.target.removeAttribute("multiselect-noclear");
+        var tab = aEvent.target;
+        if (tab.getAttribute("multiselect-noclear") == "true") {
+            tab.removeAttribute("multiselect");
+            tab.removeAttribute("multiselect-noclear");
             return;
         }
         this.clearMultiSelect();
