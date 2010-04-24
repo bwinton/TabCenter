@@ -24,7 +24,7 @@
     <menupopup id="tabContextMenu">
       <!-- TODO l10n -->
       <menuitem id="context_verticalTabsCloseMultiple"
-                label="Close Tabs"
+                label="Close Selected Tabs"
                 tbattr="tabbrowser-multiple"
                 oncommand="VTMultiSelect.closeMultiSelection();"/>
       <menuseparator/>
