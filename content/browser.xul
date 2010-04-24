@@ -23,11 +23,15 @@
   <popupset id="mainPopupSet">
     <menupopup id="tabContextMenu">
       <!-- TODO l10n -->
+      <menuitem id="context_verticalTabsCloseMultiple"
+                label="Close Tabs"
+                tbattr="tabbrowser-multiple"
+                oncommand="VTMultiSelect.closeMultiSelection();"/>
+      <menuseparator/>
       <menuitem id="context_verticalTabsGroup"
                 label="Group"
                 tbattr="tabbrowser-multiple"
                 oncommand="VTGroups.createGroupFromMultiSelect();" />
-
     </menupopup>
   </popupset>
 

@@ -41,6 +41,8 @@ var VerticalTabs = {
         for (let i=0; i < tabs.childNodes.length; i++) {
             this.initTab(tabs.childNodes[i]);
         }
+
+        tabs.contextMenu.addEventListener('popupshowing', this, false);
     },
 
     initTab: function(aTab) {
@@ -74,6 +76,9 @@ var VerticalTabs = {
         case 'mouseup':
             this.onMouseUp(aEvent);
             return;
+        case 'popupshowing':
+            this.onPopupShowing(aEvent);
+            return;
         }
     },
 
@@ -84,6 +89,16 @@ var VerticalTabs = {
     onMouseUp: function(aEvent) {
         if (aEvent.target.getAttribute("id") == "verticaltabs-splitter") {
             this.onTabbarResized();
+        }
+    },
+
+    onPopupShowing: function(aEvent) {
+        var closeTabs = document.getElementById('context_verticalTabsCloseMultiple');
+        var tabs = VTMultiSelect.getMultiSelection();
+        if (tabs.length > 1) {
+            closeTabs.disabled = false;
+        } else {
+            closeTabs.disabled = true;
         }
     }
 
