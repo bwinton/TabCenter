@@ -41,6 +41,9 @@ var VerticalTabs = {
         for (let i=0; i < tabs.childNodes.length; i++) {
             this.initTab(tabs.childNodes[i]);
         }
+
+        // Hook up event handler for closing multiple tabs
+        tabs.addEventListener('TabClose', this, false);
     },
 
     initTab: function(aTab) {
@@ -71,6 +74,9 @@ var VerticalTabs = {
         case 'TabOpen':
             this.onTabOpen(aEvent);
             return;
+        case 'TabClose':
+            this.onTabClose(aEvent);
+            return;
         case 'mouseup':
             this.onMouseUp(aEvent);
             return;
@@ -78,7 +84,32 @@ var VerticalTabs = {
     },
 
     onTabOpen: function(aEvent) {
-        this.initTab(aEvent.originalTarget);
+        this.initTab(aEvent.target);
+    },
+
+    onTabClose: function(aEvent) {
+        if (aEvent.target.getAttribute("multiselect-closing") == "true") {
+            return;
+        }
+        if (!aEvent.target.selected) {
+            return;
+        }
+
+        // If multiple tabs are selected (by means of the
+        // VTMultiSelect feature), close them as well.
+        var tabs = document.getElementById("tabbrowser-tabs");
+        var toclose = VTMultiSelect.getMultiSelection();
+        VTMultiSelect.clearMultiSelect();
+
+        var tab;
+        for (var i=0; i < toclose.length; i++) {
+            tab = toclose[i];
+            if (tab.selected) {
+                continue;
+            }
+            tab.setAttribute("multiselect-closing", "true");
+            tabs.tabbrowser.removeTab(tab);
+        }
     },
 
     onMouseUp: function(aEvent) {
