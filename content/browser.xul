@@ -14,6 +14,12 @@
                   src="chrome://verticaltabs/locale/overlay.properties"/>
   </stringbundleset>
 
+  <!-- Rewrite the "Close Tab" command so that it works for multiselections -->
+  <commandset id="mainCommandSet">
+    <command id="cmd_close"
+             oncommand="VTMultiSelect.closeMultiSelection()"/>
+  </commandset>
+
   <hbox id="browser">
     <vbox id="verticaltabs-box" insertbefore="appcontent">
       <!-- tabs inserted here -->

@@ -97,6 +97,21 @@ var VTMultiSelect = {
         return results;
     },
 
+    /*
+     * Close all tabs in the multiselection.
+     */
+    closeMultiSelection: function() {
+        var tabs = document.getElementById("tabbrowser-tabs");
+        var toclose = this.getMultiSelection();
+        this.clearMultiSelect();
+
+        var tab;
+        for (var i=0; i < toclose.length; i++) {
+            tab = toclose[i];
+            tabs.tabbrowser.removeTab(tab);
+        }
+    },
+
     /*** Event handlers ***/
 
     handleEvent: function(aEvent) {
