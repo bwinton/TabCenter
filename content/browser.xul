@@ -20,6 +20,17 @@
              oncommand="VTMultiSelect.closeMultiSelection();"/>
   </commandset>
 
+  <popupset id="mainPopupSet">
+    <menupopup id="tabContextMenu">
+      <!-- TODO l10n -->
+      <menuitem id="context_verticalTabsGroup"
+                label="Group"
+                tbattr="tabbrowser-multiple"
+                oncommand="VTGroups.createGroupFromMultiSelect();" />
+
+    </menupopup>
+  </popupset>
+
   <hbox id="browser">
     <vbox id="verticaltabs-box" insertbefore="appcontent">
       <!-- tabs inserted here -->

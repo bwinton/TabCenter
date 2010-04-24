@@ -38,13 +38,6 @@ var VTGroups = {
         for (let i=0; i < tabs.childNodes.length; i++) {
             this.initTab(tabs.childNodes[i]);
         }
-
-        var menuitemGroup = document.createElement('menuitem');
-        menuitemGroup.setAttribute('id', 'context_verticalTabsGroup');
-        menuitemGroup.setAttribute('label', 'Group'); //XXX TODO l10n
-        menuitemGroup.setAttribute('tbattr', 'tabbrowser-multiple');
-        menuitemGroup.setAttribute('oncommand', 'VTGroups.createGroupFromMultiSelect()');
-        tabs.contextMenu.appendChild(menuitemGroup);
     },
 
     initTab: function(aTab) {
