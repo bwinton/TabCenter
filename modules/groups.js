@@ -33,6 +33,7 @@ function VTGroups(tabs) {
     for (let i=0; i < tabs.childNodes.length; i++) {
         this.initTab(tabs.childNodes[i]);
     }
+    tabs.addEventListener('click', this, true);
 }
 VTGroups.prototype = {
 
@@ -41,6 +42,7 @@ VTGroups.prototype = {
     kInGroup: 'verticaltabs-ingroup',
     kChildren: 'verticaltabs-children',
     kLabel: 'verticaltabs-grouplabel',
+    kCollapsed: 'verticaltabs-collapsed',
 
     initTab: function(aTab) {
         if (aTab.hasAttribute(this.kId)) {
@@ -67,7 +69,8 @@ VTGroups.prototype = {
         for each (let attr in [this.kGroup,
                                this.kInGroup,
                                this.kChildren,
-                               this.kLabel]) {
+                               this.kLabel,
+                               this.kCollapsed]) {
             let value = VTTabDataStore.getTabValue(aTab, attr);
             if (value) {
                 aTab.setAttribute(attr, value);
@@ -152,6 +155,18 @@ VTGroups.prototype = {
         return (VTTabDataStore.getTabValue(aTab, this.kGroup) == "true");
     },
 
+    collapseExpand: function(aGroup) {
+        if (!this.isGroup(aGroup)) {
+            return;
+        }
+        let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed) == "true");
+        let children = this.getChildren(aGroup);
+        for each (let tab in children) {
+            tab.collapsed = !collapsed;
+        }
+        VTTabDataStore.setTabValue(aGroup, this.kCollapsed, !collapsed);
+    },
+
 
     /*** Event handlers ***/
 
@@ -166,7 +181,21 @@ VTGroups.prototype = {
         case 'SSTabRestoring':
             this.restoreTab(aEvent.originalTarget);
             return;
+        case "click":
+            this.onClick(aEvent);
+            return;
         }
+    },
+
+    onClick: function(aEvent) {
+        var tab = aEvent.target;
+        if (tab.localName != "tab") {
+            return;
+        }
+        if (aEvent.originalTarget !== tab.mTwisty) {
+            return;
+        }
+        this.collapseExpand(tab);
     }
 
 };
