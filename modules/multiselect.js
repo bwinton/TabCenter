@@ -14,6 +14,8 @@ var EXPORTED_SYMBOLS = ["VTMultiSelect"];
 
 function VTMultiSelect (tabs) {
     this.tabs = tabs;
+    tabs.VTMultiSelect = this;
+
     tabs.addEventListener('mousedown', this, true);
     tabs.addEventListener('TabSelect', this, false);
 }

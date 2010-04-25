@@ -20,6 +20,8 @@ Components.utils.import("resource://verticaltabs/tabdatastore.js");
 
 function VTGroups(tabs) {
     this.tabs = tabs;
+    tabs.VTGroups = this;
+
      // Hashmap (id -> tab) for easy access to tabs via id (assigned by us).
      // Necessary until https://bugzilla.mozilla.org/show_bug.cgi?id=529477
      // is implemented.
@@ -137,7 +139,7 @@ VTGroups.prototype = {
 
     createGroupFromMultiSelect: function() {
         var group = this.addGroup();
-        var children = VerticalTabs.multiSelect.getMultiSelection();
+        var children = this.tabs.VTMultiSelect.getMultiSelection();
         for each (let tab in children) {
             this.addChild(group, tab);
             this.tabs.tabbrowser.moveTabTo(tab, group._tPos+1);  //XXX

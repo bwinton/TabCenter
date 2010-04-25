@@ -5,7 +5,6 @@
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
          id="verticaltabs-overlay">
   <script src="verticaltabs.js" type="application/javascript" />
-  <script src="tabbrowser.js" type="application/javascript" />
 
   <stringbundleset id="stringbundleset">
     <stringbundle id="verticaltabs-strings"
@@ -15,7 +14,7 @@
   <!-- Rewrite the "Close Tab" command so that it works for multiselections -->
   <commandset id="mainCommandSet">
     <command id="cmd_close"
-             oncommand="VerticalTabs.multiSelect.closeMultiSelection();"/>
+             oncommand="gBrowser.tabContainer.VTMultiSelect.closeMultiSelection();"/>
   </commandset>
 
   <popupset id="mainPopupSet">
@@ -24,12 +23,12 @@
       <menuitem id="context_verticalTabsCloseMultiple"
                 label="Close Selected Tabs"
                 tbattr="tabbrowser-multiple"
-                oncommand="VerticalTabs.multiSelect.closeMultiSelection();"/>
+                oncommand="gBrowser.tabContainer.VTMultiSelect.closeMultiSelection();"/>
       <menuseparator/>
       <menuitem id="context_verticalTabsGroup"
                 label="Group"
                 tbattr="tabbrowser-multiple"
-                oncommand="VerticalTabs.groups.createGroupFromMultiSelect();" />
+                oncommand="gBrowser.tabContainer.VTGroups.createGroupFromMultiSelect();" />
     </menupopup>
   </popupset>
 
