@@ -14,31 +14,27 @@
  *   - But we have to make sure that groups don't behave like tabs at
  *     all.
  */
-var VTGroups = {
+function VTGroups(tabs) {
+    this.tabs = tabs;
+     // Hashmap (id -> tab) for easy access to tabs via id (assigned by us).
+     // Necessary until https://bugzilla.mozilla.org/show_bug.cgi?id=529477
+     // is implemented.
+    this.tabsById = {};
+
+    tabs.addEventListener('TabOpen', this, true);
+    tabs.addEventListener('TabClose', this, true);
+    tabs.addEventListener('SSTabRestoring', this, true);
+    for (let i=0; i < tabs.childNodes.length; i++) {
+        this.initTab(tabs.childNodes[i]);
+    }
+}
+VTGroups.prototype = {
 
     kId: 'verticaltabs-id',
     kGroup: 'verticaltabs-group',
     kInGroup: 'verticaltabs-ingroup',
     kChildren: 'verticaltabs-children',
     kLabel: 'verticaltabs-grouplabel',
-
-    /*
-     * Hashmap (id -> tab) for easy access to tabs via id (assigned by us).
-     * 
-     * Necessary until https://bugzilla.mozilla.org/show_bug.cgi?id=529477
-     * is implemented.
-     */
-    tabsById: {},
-
-    init: function() {
-        var tabs = document.getElementById("tabbrowser-tabs");
-        tabs.addEventListener('TabOpen', this, true);
-        tabs.addEventListener('TabClose', this, true);
-        tabs.addEventListener('SSTabRestoring', this, true);
-        for (let i=0; i < tabs.childNodes.length; i++) {
-            this.initTab(tabs.childNodes[i]);
-        }
-    },
 
     initTab: function(aTab) {
         if (!aTab.hasAttribute(this.kId)) {
@@ -87,8 +83,7 @@ var VTGroups = {
     /*** Public API ***/
 
     addGroup: function(aLabel) {        
-        var tabs = document.getElementById("tabbrowser-tabs");
-        var group = tabs.tabbrowser.addTab();
+        var group = this.tabs.tabbrowser.addTab();
         VTTabDataStore.setTabValue(group, this.kGroup, 'true');
         VTTabDataStore.setTabValue(group, this.kChildren, '');
 
@@ -136,12 +131,11 @@ var VTGroups = {
     },
 
     createGroupFromMultiSelect: function() {
-        var tabs = document.getElementById("tabbrowser-tabs");
         var group = this.addGroup();
-        var children = VTMultiSelect.getMultiSelection();
+        var children = VerticalTabs.multiSelect.getMultiSelection();
         for each (let tab in children) {
             this.addChild(group, tab);
-            tabs.tabbrowser.moveTabTo(tab, group._tPos+1);  //XXX
+            this.tabs.tabbrowser.moveTabTo(tab, group._tPos+1);  //XXX
         }
     },
 

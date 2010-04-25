@@ -31,7 +31,7 @@
       <menuitem id="context_verticalTabsGroup"
                 label="Group"
                 tbattr="tabbrowser-multiple"
-                oncommand="VTGroups.createGroupFromMultiSelect();" />
+                oncommand="VerticalTabs.groups.createGroupFromMultiSelect();" />
     </menupopup>
   </popupset>
 

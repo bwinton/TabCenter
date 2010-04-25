@@ -33,7 +33,7 @@ var VerticalTabs = {
 
         VTTabbrowserTabs.init();
         this.multiSelect = new VTMultiSelect(tabs);
-        VTGroups.init();
+        this.groups = new VTGroups(tabs);
 
         // Fix up each individual tab for vertical layout, including
         // ones that are opened later on.
