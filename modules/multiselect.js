@@ -9,6 +9,9 @@
  * Use getMultiSelect() to obtain a list of selected tabs.  For most
  * cases this will be the only API you ever need.
  */
+
+var EXPORTED_SYMBOLS = ["VTMultiSelect"];
+
 function VTMultiSelect (tabs) {
     this.tabs = tabs;
     tabs.addEventListener('mousedown', this, true);

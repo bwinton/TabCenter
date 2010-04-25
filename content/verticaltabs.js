@@ -1,4 +1,6 @@
 Components.utils.import("resource://verticaltabs/tabdatastore.js");
+Components.utils.import("resource://verticaltabs/multiselect.js");
+Components.utils.import("resource://verticaltabs/groups.js");
 
 /*
  * Vertical Tabs

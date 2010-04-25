@@ -6,8 +6,6 @@
          id="verticaltabs-overlay">
   <script src="verticaltabs.js" type="application/javascript" />
   <script src="tabbrowser.js" type="application/javascript" />
-  <script src="multiselect.js" type="application/javascript" />
-  <script src="groups.js" type="application/javascript" />
 
   <stringbundleset id="stringbundleset">
     <stringbundle id="verticaltabs-strings"

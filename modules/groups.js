@@ -14,6 +14,9 @@
  *   - But we have to make sure that groups don't behave like tabs at
  *     all.
  */
+
+var EXPORTED_SYMBOLS = ["VTGroups"];
+
 function VTGroups(tabs) {
     this.tabs = tabs;
      // Hashmap (id -> tab) for easy access to tabs via id (assigned by us).
