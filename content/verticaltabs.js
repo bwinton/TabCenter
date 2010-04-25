@@ -32,7 +32,7 @@ var VerticalTabs = {
         splitter.addEventListener('mouseup', this, false);
 
         VTTabbrowserTabs.init();
-        VTMultiSelect.init();
+        this.multiSelect = new VTMultiSelect(tabs);
         VTGroups.init();
 
         // Fix up each individual tab for vertical layout, including
@@ -94,7 +94,7 @@ var VerticalTabs = {
 
     onPopupShowing: function(aEvent) {
         var closeTabs = document.getElementById('context_verticalTabsCloseMultiple');
-        var tabs = VTMultiSelect.getMultiSelection();
+        var tabs = this.multiSelect.getMultiSelection();
         if (tabs.length > 1) {
             closeTabs.disabled = false;
         } else {

@@ -9,13 +9,12 @@
  * Use getMultiSelect() to obtain a list of selected tabs.  For most
  * cases this will be the only API you ever need.
  */
-var VTMultiSelect = {
-
-    init: function() {
-        var tabs = document.getElementById("tabbrowser-tabs");
-        tabs.addEventListener('mousedown', this, true);
-        tabs.addEventListener('TabSelect', this, false);
-    },
+function VTMultiSelect (tabs) {
+    this.tabs = tabs;
+    tabs.addEventListener('mousedown', this, true);
+    tabs.addEventListener('TabSelect', this, false);
+}
+VTMultiSelect.prototype = {
 
     /*** Public API ***/
 
@@ -24,11 +23,10 @@ var VTMultiSelect = {
             // Toggling a selected tab means we have to find another
             // tab within the multiselection that we can select instead.
             let tab = this.findClosestMultiSelectedTab(aTab);
-            let tabs = document.getElementById("tabbrowser-tabs");
             if (tab) {
                 // Prevent the tab switch from clearing the multiselection.
                 tab.setAttribute("multiselect-noclear", "true");
-                tabs.tabbrowser.selectedTab = tab;
+                this.tabs.tabbrowser.selectedTab = tab;
             }
             return;
         }
@@ -40,19 +38,18 @@ var VTMultiSelect = {
     },
 
     findClosestMultiSelectedTab: function(aTab) {
-        var tabs = document.getElementById("tabbrowser-tabs");
         var i = 1;
         var tab = null;
         while ((aTab._tPos - i >= 0) ||
-               (aTab._tPos + i < tabs.childNodes.length)) {
+               (aTab._tPos + i < this.tabs.childNodes.length)) {
             if (aTab._tPos - i >= 0) {
-                tab = tabs.childNodes[aTab._tPos - i];
+                tab = this.tabs.childNodes[aTab._tPos - i];
                 if (tab.getAttribute("multiselect") == "true") {
                     break;
                 }
             }
-            if (aTab._tPos + i < tabs.childNodes.length) {
-                tab = tabs.childNodes[aTab._tPos + i];
+            if (aTab._tPos + i < this.tabs.childNodes.length) {
+                tab = this.tabs.childNodes[aTab._tPos + i];
                 if (tab.getAttribute("multiselect") == "true") {
                     break;
                 }
@@ -64,21 +61,19 @@ var VTMultiSelect = {
 
     multiSpanSelect: function(aBeginTab, aEndTab) {
         this.clearMultiSelect();
-        var tabs = document.getElementById("tabbrowser-tabs");
         var begin = aBeginTab._tPos;
         var end = aEndTab._tPos;
         if (begin > end) {
             [end, begin] = [begin, end];
         }
         for (let i=begin; i <= end; i++) {
-            tabs.childNodes[i].setAttribute("multiselect", "true");
+            this.tabs.childNodes[i].setAttribute("multiselect", "true");
         }
     },
 
     clearMultiSelect: function() {
-        var tabs = document.getElementById("tabbrowser-tabs");
-        for (let i=0; i < tabs.childNodes.length; i++ ) {
-            tabs.childNodes[i].removeAttribute("multiselect");
+        for (let i=0; i < this.tabs.childNodes.length; i++ ) {
+            this.tabs.childNodes[i].removeAttribute("multiselect");
         }
     },
 
@@ -86,10 +81,9 @@ var VTMultiSelect = {
      * Return a list of selected tabs.
      */
     getMultiSelection: function() {
-        var tabs = document.getElementById("tabbrowser-tabs");
         var results = [];
-        for (let i=0; i < tabs.childNodes.length; i++ ) {
-            let tab = tabs.childNodes[i];
+        for (let i=0; i < this.tabs.childNodes.length; i++ ) {
+            let tab = this.tabs.childNodes[i];
             if (tab.selected || (tab.getAttribute("multiselect") == "true")) {
                 results.push(tab);
             }
@@ -101,14 +95,13 @@ var VTMultiSelect = {
      * Close all tabs in the multiselection.
      */
     closeMultiSelection: function() {
-        var tabs = document.getElementById("tabbrowser-tabs");
         var toclose = this.getMultiSelection();
         this.clearMultiSelect();
 
         var tab;
         for (var i=0; i < toclose.length; i++) {
             tab = toclose[i];
-            tabs.tabbrowser.removeTab(tab);
+            this.tabs.tabbrowser.removeTab(tab);
         }
     },
 
@@ -143,8 +136,7 @@ var VTMultiSelect = {
             return;
         }
         if (aEvent.shiftKey) {
-            let tabs = document.getElementById("tabbrowser-tabs");
-            this.multiSpanSelect(tabs.tabbrowser.selectedTab, tab);
+            this.multiSpanSelect(this.tabs.tabbrowser.selectedTab, tab);
             aEvent.stopPropagation();
             return;
         }
@@ -168,8 +160,7 @@ var VTMultiSelect = {
         }
         // Prevent the tab switch from clearing the multiselection.
         newtab.setAttribute("multiselect-noclear", "true");
-        let tabs = document.getElementById("tabbrowser-tabs");
-        tabs.tabbrowser.selectedTab = newtab;
+        this.tabs.tabbrowser.selectedTab = newtab;
     },
 
     onTabSelect: function(aEvent) {
