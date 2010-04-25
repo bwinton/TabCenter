@@ -48,7 +48,7 @@ VTGroups.prototype = {
         }
 
         let id = VTTabDataStore.getTabValue(aTab, this.kId) || this.makeNewId();
-        aTab.setAttribute(this.kId, id);
+        VTTabDataStore.setTabValue(aTab, this.kId, id);
         if (!(id in this.tabsById)) {
             this.tabsById[id] = aTab;
         }
@@ -77,7 +77,6 @@ VTGroups.prototype = {
         // Restore the original ID
         let oldId = aTab.getAttribute(this.kId);
         let newId = VTTabDataStore.getTabValue(aTab, this.kId);
-        Components.utils.reportError(oldId + ' ' + newId);
         if (oldId && newId) {
             delete this.tabsById[oldId];
             aTab.setAttribute(this.kId, newId);
