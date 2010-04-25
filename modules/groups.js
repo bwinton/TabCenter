@@ -16,6 +16,7 @@
  */
 
 var EXPORTED_SYMBOLS = ["VTGroups"];
+Components.utils.import("resource://verticaltabs/tabdatastore.js");
 
 function VTGroups(tabs) {
     this.tabs = tabs;
@@ -41,7 +42,8 @@ VTGroups.prototype = {
 
     initTab: function(aTab) {
         if (!aTab.hasAttribute(this.kId)) {
-            var id = VTTabDataStore.getTabValue(aTab, this.kId) || this.makeNewId();
+            let window = aTab.ownerDocument.defaultView;
+            let id = VTTabDataStore.getTabValue(aTab, this.kId) || this.makeNewId();
             aTab.setAttribute(this.kId, id);
             window.setTimeout(function(aSelf) {
                 if (!VTTabDataStore.getTabValue(aTab, aSelf.kId)) {
