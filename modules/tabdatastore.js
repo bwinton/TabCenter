@@ -1,11 +1,12 @@
-var EXPORTED_SYMBOLS = ['VTTabDataStore'];
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
-
 /*
  * Persistently store tab attributes in the session store service.
  *
  * Heavily inspired by Tree Style Tab's TreeStyleTabUtils.
  */
+
+var EXPORTED_SYMBOLS = ["VTTabDataStore"];
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 var VTTabDataStore = {
 
     getTabValue: function(aTab, aKey) {
