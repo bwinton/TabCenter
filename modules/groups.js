@@ -43,21 +43,14 @@ VTGroups.prototype = {
     kLabel: 'verticaltabs-grouplabel',
 
     initTab: function(aTab) {
-        if (!aTab.hasAttribute(this.kId)) {
-            let window = aTab.ownerDocument.defaultView;
-            let id = VTTabDataStore.getTabValue(aTab, this.kId) || this.makeNewId();
-            aTab.setAttribute(this.kId, id);
-            window.setTimeout(function(aSelf) {
-                if (!VTTabDataStore.getTabValue(aTab, aSelf.kId)) {
-                    VTTabDataStore.setTabValue(aTab, aSelf.kId, id);
-                    if (!(id in aSelf.tabsById)) {
-                        aSelf.tabsById[id] = aTab;
-                    }
-                }
-            }, 0, this);
-            if (!(id in this.tabsById)) {
-                this.tabsById[id] = aTab;
-            }
+        if (aTab.hasAttribute(this.kId)) {
+            return;
+        }
+
+        let id = VTTabDataStore.getTabValue(aTab, this.kId) || this.makeNewId();
+        aTab.setAttribute(this.kId, id);
+        if (!(id in this.tabsById)) {
+            this.tabsById[id] = aTab;
         }
     },
 
@@ -79,6 +72,16 @@ VTGroups.prototype = {
             if (value) {
                 aTab.setAttribute(attr, value);
             }
+        }
+
+        // Restore the original ID
+        let oldId = aTab.getAttribute(this.kId);
+        let newId = VTTabDataStore.getTabValue(aTab, this.kId);
+        Components.utils.reportError(oldId + ' ' + newId);
+        if (oldId && newId) {
+            delete this.tabsById[oldId];
+            aTab.setAttribute(this.kId, newId);
+            this.tabsById[newId] = aTab;
         }
     },
 
