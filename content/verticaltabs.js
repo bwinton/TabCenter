@@ -1,3 +1,4 @@
+Components.utils.import("resource://verticaltabs/tabbrowser.js");
 Components.utils.import("resource://verticaltabs/tabdatastore.js");
 Components.utils.import("resource://verticaltabs/multiselect.js");
 Components.utils.import("resource://verticaltabs/groups.js");
@@ -35,7 +36,7 @@ var VerticalTabs = {
         var splitter = document.getElementById("verticaltabs-splitter");
         splitter.addEventListener('mouseup', this, false);
 
-        VTTabbrowserTabs.init();
+        VTTabbrowserTabs.patch(tabs);
         this.multiSelect = new VTMultiSelect(tabs);
         this.groups = new VTGroups(tabs);
 
