@@ -4,6 +4,7 @@
 <!DOCTYPE overlay SYSTEM "chrome://browser/locale/browser.dtd" >
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
          id="verticaltabs-overlay">
+  <script src="tabbrowser.js" type="application/javascript" />
   <script src="verticaltabs.js" type="application/javascript" />
 
   <stringbundleset id="stringbundleset">

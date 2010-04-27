@@ -4,12 +4,10 @@
  * These are necessary where the original implementation assumes a
  * horizontal layout.
  */
-
-var EXPORTED_SYMBOLS = ["VTTabbrowserTabs"];
-
 var VTTabbrowserTabs = {
 
-    patch: function(tabs) {
+    patch: function() {
+        var tabs = document.getElementById("tabbrowser-tabs");
         tabs._getDropIndex = this._getDropIndex;
         tabs._setEffectAllowedForDataTransfer
             = this._setEffectAllowedForDataTransfer;
