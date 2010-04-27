@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="chrome://verticaltabs/content/bindings.css" type="text/css"?>
 <?xml-stylesheet href="chrome://verticaltabs/skin/verticaltabs.css" type="text/css"?>
-<!DOCTYPE overlay SYSTEM "chrome://browser/locale/tabbrowser.dtd" >
+<!DOCTYPE overlay SYSTEM "chrome://browser/locale/browser.dtd" >
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
          id="verticaltabs-overlay">
   <script src="verticaltabs.js" type="application/javascript" />
@@ -40,10 +40,12 @@
         <toolbarbutton id="verticaltabs-newtabbutton"
                        class="verticaltabs-button"
                        command="cmd_newNavigatorTab"
+                       label="&tabCmd.label;"
                        tooltiptext="&newTabButton.tooltip;" />
         <toolbarbutton id="verticaltabs-alltabsbutton"
                        class="verticaltabs-button"
                        command="Browser:ShowAllTabs"
+                       label="&listAllTabs.label;"
                        tooltiptext="&listAllTabs.label;" />
       </statusbar>
     </vbox>
