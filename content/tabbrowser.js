@@ -61,7 +61,7 @@ var VTTabbrowserTabs = {
         return dt.effectAllowed = "none";
     },
 
-    // Calculate the drop indocator's position for vertical tabs.
+    // Calculate the drop indicator's position for vertical tabs.
     // Overwrites what the original 'dragover' event handler does
     // towards the end.
     onDragOver: function(aEvent) {
