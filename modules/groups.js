@@ -143,6 +143,7 @@ VTGroups.prototype = {
             // TabMove handler knows the right thing to do.
             this.tabs.tabbrowser.moveTabTo(tab, group._tPos+1);
         }
+        this.tabs.VTMultiSelect.clearMultiSelect();
     },
 
     isGroup: function(aTab) {
