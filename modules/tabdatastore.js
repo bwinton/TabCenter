@@ -84,7 +84,8 @@ VTTabIDs.prototype = {
     },
 
     get: function(aID) {
-        return this.tabs.getElementsByAttribute(this.kId, aID)[0];
+        var elements = this.tabs.getElementsByAttribute(this.kId, aID);
+        return elements.length ? elements[0] : undefined;
     },
 
     /*** Event handlers ***/
