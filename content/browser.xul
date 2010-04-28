@@ -15,7 +15,7 @@
   <!-- Rewrite the "Close Tab" command so that it works for multiselections -->
   <commandset id="mainCommandSet">
     <command id="cmd_close"
-             oncommand="gBrowser.tabContainer.VTMultiSelect.closeMultiSelection();"/>
+             oncommand="gBrowser.tabContainer.VTMultiSelect.closeSelected();"/>
   </commandset>
 
   <popupset id="mainPopupSet">
@@ -24,7 +24,7 @@
       <menuitem id="context_verticalTabsCloseMultiple"
                 label="Close Selected Tabs"
                 tbattr="tabbrowser-multiple"
-                oncommand="gBrowser.tabContainer.VTMultiSelect.closeMultiSelection();"/>
+                oncommand="gBrowser.tabContainer.VTMultiSelect.closeSelected();"/>
       <menuseparator/>
       <menuitem id="context_verticalTabsGroup"
                 label="Group"

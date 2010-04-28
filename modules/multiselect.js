@@ -23,11 +23,11 @@ VTMultiSelect.prototype = {
 
     /*** Public API ***/
 
-    toggleMultiSelect: function(aTab) {
+    toggleSelect: function(aTab) {
         if (aTab.selected) {
             // Toggling a selected tab means we have to find another
             // tab within the multiselection that we can select instead.
-            let tab = this.findClosestMultiSelectedTab(aTab);
+            let tab = this.findClosestSelectedTab(aTab);
             if (tab) {
                 // Prevent the tab switch from clearing the multiselection.
                 tab.setAttribute("multiselect-noclear", "true");
@@ -42,7 +42,7 @@ VTMultiSelect.prototype = {
         }
     },
 
-    findClosestMultiSelectedTab: function(aTab) {
+    findClosestSelectedTab: function(aTab) {
         var i = 1;
         var tab = null;
         while ((aTab._tPos - i >= 0) ||
@@ -64,8 +64,8 @@ VTMultiSelect.prototype = {
         return tab;
     },
 
-    multiSpanSelect: function(aBeginTab, aEndTab) {
-        this.clearMultiSelect();
+    spanSelect: function(aBeginTab, aEndTab) {
+        this.clear();
         var begin = aBeginTab._tPos;
         var end = aEndTab._tPos;
         if (begin > end) {
@@ -76,7 +76,7 @@ VTMultiSelect.prototype = {
         }
     },
 
-    clearMultiSelect: function() {
+    clear: function() {
         for (let i=0; i < this.tabs.childNodes.length; i++ ) {
             this.tabs.childNodes[i].removeAttribute("multiselect");
         }
@@ -85,7 +85,7 @@ VTMultiSelect.prototype = {
     /*
      * Return a list of selected tabs.
      */
-    getMultiSelection: function() {
+    getSelected: function() {
         var results = [];
         for (let i=0; i < this.tabs.childNodes.length; i++ ) {
             let tab = this.tabs.childNodes[i];
@@ -99,9 +99,9 @@ VTMultiSelect.prototype = {
     /*
      * Close all tabs in the multiselection.
      */
-    closeMultiSelection: function() {
-        var toclose = this.getMultiSelection();
-        this.clearMultiSelect();
+    closeSelected: function() {
+        var toclose = this.getSelected();
+        this.clear();
 
         var tab;
         for (var i=0; i < toclose.length; i++) {
@@ -136,12 +136,12 @@ VTMultiSelect.prototype = {
         // Cmd+click which is represented by metaKey.  Ctrl+click won't be
         // possible on the Mac because that would be a right click (button 2)
         if (aEvent.ctrlKey || aEvent.metaKey) {
-            this.toggleMultiSelect(tab);
+            this.toggleSelect(tab);
             aEvent.stopPropagation();
             return;
         }
         if (aEvent.shiftKey) {
-            this.multiSpanSelect(this.tabs.tabbrowser.selectedTab, tab);
+            this.spanSelect(this.tabs.tabbrowser.selectedTab, tab);
             aEvent.stopPropagation();
             return;
         }
@@ -152,14 +152,14 @@ VTMultiSelect.prototype = {
         if (!tab.mOverCloseButton) {
             // Clicking on the already selected tab won't fire a TabSelect
             // event, but we still want to deselect any other tabs.
-            this.clearMultiSelect();
+            this.clear();
             return;
         }
 
         // Ok, so we're closing the selected tab.  That means we have
         // to find another tab within the multiselection that we can
         // select instead.
-        let newtab = this.findClosestMultiSelectedTab(tab);
+        let newtab = this.findClosestSelectedTab(tab);
         if (!newtab) {
             return;
         }
@@ -175,7 +175,7 @@ VTMultiSelect.prototype = {
             tab.removeAttribute("multiselect-noclear");
             return;
         }
-        this.clearMultiSelect();
+        this.clear();
     }
 
 };

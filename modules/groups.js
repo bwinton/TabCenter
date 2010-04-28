@@ -137,13 +137,13 @@ VTGroups.prototype = {
 
     createGroupFromMultiSelect: function() {
         var group = this.addGroup();
-        var children = this.tabs.VTMultiSelect.getMultiSelection();
+        var children = this.tabs.VTMultiSelect.getSelected();
         for each (let tab in children) {
             // Moving the tabs to the right position is enough, the
             // TabMove handler knows the right thing to do.
             this.tabs.tabbrowser.moveTabTo(tab, group._tPos+1);
         }
-        this.tabs.VTMultiSelect.clearMultiSelect();
+        this.tabs.VTMultiSelect.clear();
     },
 
     isGroup: function(aTab) {

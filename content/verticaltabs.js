@@ -99,7 +99,7 @@ var VerticalTabs = {
 
     onPopupShowing: function(aEvent) {
         var closeTabs = document.getElementById('context_verticalTabsCloseMultiple');
-        var tabs = this.multiSelect.getMultiSelection();
+        var tabs = this.multiSelect.getSelected();
         if (tabs.length > 1) {
             closeTabs.disabled = false;
         } else {
