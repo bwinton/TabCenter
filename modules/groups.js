@@ -63,16 +63,24 @@ VTGroups.prototype = {
         var group = this.tabs.tabbrowser.addTab();
         VTTabDataStore.setTabValue(group, this.kGroup, 'true');
 
-        //XXX this doesn't work since the binding isn't made available
-        // synchronously :(
-/*
+        var window = this.tabs.ownerDocument.defaultView;
+        function makeLabelEditable() {
+            // Work around the fact that XBL bindings aren't applied
+            // synchronously
+            if (typeof group.editLabel !== "function") {
+                window.setTimeout(makeLabelEditable, 10);
+                return;
+            }
+            group.editLabel();
+        }
+
         if (aLabel) {
             VTTabDataStore.setTabValue(group, this.kLabel, aLabel);
             group.groupLabel = aLabel;
         } else {
-            group.editLabel();
+            makeLabelEditable();
         }
-*/
+
         return group;
     },
 
