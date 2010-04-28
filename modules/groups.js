@@ -119,11 +119,15 @@ VTGroups.prototype = {
             return;
         }
 
-        // Remove the tab from its current group, if it belongs to one.
-        this.removeChild(aTab);
-
+        // Assign a group to the tab.  If the tab was in another group
+        // before, this will simply overwrite the old value.
         let groupId = this.tabs.VTTabIDs.id(aGroup);
         VTTabDataStore.setTabValue(aTab, this.kInGroup, groupId);
+
+        // Apply the group's collapsed state to the tab
+        let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed)
+                         == "true");
+        aTab.collapsed = collapsed;
     },
 
     removeChild: function(aTab) {
@@ -154,7 +158,8 @@ VTGroups.prototype = {
         if (!this.isGroup(aGroup)) {
             return;
         }
-        let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed) == "true");
+        let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed)
+                         == "true");
         let children = this.getChildren(aGroup);
         for (let i=0; i < children.length; i++) {
             children[i].collapsed = !collapsed;
