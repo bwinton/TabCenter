@@ -55,6 +55,27 @@ VTGroups.prototype = {
                 aTab.setAttribute(attr, value);
             }
         }
+
+        // Restore collapsed state if we belong to a group.
+        let groupId = VTTabDataStore.getTabValue(aTab, this.kInGroup);
+        if (!groupId) {
+            return;
+        }
+
+        var self = this;
+        var window = this.tabs.ownerDocument.defaultView;
+        function restoreCollapsedState() {
+            // The group tab we belong to may not have been restored yet.
+            var group = self.tabs.VTTabIDs.get(groupId);
+            if (group === undefined) {
+                window.setTimeout(restoreCollapsedState, 10);
+                return;
+            }
+            let collapsed = (VTTabDataStore.getTabValue(group, self.kCollapsed)
+                             == "true");
+            aTab.collapsed = collapsed;
+        }
+        restoreCollapsedState();
     },
 
     /*** Public API ***/
@@ -65,8 +86,7 @@ VTGroups.prototype = {
 
         var window = this.tabs.ownerDocument.defaultView;
         function makeLabelEditable() {
-            // Work around the fact that XBL bindings aren't applied
-            // synchronously
+            // XBL bindings aren't applied synchronously.
             if (typeof group.editLabel !== "function") {
                 window.setTimeout(makeLabelEditable, 10);
                 return;
