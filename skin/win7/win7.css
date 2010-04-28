@@ -70,6 +70,14 @@
     margin-left: 3px;
 }
 
+
+/* Drop indicator for drag'n'drop of tabs */
+.tab-drop-indicator {
+    list-style-image: url("chrome://verticaltabs/skin/win7/dropmarker.png");
+    margin-top: -11px !important; /* height of the above image */
+}
+
+
 /* Hide resizer in the new statusbar */
 #verticaltabs-statusbar resizer {
     visibility: collapse;
