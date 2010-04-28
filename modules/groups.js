@@ -27,13 +27,22 @@ function VTGroups(tabs) {
      // is implemented.
     this.tabsById = {};
 
+    // For maintaining tab IDs
     tabs.addEventListener('TabOpen', this, true);
     tabs.addEventListener('TabClose', this, true);
     tabs.addEventListener('SSTabRestoring', this, true);
     for (let i=0; i < tabs.childNodes.length; i++) {
         this.initTab(tabs.childNodes[i]);
     }
+
+    // For clicks on the twisty
     tabs.addEventListener('click', this, true);
+
+    // For synchronizing group behaviour and tab positioning
+    tabs.addEventListener('dragover', this, false);
+    tabs.addEventListener('dragend', this, false);
+    tabs.addEventListener('drop', this, false);
+    tabs.addEventListener('TabMove', this, false);
 }
 VTGroups.prototype = {
 
@@ -43,6 +52,7 @@ VTGroups.prototype = {
     kChildren: 'verticaltabs-children',
     kLabel: 'verticaltabs-grouplabel',
     kCollapsed: 'verticaltabs-collapsed',
+    kDropTarget: 'verticaltabs-droptarget',
 
     initTab: function(aTab) {
         if (aTab.hasAttribute(this.kId)) {
@@ -130,9 +140,12 @@ VTGroups.prototype = {
             return;
         }
 
-        var groupId = aGroup.getAttribute(this.kId);
+        // Remove the tab from its current group, if it belongs to one.
+        this.removeChild(aTab);
+
+        let groupId = aGroup.getAttribute(this.kId);
         VTTabDataStore.setTabValue(aTab, this.kInGroup, groupId);
-        var groupChildren = VTTabDataStore.getTabValue(aGroup, this.kChildren);
+        let groupChildren = VTTabDataStore.getTabValue(aGroup, this.kChildren);
         // TODO this doesn't preserve any order
         if (!groupChildren) {
             groupChildren = aTab.getAttribute(this.kId);
@@ -142,12 +155,31 @@ VTGroups.prototype = {
         VTTabDataStore.setTabValue(aGroup, this.kChildren, groupChildren);
     },
 
+    removeChild: function(aTab) {
+        var groupId = VTTabDataStore.getTabValue(aTab, this.kInGroup);
+        if (!groupId) {
+            return;
+        }
+
+        let group = this.tabsById[groupId];
+        let tabId = aTab.getAttribute(this.kId);
+        let groupChildren = VTTabDataStore.getTabValue(group, this.kChildren);
+        groupChildren = groupChildren.split("|");
+        let index = groupChildren.indexOf(tabId);
+        groupChildren.splice(index, 1);
+        groupChildren = groupChildren.join("|");
+
+        VTTabDataStore.deleteTabValue(aTab, this.kInGroup);
+        VTTabDataStore.setTabValue(group, this.kChildren, groupChildren);
+    },
+
     createGroupFromMultiSelect: function() {
         var group = this.addGroup();
         var children = this.tabs.VTMultiSelect.getMultiSelection();
         for each (let tab in children) {
-            this.addChild(group, tab);
-            this.tabs.tabbrowser.moveTabTo(tab, group._tPos+1);  //XXX
+            // Moving the tabs to the right position is enough, the
+            // TabMove handler knows the right thing to do.
+            this.tabs.tabbrowser.moveTabTo(tab, group._tPos+1);
         }
     },
 
@@ -184,6 +216,16 @@ VTGroups.prototype = {
         case "click":
             this.onClick(aEvent);
             return;
+        case "dragover":
+            this.onDragOver(aEvent);
+            return;
+        case "dragend":
+        case "drop":
+            this.clearDropTargets();
+            return;
+        case 'TabMove':
+            this.onTabMove(aEvent);
+            return;
         }
     },
 
@@ -196,6 +238,69 @@ VTGroups.prototype = {
             return;
         }
         this.collapseExpand(tab);
+    },
+
+    clearDropTargets: function() {
+        Components.utils.reportError("clearDropTargets");
+        var groups = this.tabs.getElementsByClassName(this.kDropTarget);
+        for (let i=0; i < groups.length; i++) {
+            groups[i].classList.remove(this.kDropTarget);
+        }
+    },
+
+    onDragOver: function(aEvent) {
+        if (aEvent.target.localName != "tab") {
+            return;
+        }
+        let dropindex = this.tabs._getDropIndex(aEvent);
+        let tab = this.tabs.childNodes[dropindex];
+        let groupId = VTTabDataStore.getTabValue(tab, this.kInGroup);
+
+        if (!groupId) {
+            // Potentially remove drop style
+            this.clearDropTargets();
+            return;
+        }
+
+        //TODO change drop indicator's left margin
+        // Add drop style to the group
+        let group = this.tabsById[groupId];
+        group.classList.add(this.kDropTarget);
+    },
+
+    onTabMove: function(aEvent) {
+        var tab = aEvent.target;
+        if (this.isGroup(tab)) {
+            return;
+        }
+
+        // Determine whether the move should result in the tab being
+        // added to a group (or removed from one).
+        let next;
+        let groupId;
+        let nextPos = tab._tPos + 1;
+        if (nextPos < this.tabs.childNodes.length) {
+            // If the next tab down the line is in a group, then the
+            // tab is added to that group.
+            next = this.tabs.childNodes[nextPos];
+            groupId = VTTabDataStore.getTabValue(next, this.kInGroup);
+        } else {
+            // We're moved to the last position, so let's look at the
+            // previous tab.  Is it in a group, or even a group?
+            nextPos = tab._tPos - 1;
+            next = this.tabs.childNodes[nextPos];
+            if (this.isGroup(next)) {
+                groupId = next.getAttribute(this.kId);
+            } else {
+                groupId = VTTabDataStore.getTabValue(next, this.kInGroup);
+            }
+        }
+
+        if (!groupId) {
+            this.removeChild(tab)
+        } else {
+            this.addChild(this.tabsById[groupId], tab);
+        }
     }
 
 };
