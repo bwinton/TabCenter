@@ -130,6 +130,12 @@
 .tabbrowser-tab[verticaltabs-group] .tab-text {
 }
 
+.verticaltabs-droptarget {
+    border: 1px solid #7da2ce !important;
+    background: -moz-linear-gradient(top, #dcebfc, #c1dbfc) repeat-x !important;
+    -moz-border-radius: 2px !important;
+}
+
 .verticaltabs-twisty {
     cursor: default !important;
     margin-left: 1px !important;

@@ -167,6 +167,13 @@
     text-shadow: 0 1px #ffffff !important;
 }
 
+.verticaltabs-droptarget {
+    border: 2px solid #577bf3 !important; /* not OSX's colour but Firefox's */
+    background: #d0def5 !important;
+    -moz-border-radius: 8px !important;
+    /* TODO avoid increasing the overall height */
+}
+
 .verticaltabs-twisty {
     list-style-image: url("chrome://verticaltabs/skin/osx/twisty.png");
     opacity: 0.38;
