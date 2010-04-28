@@ -77,7 +77,7 @@ VTMultiSelect.prototype = {
     },
 
     clear: function() {
-        for (let i=0; i < this.tabs.childNodes.length; i++ ) {
+        for (let i=0; i < this.tabs.childNodes.length; i++) {
             this.tabs.childNodes[i].removeAttribute("multiselect");
         }
     },
@@ -87,7 +87,7 @@ VTMultiSelect.prototype = {
      */
     getSelected: function() {
         var results = [];
-        for (let i=0; i < this.tabs.childNodes.length; i++ ) {
+        for (let i=0; i < this.tabs.childNodes.length; i++) {
             let tab = this.tabs.childNodes[i];
             if (tab.selected || (tab.getAttribute("multiselect") == "true")) {
                 results.push(tab);
