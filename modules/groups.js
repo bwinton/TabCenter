@@ -49,7 +49,6 @@ VTGroups.prototype = {
     kId: 'verticaltabs-id',
     kGroup: 'verticaltabs-group',
     kInGroup: 'verticaltabs-ingroup',
-    kChildren: 'verticaltabs-children',
     kLabel: 'verticaltabs-grouplabel',
     kCollapsed: 'verticaltabs-collapsed',
     kDropTarget: 'verticaltabs-droptarget',
@@ -78,7 +77,6 @@ VTGroups.prototype = {
         // automatically).  kId is already restored in initTab()
         for each (let attr in [this.kGroup,
                                this.kInGroup,
-                               this.kChildren,
                                this.kLabel,
                                this.kCollapsed]) {
             let value = VTTabDataStore.getTabValue(aTab, attr);
@@ -107,7 +105,6 @@ VTGroups.prototype = {
     addGroup: function(aLabel) {        
         var group = this.tabs.tabbrowser.addTab();
         VTTabDataStore.setTabValue(group, this.kGroup, 'true');
-        VTTabDataStore.setTabValue(group, this.kChildren, '');
 
         //XXX this doesn't work since the binding isn't made available
         // synchronously :(
@@ -123,11 +120,8 @@ VTGroups.prototype = {
     },
 
     getChildren: function(aGroup) {
-        var childIds = VTTabDataStore.getTabValue(aGroup, this.kChildren);
-        if (!childIds) {
-            return [];
-        }
-        return [this.tabsById[id] for each (id in childIds.split('|'))];
+        var groupId = aGroup.getAttribute(this.kId);
+        return this.tabs.getElementsByAttribute(this.kInGroup, groupId);
     },
 
     addChild: function(aGroup, aTab) {
@@ -145,14 +139,6 @@ VTGroups.prototype = {
 
         let groupId = aGroup.getAttribute(this.kId);
         VTTabDataStore.setTabValue(aTab, this.kInGroup, groupId);
-        let groupChildren = VTTabDataStore.getTabValue(aGroup, this.kChildren);
-        // TODO this doesn't preserve any order
-        if (!groupChildren) {
-            groupChildren = aTab.getAttribute(this.kId);
-        } else {
-            groupChildren += '|' + aTab.getAttribute(this.kId);
-        }
-        VTTabDataStore.setTabValue(aGroup, this.kChildren, groupChildren);
     },
 
     removeChild: function(aTab) {
@@ -161,16 +147,7 @@ VTGroups.prototype = {
             return;
         }
 
-        let group = this.tabsById[groupId];
-        let tabId = aTab.getAttribute(this.kId);
-        let groupChildren = VTTabDataStore.getTabValue(group, this.kChildren);
-        groupChildren = groupChildren.split("|");
-        let index = groupChildren.indexOf(tabId);
-        groupChildren.splice(index, 1);
-        groupChildren = groupChildren.join("|");
-
         VTTabDataStore.deleteTabValue(aTab, this.kInGroup);
-        VTTabDataStore.setTabValue(group, this.kChildren, groupChildren);
     },
 
     createGroupFromMultiSelect: function() {
@@ -193,8 +170,8 @@ VTGroups.prototype = {
         }
         let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed) == "true");
         let children = this.getChildren(aGroup);
-        for each (let tab in children) {
-            tab.collapsed = !collapsed;
+        for (let i=0; i < children.length; i++) {
+            children[i].collapsed = !collapsed;
         }
         VTTabDataStore.setTabValue(aGroup, this.kCollapsed, !collapsed);
     },
@@ -241,7 +218,6 @@ VTGroups.prototype = {
     },
 
     clearDropTargets: function() {
-        Components.utils.reportError("clearDropTargets");
         var groups = this.tabs.getElementsByClassName(this.kDropTarget);
         for (let i=0; i < groups.length; i++) {
             groups[i].classList.remove(this.kDropTarget);
