@@ -36,6 +36,7 @@ var VerticalTabs = {
         splitter.addEventListener('mouseup', this, false);
 
         VTTabbrowserTabs.patch();
+        this.tabIDs = new VTTabIDs(tabs);
         this.multiSelect = new VTMultiSelect(tabs);
         this.groups = new VTGroups(tabs);
 

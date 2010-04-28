@@ -22,18 +22,8 @@ function VTGroups(tabs) {
     this.tabs = tabs;
     tabs.VTGroups = this;
 
-     // Hashmap (id -> tab) for easy access to tabs via id (assigned by us).
-     // Necessary until https://bugzilla.mozilla.org/show_bug.cgi?id=529477
-     // is implemented.
-    this.tabsById = {};
-
-    // For maintaining tab IDs
-    tabs.addEventListener('TabOpen', this, true);
-    tabs.addEventListener('TabClose', this, true);
+    // Restore group and in-group status
     tabs.addEventListener('SSTabRestoring', this, true);
-    for (let i=0; i < tabs.childNodes.length; i++) {
-        this.initTab(tabs.childNodes[i]);
-    }
 
     // For clicks on the twisty
     tabs.addEventListener('click', this, true);
@@ -53,28 +43,9 @@ VTGroups.prototype = {
     kCollapsed: 'verticaltabs-collapsed',
     kDropTarget: 'verticaltabs-droptarget',
 
-    initTab: function(aTab) {
-        if (aTab.hasAttribute(this.kId)) {
-            return;
-        }
-
-        let id = VTTabDataStore.getTabValue(aTab, this.kId) || this.makeNewId();
-        VTTabDataStore.setTabValue(aTab, this.kId, id);
-        if (!(id in this.tabsById)) {
-            this.tabsById[id] = aTab;
-        }
-    },
-
-    destroyTab: function(aTab) {
-        var id = aTag.getAttribute(this.kId);
-        if (id && (id in this.tabsById)) {
-            delete this.tabsById[id];
-        }
-    },
-
     restoreTab: function(aTab) {
         // Restore tab attributes from session data (this isn't done
-        // automatically).  kId is already restored in initTab()
+        // automatically).  kId is restored by VTTabIDs.
         for each (let attr in [this.kGroup,
                                this.kInGroup,
                                this.kLabel,
@@ -84,20 +55,6 @@ VTGroups.prototype = {
                 aTab.setAttribute(attr, value);
             }
         }
-
-        // Restore the original ID
-        let oldId = aTab.getAttribute(this.kId);
-        let newId = VTTabDataStore.getTabValue(aTab, this.kId);
-        if (oldId && newId) {
-            delete this.tabsById[oldId];
-            aTab.setAttribute(this.kId, newId);
-            this.tabsById[newId] = aTab;
-        }
-    },
-
-    makeNewId: function() {
-        return 'tab-<' + Date.now() + '-'
-               + parseInt(Math.random() * 65000) + '>';
     },
 
     /*** Public API ***/
@@ -120,7 +77,7 @@ VTGroups.prototype = {
     },
 
     getChildren: function(aGroup) {
-        var groupId = aGroup.getAttribute(this.kId);
+        var groupId = this.tabs.VTTabIDs.id(aGroup);
         return this.tabs.getElementsByAttribute(this.kInGroup, groupId);
     },
 
@@ -137,7 +94,7 @@ VTGroups.prototype = {
         // Remove the tab from its current group, if it belongs to one.
         this.removeChild(aTab);
 
-        let groupId = aGroup.getAttribute(this.kId);
+        let groupId = this.tabs.VTTabIDs.id(aGroup);
         VTTabDataStore.setTabValue(aTab, this.kInGroup, groupId);
     },
 
@@ -181,12 +138,6 @@ VTGroups.prototype = {
 
     handleEvent: function(aEvent) {
         switch (aEvent.type) {
-        case 'TabOpen':
-            this.initTab(aEvent.originalTarget);
-            return;
-        case 'TabClose':
-            this.destroyTab(aEvent.originalTarget);
-            return;
         case 'SSTabRestoring':
             this.restoreTab(aEvent.originalTarget);
             return;
@@ -240,7 +191,7 @@ VTGroups.prototype = {
 
         //TODO change drop indicator's left margin
         // Add drop style to the group
-        let group = this.tabsById[groupId];
+        let group = this.tabs.VTTabIDs.get(groupId);
         group.classList.add(this.kDropTarget);
     },
 
@@ -252,30 +203,31 @@ VTGroups.prototype = {
 
         // Determine whether the move should result in the tab being
         // added to a group (or removed from one).
-        let next;
-        let groupId;
+        let group;
         let nextPos = tab._tPos + 1;
         if (nextPos < this.tabs.childNodes.length) {
             // If the next tab down the line is in a group, then the
             // tab is added to that group.
-            next = this.tabs.childNodes[nextPos];
-            groupId = VTTabDataStore.getTabValue(next, this.kInGroup);
+            let next = this.tabs.childNodes[nextPos];
+            let groupId = VTTabDataStore.getTabValue(next, this.kInGroup);
+            group = this.tabs.VTTabIDs.get(groupId);
         } else {
             // We're moved to the last position, so let's look at the
             // previous tab.  Is it in a group, or even a group?
             nextPos = tab._tPos - 1;
-            next = this.tabs.childNodes[nextPos];
-            if (this.isGroup(next)) {
-                groupId = next.getAttribute(this.kId);
+            let prev = this.tabs.childNodes[nextPos];
+            if (this.isGroup(prev)) {
+                group = prev;
             } else {
-                groupId = VTTabDataStore.getTabValue(next, this.kInGroup);
+                let groupId = VTTabDataStore.getTabValue(prev, this.kInGroup);
+                group = this.tabs.VTTabIDs.get(groupId);
             }
         }
 
-        if (!groupId) {
+        if (!group) {
             this.removeChild(tab)
         } else {
-            this.addChild(this.tabsById[groupId], tab);
+            this.addChild(group, tab);
         }
     }
 
