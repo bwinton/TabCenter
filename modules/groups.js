@@ -2,8 +2,7 @@
  * Functionality for grouping tabs.
  *
  * Groups are implemented as a special kind of tab (see binding in
- * group.xml) that isn't selectable.  There are a few advantages and
- * disadvantages to this:
+ * group.xml).  There are a few advantages and disadvantages to this:
  *
  *   - Groups can be regular children of tabbrowser.tabContainer
  *     (cf. https://bugzilla.mozilla.org/show_bug.cgi?id=475142).
@@ -24,6 +23,9 @@ function VTGroups(tabs) {
 
     // Restore group and in-group status
     tabs.addEventListener('SSTabRestoring', this, true);
+
+    // Updating UI
+    tabs.addEventListener('TabSelect', this, false);
 
     // For clicks on the twisty
     tabs.addEventListener('click', this, true);
@@ -175,6 +177,9 @@ VTGroups.prototype = {
         case 'SSTabRestoring':
             this.restoreTab(aEvent.originalTarget);
             return;
+        case 'TabSelect':
+            this.onTabSelect(aEvent);
+            return;
         case "click":
             this.onClick(aEvent);
             return;
@@ -188,6 +193,27 @@ VTGroups.prototype = {
         case 'TabMove':
             this.onTabMove(aEvent);
             return;
+        }
+    },
+
+    onTabSelect: function(aEvent) {
+        var tab = aEvent.target;
+        var document = tab.ownerDocument;
+        var urlbar = document.getElementById("urlbar");
+
+        var isGroup = this.isGroup(tab);
+        if (isGroup) {
+            urlbar.placeholder = "Group";
+        } else {
+            urlbar.placeholder = urlbar.getAttribute("bookmarkhistoryplaceholder");
+        }
+        urlbar.disabled = isGroup;
+
+        //XXX this doesn't quite work:
+        var buttons = ["reload-button", "home-button", "urlbar", "searchbar"];
+        for (let i=0; i < buttons.length; i++) {
+            let element = document.getElementById(buttons[i]);
+            element.disabled = isGroup;
         }
     },
 

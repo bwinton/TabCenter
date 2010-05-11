@@ -22,17 +22,18 @@
                  class="tab-icon-image"
                  role="presentation"
                  collapsed="true"/>
-      <xul:label flex="1"
-                 class="tab-text"
+
+      <xul:label class="tab-text"
                  role="presentation">&newGroup.label;</xul:label>
+      <xul:spacer flex="1"/>
+
       <xul:textbox flex="1"
                    class="verticaltabs-textbox"
                    value="&newGroup.label;"
                    collapsed="true"/>
       <xul:toolbarbutton anonid="close-button"
                          tabindex="-1"
-                         class="tab-close-button"
-                         collapsed="true"/>
+                         class="tab-close-button"/>
     </content>
 
     <implementation implements="nsIDOMEventListener">
@@ -117,8 +118,10 @@
 
     <handlers>
       <handler event="mousedown" button="0" phase="capturing"><![CDATA[
-        // Prevent this tab from being selected.
-        event.stopPropagation();
+        // Prevent the tab from being selected when the twisty is being clicked
+        if (event.originalTarget === this.mTwisty) {
+            event.stopPropagation();
+        }
       ]]></handler>
     </handlers>
   </binding>

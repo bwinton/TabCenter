@@ -9,6 +9,7 @@
 }
 
 .tabbrowser-tab {
+    -moz-box-pack: start;
     -moz-appearance: none !important;
     background: transparent !important;
     border: 1px solid transparent !important;

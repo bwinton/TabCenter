@@ -25,6 +25,7 @@
 
 /* Style tabs themselves.  Get rid of most of the initial XUL styling */
 .tabbrowser-tab {
+    -moz-box-pack: start;
     -moz-appearance: none !important;
     background: transparent !important;
     -moz-border-top-colors: none !important;
@@ -165,6 +166,10 @@
     font-weight: bold !important;
     text-transform: uppercase !important;
     text-shadow: 0 1px #ffffff !important;
+}
+.tabbrowser-tab[selected="true"][verticaltabs-group] .tab-text {
+    color: #ffffff !important;
+    text-shadow: 0 1px #404040 !important;
 }
 
 .verticaltabs-droptarget {
