@@ -285,7 +285,7 @@ VTGroups.prototype = {
         }
 
         if (!group) {
-            this.removeChild(tab)
+            this.removeChild(tab);
         } else {
             this.addChild(group, tab);
         }
