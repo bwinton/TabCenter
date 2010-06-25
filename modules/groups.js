@@ -230,6 +230,8 @@ VTGroups.prototype = {
 
     clearDropTargets: function() {
         var groups = this.tabs.getElementsByClassName(this.kDropTarget);
+        // Make a copy of the array before modifying its contents.
+        groups = Array.prototype.slice.call(groups);
         for (let i=0; i < groups.length; i++) {
             groups[i].classList.remove(this.kDropTarget);
         }
