@@ -18,9 +18,14 @@ var VTTabbrowserTabs = {
         var tabs = this.childNodes;
         var tab = this._getDragTargetTab(event);
         // CHANGE for Vertical Tabs: no ltr handling, X -> Y, width -> height
-        for (let i = tab ? tab._tPos : 0; i < tabs.length; i++)
+        // and group support.
+        for (let i = tab ? tab._tPos : 0; i < tabs.length; i++) {
+            if (this.VTGroups.isGroup(tabs[i])) {
+                return i + 1;
+            }
             if (event.screenY < tabs[i].boxObject.screenY + tabs[i].boxObject.height / 2) 
                 return i;
+        }
         return tabs.length;
     },
 

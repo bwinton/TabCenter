@@ -241,16 +241,22 @@ VTGroups.prototype = {
         if (aEvent.target.localName != "tab") {
             return;
         }
+        // Potentially remove drop target style
+        //XXX is this inefficient?
+        this.clearDropTargets();
+
+        if (this.isGroup(aEvent.target)) {
+          aEvent.target.classList.add(this.kDropTarget);
+          this.tabs._tabDropIndicator.collapsed = true;
+          return;
+        }
+
         let dropindex = this.tabs._getDropIndex(aEvent);
         let tab = this.tabs.childNodes[dropindex];
         let groupId = VTTabDataStore.getTabValue(tab, this.kInGroup);
-
         if (!groupId) {
-            // Potentially remove drop style
-            this.clearDropTargets();
             return;
         }
-
         //TODO change drop indicator's left margin
         // Add drop style to the group
         let group = this.tabs.VTTabIDs.get(groupId);
