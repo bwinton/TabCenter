@@ -102,8 +102,7 @@ VTTabIDs.prototype = {
     },
 
     makeNewId: function() {
-        return 'tab-<' + Date.now() + '-'
-               + parseInt(Math.random() * 65000) + '>';
+        return this.uuidGen.generateUUID().toString();
     },
 
     initTab: function(aTab) {
@@ -124,3 +123,6 @@ VTTabIDs.prototype = {
     }
 
 };
+XPCOMUtils.defineLazyServiceGetter(VTTabIDs.prototype, "uuidGen",
+                                   "@mozilla.org/uuid-generator;1",
+                                   "nsIUUIDGenerator");
