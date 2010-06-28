@@ -26,6 +26,7 @@
 /* Style tabs themselves.  Get rid of most of the initial XUL styling */
 .tabbrowser-tab {
     -moz-box-pack: start;
+    -moz-box-flex: 0;
     -moz-appearance: none !important;
     background: transparent !important;
     -moz-border-top-colors: none !important;
