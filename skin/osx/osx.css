@@ -33,10 +33,7 @@
     -moz-border-bottom-colors: none !important;
     -moz-border-right-colors: none !important;
     -moz-border-left-colors: none !important;
-    -moz-border-radius-topleft: 0 !important;
-    -moz-border-radius-topright: 0 !important;
-    -moz-border-radius-bottomleft: 0 !important;
-    -moz-border-radius-bottomright: 0 !important;
+    -moz-border-radius: 0 !important;
     -moz-box-align: stretch !important;
     margin: 0 !important;
     padding: 0 3px 2px 10px !important;

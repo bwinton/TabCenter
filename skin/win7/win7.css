@@ -14,20 +14,13 @@
     -moz-appearance: none !important;
     background: transparent !important;
     border: 1px solid transparent !important;
-    -moz-border-radius-topleft: 0 !important;
-    -moz-border-radius-topright: 0 !important;
-    -moz-border-radius-bottomleft: 0 !important;
-    -moz-border-radius-bottomright: 0 !important;
+    -moz-border-radius: 3px !important;
     margin: 0 !important;
     padding: 0 !important;
 }
 .tabbrowser-tab:hover {
     border: 1px solid #b9d7fc !important;
     background: -moz-linear-gradient(top, Window, #edf5ff) repeat-x !important;
-    -moz-border-radius-topleft: 3px !important;
-    -moz-border-radius-topright: 3px !important;
-    -moz-border-radius-bottomleft: 3px !important;
-    -moz-border-radius-bottomright: 3px !important;
 }
 
 .tabbrowser-tab[selected="true"],
@@ -37,10 +30,6 @@
 
     border: 1px solid #84acdd !important;
     background: -moz-linear-gradient(top, Window, #d0e5ff) repeat-x !important;
-    -moz-border-radius-topleft: 3px !important;
-    -moz-border-radius-topright: 3px !important;
-    -moz-border-radius-bottomleft: 3px !important;
-    -moz-border-radius-bottomright: 3px !important;
 
     font-weight: normal;
     text-shadow: none;
