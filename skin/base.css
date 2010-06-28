@@ -30,3 +30,7 @@
 	-moz-box-pack: start;
 	-moz-box-align: center;
 }
+
+.verticaltabs-collapsed {
+    visibility: collapse;
+}

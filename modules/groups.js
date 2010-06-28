@@ -75,10 +75,19 @@ VTGroups.prototype = {
             }
             let collapsed = (VTTabDataStore.getTabValue(group, self.kCollapsed)
                              == "true");
-            aTab.collapsed = collapsed;
+            self._tabCollapseExpand(aTab, collapsed);
         }
         restoreCollapsedState();
     },
+
+    _tabCollapseExpand: function(aTab, collapsed) {
+        if (collapsed) {
+            aTab.classList.add(this.kCollapsed);
+        } else {
+            aTab.classList.remove(this.kCollapsed);
+        }
+    },
+
 
     /*** Public API ***/
 
@@ -164,7 +173,7 @@ VTGroups.prototype = {
                          == "true");
         let children = this.getChildren(aGroup);
         for (let i=0; i < children.length; i++) {
-            children[i].collapsed = !collapsed;
+            this._tabCollapseExpand(children[i], !collapsed);
         }
         VTTabDataStore.setTabValue(aGroup, this.kCollapsed, !collapsed);
     },
