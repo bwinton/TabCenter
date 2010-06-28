@@ -41,6 +41,7 @@
     text-align: left !important;
     border: none;
     border-top: 1px solid transparent !important;
+    overflow: hidden;  /* so that the heigh transition for collapsed works */
 }
 
 .tabbrowser-tab[selected="true"],
@@ -180,6 +181,8 @@
 .verticaltabs-twisty {
     list-style-image: url("chrome://verticaltabs/skin/osx/twisty.png");
     opacity: 0.38;
+    -moz-transition-property: -moz-transform; /* TODO bug 531344 */
+    -moz-transition-duration: .1s;
 }
 .tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-twisty {
     -moz-transform: rotate(270deg);
@@ -187,4 +190,15 @@
 
 .verticaltabs-twisty:active {
     opacity: 1.0;
+}
+
+.tabbrowser-tab[fadein]:not([pinned]) {
+    -moz-transition-property: visibility, height;
+    -moz-transition-duration: .1s;
+    -moz-transition-timing-function: ease-out;
+}
+
+.verticaltabs-collapsed {
+    height: 0px !important;  /* animation shrinks height */
+    visibility: collapse;
 }
