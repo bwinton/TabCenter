@@ -7,13 +7,14 @@ Tree Style Tab add-on.
 
 Goals:
 
-* Arrange tabs in groups (instead of arbitrary trees)
+* Ability to arrange tabs in groups (instead of arbitrary trees) plus
+  some group-related features (collapse group, tab previews, etc.)
 
-* Some group-related features (collapse group, tab previews, etc.)
+* Very few other features and hopefully little or no preference settings.
+  Instead a good JavaScript API shall be provided for other extensions
+  (e.g. JetPack SDK based) to provide additional features.
 
-* Very few other features and hopefully little or no preference settings
-
-* Native look and feel
+* Native look and feel.
 
 * Readable and maintainable code, taking latest Mozilla practices into
   account.  No eval() hacks.
