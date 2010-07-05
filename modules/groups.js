@@ -50,7 +50,171 @@ VTGroups.prototype = {
     kDropInGroup: 'verticaltabs-dropingroup',
     kIgnoreMove: 'verticaltabs-ignoremove',
 
-    restoreTab: function(aTab) {
+
+    /*** Public API ***/
+
+    /*
+     * Create a new group tab.  If given as an argument, the label is
+     * applied to the group.  Otherwise the label will be made
+     * editable.
+     */
+    addGroup: function(aLabel) {        
+        let group = this.tabs.tabbrowser.addTab();
+        VTTabDataStore.setTabValue(group, this.kGroup, "true");
+
+        let window = this.tabs.ownerDocument.defaultView;
+        function makeLabelEditable() {
+            // XBL bindings aren't applied synchronously.
+            if (typeof group.editLabel !== "function") {
+                window.setTimeout(makeLabelEditable, 10);
+                return;
+            }
+            group.editLabel();
+        }
+
+        if (aLabel) {
+            VTTabDataStore.setTabValue(group, this.kLabel, aLabel);
+            group.groupLabel = aLabel;
+        } else {
+            makeLabelEditable();
+        }
+
+        return group;
+    },
+
+    /*
+     * Return the child tabs of a given group.  The return value is a
+     * JavaScript Array (not just a NodeList) and is "owned" by the
+     * caller (e.g. it may be modified).
+     */
+    getChildren: function(aGroup) {
+        let groupId = this.tabs.VTTabIDs.id(aGroup);
+        let children = this.tabs.getElementsByAttribute(this.kInGroup, groupId);
+        // Return a copy
+        return Array.prototype.slice.call(children);
+    },
+
+    /*
+     * Add a tab to a group.  This won't physically move the tab
+     * anywhere, just create the logical connection.
+     */
+    addChild: function(aGroup, aTab) {
+        // Only groups can have children
+        if (!this.isGroup(aGroup)) {
+            return;
+        }
+        // We don't allow nested groups
+        if (this.isGroup(aTab)) {
+            return;
+        }
+
+        // Assign a group to the tab.  If the tab was in another group
+        // before, this will simply overwrite the old value.
+        let groupId = this.tabs.VTTabIDs.id(aGroup);
+        VTTabDataStore.setTabValue(aTab, this.kInGroup, groupId);
+
+        // Apply the group's collapsed state to the tab
+        let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed)
+                         == "true");
+        aTab.collapsed = collapsed;
+    },
+
+    addChildren: function(aGroup, aTabs) {
+        for each (let tab in aTabs) {
+            this.addChild(aGroup, tab);
+        }
+    },
+
+    /*
+     * Remove a tab from its group.
+     */
+    removeChild: function(aTab) {
+        let groupId = VTTabDataStore.getTabValue(aTab, this.kInGroup);
+        if (!groupId) {
+            return;
+        }
+
+        VTTabDataStore.deleteTabValue(aTab, this.kInGroup);
+    },
+
+    removeChildren: function(aTabs) {
+        for each (let tab in aTabs) {
+            this.removeChild(tab);
+        }
+    },
+
+    /*
+     * Creates a tab from the active selection.
+     */
+    createGroupFromMultiSelect: function() {
+        let group = this.addGroup();
+        let children = this.tabs.VTMultiSelect.getSelected();
+        for each (let tab in children) {
+            // Moving the tabs to the right position is enough, the
+            // TabMove handler knows the right thing to do.
+            this.tabs.tabbrowser.moveTabTo(tab, group._tPos+1);
+        }
+        this.tabs.VTMultiSelect.clear();
+    },
+
+    /*
+     * Return true if a given tab is a group tab.
+     */
+    isGroup: function(aTab) {
+        return (VTTabDataStore.getTabValue(aTab, this.kGroup) == "true");
+    },
+
+    /*
+     * Toggle collapsed/expanded state of a group tab.
+     */
+    collapseExpand: function(aGroup) {
+        if (!this.isGroup(aGroup)) {
+            return;
+        }
+        let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed)
+                         == "true");
+        for each (let tab in this.getChildren(aGroup)) {
+            this._tabCollapseExpand(tab, !collapsed);
+            if (tab.selected) {
+                this.tabs.tabbrowser.selectedTab = aGroup;
+            }
+        }
+        VTTabDataStore.setTabValue(aGroup, this.kCollapsed, !collapsed);
+    },
+
+
+    /*** Event handlers ***/
+
+    handleEvent: function(aEvent) {
+        switch (aEvent.type) {
+        case "SSTabRestoring":
+            this.onTabRestoring(aEvent.originalTarget);
+            return;
+        case "TabSelect":
+            this.onTabSelect(aEvent);
+            return;
+        case "TabMove":
+            this.onTabMove(aEvent);
+            return;
+        case "TabClose":
+            this.onTabClose(aEvent);
+            return;
+        case "click":
+            this.onClick(aEvent);
+            return;
+        case "dragover":
+            this.onDragOver(aEvent);
+            return;
+        case "dragend":
+            this._clearDropTargets();
+            return;
+        case "drop":
+            this.onDrop(aEvent);
+            return;
+        }
+    },
+
+    onTabRestoring: function(aTab) {
         // Restore tab attributes from session data (this isn't done
         // automatically).  kId is restored by VTTabIDs.
         for each (let attr in [this.kGroup,
@@ -93,144 +257,6 @@ VTGroups.prototype = {
         }
     },
 
-
-    /*** Public API ***/
-
-    addGroup: function(aLabel) {        
-        let group = this.tabs.tabbrowser.addTab();
-        VTTabDataStore.setTabValue(group, this.kGroup, "true");
-
-        let window = this.tabs.ownerDocument.defaultView;
-        function makeLabelEditable() {
-            // XBL bindings aren't applied synchronously.
-            if (typeof group.editLabel !== "function") {
-                window.setTimeout(makeLabelEditable, 10);
-                return;
-            }
-            group.editLabel();
-        }
-
-        if (aLabel) {
-            VTTabDataStore.setTabValue(group, this.kLabel, aLabel);
-            group.groupLabel = aLabel;
-        } else {
-            makeLabelEditable();
-        }
-
-        return group;
-    },
-
-    getChildren: function(aGroup) {
-        let groupId = this.tabs.VTTabIDs.id(aGroup);
-        let children = this.tabs.getElementsByAttribute(this.kInGroup, groupId);
-        // Return a copy
-        return Array.prototype.slice.call(children);
-    },
-
-    addChild: function(aGroup, aTab) {
-        // Only groups can have children
-        if (!this.isGroup(aGroup)) {
-            return;
-        }
-        // We don't allow nested groups
-        if (this.isGroup(aTab)) {
-            return;
-        }
-
-        // Assign a group to the tab.  If the tab was in another group
-        // before, this will simply overwrite the old value.
-        let groupId = this.tabs.VTTabIDs.id(aGroup);
-        VTTabDataStore.setTabValue(aTab, this.kInGroup, groupId);
-
-        // Apply the group's collapsed state to the tab
-        let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed)
-                         == "true");
-        aTab.collapsed = collapsed;
-    },
-
-    addChildren: function(aGroup, aTabs) {
-        for each (let tab in aTabs) {
-            this.addChild(aGroup, tab);
-        }
-    },
-
-    removeChild: function(aTab) {
-        let groupId = VTTabDataStore.getTabValue(aTab, this.kInGroup);
-        if (!groupId) {
-            return;
-        }
-
-        VTTabDataStore.deleteTabValue(aTab, this.kInGroup);
-    },
-
-    removeChildren: function(aTabs) {
-        for each (let tab in aTabs) {
-            this.removeChild(tab);
-        }
-    },
-
-    createGroupFromMultiSelect: function() {
-        let group = this.addGroup();
-        let children = this.tabs.VTMultiSelect.getSelected();
-        for each (let tab in children) {
-            // Moving the tabs to the right position is enough, the
-            // TabMove handler knows the right thing to do.
-            this.tabs.tabbrowser.moveTabTo(tab, group._tPos+1);
-        }
-        this.tabs.VTMultiSelect.clear();
-    },
-
-    isGroup: function(aTab) {
-        return (VTTabDataStore.getTabValue(aTab, this.kGroup) == "true");
-    },
-
-    collapseExpand: function(aGroup) {
-        if (!this.isGroup(aGroup)) {
-            return;
-        }
-        let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed)
-                         == "true");
-        for each (let tab in this.getChildren(aGroup)) {
-            this._tabCollapseExpand(tab, !collapsed);
-            if (tab.selected) {
-                this.tabs.tabbrowser.selectedTab = aGroup;
-            }
-        }
-        VTTabDataStore.setTabValue(aGroup, this.kCollapsed, !collapsed);
-    },
-
-
-    /*** Event handlers ***/
-
-    handleEvent: function(aEvent) {
-        switch (aEvent.type) {
-        case "SSTabRestoring":
-            this.restoreTab(aEvent.originalTarget);
-            return;
-        case "TabSelect":
-            this.onTabSelect(aEvent);
-            return;
-        case "click":
-            this.onClick(aEvent);
-            return;
-        case "dragover":
-            this.onDragOver(aEvent);
-            return;
-        case "dragend":
-            this.clearDropTargets();
-            return;
-        case "drop":
-            this.onDrop(aEvent);
-            return;
-        case "TabMove":
-            this.onTabMove(aEvent);
-            return;
-        case "TabClose":
-            this.onTabClose(aEvent);
-            return;
-        }
-    },
-
     onTabSelect: function(aEvent) {
         let tab = aEvent.target;
         let document = tab.ownerDocument;
@@ -264,7 +290,11 @@ VTGroups.prototype = {
         this.collapseExpand(tab);
     },
 
-    clearDropTargets: function() {
+    /*
+     * Remove style from all potential drop targets (usually there
+     * should only be one...).
+     */
+    _clearDropTargets: function() {
         let groups = this.tabs.getElementsByClassName(this.kDropTarget);
         // Make a copy of the array before modifying its contents.
         groups = Array.prototype.slice.call(groups);
@@ -279,7 +309,7 @@ VTGroups.prototype = {
         }
         // Potentially remove drop target style
         //XXX is this inefficient?
-        this.clearDropTargets();
+        this._clearDropTargets();
 
         if (this.isGroup(aEvent.target)) {
             aEvent.target.classList.add(this.kDropTarget);
@@ -301,7 +331,7 @@ VTGroups.prototype = {
     },
 
     onDrop: function(aEvent) {
-        this.clearDropTargets();
+        this._clearDropTargets();
         let tab = aEvent.target;
 
         // Dropping on a group will append to that group's children.
@@ -358,9 +388,12 @@ VTGroups.prototype = {
         }
     },
 
+
+    /*
+     * Determine whether a tab move should result in the tab being
+     * added to a group (or removed from one).
+     */
     _findGroupFromContext: function(tab) {
-        // Determine whether the move should result in the tab being
-        // added to a group (or removed from one).
         let group;
         let nextPos = tab._tPos + 1;
         if (nextPos < this.tabs.childNodes.length) {
