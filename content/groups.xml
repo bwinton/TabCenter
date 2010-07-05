@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE bindings [
 <!ENTITY % tabBrowserDTD SYSTEM "chrome://browser/locale/tabbrowser.dtd">
-<!ENTITY newGroup.label "New Group">
+<!ENTITY newGroup.label "New Group">  <!-- TODO l10n -->
 %tabBrowserDTD;
 ]>
 

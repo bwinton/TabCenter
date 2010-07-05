@@ -217,7 +217,8 @@ VTGroups.prototype = {
 
         var isGroup = this.isGroup(tab);
         if (isGroup) {
-            urlbar.placeholder = "Group";
+            //TODO l10n
+            urlbar.placeholder = "Group: " + tab.groupLabel;
         } else {
             urlbar.placeholder = urlbar.getAttribute("bookmarkhistoryplaceholder");
         }
