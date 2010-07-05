@@ -322,6 +322,15 @@ VTGroups.prototype = {
             return;
         }
 
+        let group = this._findGroupFromContext(tab);
+        if (!group) {
+            this.removeChild(tab);
+        } else {
+            this.addChild(group, tab);
+        }
+    },
+
+    _findGroupFromContext: function(tab) {
         // Determine whether the move should result in the tab being
         // added to a group (or removed from one).
         let group;
@@ -344,12 +353,7 @@ VTGroups.prototype = {
                 group = this.tabs.VTTabIDs.get(groupId);
             }
         }
-
-        if (!group) {
-            this.removeChild(tab);
-        } else {
-            this.addChild(group, tab);
-        }
+        return group;
     },
 
     onTabClose: function(aEvent) {
