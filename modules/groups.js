@@ -363,20 +363,22 @@ VTGroups.prototype = {
         let collapsed = (VTTabDataStore.getTabValue(group, this.kCollapsed)
                          == "true");
         let children = this.getChildren(group);
-        if (collapsed) {
-            let window = group.ownerDocument.defaultView;
-            let tabbrowser = this.tabs.tabbrowser;
-            // Remove children async to avoid confusing tabbrowser.removeTab()
-            window.setTimeout(function() {
-                for each (let tab in children) {
-                    tabbrowser.removeTab(tab);
-                }
-            }, 10);
-        } else { 
+
+        if (!collapsed) {
             for each (let tab in children) {
                 this.removeChild(tab);
             }
+            return;
         }
+
+        let window = group.ownerDocument.defaultView;
+        let tabbrowser = this.tabs.tabbrowser;
+        // Remove children async to avoid confusing tabbrowser.removeTab()
+        window.setTimeout(function() {
+            for each (let tab in children) {
+                tabbrowser.removeTab(tab);
+            }
+        }, 10);
     }
 
 };
