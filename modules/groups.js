@@ -44,6 +44,7 @@ VTGroups.prototype = {
     kLabel: 'verticaltabs-grouplabel',
     kCollapsed: 'verticaltabs-collapsed',
     kDropTarget: 'verticaltabs-droptarget',
+    kIgnoreMove: 'verticaltabs-ignoremove',
 
     restoreTab: function(aTab) {
         // Restore tab attributes from session data (this isn't done
@@ -275,7 +276,23 @@ VTGroups.prototype = {
 
     onTabMove: function(aEvent) {
         var tab = aEvent.target;
+        if (tab.getAttribute(this.kIgnoreMove) == "true") {
+            tab.removeAttribute(this.kIgnoreMove);
+            return;
+        }
+
         if (this.isGroup(tab)) {
+            // Move group's children.
+            let children = this.getChildren(tab);
+            let offset = 0;
+            if (children.length && children[0]._tPos > tab._tPos) {
+                offset = 1;
+            }
+            for (let i = 0; i < children.length; i++) {
+                children[i].setAttribute(this.kIgnoreMove, "true");
+                this.tabs.tabbrowser.moveTabTo(children[i],
+                                               tab._tPos + i + offset);
+            }
             return;
         }
 
