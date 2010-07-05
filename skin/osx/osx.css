@@ -193,7 +193,7 @@
 }
 
 .tabbrowser-tab[fadein]:not([pinned]) {
-    -moz-transition-property: visibility, height;
+    -moz-transition-property: visibility, height, padding-left;
     -moz-transition-duration: .1s;
     -moz-transition-timing-function: ease-out;
 }
