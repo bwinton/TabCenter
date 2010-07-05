@@ -295,7 +295,15 @@ VTGroups.prototype = {
             let dt = aEvent.dataTransfer;
             let draggedTab = dt.mozGetDataAt(TAB_DROP_TYPE, 0);
             if (this.tabs._isAllowedForDataTransfer(draggedTab)) {
-                this.addChild(tab, draggedTab);
+                if (this.isGroup(draggedTab)) {
+                    // If it's a group we're dropping, merge groups.
+                    for each (let child in this.getChildren(draggedTab)) {
+                        this.addChild(tab, child);
+                    }
+                    this.tabs.tabbrowser.removeTab(draggedTab);
+                } else {
+                    this.addChild(tab, draggedTab);
+                }
             }
         }
     },
@@ -308,6 +316,8 @@ VTGroups.prototype = {
         }
 
         if (this.isGroup(tab)) {
+            let newGroup = this._findGroupFromContext(tab);
+
             // Move group's children.
             let children = this.getChildren(tab);
             let offset = 0;
@@ -318,6 +328,14 @@ VTGroups.prototype = {
                 children[i].setAttribute(this.kIgnoreMove, "true");
                 this.tabs.tabbrowser.moveTabTo(children[i],
                                                tab._tPos + i + offset);
+            }
+
+            // If we're being dragged into another group, merge groups.
+            if (newGroup) {
+                for each (let child in children) {
+                    this.addChild(newGroup, child);
+                }
+                this.tabs.tabbrowser.removeTab(tab);
             }
             return;
         }
