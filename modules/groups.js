@@ -17,6 +17,8 @@
 var EXPORTED_SYMBOLS = ["VTGroups"];
 Components.utils.import("resource://verticaltabs/tabdatastore.js");
 
+var TAB_DROP_TYPE = "application/x-moz-tabbrowser-tab";
+
 function VTGroups(tabs) {
     this.tabs = tabs;
     tabs.VTGroups = this;
@@ -201,9 +203,10 @@ VTGroups.prototype = {
             this.onDragOver(aEvent);
             return;
         case "dragend":
-        case "drop":
             this.clearDropTargets();
             return;
+        case "drop":
+            this.onDrop(aEvent);
         case 'TabMove':
             this.onTabMove(aEvent);
             return;
@@ -276,6 +279,20 @@ VTGroups.prototype = {
         // Add drop style to the group
         let group = this.tabs.VTTabIDs.get(groupId);
         group.classList.add(this.kDropTarget);
+    },
+
+    onDrop: function(aEvent) {
+        this.clearDropTargets();
+        let tab = aEvent.target;
+
+        // Dropping on a group will append to that group's children.
+        if (this.isGroup(tab)) {
+            let dt = aEvent.dataTransfer;
+            let draggedTab = dt.mozGetDataAt(TAB_DROP_TYPE, 0);
+            if (this.tabs._isAllowedForDataTransfer(draggedTab)) {
+                this.addChild(tab, draggedTab);
+            }
+        }
     },
 
     onTabMove: function(aEvent) {
