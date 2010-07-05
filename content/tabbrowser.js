@@ -9,6 +9,7 @@ var VTTabbrowserTabs = {
     patch: function() {
         var tabs = document.getElementById("tabbrowser-tabs");
         tabs._getDropIndex = this._getDropIndex;
+        tabs._isAllowedForDataTransfer = this._isAllowedForDataTransfer;
         tabs._setEffectAllowedForDataTransfer
             = this._setEffectAllowedForDataTransfer;
         tabs.addEventListener('dragover', this.onDragOver, false);
@@ -32,6 +33,15 @@ var VTTabbrowserTabs = {
         return tabs.length;
     },
 
+    _isAllowedForDataTransfer: function(node) {
+        return (node instanceof XULElement
+                && node.localName == "tab"
+                && (node.parentNode == this
+                    || (node.ownerDocument.defaultView instanceof ChromeWindow
+                        && node.ownerDocument.documentElement.getAttribute("windowtype") == "navigator:browser")));
+
+    },
+
     _setEffectAllowedForDataTransfer: function(event) {
         var dt = event.dataTransfer;
         // Disallow dropping multiple items
@@ -39,15 +49,10 @@ var VTTabbrowserTabs = {
             return dt.effectAllowed = "none";
 
         var types = dt.mozTypesAt(0);
-        var sourceNode = null;
         // tabs are always added as the first type
         if (types[0] == TAB_DROP_TYPE) {
-            var sourceNode = dt.mozGetDataAt(TAB_DROP_TYPE, 0);
-            if (sourceNode instanceof XULElement &&
-                sourceNode.localName == "tab" &&
-                (sourceNode.parentNode == this ||
-                 (sourceNode.ownerDocument.defaultView instanceof ChromeWindow &&
-                  sourceNode.ownerDocument.documentElement.getAttribute("windowtype") == "navigator:browser"))) {
+            let sourceNode = dt.mozGetDataAt(TAB_DROP_TYPE, 0);
+            if (this._isAllowedForDataTransfer(sourceNode)) {
                 if (sourceNode.parentNode == this &&
                     // CHANGE for Vertical Tabs: X -> Y, width -> height
                     (event.screenY >= sourceNode.boxObject.screenY &&
