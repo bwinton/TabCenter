@@ -147,6 +147,12 @@ VTGroups.prototype = {
         aTab.collapsed = collapsed;
     },
 
+    addChildren: function(aGroup, aTabs) {
+        for each (let tab in aTabs) {
+            this.addChild(aGroup, tab);
+        }
+    },
+
     removeChild: function(aTab) {
         let groupId = VTTabDataStore.getTabValue(aTab, this.kInGroup);
         if (!groupId) {
@@ -154,6 +160,12 @@ VTGroups.prototype = {
         }
 
         VTTabDataStore.deleteTabValue(aTab, this.kInGroup);
+    },
+
+    removeChildren: function(aTabs) {
+        for each (let tab in aTabs) {
+            this.removeChild(tab);
+        }
     },
 
     createGroupFromMultiSelect: function() {
@@ -297,9 +309,7 @@ VTGroups.prototype = {
             if (this.tabs._isAllowedForDataTransfer(draggedTab)) {
                 if (this.isGroup(draggedTab)) {
                     // If it's a group we're dropping, merge groups.
-                    for each (let child in this.getChildren(draggedTab)) {
-                        this.addChild(tab, child);
-                    }
+                    this.addChildren(tab, this.getChildren(draggedTab));
                     this.tabs.tabbrowser.removeTab(draggedTab);
                 } else {
                     this.addChild(tab, draggedTab);
@@ -332,9 +342,7 @@ VTGroups.prototype = {
 
             // If we're being dragged into another group, merge groups.
             if (newGroup) {
-                for each (let child in children) {
-                    this.addChild(newGroup, child);
-                }
+                this.addChildren(newGroup, children);
                 this.tabs.tabbrowser.removeTab(tab);
             }
             return;
@@ -387,9 +395,7 @@ VTGroups.prototype = {
         let children = this.getChildren(group);
 
         if (!collapsed) {
-            for each (let tab in children) {
-                this.removeChild(tab);
-            }
+            this.removeChildren(children);
             return;
         }
 
