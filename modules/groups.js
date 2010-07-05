@@ -281,9 +281,9 @@ VTGroups.prototype = {
         this.clearDropTargets();
 
         if (this.isGroup(aEvent.target)) {
-          aEvent.target.classList.add(this.kDropTarget);
-          this.tabs._tabDropIndicator.collapsed = true;
-          return;
+            aEvent.target.classList.add(this.kDropTarget);
+            this.tabs._tabDropIndicator.collapsed = true;
+            return;
         }
 
         let dropindex = this.tabs._getDropIndex(aEvent);
