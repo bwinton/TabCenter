@@ -16,8 +16,8 @@ function VTMultiSelect (tabs) {
     this.tabs = tabs;
     tabs.VTMultiSelect = this;
 
-    tabs.addEventListener('mousedown', this, true);
-    tabs.addEventListener('TabSelect', this, false);
+    tabs.addEventListener("mousedown", this, true);
+    tabs.addEventListener("TabSelect", this, false);
 }
 VTMultiSelect.prototype = {
 
@@ -114,10 +114,10 @@ VTMultiSelect.prototype = {
 
     handleEvent: function(aEvent) {
         switch (aEvent.type) {
-        case 'mousedown':
+        case "mousedown":
             this.onMouseDown(aEvent);
             return;
-        case 'TabSelect':
+        case "TabSelect":
             this.onTabSelect(aEvent);
             return;
         }

@@ -37,7 +37,7 @@ var VTTabDataStore = {
         aTab.removeAttribute(aKey);
         try {
             this.checkCachedSessionDataExpiration(aTab);
-            this.sessionStore.setTabValue(aTab, aKey, '');
+            this.sessionStore.setTabValue(aTab, aKey, "");
             this.sessionStore.deleteTabValue(aTab, aKey);
         } catch(ex) {
             // Ignore
@@ -49,7 +49,7 @@ var VTTabDataStore = {
         let data = aTab.linkedBrowser.__SS_data;
         if (data &&
             data._tabStillLoading &&
-            aTab.getAttribute('busy') != 'true')
+            aTab.getAttribute("busy") != "true")
             data._tabStillLoading = false;
     }
 };
@@ -69,15 +69,15 @@ function VTTabIDs(tabs) {
     this.tabs = tabs;
     tabs.VTTabIDs = this;
 
-    tabs.addEventListener('TabOpen', this, true);
-    tabs.addEventListener('SSTabRestoring', this, true);
+    tabs.addEventListener("TabOpen", this, true);
+    tabs.addEventListener("SSTabRestoring", this, true);
     for (let i=0; i < tabs.childNodes.length; i++) {
         this.initTab(tabs.childNodes[i]);
     }
 }
 VTTabIDs.prototype = {
 
-    kId: 'verticaltabs-id',
+    kId: "verticaltabs-id",
 
     id: function(aTab) {
         return aTab.getAttribute(this.kId);
@@ -92,10 +92,10 @@ VTTabIDs.prototype = {
 
     handleEvent: function(aEvent) {
         switch (aEvent.type) {
-        case 'TabOpen':
+        case "TabOpen":
             this.initTab(aEvent.originalTarget);
             return;
-        case 'SSTabRestoring':
+        case "SSTabRestoring":
             this.restoreTab(aEvent.originalTarget);
             return;
         }

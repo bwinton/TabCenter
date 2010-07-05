@@ -28,12 +28,12 @@ var VerticalTabs = {
         tabs.orient = "vertical";
         tabs.mTabstrip.orient = "vertical";
         tabs.tabbox.orient = "horizontal"; // probably not necessary
-        tabs.setAttribute("width", Services.prefs.getIntPref('extensions.verticaltabs.width'));
+        tabs.setAttribute("width", Services.prefs.getIntPref("extensions.verticaltabs.width"));
 
         // Hook up event handler for splitter so that the width of the
         // tab bar is persisted.
         let splitter = document.getElementById("verticaltabs-splitter");
-        splitter.addEventListener('mouseup', this, false);
+        splitter.addEventListener("mouseup", this, false);
 
         VTTabbrowserTabs.patch();
         this.tabIDs = new VTTabIDs(tabs);
@@ -42,20 +42,20 @@ var VerticalTabs = {
 
         // Fix up each individual tab for vertical layout, including
         // ones that are opened later on.
-        tabs.addEventListener('TabOpen', this, true);
+        tabs.addEventListener("TabOpen", this, true);
         for (let i=0; i < tabs.childNodes.length; i++) {
             this.initTab(tabs.childNodes[i]);
         }
 
-        tabs.contextMenu.addEventListener('popupshowing', this, false);
+        tabs.contextMenu.addEventListener("popupshowing", this, false);
     },
 
     initTab: function(aTab) {
-        aTab.setAttribute('align', 'stretch');
-        aTab.removeAttribute('maxwidth');
-        aTab.removeAttribute('minwidth');
-        aTab.removeAttribute('width');
-        aTab.removeAttribute('flex');
+        aTab.setAttribute("align", "stretch");
+        aTab.removeAttribute("maxwidth");
+        aTab.removeAttribute("minwidth");
+        aTab.removeAttribute("width");
+        aTab.removeAttribute("flex");
         aTab.maxWidth = 65000;
         aTab.minWidth = 0;
     },
@@ -63,7 +63,7 @@ var VerticalTabs = {
 	onTabbarResized: function() {
         let tabs = document.getElementById("tabbrowser-tabs");
         setTimeout(function() {
-            Services.prefs.setIntPref('extensions.verticaltabs.width',
+            Services.prefs.setIntPref("extensions.verticaltabs.width",
                                       tabs.boxObject.width);
         }, 10);
 	},
@@ -72,16 +72,16 @@ var VerticalTabs = {
 
     handleEvent: function(aEvent) {
         switch (aEvent.type) {
-        case 'DOMContentLoaded':
+        case "DOMContentLoaded":
             this.init();
             return;
-        case 'TabOpen':
+        case "TabOpen":
             this.onTabOpen(aEvent);
             return;
-        case 'mouseup':
+        case "mouseup":
             this.onMouseUp(aEvent);
             return;
-        case 'popupshowing':
+        case "popupshowing":
             this.onPopupShowing(aEvent);
             return;
         }
@@ -98,7 +98,7 @@ var VerticalTabs = {
     },
 
     onPopupShowing: function(aEvent) {
-        let closeTabs = document.getElementById('context_verticalTabsCloseMultiple');
+        let closeTabs = document.getElementById("context_verticalTabsCloseMultiple");
         let tabs = this.multiSelect.getSelected();
         if (tabs.length > 1) {
             closeTabs.disabled = false;

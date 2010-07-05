@@ -96,7 +96,7 @@ VTGroups.prototype = {
 
     addGroup: function(aLabel) {        
         let group = this.tabs.tabbrowser.addTab();
-        VTTabDataStore.setTabValue(group, this.kGroup, 'true');
+        VTTabDataStore.setTabValue(group, this.kGroup, "true");
 
         let window = this.tabs.ownerDocument.defaultView;
         function makeLabelEditable() {
@@ -190,10 +190,10 @@ VTGroups.prototype = {
 
     handleEvent: function(aEvent) {
         switch (aEvent.type) {
-        case 'SSTabRestoring':
+        case "SSTabRestoring":
             this.restoreTab(aEvent.originalTarget);
             return;
-        case 'TabSelect':
+        case "TabSelect":
             this.onTabSelect(aEvent);
             return;
         case "click":
@@ -207,7 +207,7 @@ VTGroups.prototype = {
             return;
         case "drop":
             this.onDrop(aEvent);
-        case 'TabMove':
+        case "TabMove":
             this.onTabMove(aEvent);
             return;
         }
