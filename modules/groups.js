@@ -207,6 +207,7 @@ VTGroups.prototype = {
             return;
         case "drop":
             this.onDrop(aEvent);
+            return;
         case "TabMove":
             this.onTabMove(aEvent);
             return;
