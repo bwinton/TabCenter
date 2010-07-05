@@ -117,7 +117,9 @@ VTGroups.prototype = {
 
     getChildren: function(aGroup) {
         var groupId = this.tabs.VTTabIDs.id(aGroup);
-        return this.tabs.getElementsByAttribute(this.kInGroup, groupId);
+        var children = this.tabs.getElementsByAttribute(this.kInGroup, groupId);
+        // Return a copy
+        return Array.prototype.slice.call(children);
     },
 
     addChild: function(aGroup, aTab) {
@@ -171,9 +173,8 @@ VTGroups.prototype = {
         }
         let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed)
                          == "true");
-        let children = this.getChildren(aGroup);
-        for (let i=0; i < children.length; i++) {
-            this._tabCollapseExpand(children[i], !collapsed);
+        for each (let tab in this.getChildren(aGroup)) {
+            this._tabCollapseExpand(tab, !collapsed);
         }
         VTTabDataStore.setTabValue(aGroup, this.kCollapsed, !collapsed);
     },
