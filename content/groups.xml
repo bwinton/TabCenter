@@ -25,12 +25,12 @@
 
       <xul:label class="tab-text"
                  role="presentation">&newGroup.label;</xul:label>
-      <xul:spacer flex="1"/>
-
       <xul:textbox flex="1"
                    class="verticaltabs-textbox"
                    value="&newGroup.label;"
                    collapsed="true"/>
+
+      <xul:spacer flex="1"/>
       <xul:toolbarbutton anonid="close-button"
                          tabindex="-1"
                          class="tab-close-button"/>
