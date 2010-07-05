@@ -290,7 +290,7 @@ VTGroups.prototype = {
             group = this.tabs.VTTabIDs.get(groupId);
         } else {
             // We're moved to the last position, so let's look at the
-            // previous tab.  Is it in a group, or even a group?
+            // previous tab.  Is it a group or in a group?
             nextPos = tab._tPos - 1;
             let prev = this.tabs.childNodes[nextPos];
             if (this.isGroup(prev)) {
