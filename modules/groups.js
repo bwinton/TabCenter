@@ -47,6 +47,7 @@ VTGroups.prototype = {
     kLabel: 'verticaltabs-grouplabel',
     kCollapsed: 'verticaltabs-collapsed',
     kDropTarget: 'verticaltabs-droptarget',
+    kDropInGroup: 'verticaltabs-dropingroup',
     kIgnoreMove: 'verticaltabs-ignoremove',
 
     restoreTab: function(aTab) {
@@ -290,12 +291,13 @@ VTGroups.prototype = {
         let tab = this.tabs.childNodes[dropindex];
         let groupId = VTTabDataStore.getTabValue(tab, this.kInGroup);
         if (!groupId) {
+            this.tabs._tabDropIndicator.classList.remove(this.kDropInGroup);
             return;
         }
-        //TODO change drop indicator's left margin
-        // Add drop style to the group
+        // Add drop style to the group and the indicator
         let group = this.tabs.VTTabIDs.get(groupId);
         group.classList.add(this.kDropTarget);
+        this.tabs._tabDropIndicator.classList.add(this.kDropInGroup);
     },
 
     onDrop: function(aEvent) {

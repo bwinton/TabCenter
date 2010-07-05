@@ -178,6 +178,10 @@
     /* TODO avoid increasing the overall height */
 }
 
+.verticaltabs-dropingroup {
+    margin-left: 10px !important;
+}
+
 .verticaltabs-twisty {
     list-style-image: url("chrome://verticaltabs/skin/osx/twisty.png");
     opacity: 0.38;
