@@ -37,6 +37,7 @@ function VTGroups(tabs) {
     tabs.addEventListener('dragend', this, false);
     tabs.addEventListener('drop', this, false);
     tabs.addEventListener('TabMove', this, false);
+    tabs.addEventListener('TabClose', this, false);
 }
 VTGroups.prototype = {
 
@@ -211,6 +212,9 @@ VTGroups.prototype = {
         case "TabMove":
             this.onTabMove(aEvent);
             return;
+        case "TabClose":
+            this.onTabClose(aEvent);
+            return;
         }
     },
 
@@ -345,6 +349,33 @@ VTGroups.prototype = {
             this.removeChild(tab);
         } else {
             this.addChild(group, tab);
+        }
+    },
+
+    onTabClose: function(aEvent) {
+        let group = aEvent.target;
+        if (!this.isGroup(group)) {
+            return;
+        }
+
+        // If a collapsed group is removed, close its children as
+        // well.  Otherwise just remove their group pointer.
+        let collapsed = (VTTabDataStore.getTabValue(group, this.kCollapsed)
+                         == "true");
+        let children = this.getChildren(group);
+        if (collapsed) {
+            let window = group.ownerDocument.defaultView;
+            let tabbrowser = this.tabs.tabbrowser;
+            // Remove children async to avoid confusing tabbrowser.removeTab()
+            window.setTimeout(function() {
+                for each (let tab in children) {
+                    tabbrowser.removeTab(tab);
+                }
+            }, 10);
+        } else { 
+            for each (let tab in children) {
+                this.removeChild(tab);
+            }
         }
     }
 
