@@ -176,6 +176,9 @@ VTGroups.prototype = {
                          == "true");
         for each (let tab in this.getChildren(aGroup)) {
             this._tabCollapseExpand(tab, !collapsed);
+            if (tab.selected) {
+                this.tabs.tabbrowser.selectedTab = aGroup;
+            }
         }
         VTTabDataStore.setTabValue(aGroup, this.kCollapsed, !collapsed);
     },
