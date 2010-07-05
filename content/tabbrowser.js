@@ -20,7 +20,10 @@ var VTTabbrowserTabs = {
         // CHANGE for Vertical Tabs: no ltr handling, X -> Y, width -> height
         // and group support.
         for (let i = tab ? tab._tPos : 0; i < tabs.length; i++) {
-            if (this.VTGroups.isGroup(tabs[i])) {
+            // If we're dropping anywhere on a group, drop to within the group
+            if (event.screenY < tabs[i].boxObject.screenY + tabs[i].boxObject.height
+                && this.VTGroups.isGroup(tabs[i])) {
+                //TODO We should be appending to the group's children
                 return i + 1;
             }
             if (event.screenY < tabs[i].boxObject.screenY + tabs[i].boxObject.height / 2) 
