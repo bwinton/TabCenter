@@ -4,13 +4,13 @@
  * Heavily inspired by Tree Style Tab's TreeStyleTabUtils.
  */
 
-var EXPORTED_SYMBOLS = ["VTTabDataStore", "VTTabIDs"];
+const EXPORTED_SYMBOLS = ["VTTabDataStore", "VTTabIDs"];
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 var VTTabDataStore = {
 
     getTabValue: function(aTab, aKey) {
-        var value = null;
+        let value = null;
         try {
             value = this.sessionStore.getTabValue(aTab, aKey);
         } catch(ex) {
@@ -46,7 +46,7 @@ var VTTabDataStore = {
 
     // workaround for http://piro.sakura.ne.jp/latest/blosxom/mozilla/extension/treestyletab/2009-09-29_debug.htm
     checkCachedSessionDataExpiration: function(aTab) {
-        var data = aTab.linkedBrowser.__SS_data;
+        let data = aTab.linkedBrowser.__SS_data;
         if (data &&
             data._tabStillLoading &&
             aTab.getAttribute('busy') != 'true')
@@ -84,7 +84,7 @@ VTTabIDs.prototype = {
     },
 
     get: function(aID) {
-        var elements = this.tabs.getElementsByAttribute(this.kId, aID);
+        let elements = this.tabs.getElementsByAttribute(this.kId, aID);
         return elements.length ? elements[0] : undefined;
     },
 

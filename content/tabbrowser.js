@@ -7,7 +7,7 @@
 var VTTabbrowserTabs = {
 
     patch: function() {
-        var tabs = document.getElementById("tabbrowser-tabs");
+        let tabs = document.getElementById("tabbrowser-tabs");
         tabs._getDropIndex = this._getDropIndex;
         tabs._isAllowedForDataTransfer = this._isAllowedForDataTransfer;
         tabs._setEffectAllowedForDataTransfer
@@ -76,11 +76,11 @@ var VTTabbrowserTabs = {
     // Overwrites what the original 'dragover' event handler does
     // towards the end.
     onDragOver: function(aEvent) {
-        var tabs = document.getElementById("tabbrowser-tabs");
-        var ind = tabs._tabDropIndicator;
-        var newIndex = tabs._getDropIndex(aEvent);
-        var rect = tabs.getBoundingClientRect();
-        var newMargin;
+        let tabs = document.getElementById("tabbrowser-tabs");
+        let ind = tabs._tabDropIndicator;
+        let newIndex = tabs._getDropIndex(aEvent);
+        let rect = tabs.getBoundingClientRect();
+        let newMargin;
 
         if (newIndex == tabs.childNodes.length) {
             let tabRect = tabs.childNodes[newIndex-1].getBoundingClientRect();

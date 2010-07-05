@@ -16,14 +16,14 @@ var VerticalTabs = {
         // tabbrowser.  That way it will share the same (horizontal)
         // space as the brower.  In other words, the bottom stuff no
         // longer extends across the whole bottom of the window.
-        var contentbox = document.getElementById("appcontent");
-        var bottom = document.getElementById("browser-bottombox");
+        let contentbox = document.getElementById("appcontent");
+        let bottom = document.getElementById("browser-bottombox");
         contentbox.appendChild(bottom);
 
         // Move the tabs next to the app content, make them vertical,
         // and restore their width from previous session
-        var leftbox = document.getElementById("verticaltabs-box");
-        var tabs = document.getElementById("tabbrowser-tabs");
+        let leftbox = document.getElementById("verticaltabs-box");
+        let tabs = document.getElementById("tabbrowser-tabs");
         leftbox.insertBefore(tabs, leftbox.firstChild);
         tabs.orient = "vertical";
         tabs.mTabstrip.orient = "vertical";
@@ -32,7 +32,7 @@ var VerticalTabs = {
 
         // Hook up event handler for splitter so that the width of the
         // tab bar is persisted.
-        var splitter = document.getElementById("verticaltabs-splitter");
+        let splitter = document.getElementById("verticaltabs-splitter");
         splitter.addEventListener('mouseup', this, false);
 
         VTTabbrowserTabs.patch();
@@ -61,7 +61,7 @@ var VerticalTabs = {
     },
 
 	onTabbarResized: function() {
-        var tabs = document.getElementById("tabbrowser-tabs");
+        let tabs = document.getElementById("tabbrowser-tabs");
         setTimeout(function() {
             Services.prefs.setIntPref('extensions.verticaltabs.width',
                                       tabs.boxObject.width);
@@ -98,8 +98,8 @@ var VerticalTabs = {
     },
 
     onPopupShowing: function(aEvent) {
-        var closeTabs = document.getElementById('context_verticalTabsCloseMultiple');
-        var tabs = this.multiSelect.getSelected();
+        let closeTabs = document.getElementById('context_verticalTabsCloseMultiple');
+        let tabs = this.multiSelect.getSelected();
         if (tabs.length > 1) {
             closeTabs.disabled = false;
         } else {

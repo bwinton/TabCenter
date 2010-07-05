@@ -10,7 +10,7 @@
  * cases this will be the only API you ever need.
  */
 
-var EXPORTED_SYMBOLS = ["VTMultiSelect"];
+const EXPORTED_SYMBOLS = ["VTMultiSelect"];
 
 function VTMultiSelect (tabs) {
     this.tabs = tabs;
@@ -43,8 +43,8 @@ VTMultiSelect.prototype = {
     },
 
     findClosestSelectedTab: function(aTab) {
-        var i = 1;
-        var tab = null;
+        let i = 1;
+        let tab = null;
         while ((aTab._tPos - i >= 0) ||
                (aTab._tPos + i < this.tabs.childNodes.length)) {
             if (aTab._tPos - i >= 0) {
@@ -66,8 +66,8 @@ VTMultiSelect.prototype = {
 
     spanSelect: function(aBeginTab, aEndTab) {
         this.clear();
-        var begin = aBeginTab._tPos;
-        var end = aEndTab._tPos;
+        let begin = aBeginTab._tPos;
+        let end = aEndTab._tPos;
         if (begin > end) {
             [end, begin] = [begin, end];
         }
@@ -86,7 +86,7 @@ VTMultiSelect.prototype = {
      * Return a list of selected tabs.
      */
     getSelected: function() {
-        var results = [];
+        let results = [];
         for (let i=0; i < this.tabs.childNodes.length; i++) {
             let tab = this.tabs.childNodes[i];
             if (tab.selected || (tab.getAttribute("multiselect") == "true")) {
@@ -100,11 +100,11 @@ VTMultiSelect.prototype = {
      * Close all tabs in the multiselection.
      */
     closeSelected: function() {
-        var toclose = this.getSelected();
+        let toclose = this.getSelected();
         this.clear();
 
-        var tab;
-        for (var i=0; i < toclose.length; i++) {
+        let tab;
+        for (let i=0; i < toclose.length; i++) {
             tab = toclose[i];
             this.tabs.tabbrowser.removeTab(tab);
         }
@@ -124,7 +124,7 @@ VTMultiSelect.prototype = {
     },
 
     onMouseDown: function(aEvent) {
-        var tab = aEvent.target;
+        let tab = aEvent.target;
         if (tab.localName != "tab") {
             return;
         }
@@ -169,7 +169,7 @@ VTMultiSelect.prototype = {
     },
 
     onTabSelect: function(aEvent) {
-        var tab = aEvent.target;
+        let tab = aEvent.target;
         if (tab.getAttribute("multiselect-noclear") == "true") {
             tab.removeAttribute("multiselect");
             tab.removeAttribute("multiselect-noclear");

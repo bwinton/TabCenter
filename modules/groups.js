@@ -14,10 +14,10 @@
  *     all.
  */
 
-var EXPORTED_SYMBOLS = ["VTGroups"];
+const EXPORTED_SYMBOLS = ["VTGroups"];
 Components.utils.import("resource://verticaltabs/tabdatastore.js");
 
-var TAB_DROP_TYPE = "application/x-moz-tabbrowser-tab";
+const TAB_DROP_TYPE = "application/x-moz-tabbrowser-tab";
 
 function VTGroups(tabs) {
     this.tabs = tabs;
@@ -67,11 +67,11 @@ VTGroups.prototype = {
             return;
         }
 
-        var self = this;
-        var window = this.tabs.ownerDocument.defaultView;
+        let self = this;
+        let window = this.tabs.ownerDocument.defaultView;
         function restoreCollapsedState() {
             // The group tab we belong to may not have been restored yet.
-            var group = self.tabs.VTTabIDs.get(groupId);
+            let group = self.tabs.VTTabIDs.get(groupId);
             if (group === undefined) {
                 window.setTimeout(restoreCollapsedState, 10);
                 return;
@@ -95,10 +95,10 @@ VTGroups.prototype = {
     /*** Public API ***/
 
     addGroup: function(aLabel) {        
-        var group = this.tabs.tabbrowser.addTab();
+        let group = this.tabs.tabbrowser.addTab();
         VTTabDataStore.setTabValue(group, this.kGroup, 'true');
 
-        var window = this.tabs.ownerDocument.defaultView;
+        let window = this.tabs.ownerDocument.defaultView;
         function makeLabelEditable() {
             // XBL bindings aren't applied synchronously.
             if (typeof group.editLabel !== "function") {
@@ -119,8 +119,8 @@ VTGroups.prototype = {
     },
 
     getChildren: function(aGroup) {
-        var groupId = this.tabs.VTTabIDs.id(aGroup);
-        var children = this.tabs.getElementsByAttribute(this.kInGroup, groupId);
+        let groupId = this.tabs.VTTabIDs.id(aGroup);
+        let children = this.tabs.getElementsByAttribute(this.kInGroup, groupId);
         // Return a copy
         return Array.prototype.slice.call(children);
     },
@@ -147,7 +147,7 @@ VTGroups.prototype = {
     },
 
     removeChild: function(aTab) {
-        var groupId = VTTabDataStore.getTabValue(aTab, this.kInGroup);
+        let groupId = VTTabDataStore.getTabValue(aTab, this.kInGroup);
         if (!groupId) {
             return;
         }
@@ -156,8 +156,8 @@ VTGroups.prototype = {
     },
 
     createGroupFromMultiSelect: function() {
-        var group = this.addGroup();
-        var children = this.tabs.VTMultiSelect.getSelected();
+        let group = this.addGroup();
+        let children = this.tabs.VTMultiSelect.getSelected();
         for each (let tab in children) {
             // Moving the tabs to the right position is enough, the
             // TabMove handler knows the right thing to do.
@@ -214,11 +214,11 @@ VTGroups.prototype = {
     },
 
     onTabSelect: function(aEvent) {
-        var tab = aEvent.target;
-        var document = tab.ownerDocument;
-        var urlbar = document.getElementById("urlbar");
+        let tab = aEvent.target;
+        let document = tab.ownerDocument;
+        let urlbar = document.getElementById("urlbar");
 
-        var isGroup = this.isGroup(tab);
+        let isGroup = this.isGroup(tab);
         if (isGroup) {
             //TODO l10n
             urlbar.placeholder = "Group: " + tab.groupLabel;
@@ -228,7 +228,7 @@ VTGroups.prototype = {
         urlbar.disabled = isGroup;
 
         //XXX this doesn't quite work:
-        var buttons = ["reload-button", "home-button", "urlbar", "searchbar"];
+        let buttons = ["reload-button", "home-button", "urlbar", "searchbar"];
         for (let i=0; i < buttons.length; i++) {
             let element = document.getElementById(buttons[i]);
             element.disabled = isGroup;
@@ -236,7 +236,7 @@ VTGroups.prototype = {
     },
 
     onClick: function(aEvent) {
-        var tab = aEvent.target;
+        let tab = aEvent.target;
         if (tab.localName != "tab") {
             return;
         }
@@ -247,7 +247,7 @@ VTGroups.prototype = {
     },
 
     clearDropTargets: function() {
-        var groups = this.tabs.getElementsByClassName(this.kDropTarget);
+        let groups = this.tabs.getElementsByClassName(this.kDropTarget);
         // Make a copy of the array before modifying its contents.
         groups = Array.prototype.slice.call(groups);
         for (let i=0; i < groups.length; i++) {
@@ -296,7 +296,7 @@ VTGroups.prototype = {
     },
 
     onTabMove: function(aEvent) {
-        var tab = aEvent.target;
+        let tab = aEvent.target;
         if (tab.getAttribute(this.kIgnoreMove) == "true") {
             tab.removeAttribute(this.kIgnoreMove);
             return;
