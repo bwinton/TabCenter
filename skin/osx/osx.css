@@ -206,7 +206,7 @@
     list-style-image: url("chrome://verticaltabs/skin/osx/twisty.png");
     opacity: 0.38;
     -moz-transition-property: -moz-transform;
-    -moz-transition-duration: .2s;
+    -moz-transition-duration: .1s;
 }
 .tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-twisty {
     -moz-transform: rotate(-90deg);
@@ -218,7 +218,7 @@
 
 .tabbrowser-tab[fadein]:not([pinned]) {
     -moz-transition-property: visibility, height, max-height, padding-left;
-    -moz-transition-duration: .2s;
+    -moz-transition-duration: .1s;
     -moz-transition-timing-function: ease-out;
 }
 
