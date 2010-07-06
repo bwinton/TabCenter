@@ -16,6 +16,8 @@
   <commandset id="mainCommandSet">
     <command id="cmd_close"
              oncommand="gBrowser.tabContainer.VTMultiSelect.closeSelected();"/>
+    <command id="VerticalTabs:Group"
+             oncommand="gBrowser.tabContainer.VTGroups.createGroupFromMultiSelect()" />
   </commandset>
 
   <popupset id="mainPopupSet">
@@ -43,6 +45,12 @@
                        command="cmd_newNavigatorTab"
                        label="&tabCmd.label;"
                        tooltiptext="&newTabButton.tooltip;" />
+        <!-- TODO l10n -->
+        <toolbarbutton id="verticaltabs-groupbutton"
+                       class="verticaltabs-button"                       
+                       command="VerticalTabs:Group"
+                       label="Group"
+                       tooltiptext="Group the selected tabs" />
         <toolbarbutton id="verticaltabs-alltabsbutton"
                        class="verticaltabs-button"
                        command="Browser:ShowAllTabs"

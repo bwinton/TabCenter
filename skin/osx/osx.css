@@ -131,8 +131,15 @@
     -moz-image-region: rect(2px, 53px, 18px, 37px);
 }
 
+#verticaltabs-groupbutton {
+    margin-left: -1px; /* make it tight with the button to its left */
+    list-style-image: url("chrome://browser/skin/Toolbar.png");
+    -moz-image-region: rect(0, 280px, 20px, 260px);
+    padding: 0 0 0 13px; /* make sure the image has space and is centered */
+}
+
 #verticaltabs-alltabsbutton {
-    margin-left: -1px; /* make it tight with the "new tab" button */
+    margin-left: -1px; /* make it tight with the button to its left */
     list-style-image: url(chrome://browser/skin/tabbrowser/alltabs-box-bkgnd-icon.png);
     -moz-image-region: rect(2px, 19px, 18px, 3px);
     -moz-transform: rotate(180deg);
