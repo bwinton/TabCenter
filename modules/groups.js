@@ -119,7 +119,7 @@ VTGroups.prototype = {
         // Apply the group's collapsed state to the tab
         let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed)
                          == "true");
-        aTab.collapsed = collapsed;
+        this._tabCollapseExpand(aTab, collapsed); 
     },
 
     addChildren: function(aGroup, aTabs) {
