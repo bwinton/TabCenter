@@ -277,6 +277,15 @@ VTGroups.prototype = {
             urlbar.placeholder = "Group: " + tab.groupLabel;
         } else {
             urlbar.placeholder = urlbar.getAttribute("bookmarkhistoryplaceholder");
+            // Selecting a tab that's in a collapsed group will expand
+            // the group.
+            if (tab.classList.contains(this.kCollapsed)) {
+                let groupId = VTTabDataStore.getTabValue(tab, this.kInGroup);
+                if (groupId) {
+                    let group = this.tabs.VTTabIDs.get(groupId);
+                    this.collapseExpand(group);
+                }
+            }
         }
         urlbar.disabled = isGroup;
 
