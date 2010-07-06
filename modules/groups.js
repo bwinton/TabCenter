@@ -178,7 +178,7 @@ VTGroups.prototype = {
                          == "true");
         for each (let tab in this.getChildren(aGroup)) {
             this._tabCollapseExpand(tab, !collapsed);
-            if (tab.selected) {
+            if (!collapsed && tab.selected) {
                 this.tabs.tabbrowser.selectedTab = aGroup;
             }
         }
