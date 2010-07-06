@@ -134,6 +134,7 @@
 
 #verticaltabs-groupbutton {
     margin-left: -1px; /* make it tight with the button to its left */
+    /* TODO need icon to symbolize tab group */
     list-style-image: url("chrome://browser/skin/Toolbar.png");
     -moz-image-region: rect(0, 280px, 20px, 260px);
     padding: 0 0 0 13px; /* make sure the image has space and is centered */
@@ -193,6 +194,12 @@
 
 .verticaltabs-dropingroup {
     margin-left: 10px !important;
+}
+
+.verticaltabs-droptonewgroup {
+    /* TODO need icon to symbolize tab group */
+    list-style-image: url("chrome://browser/skin/Toolbar.png");
+    -moz-image-region: rect(0, 280px, 20px, 260px);
 }
 
 .verticaltabs-twisty {

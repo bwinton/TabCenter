@@ -34,6 +34,8 @@ function VTGroups(tabs) {
 
     // For synchronizing group behaviour and tab positioning
     tabs.addEventListener('dragover', this, false);
+    tabs.addEventListener('dragenter', this, false);
+    tabs.addEventListener('dragleave', this, false);
     tabs.addEventListener('dragend', this, false);
     tabs.addEventListener('drop', this, false);
     tabs.addEventListener('TabMove', this, false);
@@ -48,6 +50,7 @@ VTGroups.prototype = {
     kCollapsed: 'verticaltabs-collapsed',
     kDropTarget: 'verticaltabs-droptarget',
     kDropInGroup: 'verticaltabs-dropingroup',
+    kDropToNewGroup: 'verticaltabs-droptonewgroup',
     kIgnoreMove: 'verticaltabs-ignoremove',
 
 
@@ -205,6 +208,12 @@ VTGroups.prototype = {
         case "dragover":
             this.onDragOver(aEvent);
             return;
+        case "dragenter":
+            this.onDragEnter(aEvent);
+            return;
+        case "dragleave":
+            this.onDragLeave(aEvent);
+            return;
         case "dragend":
             this._clearDropTargets();
             return;
@@ -311,12 +320,18 @@ VTGroups.prototype = {
         //XXX is this inefficient?
         this._clearDropTargets();
 
-        if (this.isGroup(aEvent.target)) {
+        // Directly dropping on a group or the tab icon:
+        // Disable drop indicator, mark tab as drop target.
+        if (this.isGroup(aEvent.target)
+           || (aEvent.originalTarget.classList
+               && aEvent.originalTarget.classList.contains("tab-icon-image"))) {
             aEvent.target.classList.add(this.kDropTarget);
             this.tabs._tabDropIndicator.collapsed = true;
             return;
         }
 
+        // Find out if the tab's new position would add it to a group.
+        // If so, mark the group as drop target and indent drop indicator.
         let dropindex = this.tabs._getDropIndex(aEvent);
         let tab = this.tabs.childNodes[dropindex];
         let groupId = VTTabDataStore.getTabValue(tab, this.kInGroup);
@@ -330,22 +345,58 @@ VTGroups.prototype = {
         this.tabs._tabDropIndicator.classList.add(this.kDropInGroup);
     },
 
+    onDragEnter: function(aEvent) {
+        if (aEvent.target.localName != "tab") {
+            return;
+        }
+        // Dragging a tab over a tab's icon changes the icon to the
+        // "create group" icon.
+        if (aEvent.originalTarget.classList
+            && aEvent.originalTarget.classList.contains("tab-icon-image")) {
+            aEvent.originalTarget.classList.add(this.kDropToNewGroup);
+        }
+    },
+
+    onDragLeave: function(aEvent) {
+        if (aEvent.target.localName != "tab") {
+            return;
+        }
+        // Change the tab's icon back from the "create group" to
+        // whatever it was before.
+        if (aEvent.originalTarget.classList
+            && aEvent.originalTarget.classList.contains("tab-icon-image")) {
+            aEvent.originalTarget.classList.remove(this.kDropToNewGroup);
+        }
+    },
+
     onDrop: function(aEvent) {
         this._clearDropTargets();
         let tab = aEvent.target;
 
+        let dt = aEvent.dataTransfer;
+        let draggedTab = dt.mozGetDataAt(TAB_DROP_TYPE, 0);
+        if (!this.tabs._isAllowedForDataTransfer(draggedTab)) {
+            return;
+        }
+
+        // Dropping a tab on another tab's icon will create a new
+        // group with those two tabs in it.
+        if (aEvent.originalTarget.classList
+            && aEvent.originalTarget.classList.contains("tab-icon-image")) {
+            let group = this.addGroup();
+            this.tabs.tabbrowser.moveTabTo(tab, group._tPos+1);
+            this.tabs.tabbrowser.moveTabTo(draggedTab, group._tPos+1);
+            return;
+        }
+
         // Dropping on a group will append to that group's children.
         if (this.isGroup(tab)) {
-            let dt = aEvent.dataTransfer;
-            let draggedTab = dt.mozGetDataAt(TAB_DROP_TYPE, 0);
-            if (this.tabs._isAllowedForDataTransfer(draggedTab)) {
-                if (this.isGroup(draggedTab)) {
-                    // If it's a group we're dropping, merge groups.
-                    this.addChildren(tab, this.getChildren(draggedTab));
-                    this.tabs.tabbrowser.removeTab(draggedTab);
-                } else {
-                    this.addChild(tab, draggedTab);
-                }
+            if (this.isGroup(draggedTab)) {
+                // If it's a group we're dropping, merge groups.
+                this.addChildren(tab, this.getChildren(draggedTab));
+                this.tabs.tabbrowser.removeTab(draggedTab);
+            } else {
+                this.addChild(tab, draggedTab);
             }
         }
     },
