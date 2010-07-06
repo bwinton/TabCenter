@@ -50,6 +50,7 @@
       <constructor><![CDATA[
         this.mLabel.addEventListener('dblclick', this, false);
         this.mTextbox.addEventListener('keypress', this, false);
+        this.mTextbox.addEventListener('blur', this, false);
 
         // Synchronize with SessionStore
         let label = this.getAttribute(VerticalTabs.groups.kLabel);
@@ -110,6 +111,9 @@
                   this.finishEditingLabel();
               }
               aEvent.stopPropagation();
+              return;
+          case 'blur':
+              this.finishEditingLabel();
               return;
           }
         ]]></body>
