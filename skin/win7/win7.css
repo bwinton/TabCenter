@@ -17,6 +17,8 @@
     -moz-border-radius: 3px !important;
     margin: 0 !important;
     padding: 0 !important;
+    height: 20px !important;
+    max-height: 20px !important;
 }
 .tabbrowser-tab:hover {
     border: 1px solid #b9d7fc !important;
