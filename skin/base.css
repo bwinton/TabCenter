@@ -25,6 +25,14 @@
     visibility: collapse;
 }
 
+/* No special treatment for app tabs (for now). */
+.tabbrowser-tab[pinned] {
+  position: inherit;
+}
+.tabbrowser-tab[pinned] > .tab-text {
+  display: inherit;
+}
+
 /* Ensure the twisty image doesn't stretch. */
 .verticaltabs-twisty-container {
 	-moz-box-pack: start;

@@ -8,11 +8,16 @@ var VTTabbrowserTabs = {
 
     patch: function() {
         let tabs = document.getElementById("tabbrowser-tabs");
+        tabs._positionPinnedTabs = this._positionPinnedTabs;
         tabs._getDropIndex = this._getDropIndex;
         tabs._isAllowedForDataTransfer = this._isAllowedForDataTransfer;
         tabs._setEffectAllowedForDataTransfer
             = this._setEffectAllowedForDataTransfer;
         tabs.addEventListener('dragover', this.onDragOver, false);
+    },
+
+    _positionPinnedTabs: function() {
+        // TODO we might want to do something here.
     },
 
     _getDropIndex: function(event) {
