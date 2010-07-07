@@ -30,3 +30,16 @@
 	-moz-box-pack: start;
 	-moz-box-align: center;
 }
+
+/* Collapse/expand animation */
+.tabbrowser-tab[fadein]:not([pinned]) {
+    -moz-transition-property: visibility, height, min-height, max-height, padding-left;
+    -moz-transition-duration: .1s;
+    -moz-transition-timing-function: ease-out;
+}
+.verticaltabs-collapsed {
+    height: 0px !important;  /* animation shrinks height */
+    min-height: 0px !important;
+    max-height: 0px !important;
+    visibility: collapse;
+}

@@ -18,6 +18,7 @@
     margin: 0 !important;
     padding: 0 !important;
     height: 20px !important;
+    min-height: 20px !important;
     max-height: 20px !important;
 }
 .tabbrowser-tab:hover {
@@ -159,16 +160,4 @@
 }
 .tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-twisty {
     list-style-image: url("chrome://verticaltabs/skin/win7/twisty-collapsed.png");
-}
-
-.tabbrowser-tab[fadein]:not([pinned]) {
-    -moz-transition-property: visibility, height, max-height, padding-left;
-    -moz-transition-duration: .1s;
-    -moz-transition-timing-function: ease-out;
-}
-
-.verticaltabs-collapsed {
-    height: 0px !important;  /* animation shrinks height */
-    max-height: 0px !important;
-    visibility: collapse;
 }

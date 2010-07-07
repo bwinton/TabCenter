@@ -38,6 +38,7 @@
     margin: 0 !important;
     padding: 0 3px 2px 10px !important;
     height: 21px !important;     /* height including border! */
+    min-height: 21px !important;
     max-height: 21px !important;
     text-align: left !important;
     border: none;
@@ -214,16 +215,4 @@
 
 .verticaltabs-twisty:active {
     opacity: 1.0;
-}
-
-.tabbrowser-tab[fadein]:not([pinned]) {
-    -moz-transition-property: visibility, height, max-height, padding-left;
-    -moz-transition-duration: .1s;
-    -moz-transition-timing-function: ease-out;
-}
-
-.verticaltabs-collapsed {
-    height: 0px !important;  /* animation shrinks height */
-    max-height: 0px !important;
-    visibility: collapse;
 }
