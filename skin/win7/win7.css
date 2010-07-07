@@ -92,6 +92,14 @@
     -moz-image-region: rect(0, 36px, 18px, 18px);
 }
 
+#verticaltabs-groupbutton {
+    margin-left: -1px; /* make it tight with the button to its left */
+    /* TODO need icon to symbolize tab group */
+    list-style-image: url("chrome://browser/skin/Toolbar.png");
+    -moz-image-region: rect(0, 234px, 18px, 216px);
+/*    padding: 0 0 0 13px;*/ /* make sure the image has space and is centered */
+}
+
 #verticaltabs-alltabsbutton > .toolbarbutton-icon {
     list-style-image: url("chrome://browser/skin/tabbrowser/alltabs.png");
     -moz-image-region: rect(0, 14px, 20px, 0);
@@ -123,10 +131,24 @@
 .tabbrowser-tab[verticaltabs-group] .tab-text {
 }
 
+.verticaltabs-textbox {
+    margin: 0;
+}
+
 .verticaltabs-droptarget {
     border: 1px solid #7da2ce !important;
     background: -moz-linear-gradient(top, #dcebfc, #c1dbfc) repeat-x !important;
     -moz-border-radius: 2px !important;
+}
+
+.verticaltabs-dropingroup {
+    margin-left: 10px !important;
+}
+
+.verticaltabs-droptonewgroup {
+    /* TODO need icon to symbolize tab group */
+    list-style-image: url("chrome://browser/skin/Toolbar.png");
+    -moz-image-region: rect(0, 234px, 18px, 216px);
 }
 
 .verticaltabs-twisty {
@@ -137,4 +159,16 @@
 }
 .tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-twisty {
     list-style-image: url("chrome://verticaltabs/skin/win7/twisty-collapsed.png");
+}
+
+.tabbrowser-tab[fadein]:not([pinned]) {
+    -moz-transition-property: visibility, height, max-height, padding-left;
+    -moz-transition-duration: .1s;
+    -moz-transition-timing-function: ease-out;
+}
+
+.verticaltabs-collapsed {
+    height: 0px !important;  /* animation shrinks height */
+    max-height: 0px !important;
+    visibility: collapse;
 }
