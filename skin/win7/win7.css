@@ -136,6 +136,10 @@
     margin: 0;
 }
 
+.verticaltabs-counter {
+    visibility: collapse;
+}
+
 .verticaltabs-droptarget {
     border: 1px solid #7da2ce !important;
     background: -moz-linear-gradient(top, #dcebfc, #c1dbfc) repeat-x !important;

@@ -31,6 +31,8 @@
                    collapsed="true"/>
 
       <xul:spacer flex="1"/>
+      <xul:label class="verticaltabs-counter"
+                 role="presentation">0</xul:label>
       <xul:toolbarbutton anonid="close-button"
                          tabindex="-1"
                          class="tab-close-button"/>
@@ -45,6 +47,9 @@
       </field>
       <field name="mTextbox" readonly="true">
         document.getAnonymousElementByAttribute(this, "class", "verticaltabs-textbox");
+      </field>
+      <field name="mCounter" readonly="true">
+        document.getAnonymousElementByAttribute(this, "class", "verticaltabs-counter");
       </field>
 
       <constructor><![CDATA[

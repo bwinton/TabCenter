@@ -97,6 +97,20 @@ VTGroups.prototype = {
         return Array.prototype.slice.call(children);
     },
 
+    _updateCount: function(aGroup) {
+        let count = this.getChildren(aGroup).length;
+
+        function update() {
+            if (!aGroup.mCounter) {
+                let window = aGroup.ownerDocument.defaultView;
+                window.setTimeout(update, 10);
+                return;
+            }
+            aGroup.mCounter.firstChild.nodeValue = "" + count;
+        }
+        update();
+    },
+
     /*
      * Add a tab to a group.  This won't physically move the tab
      * anywhere, just create the logical connection.
@@ -115,6 +129,7 @@ VTGroups.prototype = {
         // before, this will simply overwrite the old value.
         let groupId = this.tabs.VTTabIDs.id(aGroup);
         VTTabDataStore.setTabValue(aTab, this.kInGroup, groupId);
+        this._updateCount(aGroup);
 
         // Apply the group's collapsed state to the tab
         let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed)
@@ -138,6 +153,7 @@ VTGroups.prototype = {
         }
 
         VTTabDataStore.deleteTabValue(aTab, this.kInGroup);
+        this._updateCount(aGroup);
     },
 
     removeChildren: function(aTabs) {
@@ -251,6 +267,7 @@ VTGroups.prototype = {
                 window.setTimeout(restoreCollapsedState, 10);
                 return;
             }
+            self._updateCount(group);
             let collapsed = (VTTabDataStore.getTabValue(group, self.kCollapsed)
                              == "true");
             self._tabCollapseExpand(aTab, collapsed);

@@ -186,6 +186,26 @@
     margin: 0 0 0 6px;
 }
 
+.verticaltabs-counter {
+    visibility: collapse;
+    margin: 1px 0;
+    padding: 0 6px;
+    max-height: 15px;
+    -moz-border-radius: 8px;
+    background-color: #91a0c0;
+    color: #ffffff;
+    font-weight: bold;
+    text-shadow: none;
+}
+.tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-counter {
+    visibility: visible;
+}
+.tabbrowser-tab[selected="true"] .verticaltabs-counter {
+    background-color: #ffffff;
+    color: #91a0c0;
+}
+/* TODO :-moz-window-inactive style */
+
 .verticaltabs-droptarget {
     border: 2px solid #577bf3 !important; /* not OSX's colour but Firefox's */
     background: #d0def5 !important;
