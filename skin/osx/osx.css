@@ -204,7 +204,13 @@
     background-color: #ffffff;
     color: #91a0c0;
 }
-/* TODO :-moz-window-inactive style */
+.verticaltabs-counter:-moz-window-inactive {
+    background-color: #b5b5b5;
+}
+.tabbrowser-tab[selected="true"] .verticaltabs-counter:-moz-window-inactive {
+    background-color: #ffffff;
+    color: #929292;
+}
 
 .verticaltabs-droptarget {
     border: 2px solid #577bf3 !important; /* not OSX's colour but Firefox's */
