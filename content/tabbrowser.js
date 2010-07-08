@@ -68,11 +68,9 @@ var VTTabbrowserTabs = {
             }
         }
 
-        for (let i = 0; i < this._supportedLinkDropTypes.length; i++) {
-            if (types.contains(this._supportedLinkDropTypes[i])) {
-                // Here we need to to do this manually
-                return dt.effectAllowed = dt.dropEffect = "link";
-            }
+        if (browserDragAndDrop.canDropLink(event)) {
+            // Here we need to do this manually
+            return dt.effectAllowed = dt.dropEffect = "link";
         }
         return dt.effectAllowed = "none";
     },
