@@ -1,5 +1,4 @@
 content   verticaltabs                 content/
-resource  verticaltabs                 modules/
 skin      verticaltabs   classic/1.0   skin/
 locale    verticaltabs   en-US         locale/en-US/
 
