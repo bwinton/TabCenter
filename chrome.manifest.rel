@@ -1,0 +1,8 @@
+content   verticaltabs                 jar:verticaltabs.jar!/content/
+skin      verticaltabs   classic/1.0   jar:verticaltabs.jar!/skin/
+locale    verticaltabs   en-US         jar:verticaltabs.jar!/locale/en-US/
+
+overlay   chrome://browser/content/browser.xul   chrome://verticaltabs/content/browser.xul
+
+override  chrome://verticaltabs/skin/platform.css chrome://verticaltabs/skin/osx/osx.css os=Darwin
+override  chrome://verticaltabs/skin/platform.css chrome://verticaltabs/skin/win7/win7.css os=WINNT
