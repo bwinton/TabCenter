@@ -421,9 +421,13 @@ VTGroups.prototype = {
                 // If it's a group we're dropping, merge groups.
                 this.addChildren(tab, this.getChildren(draggedTab));
                 this.tabs.tabbrowser.removeTab(draggedTab);
-            } else {
-                this.addChild(tab, draggedTab);
+                return;
             }
+            // Dropping onto a collapsed group should select the group.
+            if (VTTabDataStore.getTabValue(tab, this.kCollapsed) == "true") {
+                this.tabs.tabbrowser.selectedTab = tab;
+            }
+            this.addChild(tab, draggedTab);
         }
     },
 
