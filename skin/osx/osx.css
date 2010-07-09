@@ -188,8 +188,9 @@
 
 .verticaltabs-counter {
     visibility: collapse;
-    margin: 1px 0;
-    padding: 0 6px;
+    font-size: 11px;
+    margin: 2px 0;
+    padding: 0 5px;
     max-height: 15px;
     -moz-border-radius: 8px;
     background-color: #91a0c0;
