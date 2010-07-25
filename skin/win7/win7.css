@@ -16,7 +16,7 @@
     border: 1px solid transparent !important;
     -moz-border-radius: 3px !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 1px 0 !important;
     height: 20px !important;
     min-height: 20px !important;
     max-height: 20px !important;
@@ -29,7 +29,7 @@
 .tabbrowser-tab[selected="true"],
 .tabbrowser-tab[multiselect="true"] {
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 1px 0 !important;
 
     border: 1px solid #84acdd !important;
     background: -moz-linear-gradient(top, Window, #d0e5ff) repeat-x !important;
@@ -45,7 +45,7 @@
 
 .tabbrowser-tab:not([selected="true"]):hover {
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 1px 0 !important;
 }
 
 /* Turn mouse cursor into a pointy hand.  This seems to be the
