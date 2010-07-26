@@ -153,7 +153,10 @@ VTGroups.prototype = {
         }
 
         VTTabDataStore.deleteTabValue(aTab, this.kInGroup);
-        this._updateCount(aGroup);
+        let group = this.tabs.VTTabIDs.get(groupId);
+        if (group) {
+            this._updateCount(group);
+        }
     },
 
     removeChildren: function(aTabs) {
