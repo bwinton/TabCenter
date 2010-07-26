@@ -502,23 +502,24 @@ VTGroups.prototype = {
     },
 
     onTabClose: function(aEvent) {
-        let group = aEvent.target;
-        if (!this.isGroup(group)) {
+        let tab = aEvent.target;
+        if (!this.isGroup(tab)) {
+            this.removeChild(tab);
             return;
         }
 
         // If a collapsed group is removed, close its children as
         // well.  Otherwise just remove their group pointer.
-        let collapsed = (VTTabDataStore.getTabValue(group, this.kCollapsed)
+        let collapsed = (VTTabDataStore.getTabValue(tab, this.kCollapsed)
                          == "true");
-        let children = this.getChildren(group);
+        let children = this.getChildren(tab);
 
         if (!collapsed) {
             this.removeChildren(children);
             return;
         }
 
-        let window = group.ownerDocument.defaultView;
+        let window = tab.ownerDocument.defaultView;
         let tabbrowser = this.tabs.tabbrowser;
         // Remove children async to avoid confusing tabbrowser.removeTab()
         window.setTimeout(function() {
