@@ -43,27 +43,14 @@ VTMultiSelect.prototype = {
     },
 
     findClosestSelectedTab: function(aTab) {
-        let i = 1;
-        let tab = null;
-        while ((aTab._tPos - i >= 0) ||
-               (aTab._tPos + i < this.tabs.childNodes.length)) {
-            if (aTab._tPos - i >= 0) {
-                let curtab = this.tabs.childNodes[aTab._tPos - i];
-                if (tab.getAttribute("multiselect") == "true") {
-                    tab = curtab;
-                    break;
-                }
-            }
-            if (aTab._tPos + i < this.tabs.childNodes.length) {
-                let curtab = this.tabs.childNodes[aTab._tPos + i];
-                if (tab.getAttribute("multiselect") == "true") {
-                    tab = curtab;
-                    break;
-                }
-            }
-            i++;
+        let selected = this.tabs.getElementsByAttribute("multiselect", "true");
+        if (!selected.length) {
+            return null;
         }
-        return tab;
+        return Array.sort(selected, function (a, b) {
+            return Math.abs(a._tPos - aTab._tPos)
+                   - Math.abs(b._tPos - aTab._tPos);
+        })[0];
     },
 
     spanSelect: function(aBeginTab, aEndTab) {
