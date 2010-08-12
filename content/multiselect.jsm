@@ -48,14 +48,16 @@ VTMultiSelect.prototype = {
         while ((aTab._tPos - i >= 0) ||
                (aTab._tPos + i < this.tabs.childNodes.length)) {
             if (aTab._tPos - i >= 0) {
-                tab = this.tabs.childNodes[aTab._tPos - i];
+                let curtab = this.tabs.childNodes[aTab._tPos - i];
                 if (tab.getAttribute("multiselect") == "true") {
+                    tab = curtab;
                     break;
                 }
             }
             if (aTab._tPos + i < this.tabs.childNodes.length) {
-                tab = this.tabs.childNodes[aTab._tPos + i];
+                let curtab = this.tabs.childNodes[aTab._tPos + i];
                 if (tab.getAttribute("multiselect") == "true") {
+                    tab = curtab;
                     break;
                 }
             }
