@@ -51,11 +51,11 @@
 /* Turn mouse cursor into a pointy hand.  This seems to be the
    standard for link lists like these. */
 .tabbrowser-tab,
-.tabbrowser-tab > .tab-text {
+.tab-text {
     cursor: pointer !important;
 }
 
-.tabbrowser-tab:not(:hover):not([selected="true"]) > .tab-close-button {
+.tabbrowser-tab:not(:hover):not([selected="true"]) .tab-close-button {
     visibility: collapse !important;
 }
 

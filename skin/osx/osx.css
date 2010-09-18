@@ -75,7 +75,7 @@
     opacity: 1;
 }
 
-.tabbrowser-tab:not(:hover):not([selected="true"]) > .tab-close-button {
+.tabbrowser-tab:not(:hover):not([selected="true"]) .tab-close-button {
     visibility: collapse !important;
 }
 
