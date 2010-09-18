@@ -61,6 +61,7 @@
 
 /* Keep the close button at a safe distance from the tab label. */
 .tab-close-button {
+    display: -moz-box;
     margin-left: 3px;
 }
 
@@ -124,9 +125,9 @@
 
 .tabbrowser-tab[verticaltabs-group] {
 }
-.tabbrowser-tab[verticaltabs-group]:hover {
-    background: transparent !important;
-    border: 1px solid transparent !important;
+
+.tabbrowser-tab[verticaltabs-group] .tab-close-button {
+    opacity: 1 !important;
 }
 
 .tabbrowser-tab[verticaltabs-group] .tab-text {
