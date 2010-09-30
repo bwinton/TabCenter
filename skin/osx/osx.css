@@ -57,11 +57,6 @@
     background: -moz-linear-gradient(top, #B4B4B4, #8A8A8A) repeat-x !important;
 }
 
-/* I <3 BarTab */
-.tabbrowser-tab[busy]:not([progresspercent]) {
-  opacity: .5;
-}
-
 /* Keep the close button at a safe distance from the tab label. */
 .tab-close-button {
     display: -moz-box;
@@ -189,11 +184,6 @@
 }
 #verticaltabs-alltabsbutton:hover:active {
     -moz-image-region: rect(2px, 63px, 18px, 47px);
-}
-
-/* Make Firefox's original status bar the same height */
-#status-bar {
-    height: 22px;
 }
 
 

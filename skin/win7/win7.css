@@ -110,11 +110,6 @@
     -moz-image-region: rect(0, 28px, 20px, 14px);
 }
 
-/* Make Firefox's original status bar the same height */
-#status-bar {
-    height: 26px;
-}
-
 
 /*** Group related styles ***/
 
