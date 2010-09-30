@@ -20,10 +20,10 @@
 }
 
 /* Hide the original tab toolbar buttons. */
-.tabs-newtab-button,
-.tabs-alltabs-button {
+.tabs-newtab-button {
     visibility: collapse;
 }
+
 
 /* No special treatment for app tabs (for now). */
 .tabbrowser-tab[pinned] {

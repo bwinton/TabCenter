@@ -12,7 +12,7 @@ var VerticalTabs = {
     init: function() {
         window.removeEventListener("DOMContentLoaded", this, false);
 
-        // Move the bottom stuff (statusbar, findbar) in with the
+        // Move the bottom stuff (findbar, addonbar, etc.) in with the
         // tabbrowser.  That way it will share the same (horizontal)
         // space as the brower.  In other words, the bottom stuff no
         // longer extends across the whole bottom of the window.
@@ -29,6 +29,10 @@ var VerticalTabs = {
         tabs.mTabstrip.orient = "vertical";
         tabs.tabbox.orient = "horizontal"; // probably not necessary
         tabs.setAttribute("width", Services.prefs.getIntPref("extensions.verticaltabs.width"));
+
+        // Move the tabs toolbar into the tab strip
+        let toolbar = document.getElementById("TabsToolbar");
+        leftbox.appendChild(toolbar);
 
         // Hook up event handler for splitter so that the width of the
         // tab bar is persisted.

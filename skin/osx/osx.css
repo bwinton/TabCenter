@@ -138,53 +138,20 @@
     margin-top: -12px !important; /* height of the above image */
 }
 
-/* New toolbar buttons in the new statusbar */
-.verticaltabs-button {
-    border-right: 1px solid #868686;
-    border-left: 1px solid #868686;
-    width: 48px;
-    height: 20px;
-    margin: 0;
-}
-.verticaltabs-button:hover:active {
-    background-color: -moz-mac-chrome-active;
-}
+/* Tab toolbar styling */
 
-#verticaltabs-newtabbutton {
-    border-left: none;
-    margin-left: -2px; /* make it tight with the left side of the window */
-    list-style-image: url(chrome://browser/skin/tabbrowser/newtab.png);
-    -moz-image-region: rect(2px, 17px, 18px, 1px);
-    padding: 0 0 0 16px; /* make sure the image has space and is centered */
-}
-#verticaltabs-newtabbutton:hover {
-    -moz-image-region: rect(2px, 35px, 18px, 19px);
-}
-#verticaltabs-newtabbutton:hover:active {
-    -moz-image-region: rect(2px, 53px, 18px, 37px);
+#TabsToolbar[tabsontop="false"]:not(:-moz-lwtheme),
+#TabsToolbar[tabsontop="false"]:not(:-moz-lwtheme):-moz-window-inactive {
+    background: none;
+    background-color: transparent;
 }
 
 #verticaltabs-groupbutton {
-    margin-left: -1px; /* make it tight with the button to its left */
     /* TODO need icon to symbolize tab group */
     list-style-image: url("chrome://browser/skin/Toolbar.png");
     -moz-image-region: rect(0, 280px, 20px, 260px);
-    padding: 0 0 0 13px; /* make sure the image has space and is centered */
 }
 
-#verticaltabs-alltabsbutton {
-    margin-left: -1px; /* make it tight with the button to its left */
-    list-style-image: url(chrome://browser/skin/tabbrowser/alltabs-box-bkgnd-icon.png);
-    -moz-image-region: rect(2px, 19px, 18px, 3px);
-    -moz-transform: rotate(180deg);
-    padding: 0 0 0 16px; /* make sure the image has space and is centered */
-}
-#verticaltabs-alltabsbutton:hover {
-    -moz-image-region: rect(2px, 41px, 18px, 25px);
-}
-#verticaltabs-alltabsbutton:hover:active {
-    -moz-image-region: rect(2px, 63px, 18px, 47px);
-}
 
 
 /* Personas */

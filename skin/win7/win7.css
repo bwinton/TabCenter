@@ -73,41 +73,12 @@
 }
 
 
-/* Hide resizer in the new statusbar */
-#verticaltabs-statusbar resizer {
-    visibility: collapse;
-}
-
-/* New toolbar buttons in the new statusbar */
-.verticaltabs-button {
-    width: 24px;
-    height: 24px;
-    max-width: 24px;
-    max-height: 24px;
-}
-
-#verticaltabs-newtabbutton {
-    list-style-image: url("chrome://browser/skin/tabbrowser/newtab.png");
-    -moz-image-region: rect(0, 18px, 18px, 0);
-}
-#verticaltabs-newtabbutton:hover:active {
-    -moz-image-region: rect(0, 36px, 18px, 18px);
-}
+/* Tab toolbar styling */
 
 #verticaltabs-groupbutton {
-    margin-left: -1px; /* make it tight with the button to its left */
     /* TODO need icon to symbolize tab group */
     list-style-image: url("chrome://browser/skin/Toolbar.png");
     -moz-image-region: rect(0, 234px, 18px, 216px);
-/*    padding: 0 0 0 13px;*/ /* make sure the image has space and is centered */
-}
-
-#verticaltabs-alltabsbutton > .toolbarbutton-icon {
-    list-style-image: url("chrome://browser/skin/tabbrowser/alltabs.png");
-    -moz-image-region: rect(0, 14px, 20px, 0);
-}
-#verticaltabs-alltabsbutton:hover:active > .toolbarbutton-icon {
-    -moz-image-region: rect(0, 28px, 20px, 14px);
 }
 
 

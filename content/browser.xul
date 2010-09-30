@@ -35,28 +35,21 @@
     </menupopup>
   </popupset>
 
+  <toolbox id="navigator-toolbox">
+    <toolbar id="TabsToolbar"
+             collapsed="false">
+      <!-- TODO l10n -->
+      <toolbarbutton id="verticaltabs-groupbutton"
+                     class="toolbarbutton-1 chromeclass-toolbar-additional"
+                     command="VerticalTabs:Group"
+                     label="Group"
+                     tooltiptext="Group the selected tabs"/>
+    </toolbar>
+  </toolbox>
+
   <hbox id="browser">
     <vbox id="verticaltabs-box" insertbefore="appcontent">
-      <!-- tabs inserted here -->
-      <statusbar id="verticaltabs-statusbar"
-                 class="chromeclass-extrachrome">
-        <toolbarbutton id="verticaltabs-newtabbutton"
-                       class="verticaltabs-button"
-                       command="cmd_newNavigatorTab"
-                       label="&tabCmd.label;"
-                       tooltiptext="&newTabButton.tooltip;" />
-        <!-- TODO l10n -->
-        <toolbarbutton id="verticaltabs-groupbutton"
-                       class="verticaltabs-button"                       
-                       command="VerticalTabs:Group"
-                       label="Group"
-                       tooltiptext="Group the selected tabs" />
-        <toolbarbutton id="verticaltabs-alltabsbutton"
-                       class="verticaltabs-button"
-                       command="Browser:ShowAllTabs"
-                       label="&listAllTabs.label;"
-                       tooltiptext="&listAllTabs.label;" />
-      </statusbar>
+      <spacer />
     </vbox>
 
     <splitter id="verticaltabs-splitter"
