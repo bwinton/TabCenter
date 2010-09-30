@@ -34,6 +34,23 @@ var VerticalTabs = {
         let toolbar = document.getElementById("TabsToolbar");
         leftbox.appendChild(toolbar);
 
+        // Force tabs on bottom (for styling).
+        TabsOnTop.enabled = false;
+        // Remove all menu items for tabs on top.
+        let menuitem = document.getElementById("menu_tabsOnTop");
+        menuitem.collapsed = true;
+        menuitem.nextSibling.collapsed = true;
+        let contextmenu = document.getElementById("toolbar-context-menu");
+        contextmenu.removeChild(contextmenu.firstChild);
+        contextmenu.removeChild(contextmenu.firstChild);
+        let appmenuitem = document.getElementById("appmenu_toggleTabsOnTop");
+        if (appmenuitem) {
+            appmenuitem.collapsed = true;
+        }
+        // Make the command a no-op just to be safe.
+        document.getElementById("cmd_ToggleTabsOnTop").setAttribute(
+            "oncommand", "");
+
         // Hook up event handler for splitter so that the width of the
         // tab bar is persisted.
         let splitter = document.getElementById("verticaltabs-splitter");
