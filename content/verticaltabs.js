@@ -32,6 +32,8 @@ var VerticalTabs = {
 
         // Move the tabs toolbar into the tab strip
         let toolbar = document.getElementById("TabsToolbar");
+        toolbar._toolbox = null; // reset value set by constructor
+        toolbar.setAttribute("toolboxid", "navigator-toolbox");
         leftbox.appendChild(toolbar);
 
         // Force tabs on bottom (for styling).
