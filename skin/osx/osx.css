@@ -101,36 +101,6 @@
     text-shadow: 0 1px #404040 !important;
 }
 
-/* Progress meter */
-
-.tab-progress-container,
-#tabbrowser-tabs[tabsontop="false"] > .tabbrowser-tab > .tab-stack > .tab-progress-container {
-  margin: -2px 0px -2px -4px;
-  -moz-box-flex: 1;
-}
-
-.tab-progress {
-  height: 20px;
-  margin: 0;
-  border: 1px solid #868686;
-  -moz-border-radius: 2px;
-}
-.tab-progress:not([value]) {
-  display: none;
-}
-
-.tab-progress > .progress-bar,
-.tab-progress > .progress-bar:-moz-window-inactive {
-  border: none;
-  background: -moz-linear-gradient(top, #a8cff8, #78c3fc, #a8cff8) repeat-x;
-}
-
-.tab-progress > .progress-remainder {
-  border: none;
-  background: none;
-  background-color: white;
-}
-
 
 /* Drop indicator for drag'n'drop of tabs */
 .tab-drop-indicator {
