@@ -12,6 +12,11 @@
     background-color: #e8e8e8 !important;
 }
 
+.tabbrowser-arrowscrollbox > .arrowscrollbox-scrollbox {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 /* Use the splitter to display the border of .tabbrowser-tabs */
 #verticaltabs-splitter {
     width: 1px !important;
@@ -55,6 +60,16 @@
 .tabbrowser-tab[multiselect="true"]:-moz-window-inactive {
     border-top: 1px solid #979797 !important;
     background: -moz-linear-gradient(top, #B4B4B4, #8A8A8A) repeat-x !important;
+}
+
+.tab-background-start, .tab-background-middle, .tab-background-end {
+  background-color: transparent !important;
+}
+
+.tab-content {
+  margin-top: -1px !important;
+  border-width: 0 3px 0 0 !important;
+  -moz-border-image: none !important;
 }
 
 /* Keep the close button at a safe distance from the tab label. */
