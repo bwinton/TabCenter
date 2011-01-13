@@ -6,3 +6,4 @@ overlay   chrome://browser/content/browser.xul   chrome://verticaltabs/content/b
 
 override  chrome://verticaltabs/skin/platform.css chrome://verticaltabs/skin/osx/osx.css os=Darwin
 override  chrome://verticaltabs/skin/platform.css chrome://verticaltabs/skin/win7/win7.css os=WINNT
+override  chrome://verticaltabs/skin/platform.css chrome://verticaltabs/skin/linux/linux.css os=Linux
