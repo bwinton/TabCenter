@@ -166,6 +166,3 @@
 .tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-twisty {
     list-style-image: url("chrome://verticaltabs/skin/win7/twisty-collapsed.png");
 }
-.verticaltabs-twisty:hover {
-    list-style-image: url("chrome://verticaltabs/skin/win7/twisty-hover.png");
-}
