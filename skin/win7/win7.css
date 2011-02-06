@@ -1,11 +1,21 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
+#verticaltabs-splitter {
+    min-width: 3px !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: 3px solid !important;
+    -moz-border-right-colors: #fcfcfc #d6e5f5 !important;
+    background-color: #fcfcfc !important;
+    margin: 0 0 1px 0 !important;
+}
+
 .tabbrowser-tabs {
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 1px 0px 1px 1px !important;
     background: transparent !important;
-    background-color: rgb(238, 243, 250) !important; /* #sidebar uses this */
-    background-color: Window !important; /* other Win7 apps seems to use this */
+    background-color: #fcfcfc !important; /* other Win7 apps seems to use this */
 }
 
 .tabbrowser-tab {
@@ -13,39 +23,51 @@
     -moz-box-flex: 0;
     -moz-appearance: none !important;
     background: transparent !important;
-    border: 1px solid transparent !important;
-    -moz-border-radius: 3px !important;
+    border: 2px solid transparent !important;
+    border-radius: 2.67px !important;
     margin: 0 !important;
-    padding: 1px 0 !important;
-    height: 20px !important;
-    min-height: 20px !important;
-    max-height: 20px !important;
+    padding: 0 0 0 3px !important;
+    height: 21px !important;
+    min-height: 21px !important;
+    max-height: 21px !important;
 }
 .tabbrowser-tab:hover {
-    border: 1px solid #b9d7fc !important;
-    background: -moz-linear-gradient(top, Window, #edf5ff) repeat-x !important;
+    border: 2px solid !important;
+    -moz-border-top-colors: #b8d6fb #fcfdfe !important;
+    -moz-border-bottom-colors: #b8d6fb #f2f7fe !important;
+    -moz-border-left-colors: #b8d6fb #f9fcfe !important;
+    -moz-border-right-colors: #b8d6fb #f9fcfe !important;
+    background: -moz-linear-gradient(top, #fafbfd, #ebf3fd) repeat-x !important;
 }
 
 .tabbrowser-tab[selected="true"],
 .tabbrowser-tab[multiselect="true"] {
     margin: 0 !important;
-    padding: 1px 0 !important;
+    padding: 0 0 0 3px !important;
 
-    border: 1px solid #84acdd !important;
-    background: -moz-linear-gradient(top, Window, #d0e5ff) repeat-x !important;
+    border: 2px solid !important;
+    -moz-border-top-colors: #84acdd #f1f7fe !important;
+    -moz-border-bottom-colors: #84acdd #deedfe !important;
+    -moz-border-left-colors: #84acdd #e8f2fe !important;
+    -moz-border-right-colors: #84acdd #e8f2fe !important;
+    background: -moz-linear-gradient(top, #ebf4fe, #cfe4fe) repeat-x !important;
 
     font-weight: normal;
     text-shadow: none;
 }
 .tabbrowser-tab[selected="true"]:-moz-window-inactive,
 .tabbrowser-tab[multiselect="true"]:-moz-window-inactive {
-    border: 1px solid #dadada !important;
-    background: -moz-linear-gradient(top, Window, #e6e6e6) repeat-x !important;
+    border: 2px solid !important;
+    -moz-border-top-colors: #d9d9d9 #fafafb !important;
+    -moz-border-bottom-colors: #d9d9d9 #f0f0f0 !important;
+    -moz-border-left-colors: #d9d9d9 #f8f8f8 !important;
+    -moz-border-right-colors: #d9d9d9 #f8f8f8 !important;
+    background: -moz-linear-gradient(top, #f8f8f8, #e5e5e5) repeat-x !important;
 }
 
 .tabbrowser-tab:not([selected="true"]):hover {
     margin: 0 !important;
-    padding: 1px 0 !important;
+    padding: 0 0 0 3px !important;
 }
 
 /* Turn mouse cursor into a pointy hand.  This seems to be the
@@ -57,6 +79,10 @@
 
 .tabbrowser-tab:not(:hover):not([selected="true"]) .tab-close-button {
     visibility: collapse !important;
+}
+
+.tab-icon-image {
+    margin: 0px 4px 1px 0px !important;
 }
 
 /* Keep the close button at a safe distance from the tab label. */
@@ -74,6 +100,11 @@
 
 
 /* Tab toolbar styling */
+
+#TabsToolbar:not(:-moz-lwtheme)  {
+    margin-bottom: 1px;
+    -moz-box-shadow: ThreeDLightShadow 0px 0px 45px 0px inset;
+}
 
 #verticaltabs-groupbutton {
     /* TODO need icon to symbolize tab group */
@@ -108,9 +139,12 @@
 }
 
 .verticaltabs-droptarget {
-    border: 1px solid #7da2ce !important;
-    background: -moz-linear-gradient(top, #dcebfc, #c1dbfc) repeat-x !important;
-    -moz-border-radius: 2px !important;
+    border: 2px solid !important;
+    -moz-border-top-colors: #84acdd #f1f7fe !important;
+    -moz-border-bottom-colors: #84acdd #deedfe !important;
+    -moz-border-left-colors: #84acdd #e8f2fe !important;
+    -moz-border-right-colors: #84acdd #e8f2fe !important;
+    background: -moz-linear-gradient(top, #ebf4fe, #cfe4fe) repeat-x !important;
 }
 
 .verticaltabs-dropingroup {
@@ -131,4 +165,7 @@
 }
 .tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-twisty {
     list-style-image: url("chrome://verticaltabs/skin/win7/twisty-collapsed.png");
+}
+.verticaltabs-twisty:hover {
+    list-style-image: url("chrome://verticaltabs/skin/win7/twisty-hover.png");
 }
