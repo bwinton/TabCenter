@@ -1,5 +1,10 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
+/* Ensure the statuspanel doesn't overlap with the tabs toolbar */
+statuspanel {
+    position: relative !important;
+}
+
 /* Style the scrollbox for vertical arrangements. */
 .tabbrowser-arrowscrollbox > scrollbox {
     overflow-x: hidden !important;
