@@ -113,6 +113,19 @@
 }
 
 
+/* Addon bar styling */
+
+#main-window[sizemode=normal] #browser-bottombox:not(:-moz-lwtheme),
+#main-window[sizemode=normal] #addon-bar:not(:-moz-lwtheme) {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 4px !important;
+}
+
+#appcontent {
+  border-bottom-right-radius: 4px !important;
+}
+
+
 /*** Group related styles ***/
 
 .tabbrowser-tab[verticaltabs-ingroup],
