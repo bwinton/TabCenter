@@ -126,6 +126,7 @@
 .tab-drop-indicator {
     list-style-image: url("chrome://verticaltabs/skin/osx/dropmarker.png");
     margin-top: -12px !important; /* height of the above image */
+    margin-bottom: 0 !important;
 }
 
 /* Tab toolbar styling */

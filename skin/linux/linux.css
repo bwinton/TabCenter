@@ -63,6 +63,7 @@
 /** Drop indicator for drag'n'drop of tabs - Works OOTB(TM)- Just needs a margin.**/
 .tab-drop-indicator {
     margin-top: -11px !important;
+    margin-bottom: 0 !important;
 }
 
 

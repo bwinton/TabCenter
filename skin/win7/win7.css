@@ -96,6 +96,7 @@
 .tab-drop-indicator {
     list-style-image: url("chrome://verticaltabs/skin/win7/dropmarker.png");
     margin-top: -13px !important; /* height of the above image */
+    margin-bottom: 0 !important;
 }
 
 
