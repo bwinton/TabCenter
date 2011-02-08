@@ -3,7 +3,6 @@
 /* Background colour for the tree sidebar (light blue when window is
    active, grey otherwise) */
 .tabbrowser-tabs {
-    margin: 0 !important;
     padding: 0 !important;
     background: transparent !important;
     background-color: #d4dde5 !important;
@@ -40,7 +39,6 @@
     -moz-border-left-colors: none !important;
     -moz-border-radius: 0 !important;
     -moz-box-align: stretch !important;
-    margin: 0 !important;
     padding: 2px 3px 2px 10px !important;
     height: 21px !important;     /* height including border! */
     min-height: 21px !important;

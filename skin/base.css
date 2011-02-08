@@ -31,9 +31,19 @@ statuspanel {
 
 
 /* No special treatment for app tabs (for now). */
-.tabbrowser-tab[pinned] {
-  position: inherit;
+
+.tabbrowser-tabs[positionpinnedtabs] > .tabbrowser-tab[pinned] {
+/*
+  position: inherit !important;
+  display: inherit !important;
+*/
 }
+/*
+.tabbrowser-tabs[positionpinnedtabs] {
+  position: fixed !important;
+}
+*/
+
 .tabbrowser-tab[pinned] > .tab-text {
   display: inherit;
 }

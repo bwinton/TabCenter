@@ -17,7 +17,44 @@ var VTTabbrowserTabs = {
     },
 
     _positionPinnedTabs: function() {
+//return;
         // TODO we might want to do something here.
+          var numPinned = this.tabbrowser._numPinnedTabs;
+          var doPosition = this.getAttribute("overflow") == "true" &&
+                           numPinned > 0 &&
+                           numPinned < this.tabbrowser.visibleTabs.length;
+
+//dump("doPosition: " + doPosition + "\n");
+          if (doPosition) {
+            this.setAttribute("positionpinnedtabs", "true");
+
+//            let scrollButtonWidth = this.mTabstrip._scrollButtonDown.scrollWidth;
+            let paddingStart = this.mTabstrip.scrollboxPaddingStart;
+            paddingStart += 40;
+dump("paddingStart " + paddingStart + "\n");
+            let height = 0;
+
+            for (let i = numPinned - 1; i >= 0; i--) {
+              let tab = this.childNodes[i];
+              height += tab.scrollHeight;
+              tab.style.marginTop = - (height + paddingStart) + "px";
+            }
+
+            this.style.marginTop = height + paddingStart + "px";
+dump("margin-top: " + this.style.marginTop + "\n");
+
+          } else {
+            this.removeAttribute("positionpinnedtabs");
+
+            for (let i = 0; i < numPinned; i++) {
+              let tab = this.childNodes[i];
+              tab.style.marginTop = "";
+            }
+
+            this.style.marginTop = "";
+          }
+
+          this.mTabstrip.ensureElementIsVisible(this.selectedItem, false);
     },
 
     _getDropIndex: function(event) {
