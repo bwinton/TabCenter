@@ -78,17 +78,8 @@
     margin-left: 3px;
 }
 
-.tab-close-button image {
-    list-style-image: url("chrome://verticaltabs/skin/osx/closetab.png");
-    opacity: 0.27;  /* turn black into #b9b9b9 */
-}
-.tab-close-button:active image {
-    opacity: 0.46;  /* turn black into #8a8a8a */
-}
-.tabbrowser-tab[selected="true"] .tab-close-button image,
-.tabbrowser-tab[multiselect="true"] .tab-close-button image {
-    list-style-image: url("chrome://verticaltabs/skin/osx/closetab-white.png");
-    opacity: 1;
+.tabbrowser-tab[selected="true"] .tab-close-button {
+    list-style-image: url("chrome://global/skin/notification/close.png");
 }
 
 .tabbrowser-tab:not(:hover):not([selected="true"]) .tab-close-button {
@@ -160,6 +151,7 @@
 }
 
 .tabbrowser-tab[verticaltabs-group] {
+  padding-top: 1px !important;
 }
 
 .tabbrowser-tab[verticaltabs-group] .tab-close-button {
