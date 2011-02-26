@@ -1,9 +1,20 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 /* Ensure the statuspanel doesn't overlap with the tabs toolbar */
-statuspanel {
+statuspanel[mirror] {
+    pointer-events: none;
+}
+
+statuspanel:-moz-locale-dir(rtl)[mirror],
+statuspanel:-moz-locale-dir(ltr):not([mirror]) {
     position: relative !important;
     display: block;
+}
+
+statuspanel:-moz-locale-dir(rtl)[mirror] .statuspanel-inner,
+statuspanel:-moz-locale-dir(ltr):not([mirror]) .statuspanel-inner {
+    width: auto;
+    max-width: 50%;
 }
 
 /* Style the scrollbox for vertical arrangements. */
