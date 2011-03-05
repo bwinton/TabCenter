@@ -103,8 +103,14 @@
 /* Tab toolbar styling */
 
 #TabsToolbar:not(:-moz-lwtheme)  {
+    height: 23px;
     margin-bottom: 1px;
     -moz-box-shadow: ThreeDLightShadow 0px 0px 45px 0px inset;
+}
+
+/* make addonbar the same height */
+#addon-bar {
+    height: 23px;
 }
 
 #verticaltabs-groupbutton {
