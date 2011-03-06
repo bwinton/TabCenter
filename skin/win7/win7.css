@@ -114,6 +114,8 @@
     border-bottom: 1px solid rgb(154,154,154) !important;
     border-right: 2px solid !important;
     -moz-border-right-colors: #fcfcfc rgb(154,154,154) !important;
+    border-left: 1px solid rgb(154,154,154) !important;
+    border-bottom-left-radius: 4px !important;
     background-color: rgb(207,219,236) !important;
     background-image: -moz-linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,0)) !important;
 }
