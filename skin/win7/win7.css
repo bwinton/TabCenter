@@ -228,9 +228,21 @@
     padding-right: 0px !important;
 }
 
+statuspanel[mirror]:-moz-locale-dir(ltr),
+statuspanel[mirror]:-moz-locale-dir(rtl) {
+    padding: 0px 6px 0px 0px !important;
+}
+
+statuspanel:-moz-locale-dir(ltr):not([mirror]),
+statuspanel:-moz-locale-dir(rtl):not([mirror]) {
+    padding: 0px 0px 0px 4px !important;
+}
+
 statuspanel[mirror]:-moz-locale-dir(ltr) .statuspanel-inner,
 statuspanel[mirror]:-moz-locale-dir(rtl) .statuspanel-inner {
-    margin: 8px 6px 0px -6px !important;
+    margin-top: 8px !important;
+    margin-bottom: 5px !important;
+    margin-left: -6px !important;
     box-shadow: 5px 5px 0 -4px rgba(0,0,0,.18), 5px 5px 0 -3px rgba(0,0,0,.15), 5px 5px 0 -2px rgba(0,0,0,.12), 5px 5px 0 -1px rgba(0,0,0,.09) !important;
     padding: 0px 0px !important;
     border-radius: 5.8px !important;
@@ -238,7 +250,9 @@ statuspanel[mirror]:-moz-locale-dir(rtl) .statuspanel-inner {
 
 statuspanel:-moz-locale-dir(ltr):not([mirror]) .statuspanel-inner,
 statuspanel:-moz-locale-dir(rtl):not([mirror]) .statuspanel-inner {
-    margin: 8px 0px 5px 4px !important;
+    margin-top: 8px !important;
+    margin-bottom: 5px !important;
+    margin-left: 4px !important;
     box-shadow: 5px 5px 0 -4px rgba(0,0,0,.18), 5px 5px 0 -3px rgba(0,0,0,.15), 5px 5px 0 -2px rgba(0,0,0,.12), 5px 5px 0 -1px rgba(0,0,0,.09) !important;
     padding: 0px 0px !important;
     border-radius: 5.8px !important;
