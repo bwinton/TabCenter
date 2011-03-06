@@ -2,13 +2,17 @@
 
 #verticaltabs-splitter {
     min-width: 3px !important;
+    width: 3px !important;
     border-top: none !important;
-    border-bottom: 1px solid -moz-dialog !important;
-    border-left: none !important;
-    border-right: 3px solid !important;
-    -moz-border-right-colors: #fcfcfc #d6e5f5 !important;
-    background-color: #fcfcfc !important;
-    margin: 0 0 0 0 !important;
+    border-bottom: none !important;
+    border-left: 1px solid #fcfcfc !important;
+    border-right: 1px solid #fcfcfc !important;
+    background-color: #d6e5f5 !important;
+    margin: 0 0 24px 0 !important;
+    -moz-border-top-colors: none !important;
+    -moz-border-left-colors: none !important;
+    -moz-border-right-colors: none !important;
+    -moz-border-bottom-colors: none !important;
 }
 
 .tabbrowser-tabs {
@@ -100,16 +104,18 @@
 }
 
 
-/* Tab toolbar styling */
+/*** Tab toolbar styling ***/
 
 #TabsToolbar:not(:-moz-lwtheme)  {
-    height: 23px;
-    margin-bottom: 1px;
-    -moz-box-shadow: ThreeDLightShadow 0px 0px 45px 0px inset;
-}
-
-#addon-bar {
-    height: 23px; /* make addonbar the same height */
+    height: 24px;
+    margin: 0 -3px 0 0 !important;
+    -moz-appearance: none !important;
+    border-top: 1px solid rgb(160,160,160) !important;
+    border-bottom: 1px solid rgb(154,154,154) !important;
+    border-right: 2px solid !important;
+    -moz-border-right-colors: #fcfcfc rgb(154,154,154) !important;
+    background-color: rgb(207,219,236) !important;
+    background-image: -moz-linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,0)) !important;
 }
 
 #verticaltabs-groupbutton {
@@ -125,7 +131,16 @@
 }
 
 
-/* Addon bar styling */
+/*** Addon bar styling ***/
+
+#addon-bar {
+    height: 23px; /* make addonbar the same height as tab toolbar*/
+}
+
+#browser-bottombox {
+    border-left: none !important; /* remove extra line between addon bar and tab toolbar */
+    margin-left: -1px !important;
+}
 
 #main-window[sizemode=normal] #browser-bottombox:not(:-moz-lwtheme),
 #main-window[sizemode=normal] #addon-bar:not(:-moz-lwtheme) {
@@ -226,13 +241,3 @@ statuspanel:-moz-locale-dir(rtl):not([mirror]) .statuspanel-inner {
     padding: 0px 0px !important;
     border-radius: 5.8px !important;
 }
-
-
-/*** aero window inner border ***/
-
-#main-window[sizemode="normal"] #browser-bottombox:not(:-moz-lwtheme), #main-window[sizemode="normal"] #addon-bar:not(:-moz-lwtheme) {
-    margin: 0 0 0 -3px !important;
-    border-width: 1px !important;
-    border-color: rgba(26,26,26,.4) !important;
-}
-
