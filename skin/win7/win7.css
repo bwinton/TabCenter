@@ -70,6 +70,11 @@
     padding: 0 0 0 3px !important;
 }
 
+.tabbrowser-tab:-moz-lwtheme {
+    color: black;
+    text-shadow: none;
+}
+
 /* Turn mouse cursor into a pointy hand.  This seems to be the
    standard for link lists like these. */
 .tabbrowser-tab,
