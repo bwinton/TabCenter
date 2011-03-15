@@ -1,6 +1,6 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
-#verticaltabs-splitter {
+#main-window[sizemode=normal] #verticaltabs-splitter {
     min-width: 3px !important;
     width: 3px !important;
     border-top: none !important;
@@ -13,6 +13,10 @@
     -moz-border-left-colors: none !important;
     -moz-border-right-colors: none !important;
     -moz-border-bottom-colors: none !important;
+}
+
+#verticaltabs-splitter {
+    margin: 0 0 23px 0 !important;
 }
 
 .tabbrowser-tabs {
@@ -106,18 +110,28 @@
 
 /*** Tab toolbar styling ***/
 
+#browser-border-start {
+margin-bottom: 23px !important;
+}
+
 #TabsToolbar:not(:-moz-lwtheme)  {
     height: 24px;
-    margin: 0 -3px 0 0 !important;
+    margin: 0 -3px -1px 0px !important;
+    border-bottom-left-radius: 0px !important;
+    box-shadow: none !important;
     -moz-appearance: none !important;
     border-top: 1px solid rgb(160,160,160) !important;
-    border-bottom: 1px solid rgb(154,154,154) !important;
     border-right: 2px solid !important;
     -moz-border-right-colors: #fcfcfc rgb(154,154,154) !important;
-    border-left: 1px solid rgb(154,154,154) !important;
-    border-bottom-left-radius: 4px !important;
     background-color: rgb(207,219,236) !important;
     background-image: -moz-linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,0)) !important;
+}
+
+#main-window[sizemode=normal] #TabsToolbar:not(:-moz-lwtheme) {
+    margin: 0 -3px 0 -1px !important;
+    border-bottom: 1px solid rgb(154,154,154) !important;
+    border-left: 1px solid rgb(154,154,154) !important;
+    border-bottom-left-radius: 4px !important;
 }
 
 #verticaltabs-groupbutton {
