@@ -23,6 +23,9 @@ var VerticalTabs = {
         // Move the tabs next to the app content, make them vertical,
         // and restore their width from previous session
         let leftbox = document.getElementById("verticaltabs-box");
+        if (Services.prefs.getBoolPref("extensions.verticaltabs.right")) {
+            leftbox.parentNode.dir = "reverse";
+        }
         let tabs = document.getElementById("tabbrowser-tabs");
         leftbox.insertBefore(tabs, leftbox.firstChild);
         tabs.orient = "vertical";
