@@ -1,19 +1,32 @@
+const EXPORTED_SYMBOLS = ["VTTabbrowserTabs"];
+const TAB_DROP_TYPE = "application/x-moz-tabbrowser-tab";
+
 /*
  * Patches for the tabbrowser-tabs object.
  * 
  * These are necessary where the original implementation assumes a
  * horizontal layout.
  */
-var VTTabbrowserTabs = {
+function VTTabbrowserTabs(window) {
+    this.window = window;
+    this.document = window.document;
+    this.patch();
+}
+VTTabbrowserTabs.prototype = {
 
     patch: function() {
-        let tabs = document.getElementById("tabbrowser-tabs");
+        let tabs = this.document.getElementById("tabbrowser-tabs");
         tabs._positionPinnedTabs = this._positionPinnedTabs;
         tabs._getDropIndex = this._getDropIndex;
         tabs._isAllowedForDataTransfer = this._isAllowedForDataTransfer;
         tabs._setEffectAllowedForDataTransfer
             = this._setEffectAllowedForDataTransfer;
+        this.onDragOver = this.onDragOver.bind(this);
         tabs.addEventListener('dragover', this.onDragOver, false);
+    },
+
+    unload: function() {
+        //TODO
     },
 
     _positionPinnedTabs: function() {
@@ -37,10 +50,11 @@ var VTTabbrowserTabs = {
     },
 
     _isAllowedForDataTransfer: function(node) {
-        return (node instanceof XULElement
+        const window = node.ownerDocument.defaultView;
+        return (node instanceof window.XULElement
                 && node.localName == "tab"
                 && (node.parentNode == this
-                    || (node.ownerDocument.defaultView instanceof ChromeWindow
+                    || (node.ownerDocument.defaultView instanceof window.ChromeWindow
                         && node.ownerDocument.documentElement.getAttribute("windowtype") == "navigator:browser")));
 
     },
@@ -79,7 +93,7 @@ var VTTabbrowserTabs = {
     // Overwrites what the original 'dragover' event handler does
     // towards the end.
     onDragOver: function(aEvent) {
-        let tabs = document.getElementById("tabbrowser-tabs");
+        let tabs = this.document.getElementById("tabbrowser-tabs");
         let ind = tabs._tabDropIndicator;
         let newIndex = tabs._getDropIndex(aEvent);
         let rect = tabs.getBoundingClientRect();

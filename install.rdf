@@ -3,6 +3,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>verticaltabs@philikon.de</em:id>
     <em:type>2</em:type>
+    <em:bootstrap>true</em:bootstrap>
     <em:name>Vertical Tabs</em:name>
     <em:version>0.9pre</em:version>
     <em:homepageURL>https://addons.mozilla.org/firefox/addon/vertical-tabs/</em:homepageURL>

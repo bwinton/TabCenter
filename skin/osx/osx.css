@@ -77,7 +77,7 @@
     -moz-image-region: auto !important;
     display: -moz-box;
     margin-left: 3px;
-    list-style-image: url("chrome://verticaltabs/skin/osx/closetab.png");
+    list-style-image: url("resource://verticaltabs/skin/osx/closetab.png");
     opacity: 0.27;  /* turn black into #b9b9b9 */
 }
 .tab-close-button:active {
@@ -85,7 +85,7 @@
 }
 .tabbrowser-tab[selected="true"] .tab-close-button,
 .tabbrowser-tab[multiselect="true"] .tab-close-button {
-    list-style-image: url("chrome://verticaltabs/skin/osx/closetab-white.png");
+    list-style-image: url("resource://verticaltabs/skin/osx/closetab-white.png");
     opacity: 1;
 }
 
@@ -122,7 +122,7 @@
 
 /* Drop indicator for drag'n'drop of tabs */
 .tab-drop-indicator {
-    list-style-image: url("chrome://verticaltabs/skin/osx/dropmarker.png");
+    list-style-image: url("resource://verticaltabs/skin/osx/dropmarker.png");
     margin-top: -12px !important; /* height of the above image */
     margin-bottom: 0 !important;
 }
@@ -231,7 +231,7 @@
 }
 
 .verticaltabs-twisty {
-    list-style-image: url("chrome://verticaltabs/skin/osx/twisty.png");
+    list-style-image: url("resource://verticaltabs/skin/osx/twisty.png");
     opacity: 0.38;
     -moz-transition-property: -moz-transform;
     -moz-transition-duration: .1s;
