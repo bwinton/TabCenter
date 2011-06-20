@@ -85,7 +85,7 @@ function registerResource(name, installPath) {
 function startup(data, reason) {
   setDefaultPrefs();
   unloaders.push(function() {
-    Services.prefs.getDefaultBranch(PREF_BRANCH).deleteBranc();
+    Services.prefs.getDefaultBranch(PREF_BRANCH).deleteBranch("");
   });
 
   AddonManager.getAddonByID(data.id, function(addon) {
