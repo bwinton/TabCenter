@@ -55,6 +55,9 @@ function include(src) {
   Services.scriptloader.loadSubScript(src, GLOBAL_SCOPE);
 }
 
+/**
+ * Declare a bunch of default preferences.
+ */
 function setDefaultPrefs() {
   let branch = Services.prefs.getDefaultBranch("");
   for (let [name, value] in Iterator(DEFAULT_PREFS)) {
@@ -72,16 +75,12 @@ function setDefaultPrefs() {
   }
 }
 
-function loadIntoWindow(win) {
-  let vt = new VerticalTabs(win);
-  unload(vt.unload.bind(vt), win);
-}
-
 function startup(data, reason) {
   AddonManager.getAddonByID(data.id, function(addon) {
-    // Load helpers from utils.js
+    // Load helpers from utils.js.
     include(addon.getResourceURI("utils.js").spec);
 
+    // Set default preferences.
     setDefaultPrefs();
     unload(function() {
       Services.prefs.getDefaultBranch(PREF_BRANCH).deleteBranch("");
@@ -94,9 +93,13 @@ function startup(data, reason) {
     unload(function () {
       resource.setSubstitution(RESOURCE_HOST, null);
     });
-    Cu.import("resource://verticaltabs/content/verticaltabs.js");
 
-    watchWindows(loadIntoWindow, "navigator:browser");
+    // Initialize VerticalTabs object for each window.
+    Cu.import("resource://verticaltabs/content/verticaltabs.js");
+    watchWindows(function(window) {
+      let vt = new VerticalTabs(window);
+      unload(vt.unload.bind(vt), window);
+    }, "navigator:browser");
   });
 };
 
