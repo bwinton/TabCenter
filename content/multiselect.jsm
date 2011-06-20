@@ -14,12 +14,23 @@ const EXPORTED_SYMBOLS = ["VTMultiSelect"];
 
 function VTMultiSelect (tabs) {
     this.tabs = tabs;
-    tabs.VTMultiSelect = this;
-
-    tabs.addEventListener("mousedown", this, true);
-    tabs.addEventListener("TabSelect", this, false);
+    this.init();
 }
 VTMultiSelect.prototype = {
+
+    init: function() {
+        const tabs = this.tabs;
+        tabs.VTMultiSelect = this;
+        tabs.addEventListener("mousedown", this, true);
+        tabs.addEventListener("TabSelect", this, false);
+    },
+
+    unload: function() {
+        const tabs = this.tabs;
+        delete tabs.VTMultiSelect;
+        tabs.removeEventListener("mousedown", this, true);
+        tabs.removeEventListener("TabSelect", this, false);
+    },
 
     /*** Public API ***/
 

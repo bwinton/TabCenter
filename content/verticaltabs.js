@@ -16,14 +16,16 @@ const NS_XUL = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 function VerticalTabs(window) {
     this.window = window;
     this.document = window.document;
-    window.VerticalTabs = this;
+    this.unloaders = [];
     this.init();
 }
 VerticalTabs.prototype = {
 
     init: function() {
-        const window = this.window;
-        const document = this.document;
+        this.window.VerticalTabs = this;
+        this.unloaders.push(function() {
+            delete this.window.VerticalTabs;
+        });
 
         this.installStylesheet("resource://verticaltabs/content/bindings.css");
         this.installStylesheet("resource://verticaltabs/skin/base.css");
@@ -39,6 +41,36 @@ VerticalTabs.prototype = {
             break;
         }
 
+        this.rearrangeXUL();
+        this.initContextMenu();
+
+        let tabs = this.document.getElementById("tabbrowser-tabs");
+        this.vtTabs = new VTTabbrowserTabs(tabs);
+        this.tabIDs = new VTTabIDs(tabs);
+        this.multiSelect = new VTMultiSelect(tabs);
+        this.groups = new VTGroups(tabs);
+        this.unloaders.push(function() {
+            this.vtTabs.unload();
+            this.tabIDs.unload();
+            this.multiSelect.unload();
+            this.groups.unload();
+        });
+    },
+
+    installStylesheet: function(uri) {
+        const document = this.document;
+        let pi = document.createProcessingInstruction(
+          "xml-stylesheet", "href=\"" + uri + "\" type=\"text/css\"");
+        document.insertBefore(pi, document.documentElement);
+        this.unloaders.push(function () {
+            document.removeChild(pi);
+        });
+    },
+
+    rearrangeXUL: function() {
+        const window = this.window;
+        const document = this.document;
+
         // Move the bottom stuff (findbar, addonbar, etc.) in with the
         // tabbrowser.  That way it will share the same (horizontal)
         // space as the brower.  In other words, the bottom stuff no
@@ -49,16 +81,17 @@ VerticalTabs.prototype = {
 
         // Create a box next to the app content. It will hold the tab
         // bar and the tab toolbar.
+        let browserbox = document.getElementById("browser");
         let leftbox = document.createElementNS(NS_XUL, "vbox");
         leftbox.id = "verticaltabs-box";
-        contentbox.parentNode.insertBefore(leftbox, contentbox);
+        browserbox.insertBefore(leftbox, contentbox);
         let spacer = document.createElementNS(NS_XUL, "spacer");
         leftbox.appendChild(spacer);
 
         let splitter = document.createElementNS(NS_XUL, "splitter");
         splitter.id = "verticaltabs-splitter";
         splitter.className = "chromeclass-extrachrome";
-        contentbox.parentNode.insertBefore(splitter, contentbox);
+        browserbox.insertBefore(splitter, contentbox);
         // Hook up event handler for splitter so that the width of the
         // tab bar is persisted.
         splitter.addEventListener("mouseup", this, false);
@@ -99,11 +132,6 @@ VerticalTabs.prototype = {
         document.getElementById("cmd_ToggleTabsOnTop").setAttribute(
             "oncommand", "");
 
-        this.vtTabs = new VTTabbrowserTabs(window);
-        this.tabIDs = new VTTabIDs(tabs);
-        this.multiSelect = new VTMultiSelect(tabs);
-        this.groups = new VTGroups(tabs);
-
         // Fix up each individual tab for vertical layout, including
         // ones that are opened later on.
         tabs.addEventListener("TabOpen", this, true);
@@ -111,16 +139,40 @@ VerticalTabs.prototype = {
             this.initTab(tabs.childNodes[i]);
         }
 
-        this.initContextMenu();
-    },
+        this.unloaders.push(function () {
+            // Move the bottom back to being the next sibling of contentbox.
+            browserbox.insertBefore(bottom, contentbox.nextSibling);
 
-    installStylesheet: function(uri) {
-        const document = this.document;
-        let pi = document.createProcessingInstruction(
-          "xml-stylesheet", "href=\"" + uri + "\" type=\"text/css\"");
-        document.insertBefore(pi, document.firstChild);
+            // Move the tabs toolbar back to where it was
+            toolbar._toolbox = null; // reset value set by constructor
+            toolbar.removeAttribute("toolboxid");
+            let toolbox = document.getElementById("navigator-toolbox");
+            toolbox.appendChild(toolbar);
 
-        //TODO remember pi for unload
+            // Restore the tab strip.
+            let new_tab_button = document.getElementById("new-tab-button");
+            toolbar.insertBefore(tabs, new_tab_button);
+            tabs.orient = "horizontal";
+            tabs.mTabstrip.orient = "horizontal";
+            tabs.removeAttribute("width");
+            tabs.removeEventListener("TabOpen", this, false);
+
+            //TODO tabs on top
+
+            // Restore all individual tabs.
+            for (let i = 0; i < tabs.childNodes.length; i++) {
+              let tab = tabs.childNodes[i];
+              tab.removeAttribute("align");
+              tab.maxWidth = tab.minWidth = "";
+            }
+
+            // Remove all the crap we added.
+            splitter.removeEventListener("mouseup", this, false);
+            browserbox.removeChild(leftbox);
+            browserbox.removeChild(splitter);
+            browserbox.dir = "normal";
+            leftbox = splitter = null;
+        });
     },
 
     initContextMenu: function() {
@@ -135,8 +187,8 @@ VerticalTabs.prototype = {
           "oncommand", "gBrowser.tabContainer.VTMultiSelect.closeSelected();");
         tabs.contextMenu.appendChild(closeMultiple);
 
-        tabs.contextMenu.appendChild(
-          document.createElementNS(NS_XUL, "menuseparator"));
+        let separator = document.createElementNS(NS_XUL, "menuseparator");
+        tabs.contextMenu.appendChild(separator);
 
         let groupTabs = document.createElementNS(NS_XUL, "menuitem");
         groupTabs.id = "context_verticalTabsCloseMultiple";
@@ -147,26 +199,30 @@ VerticalTabs.prototype = {
         tabs.contextMenu.appendChild(groupTabs);
 
         tabs.contextMenu.addEventListener("popupshowing", this, false);
+
+        this.unloaders.push(function () {
+            tabs.contextMenu.removeChild(closeMultiple);
+            tabs.contextMenu.removeChild(separator);
+            tabs.contextMenu.removeChild(groupTabs);
+            tabs.contextMenu.removeEventListener("popupshowing", this, false);
+        });
     },
 
     initTab: function(aTab) {
         aTab.setAttribute("align", "stretch");
-        aTab.removeAttribute("maxwidth");
-        aTab.removeAttribute("minwidth");
-        aTab.removeAttribute("width");
-        aTab.removeAttribute("flex");
         aTab.maxWidth = 65000;
         aTab.minWidth = 0;
     },
 
     unload: function() {
-        //TODO
-        this.vtTabs.unload();
+        this.unloaders.forEach(function(func) {
+          func.call(this);
+        }, this);
     },
 
     onTabbarResized: function() {
         let tabs = this.document.getElementById("tabbrowser-tabs");
-        setTimeout(function() {
+        this.window.setTimeout(function() {
             Services.prefs.setIntPref("extensions.verticaltabs.width",
                                       tabs.boxObject.width);
         }, 10);

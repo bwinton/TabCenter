@@ -67,15 +67,26 @@ XPCOMUtils.defineLazyServiceGetter(VTTabDataStore, "sessionStore",
 
 function VTTabIDs(tabs) {
     this.tabs = tabs;
-    tabs.VTTabIDs = this;
-
-    tabs.addEventListener("TabOpen", this, true);
-    tabs.addEventListener("SSTabRestoring", this, true);
-    for (let i=0; i < tabs.childNodes.length; i++) {
-        this.initTab(tabs.childNodes[i]);
-    }
+    this.init();
 }
 VTTabIDs.prototype = {
+
+    init: function() {
+        const tabs = this.tabs;
+        tabs.VTTabIDs = this;
+        tabs.addEventListener("TabOpen", this, true);
+        tabs.addEventListener("SSTabRestoring", this, true);
+        for (let i=0; i < tabs.childNodes.length; i++) {
+            this.initTab(tabs.childNodes[i]);
+        }
+    },
+
+    unload: function unload() {
+        const tabs = this.tabs;
+        delete tabs.VTTabIDs;
+        tabs.removeEventListener("TabOpen", this, true);
+        tabs.removeEventListener("SSTabRestoring", this, true);
+    },
 
     kId: "verticaltabs-id",
 

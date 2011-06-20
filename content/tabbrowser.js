@@ -7,26 +7,42 @@ const TAB_DROP_TYPE = "application/x-moz-tabbrowser-tab";
  * These are necessary where the original implementation assumes a
  * horizontal layout.
  */
-function VTTabbrowserTabs(window) {
-    this.window = window;
-    this.document = window.document;
-    this.patch();
+function VTTabbrowserTabs(tabs) {
+    this.tabs = tabs;
+    this.init();
 }
 VTTabbrowserTabs.prototype = {
 
-    patch: function() {
-        let tabs = this.document.getElementById("tabbrowser-tabs");
-        tabs._positionPinnedTabs = this._positionPinnedTabs;
-        tabs._getDropIndex = this._getDropIndex;
-        tabs._isAllowedForDataTransfer = this._isAllowedForDataTransfer;
-        tabs._setEffectAllowedForDataTransfer
-            = this._setEffectAllowedForDataTransfer;
+    init: function() {
+        const tabs = this.tabs;
+        ["_positionPinnedTabs",
+         "_getDropIndex",
+         "_isAllowedForDataTransfer",
+         "_setEffectAllowedForDataTransfer"].forEach(function(methodname) {
+            this.swapMethod(tabs, this, methodname);
+        }, this);
+
         this.onDragOver = this.onDragOver.bind(this);
         tabs.addEventListener('dragover', this.onDragOver, false);
     },
 
     unload: function() {
-        //TODO
+        const tabs = this.tabs;
+        ["_positionPinnedTabs",
+         "_getDropIndex",
+         "_isAllowedForDataTransfer",
+         "_setEffectAllowedForDataTransfer"].forEach(function(methodname) {
+            this.swapMethod(tabs, this, methodname);
+        }, this);
+
+        tabs.removeEventListener('dragover', this.onDragOver, false);
+    },
+
+    swapMethod: function(obj1, obj2, methodname) {
+      let method1 = obj1[methodname];
+      let method2 = obj2[methodname];
+      obj1[methodname] = method2;
+      obj2[methodname] = method1;
     },
 
     _positionPinnedTabs: function() {
@@ -93,7 +109,7 @@ VTTabbrowserTabs.prototype = {
     // Overwrites what the original 'dragover' event handler does
     // towards the end.
     onDragOver: function(aEvent) {
-        let tabs = this.document.getElementById("tabbrowser-tabs");
+        const tabs = this.tabs;
         let ind = tabs._tabDropIndicator;
         let newIndex = tabs._getDropIndex(aEvent);
         let rect = tabs.getBoundingClientRect();

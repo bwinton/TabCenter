@@ -21,27 +21,55 @@ const TAB_DROP_TYPE = "application/x-moz-tabbrowser-tab";
 
 function VTGroups(tabs) {
     this.tabs = tabs;
-    tabs.VTGroups = this;
-
-    // Restore group and in-group status
-    tabs.addEventListener('SSTabRestoring', this, true);
-
-    // Updating UI
-    tabs.addEventListener('TabSelect', this, false);
-
-    // For clicks on the twisty
-    tabs.addEventListener('click', this, true);
-
-    // For synchronizing group behaviour and tab positioning
-    tabs.addEventListener('dragover', this, false);
-    tabs.addEventListener('dragenter', this, false);
-    tabs.addEventListener('dragleave', this, false);
-    tabs.addEventListener('dragend', this, false);
-    tabs.addEventListener('drop', this, false);
-    tabs.addEventListener('TabMove', this, false);
-    tabs.addEventListener('TabClose', this, false);
+    this.init();
 }
 VTGroups.prototype = {
+
+    init: function() {
+        const tabs = this.tabs;
+        tabs.VTGroups = this;
+
+        // Restore group and in-group status
+        tabs.addEventListener('SSTabRestoring', this, true);
+
+        // Updating UI
+        tabs.addEventListener('TabSelect', this, false);
+
+        // For clicks on the twisty
+        tabs.addEventListener('click', this, true);
+
+        // For synchronizing group behaviour and tab positioning
+        tabs.addEventListener('dragover', this, false);
+        tabs.addEventListener('dragenter', this, false);
+        tabs.addEventListener('dragleave', this, false);
+        tabs.addEventListener('dragend', this, false);
+        tabs.addEventListener('drop', this, false);
+        tabs.addEventListener('TabMove', this, false);
+        tabs.addEventListener('TabClose', this, false);
+    },
+
+    unload: function() {
+        const tabs = this.tabs;
+        delete tabs.VTGroups;
+
+        // Restore group and in-group status
+        tabs.removeEventListener('SSTabRestoring', this, true);
+
+        // Updating UI
+        tabs.removeEventListener('TabSelect', this, false);
+
+        // For clicks on the twisty
+        tabs.removeEventListener('click', this, true);
+
+        // For synchronizing group behaviour and tab positioning
+        tabs.removeEventListener('dragover', this, false);
+        tabs.removeEventListener('dragenter', this, false);
+        tabs.removeEventListener('dragleave', this, false);
+        tabs.removeEventListener('dragend', this, false);
+        tabs.removeEventListener('drop', this, false);
+        tabs.removeEventListener('TabMove', this, false);
+        tabs.removeEventListener('TabClose', this, false);
+    },
 
     kId: 'verticaltabs-id',
     kGroup: 'verticaltabs-group',
