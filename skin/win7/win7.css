@@ -107,7 +107,7 @@
 
 /* Drop indicator for drag'n'drop of tabs */
 .tab-drop-indicator {
-    list-style-image: url("chrome://verticaltabs/skin/win7/dropmarker.png");
+    list-style-image: url("resource://verticaltabs/skin/win7/dropmarker.png");
     margin-top: -13px !important; /* height of the above image */
     margin-bottom: 0 !important;
 }
@@ -222,10 +222,10 @@ margin-bottom: 23px !important;
     cursor: default !important;
     margin-left: 1px !important;
     margin-right: 2px !important;
-    list-style-image: url("chrome://verticaltabs/skin/win7/twisty.png");
+    list-style-image: url("resource://verticaltabs/skin/win7/twisty.png");
 }
 .tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-twisty {
-    list-style-image: url("chrome://verticaltabs/skin/win7/twisty-collapsed.png");
+    list-style-image: url("resource://verticaltabs/skin/win7/twisty-collapsed.png");
 }
 
 

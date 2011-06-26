@@ -161,6 +161,7 @@ VerticalTabs.prototype = {
             toolbar.insertBefore(tabs, new_tab_button);
             tabs.orient = "horizontal";
             tabs.mTabstrip.orient = "horizontal";
+            tabs.tabbox.orient = "vertical"; // probably not necessary
             tabs.removeAttribute("width");
             tabs.removeEventListener("TabOpen", this, false);
 
