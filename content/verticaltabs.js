@@ -99,7 +99,7 @@ VerticalTabs.prototype = {
         // Move the tabs next to the app content, make them vertical,
         // and restore their width from previous session
         if (Services.prefs.getBoolPref("extensions.verticaltabs.right")) {
-            leftbox.parentNode.dir = "reverse";
+            browserbox.dir = "reverse";
         }
 
         let tabs = document.getElementById("tabbrowser-tabs");
@@ -115,22 +115,29 @@ VerticalTabs.prototype = {
         toolbar.setAttribute("toolboxid", "navigator-toolbox");
         leftbox.appendChild(toolbar);
 
-        // Force tabs on bottom (for styling).
-        window.TabsOnTop.enabled = false;
-        // Remove all menu items for tabs on top.
-        let menuitem = document.getElementById("menu_tabsOnTop");
-        menuitem.collapsed = true;
-        menuitem.nextSibling.collapsed = true;
-        let contextmenu = document.getElementById("toolbar-context-menu");
-        contextmenu.removeChild(contextmenu.firstChild);
-        contextmenu.removeChild(contextmenu.firstChild);
-        let appmenuitem = document.getElementById("appmenu_toggleTabsOnTop");
-        if (appmenuitem) {
-            appmenuitem.collapsed = true;
+        // Force tabs on bottom (for styling) after backing up the user's
+        // setting.
+        try {
+          Services.prefs.getBoolPref("extensions.verticaltabs.tabsOnTop");
+        } catch (ex if (ex.result == Components.results.NS_ERROR_UNEXPECTED)) {
+          Services.prefs.setBoolPref("extensions.verticaltabs.tabsOnTop",
+                                     window.TabsOnTop.enabled);
         }
-        // Make the command a no-op just to be safe.
-        document.getElementById("cmd_ToggleTabsOnTop").setAttribute(
-            "oncommand", "");
+        window.TabsOnTop.enabled = false;
+        // Hide all menu items for tabs on top.
+        let menu_tabsOnTop = document.getElementById("menu_tabsOnTop");
+        menu_tabsOnTop.collapsed = true;
+        menu_tabsOnTop.nextSibling.collapsed = true; // separator
+        let toolbar_context_menu = document.getElementById("toolbar-context-menu");
+        toolbar_context_menu.firstChild.collapsed = true;
+        toolbar_context_menu.firstChild.nextSibling.collapsed = true; // separator
+        let appmenu_tabsOnTop = document.getElementById("appmenu_toggleTabsOnTop");
+        if (appmenu_tabsOnTop) {
+            appmenu_tabsOnTop.collapsed = true;
+        }
+        // Disable the command just to be safe.
+        let cmd_tabsOnTop = document.getElementById("cmd_ToggleTabsOnTop");
+        cmd_tabsOnTop.disabled = true;
 
         // Fix up each individual tab for vertical layout, including
         // ones that are opened later on.
@@ -157,7 +164,17 @@ VerticalTabs.prototype = {
             tabs.removeAttribute("width");
             tabs.removeEventListener("TabOpen", this, false);
 
-            //TODO tabs on top
+            // Restore tabs on top.
+            window.TabsOnTop.enabled = Services.prefs.getBoolPref(
+                "extensions.verticaltabs.tabsOnTop");
+            menu_tabsOnTop.collapsed = false;
+            menu_tabsOnTop.nextSibling.collapsed = false; // separator
+            toolbar_context_menu.firstChild.collapsed = false;
+            toolbar_context_menu.firstChild.nextSibling.collapsed = false; // separator
+            if (appmenu_tabsOnTop) {
+                appmenu_tabsOnTop.collapsed = false;
+            }
+            cmd_tabsOnTop.disabled = false;
 
             // Restore all individual tabs.
             for (let i = 0; i < tabs.childNodes.length; i++) {

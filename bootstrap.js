@@ -82,9 +82,6 @@ function startup(data, reason) {
 
     // Set default preferences.
     setDefaultPrefs();
-    unload(function() {
-      Services.prefs.getDefaultBranch(PREF_BRANCH).deleteBranch("");
-    });
 
     // Register the resource:// alias.
     let resource = Services.io.getProtocolHandler("resource")
@@ -108,4 +105,6 @@ function shutdown(data, reason) {
     return;
   }
   unload();
+  // Unloaders might want access to prefs, so do this last
+  Services.prefs.getDefaultBranch(PREF_BRANCH).deleteBranch("");
 }
