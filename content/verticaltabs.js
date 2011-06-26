@@ -37,7 +37,7 @@ VerticalTabs.prototype = {
             this.installStylesheet("resource://verticaltabs/skin/osx/osx.css");
             break;
           case "Linux":
-            this.installStylesheet("resource://verticaltabs/skin/osx/osx.css");
+            this.installStylesheet("resource://verticaltabs/skin/linux/linux.css");
             break;
         }
 
