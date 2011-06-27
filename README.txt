@@ -11,7 +11,7 @@ Goals:
   some group-related features (collapse group, tab previews, etc.)
 
 * Very few other features and hopefully little or no preference settings.
-  Instead a good JavaScript API shall be provided for other extensions
+  Instead a good JavaScript API might be provided for other extensions
   (e.g. JetPack SDK based) to provide additional features.
 
 * Native look and feel.
