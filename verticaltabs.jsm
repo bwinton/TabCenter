@@ -63,7 +63,7 @@ VerticalTabs.prototype = {
             delete this.window.VerticalTabs;
         });
 
-        this.installStylesheet("resource://verticaltabs/content/bindings.css");
+        this.installStylesheet("resource://verticaltabs/skin/bindings.css");
         this.installStylesheet("resource://verticaltabs/skin/base.css");
         switch (Services.appinfo.OS) {
           case "WINNT":
