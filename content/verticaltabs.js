@@ -205,23 +205,10 @@ VerticalTabs.prototype = {
           "oncommand", "gBrowser.tabContainer.VTMultiSelect.closeSelected();");
         tabs.contextMenu.appendChild(closeMultiple);
 
-        let separator = document.createElementNS(NS_XUL, "menuseparator");
-        tabs.contextMenu.appendChild(separator);
-
-        let groupTabs = document.createElementNS(NS_XUL, "menuitem");
-        groupTabs.id = "context_verticalTabsCloseMultiple";
-        groupTabs.setAttribute("label", "Group"); //TODO l10n
-        groupTabs.setAttribute("tbattr", "tabbrowser-multiple");
-        groupTabs.setAttribute(
-          "oncommand", "gBrowser.tabContainer.VTGroups.createGroupFromMultiSelect();");
-        tabs.contextMenu.appendChild(groupTabs);
-
         tabs.contextMenu.addEventListener("popupshowing", this, false);
 
         this.unloaders.push(function () {
             tabs.contextMenu.removeChild(closeMultiple);
-            tabs.contextMenu.removeChild(separator);
-            tabs.contextMenu.removeChild(groupTabs);
             tabs.contextMenu.removeEventListener("popupshowing", this, false);
         });
     },
