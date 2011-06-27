@@ -92,7 +92,7 @@ function startup(data, reason) {
     });
 
     // Initialize VerticalTabs object for each window.
-    Cu.import("resource://verticaltabs/content/verticaltabs.js");
+    Cu.import("resource://verticaltabs/verticaltabs.jsm");
     watchWindows(function(window) {
       let vt = new VerticalTabs(window);
       unload(vt.unload.bind(vt), window);
