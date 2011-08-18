@@ -44,6 +44,9 @@ const PREF_BRANCH = "extensions.verticaltabs.";
 const DEFAULT_PREFS = {
   "extensions.verticaltabs.width": 250,
   "extensions.verticaltabs.right": false,
+  //TODO these shouldn't be set as default prefs, or at least they
+  // should clean up after themselves on unload
+  "browser.tabs.animate": false,
   "browser.allTabs.previews": true
 };
 
