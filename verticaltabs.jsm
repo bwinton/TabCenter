@@ -424,9 +424,9 @@ VTTabbrowserTabs.prototype = {
           var newIndex = this._getDropIndex(event);
           var scrollRect = tabStrip.scrollClientRect;
           var rect = this.getBoundingClientRect();
-          var minMargin = scrollRect.left - rect.left;
+          var minMargin = scrollRect.top - rect.top;
           var maxMargin = Math.min(minMargin + scrollRect.height,
-                                   scrollRect.right);
+                                   scrollRect.bottom);
 
           var newMargin;
           if (pixelsToScroll) {
@@ -479,8 +479,12 @@ VTTabbrowserTabs.prototype = {
         // HACK: This property should ideally be computed in the 'dragstart'
         // event, but we can just fake it here. It might be off by a little
         // bit, but we're willing to take that risk.
-        if (!draggedTab._dragData._dragStartY) {
-            draggedTab._dragData._dragStartY = event.screenY;
+        let data = draggedTab._dragData;
+        if (!data._dragStartY) {
+            data._dragStartY = event.screenY;
+            if (!draggedTab.pinned) {
+               data._dragStartY += this.mTabstrip.scrollPosition;
+            }
         }
         // END HACK
           let transformY = event.screenY - draggedTab._dragData._dragStartY;
