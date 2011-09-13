@@ -177,7 +177,7 @@ VerticalTabs.prototype = {
 
         // Fix up each individual tab for vertical layout, including
         // ones that are opened later on.
-        tabs.addEventListener("TabOpen", this, true);
+        tabs.addEventListener("TabOpen", this, false);
         for (let i=0; i < tabs.childNodes.length; i++) {
             this.initTab(tabs.childNodes[i]);
         }
