@@ -79,6 +79,7 @@ VerticalTabs.prototype = {
 
         this.rearrangeXUL();
         this.initContextMenu();
+        this.observeRightPref();
 
         let tabs = this.document.getElementById("tabbrowser-tabs");
         this.vtTabs = new VTTabbrowserTabs(tabs);
@@ -255,12 +256,6 @@ VerticalTabs.prototype = {
         aTab.minWidth = 0;
     },
 
-    unload: function() {
-        this.unloaders.forEach(function(func) {
-          func.call(this);
-        }, this);
-    },
-
     onTabbarResized: function() {
         let tabs = this.document.getElementById("tabbrowser-tabs");
         this.window.setTimeout(function() {
@@ -268,6 +263,31 @@ VerticalTabs.prototype = {
                                       tabs.boxObject.width);
         }, 10);
 	},
+
+    observeRightPref: function () {
+      Services.prefs.addObserver("extensions.verticaltabs.right", this, false);
+      this.unloaders.push(function () {
+        Services.prefs.removeObserver("extensions.verticaltabs.right", this, false);
+      });
+    },
+
+    observe: function (subject, topic, data) {
+      if (topic != "nsPref:changed" || data != "extensions.verticaltabs.right") {
+        return;
+      }
+      let browserbox = this.document.getElementById("browser");
+      if (browserbox.dir != "reverse") {
+        browserbox.dir = "reverse";
+      } else {
+        browserbox.dir = "normal";
+      }
+    },
+
+    unload: function() {
+      this.unloaders.forEach(function(func) {
+        func.call(this);
+      }, this);
+    },
 
     /*** Event handlers ***/
 
