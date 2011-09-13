@@ -44,9 +44,6 @@ const PREF_BRANCH = "extensions.verticaltabs.";
 const DEFAULT_PREFS = {
   "extensions.verticaltabs.width": 250,
   "extensions.verticaltabs.right": false,
-  //TODO these shouldn't be set as default prefs, or at least they
-  // should clean up after themselves on unload
-  "browser.tabs.animate": false,
 };
 
 /**
@@ -81,6 +78,19 @@ function startup(data, reason) {
   AddonManager.getAddonByID(data.id, function(addon) {
     // Load helpers from utils.js.
     include(addon.getResourceURI("utils.js").spec);
+
+    // Back up 'browser.tabs.animate' pref before overwriting it.
+    try {
+      Services.prefs.getBoolPref("extensions.verticaltabs.animate");
+    } catch (ex if (ex.result == Components.results.NS_ERROR_UNEXPECTED)) {
+      let animate = Services.prefs.getBoolPref("browser.tabs.animate");
+      Services.prefs.setBoolPref("extensions.verticaltabs.animate", animate);
+      Services.prefs.setBoolPref("browser.tabs.animate", false);
+    }
+    unload(function () {
+      let animate = Services.prefs.getBoolPref("extensions.verticaltabs.animate");
+      Services.prefs.setBoolPref("browser.tabs.animate", animate);
+    });
 
     // Set default preferences.
     setDefaultPrefs();
