@@ -37,7 +37,6 @@
 const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 
 Cu.import("resource://gre/modules/Services.jsm");
-Cu.import("resource://gre/modules/AddonManager.jsm");
 
 const RESOURCE_HOST = "verticaltabs";
 const PREF_BRANCH = "extensions.verticaltabs.";
@@ -75,41 +74,39 @@ function setDefaultPrefs() {
 }
 
 function startup(data, reason) {
-  AddonManager.getAddonByID(data.id, function(addon) {
-    // Load helpers from utils.js.
-    include(addon.getResourceURI("utils.js").spec);
+  // Load helpers from utils.js.
+  include(data.resourceURI.spec + "utils.js");
 
-    // Back up 'browser.tabs.animate' pref before overwriting it.
-    try {
-      Services.prefs.getBoolPref("extensions.verticaltabs.animate");
-    } catch (ex if (ex.result == Components.results.NS_ERROR_UNEXPECTED)) {
-      let animate = Services.prefs.getBoolPref("browser.tabs.animate");
-      Services.prefs.setBoolPref("extensions.verticaltabs.animate", animate);
-      Services.prefs.setBoolPref("browser.tabs.animate", false);
-    }
-    unload(function () {
-      let animate = Services.prefs.getBoolPref("extensions.verticaltabs.animate");
-      Services.prefs.setBoolPref("browser.tabs.animate", animate);
-    });
-
-    // Set default preferences.
-    setDefaultPrefs();
-
-    // Register the resource:// alias.
-    let resource = Services.io.getProtocolHandler("resource")
-                           .QueryInterface(Ci.nsIResProtocolHandler);
-    resource.setSubstitution(RESOURCE_HOST, addon.getResourceURI("."));
-    unload(function () {
-      resource.setSubstitution(RESOURCE_HOST, null);
-    });
-
-    // Initialize VerticalTabs object for each window.
-    Cu.import("resource://verticaltabs/verticaltabs.jsm");
-    watchWindows(function(window) {
-      let vt = new VerticalTabs(window);
-      unload(vt.unload.bind(vt), window);
-    }, "navigator:browser");
+  // Back up 'browser.tabs.animate' pref before overwriting it.
+  try {
+    Services.prefs.getBoolPref("extensions.verticaltabs.animate");
+  } catch (ex if (ex.result == Components.results.NS_ERROR_UNEXPECTED)) {
+    let animate = Services.prefs.getBoolPref("browser.tabs.animate");
+    Services.prefs.setBoolPref("extensions.verticaltabs.animate", animate);
+    Services.prefs.setBoolPref("browser.tabs.animate", false);
+  }
+  unload(function () {
+    let animate = Services.prefs.getBoolPref("extensions.verticaltabs.animate");
+    Services.prefs.setBoolPref("browser.tabs.animate", animate);
   });
+
+  // Set default preferences.
+  setDefaultPrefs();
+
+  // Register the resource:// alias.
+  let resource = Services.io.getProtocolHandler("resource")
+                         .QueryInterface(Ci.nsIResProtocolHandler);
+  resource.setSubstitution(RESOURCE_HOST, data.resourceURI);
+  unload(function () {
+    resource.setSubstitution(RESOURCE_HOST, null);
+  });
+
+  // Initialize VerticalTabs object for each window.
+  Cu.import("resource://verticaltabs/verticaltabs.jsm");
+  watchWindows(function(window) {
+    let vt = new VerticalTabs(window);
+    unload(vt.unload.bind(vt), window);
+  }, "navigator:browser");
 };
 
 function shutdown(data, reason) {
