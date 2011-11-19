@@ -5,7 +5,7 @@
     <em:type>2</em:type>
     <em:bootstrap>true</em:bootstrap>
     <em:name>Vertical Tabs</em:name>
-    <em:version>0.10pre</em:version>
+    <em:version>0.9.3</em:version>
     <em:homepageURL>https://addons.mozilla.org/firefox/addon/vertical-tabs/</em:homepageURL>
     <em:creator>Philipp von Weitershausen</em:creator>
     <em:contributor>SHIMODA Hiroshi (creator of Tree Style Tab)</em:contributor>
@@ -15,7 +15,7 @@
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox -->
         <em:minVersion>8.0a2</em:minVersion>
-        <em:maxVersion>9.0a1</em:maxVersion>
+        <em:maxVersion>11.0a1</em:maxVersion>
       </Description>
     </em:targetApplication>
   </Description>
