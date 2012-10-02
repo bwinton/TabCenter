@@ -1,3 +1,4 @@
+/* -*- Mode: javascript; indent-tabs-mode: nil -*- */
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -82,15 +83,11 @@ VerticalTabs.prototype = {
         this.observeRightPref();
 
         let tabs = this.document.getElementById("tabbrowser-tabs");
-        this.vtTabs = new VTTabbrowserTabs(tabs);
         this.tabIDs = new VTTabIDs(tabs);
-        this.multiSelect = new VTMultiSelect(tabs);
-        this.groups = new VTGroups(tabs);
+        //this.groups = new VTGroups(tabs);
         this.unloaders.push(function() {
-            this.vtTabs.unload();
             this.tabIDs.unload();
-            this.multiSelect.unload();
-            this.groups.unload();
+            //this.groups.unload();
         });
     },
 
@@ -122,8 +119,6 @@ VerticalTabs.prototype = {
         let leftbox = document.createElementNS(NS_XUL, "vbox");
         leftbox.id = "verticaltabs-box";
         browserbox.insertBefore(leftbox, contentbox);
-        let spacer = document.createElementNS(NS_XUL, "spacer");
-        leftbox.appendChild(spacer);
 
         let splitter = document.createElementNS(NS_XUL, "splitter");
         splitter.id = "verticaltabs-splitter";
@@ -183,6 +178,8 @@ VerticalTabs.prototype = {
             this.initTab(tabs.childNodes[i]);
         }
 
+        this.window.addEventListener("resize", this, false);
+
         this.unloaders.push(function () {
             // Move the bottom back to being the next sibling of contentbox.
             browserbox.insertBefore(bottom, contentbox.nextSibling);
@@ -234,18 +231,22 @@ VerticalTabs.prototype = {
         const document = this.document;
         const tabs = document.getElementById("tabbrowser-tabs");
 
-        let closeMultiple = document.createElementNS(NS_XUL, "menuitem");
-        closeMultiple.id = "context_verticalTabsCloseMultiple";
-        closeMultiple.setAttribute("label", "Close Selected Tabs"); //TODO l10n
-        closeMultiple.setAttribute("tbattr", "tabbrowser-multiple");
-        closeMultiple.setAttribute(
-          "oncommand", "gBrowser.tabContainer.VTMultiSelect.closeSelected();");
-        tabs.contextMenu.appendChild(closeMultiple);
+        let closeMultiple = null;
+        if (this.multiSelect) {
+            closeMultiple = document.createElementNS(NS_XUL, "menuitem");
+            closeMultiple.id = "context_verticalTabsCloseMultiple";
+            closeMultiple.setAttribute("label", "Close Selected Tabs"); //TODO l10n
+            closeMultiple.setAttribute("tbattr", "tabbrowser-multiple");
+            closeMultiple.setAttribute(
+                "oncommand", "gBrowser.tabContainer.VTMultiSelect.closeSelected();");
+            tabs.contextMenu.appendChild(closeMultiple);
+        }
 
         tabs.contextMenu.addEventListener("popupshowing", this, false);
 
         this.unloaders.push(function () {
-            tabs.contextMenu.removeChild(closeMultiple);
+            if (closeMultiple)
+                tabs.contextMenu.removeChild(closeMultiple);
             tabs.contextMenu.removeEventListener("popupshowing", this, false);
         });
     },
@@ -256,13 +257,31 @@ VerticalTabs.prototype = {
         aTab.minWidth = 0;
     },
 
+    setPinnedSizes: function() {
+        let tabs = this.document.getElementById("tabbrowser-tabs");
+        // awfulness
+        let numPinned = tabs.tabbrowser._numPinnedTabs;
+
+        if (tabs.getAttribute("positionpinnedtabs")) {
+            let width = tabs.boxObject.width;
+            for (let i = 0; i < numPinned; ++i) {
+                tabs.childNodes[i].style.width = tabs.boxObject.width + "px";
+            }
+        } else {
+            for (let i = 0; i < numPinned; ++i) {
+                tabs.childNodes[i].style.width = "";
+            }
+        }
+    },
+
     onTabbarResized: function() {
         let tabs = this.document.getElementById("tabbrowser-tabs");
+        this.setPinnedSizes();
         this.window.setTimeout(function() {
             Services.prefs.setIntPref("extensions.verticaltabs.width",
                                       tabs.boxObject.width);
         }, 10);
-	},
+    },
 
     observeRightPref: function () {
       Services.prefs.addObserver("extensions.verticaltabs.right", this, false);
@@ -298,12 +317,16 @@ VerticalTabs.prototype = {
             return;
         case "TabOpen":
             this.onTabOpen(aEvent);
+            this.setPinnedSizes();
             return;
         case "mouseup":
             this.onMouseUp(aEvent);
             return;
         case "popupshowing":
             this.onPopupShowing(aEvent);
+            return;
+        case "resize":
+            this.setPinnedSizes();
             return;
         }
     },
@@ -319,6 +342,9 @@ VerticalTabs.prototype = {
     },
 
     onPopupShowing: function(aEvent) {
+        if (!this.multiSelect)
+            return;
+
         let closeTabs = this.document.getElementById("context_verticalTabsCloseMultiple");
         let tabs = this.multiSelect.getSelected();
         if (tabs.length > 1) {
@@ -328,137 +354,4 @@ VerticalTabs.prototype = {
         }
     }
 
-};
-
-/**
- * Patches for the tabbrowser-tabs object.
- * 
- * These are necessary where the original implementation assumes a
- * horizontal layout. Pretty much only needed for drag'n'drop to work
- * correctly.
- * 
- * WARNING: Do not continue reading unless you want to feel sick. You
- * have been warned.
- * 
- */
-function VTTabbrowserTabs(tabs) {
-    this.tabs = tabs;
-    this.init();
-}
-VTTabbrowserTabs.prototype = {
-
-    init: function() {
-        this.swapMethods();
-        this.onDragOver = this.onDragOver.bind(this);
-        tabs.addEventListener('dragover', this.onDragOver, false);
-    },
-
-    unload: function() {
-        this.swapMethods();
-        tabs.removeEventListener('dragover', this.onDragOver, false);
-    },
-
-    _patchedMethods: ["_positionPinnedTabs",
-                      "_getDropIndex",
-                      "_isAllowedForDataTransfer",
-                      "_setEffectAllowedForDataTransfer"
-                      ],
-    swapMethods: function swapMethods() {
-        const tabs = this.tabs;
-        this._patchedMethods.forEach(function(methodname) {
-            this.swapMethod(tabs, this, methodname);
-        }, this);
-    },
-
-    swapMethod: function(obj1, obj2, methodname) {
-      let method1 = obj1[methodname];
-      let method2 = obj2[methodname];
-      obj1[methodname] = method2;
-      obj2[methodname] = method1;
-    },
-
-    // Modified methods below.
-
-    _positionPinnedTabs: function() {
-        // TODO we might want to do something here. For now we just
-        // don't do anything which is better than doing something stupid.
-    },
-
-    _getDropIndex: function(event) {
-        var tabs = this.childNodes;
-        var tab = this._getDragTargetTab(event);
-        // CHANGE for Vertical Tabs: no ltr handling, X -> Y, width -> height
-        // and group support.
-        for (let i = tab ? tab._tPos : 0; i < tabs.length; i++) {
-            // Dropping on a group will append to that group's children.
-            if (event.screenY < tabs[i].boxObject.screenY + tabs[i].boxObject.height / 2)
-                return i;
-        }
-        return tabs.length;
-    },
-
-    _isAllowedForDataTransfer: function(node) {
-        const window = node.ownerDocument.defaultView;
-        return (node instanceof window.XULElement
-                && node.localName == "tab"
-                && (node.parentNode == this
-                    || (node.ownerDocument.defaultView instanceof window.ChromeWindow
-                        && node.ownerDocument.documentElement.getAttribute("windowtype") == "navigator:browser")));
-
-    },
-
-    _setEffectAllowedForDataTransfer: function(event) {
-        var dt = event.dataTransfer;
-        // Disallow dropping multiple items
-        if (dt.mozItemCount > 1)
-            return dt.effectAllowed = "none";
-
-        var types = dt.mozTypesAt(0);
-        // tabs are always added as the first type
-        if (types[0] == TAB_DROP_TYPE) {
-            let sourceNode = dt.mozGetDataAt(TAB_DROP_TYPE, 0);
-            if (this._isAllowedForDataTransfer(sourceNode)) {
-                if (sourceNode.parentNode == this &&
-                    // CHANGE for Vertical Tabs: X -> Y, width -> height
-                    (event.screenY >= sourceNode.boxObject.screenY &&
-                     event.screenY <= (sourceNode.boxObject.screenY +
-                                       sourceNode.boxObject.height))) {
-                    return dt.effectAllowed = "none";
-                }
-
-                return dt.effectAllowed = "copyMove";
-            }
-        }
-
-        if (browserDragAndDrop.canDropLink(event)) {
-            // Here we need to do this manually
-            return dt.effectAllowed = dt.dropEffect = "link";
-        }
-        return dt.effectAllowed = "none";
-    },
-
-    // Calculate the drop indicator's position for vertical tabs.
-    // Overwrites what the original 'dragover' event handler does
-    // towards the end.
-    onDragOver: function(aEvent) {
-        const tabs = this.tabs;
-        let ind = tabs._tabDropIndicator;
-        let newIndex = tabs._getDropIndex(aEvent);
-        let rect = tabs.getBoundingClientRect();
-        let newMargin;
-
-        if (newIndex == tabs.childNodes.length) {
-            let tabRect = tabs.childNodes[newIndex-1].getBoundingClientRect();
-            newMargin = tabRect.bottom - rect.top;
-        } else {
-            let tabRect = tabs.childNodes[newIndex].getBoundingClientRect();
-            newMargin = tabRect.top - rect.top;
-        }
-
-        newMargin += ind.clientHeight / 2;
-        ind.style.MozTransform = "translate(0, " + Math.round(newMargin) + "px)";
-        ind.style.MozMarginStart = null;
-        ind.style.marginTop = null;
-        ind.style.maxWidth = rect.width + "px";
-    }
 };

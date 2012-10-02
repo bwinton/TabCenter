@@ -20,8 +20,8 @@
 }
 
 .tabbrowser-tabs {
-    margin: 0 !important;
-    padding: 1px 0px 1px 1px !important;
+    /*margin: 0 !important;*/
+    /*padding: 1px 0px 1px 1px !important;*/
     background: transparent !important;
     background-color: #fcfcfc !important; /* other Win7 apps seems to use this */
 }
@@ -29,35 +29,37 @@
 .tabbrowser-tab {
     -moz-box-pack: start;
     -moz-box-flex: 0;
-    -moz-appearance: none !important;
-    background: transparent !important;
-    border: 2px solid transparent !important;
-    border-radius: 2.67px !important;
-    margin: 0 !important;
-    padding: 0 0 0 3px !important;
-    height: 21px !important;
-    min-height: 21px !important;
-    max-height: 21px !important;
+    -moz-appearance: none;
+    background: transparent;
+
+    border: 2px solid transparent;
+    border-radius: 2.67px 0 0 2.67px;
+
+    margin: 0;
+    padding: 0 0 2px 0px;
+
+    /* XXX this height isn't correct, especially on higher dpi settings. */
+    height: 25px;
+    min-height: 25px;
+    max-height: 25px;
 }
+
 .tabbrowser-tab:hover {
-    border: 2px solid !important;
-    -moz-border-top-colors: #b8d6fb #fcfdfe !important;
-    -moz-border-bottom-colors: #b8d6fb #f2f7fe !important;
-    -moz-border-left-colors: #b8d6fb #f9fcfe !important;
-    -moz-border-right-colors: #b8d6fb #f9fcfe !important;
+    border: 2px solid;
     background: -moz-linear-gradient(top, #fafbfd, #ebf3fd) repeat-x !important;
+}
+
+.tabbrowser-tab[pinned] {
+    position: inherit;
+    border-left: 10px solid gray ! important; /* this should remain no matter what */
 }
 
 .tabbrowser-tab[selected="true"],
 .tabbrowser-tab[multiselect="true"] {
-    margin: 0 !important;
+    /*margin: 0 !important;*/
     padding: 0 0 0 3px !important;
 
-    border: 2px solid !important;
-    -moz-border-top-colors: #84acdd #f1f7fe !important;
-    -moz-border-bottom-colors: #84acdd #deedfe !important;
-    -moz-border-left-colors: #84acdd #e8f2fe !important;
-    -moz-border-right-colors: #84acdd #e8f2fe !important;
+    border: 2px solid;
     background: -moz-linear-gradient(top, #ebf4fe, #cfe4fe) repeat-x !important;
 
     font-weight: normal;
@@ -74,8 +76,8 @@
 }
 
 .tabbrowser-tab:not([selected="true"]):hover {
-    margin: 0 !important;
-    padding: 0 0 0 3px !important;
+    /*margin: 0 !important;*/
+    /*padding: 0 0 0 3px !important;*/
 }
 
 .tabbrowser-tab:-moz-lwtheme {
