@@ -29,37 +29,40 @@
 .tabbrowser-tab {
     -moz-box-pack: start;
     -moz-box-flex: 0;
-    -moz-appearance: none;
-    background: transparent;
+    -moz-appearance: none ! important;
+    background: transparent ! important;
 
-    border: 2px solid transparent;
+    border: 1px solid transparent;
     border-radius: 2.67px 0 0 2.67px;
 
     margin: 0;
-    padding: 0 0 2px 0px;
+    padding: 1px 2px 2px 0px;
 
     /* XXX this height isn't correct, especially on higher dpi settings. */
-    height: 25px;
-    min-height: 25px;
-    max-height: 25px;
+    /* but we can force it with a font-size, so it'll be correct */
+    font-size: 12px ! important;
+
+    height: 21px;
+    min-height: 21px;
+    max-height: 21px;
 }
 
 .tabbrowser-tab:hover {
-    border: 2px solid;
+    border-color: gray;
     background: -moz-linear-gradient(top, #fafbfd, #ebf3fd) repeat-x !important;
 }
 
 .tabbrowser-tab[pinned] {
     position: inherit;
-    border-left: 10px solid gray ! important; /* this should remain no matter what */
+    background: -moz-linear-gradient(left, gray, #ebf3fd) repeat-y !important;
 }
 
 .tabbrowser-tab[selected="true"],
 .tabbrowser-tab[multiselect="true"] {
     /*margin: 0 !important;*/
-    padding: 0 0 0 3px !important;
+    /*padding: 0 0 0 3px !important;*/
 
-    border: 2px solid;
+    border-color: gray;
     background: -moz-linear-gradient(top, #ebf4fe, #cfe4fe) repeat-x !important;
 
     font-weight: normal;
@@ -67,7 +70,7 @@
 }
 .tabbrowser-tab[selected="true"]:-moz-window-inactive,
 .tabbrowser-tab[multiselect="true"]:-moz-window-inactive {
-    border: 2px solid !important;
+    border: 1px solid !important;
     -moz-border-top-colors: #d9d9d9 #fafafb !important;
     -moz-border-bottom-colors: #d9d9d9 #f0f0f0 !important;
     -moz-border-left-colors: #d9d9d9 #f8f8f8 !important;
