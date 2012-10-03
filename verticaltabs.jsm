@@ -64,6 +64,7 @@ VerticalTabs.prototype = {
             delete this.window.VerticalTabs;
         });
 
+        this.installStylesheet("resource://verticaltabs/override-bindings.css");
         this.installStylesheet("resource://verticaltabs/skin/bindings.css");
         this.installStylesheet("resource://verticaltabs/skin/base.css");
         switch (Services.appinfo.OS) {

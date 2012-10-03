@@ -1,0 +1,7 @@
+.tabbrowser-tabs {
+  -moz-binding: url("chrome://verticaltabs/content/vertical-tabbrowser.xml#tabbrowser-tabs") ! important;
+}
+
+.tabbrowser-arrowscrollbox {
+  -moz-binding: url("chrome://verticaltabs/content/vertical-tabbrowser.xml#tabbrowser-arrowscrollbox") ! important;
+}
