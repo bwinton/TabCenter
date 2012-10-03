@@ -73,6 +73,9 @@ function setDefaultPrefs() {
   }
 }
 
+function install() {
+}
+
 function startup(data, reason) {
   // Load helpers from utils.js.
   include(data.resourceURI.spec + "utils.js");
