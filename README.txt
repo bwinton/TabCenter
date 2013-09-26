@@ -1,5 +1,5 @@
-Vertical Tabs for Firefox 4
-===========================
+Vertical Tabs for Firefox 27 and beyond
+=======================================
 
 This Firefox add-on arranges tabs in a vertical rather than horizontal
 fashion.  It is heavily inspired by and borrows ideas from the excellent

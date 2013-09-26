@@ -5,7 +5,7 @@
     <em:type>2</em:type>
     <em:bootstrap>true</em:bootstrap>
     <em:name>Vertical Tabs</em:name>
-    <em:version>22.0pre</em:version>
+    <em:version>27.0pre</em:version>
     <em:homepageURL>https://www.bitops.com/vertical-tabs/</em:homepageURL>
     <em:creator>Vladimir Vukicevic</em:creator>
     <em:contributor>Philipp von Weitershausen (original author)</em:contributor>
@@ -15,8 +15,8 @@
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox -->
-        <em:minVersion>22.0a1</em:minVersion>
-        <em:maxVersion>22.0</em:maxVersion>
+        <em:minVersion>27.0a1</em:minVersion>
+        <em:maxVersion>27.0</em:maxVersion>
       </Description>
     </em:targetApplication>
   </Description>
