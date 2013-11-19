@@ -85,86 +85,14 @@
         <parameter name="aTab"/>
         <body><![CDATA[
 	  // XXX I don't think this is necessary for vertical tabs
-	  if (this._verticalTabs)
-	    return;
-
-          var tabs = this.tabbrowser.visibleTabs;
-          if (!tabs.length)
-            return;
-
-          var isEndTab = (aTab._tPos > tabs[tabs.length-1]._tPos);
-          var tabWidth = aTab.getBoundingClientRect().width;
-
-          if (!this._tabDefaultMaxWidth)
-            this._tabDefaultMaxWidth =
-              parseFloat(window.getComputedStyle(aTab).maxWidth);
-          this._lastTabClosedByMouse = true;
-
-          if (this.getAttribute("overflow") == "true") {
-            // Don't need to do anything if we're in overflow mode and aren't scrolled
-            // all the way to the right, or if we're closing the last tab.
-            if (isEndTab || !this.mTabstrip._scrollButtonDown.disabled)
-              return;
-
-            // If the tab has an owner that will become the active tab, the owner will
-            // be to the left of it, so we actually want the left tab to slide over.
-            // This can't be done as easily in non-overflow mode, so we don't bother.
-            if (aTab.owner)
-              return;
-
-            this._expandSpacerBy(tabWidth);
-          } else { // non-overflow mode
-            // Locking is neither in effect nor needed, so let tabs expand normally.
-            if (isEndTab && !this._hasTabTempMaxWidth)
-              return;
-
-            let numPinned = this.tabbrowser._numPinnedTabs;
-            // Force tabs to stay the same width, unless we're closing the last tab,
-            // which case we need to let them expand just enough so that the overall
-            // tabbar width is the same.
-            if (isEndTab) {
-              let numNormalTabs = tabs.length - numPinned;
-              tabWidth = tabWidth * (numNormalTabs + 1) / numNormalTabs;
-              if (tabWidth > this._tabDefaultMaxWidth)
-                tabWidth = this._tabDefaultMaxWidth;
-            }
-            tabWidth += "px";
-            for (let i = numPinned; i < tabs.length; i++) {
-              let tab = tabs[i];
-              tab.style.setProperty("max-width", tabWidth, "important");
-              if (!isEndTab) { // keep tabs the same width
-                tab.style.transition = "none";
-                tab.clientTop; // flush styles to skip animation; see bug 649247
-                tab.style.transition = "";
-              }
-            }
-            this._hasTabTempMaxWidth = true;
-            this.tabbrowser.addEventListener("mousemove", this, false);
-            window.addEventListener("mouseout", this, false);
-          }
+	  return;
         ]]></body>
       </method>
 
       <method name="_unlockTabSizing">
         <body><![CDATA[
 	  // XXX I don't think this is necessary for vertical tabs
-	  if (this._verticalTabs)
-	    return;
-
-          this.tabbrowser.removeEventListener("mousemove", this, false);
-          window.removeEventListener("mouseout", this, false);
-
-          if (this._hasTabTempMaxWidth) {
-            this._hasTabTempMaxWidth = false;
-            let tabs = this.tabbrowser.visibleTabs;
-            for (let i = 0; i < tabs.length; i++)
-              tabs[i].style.maxWidth = "";
-          }
-
-          if (this.hasAttribute("using-closing-tabs-spacer")) {
-            this.removeAttribute("using-closing-tabs-spacer");
-            this._closingTabsSpacer.style.width = 0;
-          }
+	  return;
         ]]></body>
       </method>
 
@@ -231,7 +159,7 @@
         ]]></body>
       </method>
 
-      <method name="_verticalAnimateTabMove">
+      <method name="_animateTabMove">
         <parameter name="event"/>
         <body><![CDATA[
           let draggedTab = event.dataTransfer.mozGetDataAt(TAB_DROP_TYPE, 0);
@@ -241,15 +169,20 @@
             this.selectedItem = draggedTab;
           }
 
-          if (!("animLastScreenPos" in draggedTab._dragData))
+          if (!("animLastScreenPos" in draggedTab._dragData)) {
+            // XXX verticalTabs hack -- this isn't set on dragstart (only screenX is),
+            // but we can fake it here.  We also call scrollX scrollPosition.
+            draggedTab._dragData.screenY = event.screenY;
+            draggedTab._dragData.scrollPos = draggedTab._dragData.scrollX;
             draggedTab._dragData.animLastScreenPos = draggedTab._dragData.screenY;
+          }
 
-          let screenPos = event.screenPos;
+          let screenPos = event.screenY;
           if (screenPos == draggedTab._dragData.animLastScreenPos)
             return;
 
           let draggingForward = screenPos > draggedTab._dragData.animLastScreenPos;
-          draggedTab._dragData.animLastScreenX = screenPos;
+          draggedTab._dragData.animLastScreenPos = screenPos;
 
           let rtl = false; //(window.getComputedStyle(this).direction == "rtl");
           let pinned = draggedTab.pinned;
@@ -266,15 +199,18 @@
           let leftTab = tabs[0];
           let rightTab = tabs[tabs.length - 1];
           let tabScreenPos = draggedTab.boxObject.screenY;
-          let translateAmount = screenPos - draggedTab._dragData.screenY;
+          console.log("tabScreenPos", tabScreenPos);
+          let translateVal = screenPos - draggedTab._dragData.screenY;
+          console.log("translateVal 1", translateVal);
           if (!pinned)
-            translateAmount += this.mTabstrip.scrollPosition - draggedTab._dragData.scrollPosition;
-          let minBound = leftTab.boxObject.screenY - tabScreenY;
-          let maxBound = (rightTab.boxObject.screenY + rightTab.boxObject.width) -
-                           (tabScreenY + tabWidth);
-          translateAmount = Math.max(translateX, minBound);
-          translateAmount = Math.min(translateX, maxBound);
-          draggedTab.style.transform = "translateY(" + translateAmount + "px)";
+            translateVal += this.mTabstrip.scrollPosition - draggedTab._dragData.scrollX; // XXX verticalTabs always scrollX here, it's actually the scrollPosition
+          let minBound = leftTab.boxObject.screenY - tabScreenPos;
+          let maxBound = (rightTab.boxObject.screenY + rightTab.boxObject.height) -
+                           (tabScreenPos + tabSize);
+          translateVal = Math.max(translateVal, minBound);
+          translateVal = Math.min(translateVal, maxBound);
+          draggedTab.style.transform = "translateY(" + translateVal + "px)";
+          console.log("draggedTab transform: " + draggedTab.style.transform + " should be " + "translateY(" + translateVal + "px)");
 
           // Determine what tab we're dragging over.
           // * Point of reference is the center of the dragged tab. If that
@@ -283,7 +219,7 @@
           // * We're doing a binary search in order to reduce the amount of
           //   tabs we need to check.
 
-          let tabCenter = tabScreenPos + translateAmount + tabSize / 2;
+          let tabCenter = tabScreenPos + translateVal + tabSize / 2;
           let newIndex = -1;
           let oldIndex = "animDropIndex" in draggedTab._dragData ?
                          draggedTab._dragData.animDropIndex : draggedTab._tPos;
@@ -323,113 +259,9 @@
 
           function getTabShift(tab, dropIndex) {
             if (tab._tPos < draggedTab._tPos && tab._tPos >= dropIndex)
-              return rtl ? -tabWidth : tabWidth;
+              return rtl ? -tabSize : tabSize;
             if (tab._tPos > draggedTab._tPos && tab._tPos < dropIndex)
-              return rtl ? tabWidth : -tabWidth;
-            return 0;
-          }
-        ]]></body>
-      </method>
-
-      <method name="_animateTabMove">
-        <parameter name="event"/>
-        <body><![CDATA[
-          if (this._verticalTabs) {
-            return this._verticalAnimateTabMove(event);
-          }
-
-          let draggedTab = event.dataTransfer.mozGetDataAt(TAB_DROP_TYPE, 0);
-
-          if (this.getAttribute("movingtab") != "true") {
-            this.setAttribute("movingtab", "true");
-            this.selectedItem = draggedTab;
-          }
-
-          if (!("animLastScreenX" in draggedTab._dragData))
-            draggedTab._dragData.animLastScreenX = draggedTab._dragData.screenX;
-
-          let screenX = event.screenX;
-          if (screenX == draggedTab._dragData.animLastScreenX)
-            return;
-
-          let draggingRight = screenX > draggedTab._dragData.animLastScreenX;
-          draggedTab._dragData.animLastScreenX = screenX;
-
-          let rtl = (window.getComputedStyle(this).direction == "rtl");
-          let pinned = draggedTab.pinned;
-          let numPinned = this.tabbrowser._numPinnedTabs;
-          let tabs = this.tabbrowser.visibleTabs
-                                    .slice(pinned ? 0 : numPinned,
-                                           pinned ? numPinned : undefined);
-          if (rtl)
-            tabs.reverse();
-          let tabWidth = draggedTab.getBoundingClientRect().width;
-
-          // Move the dragged tab based on the mouse position.
-
-          let leftTab = tabs[0];
-          let rightTab = tabs[tabs.length - 1];
-          let tabScreenX = draggedTab.boxObject.screenX;
-          let translateX = screenX - draggedTab._dragData.screenX;
-          if (!pinned)
-            translateX += this.mTabstrip.scrollPosition - draggedTab._dragData.scrollX;
-          let leftBound = leftTab.boxObject.screenX - tabScreenX;
-          let rightBound = (rightTab.boxObject.screenX + rightTab.boxObject.width) -
-                           (tabScreenX + tabWidth);
-          translateX = Math.max(translateX, leftBound);
-          translateX = Math.min(translateX, rightBound);
-          draggedTab.style.transform = "translateX(" + translateX + "px)";
-
-          // Determine what tab we're dragging over.
-          // * Point of reference is the center of the dragged tab. If that
-          //   point touches a background tab, the dragged tab would take that
-          //   tab's position when dropped.
-          // * We're doing a binary search in order to reduce the amount of
-          //   tabs we need to check.
-
-          let tabCenter = tabScreenX + translateX + tabWidth / 2;
-          let newIndex = -1;
-          let oldIndex = "animDropIndex" in draggedTab._dragData ?
-                         draggedTab._dragData.animDropIndex : draggedTab._tPos;
-          let low = 0;
-          let high = tabs.length - 1;
-          while (low <= high) {
-            let mid = Math.floor((low + high) / 2);
-            if (tabs[mid] == draggedTab &&
-                ++mid > high)
-              break;
-            let boxObject = tabs[mid].boxObject;
-            let screenX = boxObject.screenX + getTabShift(tabs[mid], oldIndex);
-            if (screenX > tabCenter) {
-              high = mid - 1;
-            } else if (screenX + boxObject.width < tabCenter) {
-              low = mid + 1;
-            } else {
-              newIndex = tabs[mid]._tPos;
-              break;
-            }
-          }
-          if (newIndex >= oldIndex)
-            newIndex++;
-          if (newIndex < 0 || newIndex == oldIndex)
-            return;
-          draggedTab._dragData.animDropIndex = newIndex;
-
-          // Shift background tabs to leave a gap where the dragged tab
-          // would currently be dropped.
-
-          for (let tab of tabs) {
-            if (tab != draggedTab) {
-              let shift = getTabShift(tab, newIndex);
-              tab.style.transform = shift ? "translateX(" + shift + "px)" : "";
-            }
-          }
-
-          function getTabShift(tab, dropIndex) {
-            if (tab._tPos < draggedTab._tPos && tab._tPos >= dropIndex)
-              return rtl ? -tabWidth : tabWidth;
-            if (tab._tPos > draggedTab._tPos && tab._tPos < dropIndex)
-              return rtl ? tabWidth : -tabWidth;
+              return rtl ? tabSize : -tabSize;
             return 0;
           }
         ]]></body>
@@ -539,6 +371,7 @@
 
         if (effects == "move" &&
             this == event.dataTransfer.mozGetDataAt(TAB_DROP_TYPE, 0).parentNode) {
+          console.log("animateTabMove!");
           ind.collapsed = true;
           this._animateTabMove(event);
           return;
