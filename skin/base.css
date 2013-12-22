@@ -64,9 +64,25 @@ statuspanel:-moz-locale-dir(ltr):not([mirror]) .statuspanel-inner {
     -moz-transition-duration: .1s;
     -moz-transition-timing-function: ease-out;
 }
+
 .verticaltabs-collapsed {
     height: 0px !important;  /* animation shrinks height */
     min-height: 0px !important;
     max-height: 0px !important;
     visibility: collapse;
+}
+
+.tab-background {
+    display: none ! important;
+}
+
+.tabbrowser-tab {
+    pointer-events: auto ! important;
+    min-width: 30px ! important;
+    max-width: 100% ! important;
+}
+
+.tabbrowser-arrowscrollbox > .arrowscrollbox-scrollbox {
+    -moz-padding-end: 0px ! important;
+    -moz-padding-start: 0px ! important;
 }
