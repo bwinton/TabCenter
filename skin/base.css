@@ -86,3 +86,11 @@ statuspanel:-moz-locale-dir(ltr):not([mirror]) .statuspanel-inner {
     -moz-padding-end: 0px ! important;
     -moz-padding-start: 0px ! important;
 }
+
+/* Make room for the close/max/min button on the right of the window */
+/* XXX this should probably be per-OS, yes? */
+/* XXX if I was smarter I'd find a way to make a swoop on the right side of the bar, under the window buttons */
+/* Maybe not - this conveniently leaves a hit target for dragging. */
+#nav-bar {
+  margin-right: 100px;
+}
