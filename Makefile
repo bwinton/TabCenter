@@ -8,7 +8,19 @@ SOURCES = \
 	multiselect.jsm \
 	options.xul \
 	override-bindings.css \
-	skin \
+	skin/base.css \
+	skin/bindings.css \
+	skin/groups.xml \
+	skin/linux/linux.css \
+	skin/osx/closetab-white.png \
+	skin/osx/closetab.png \
+	skin/osx/dropmarker.png \
+	skin/osx/osx.css \
+	skin/osx/twisty.png \
+	skin/win7/dropmarker.png \
+	skin/win7/twisty-collapsed.png \
+	skin/win7/twisty.png \
+	skin/win7/win7.css \
 	tabdatastore.jsm \
 	utils.js \
 	vertical-tabbrowser.xml \
