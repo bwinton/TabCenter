@@ -42,8 +42,8 @@ statuspanel:-moz-locale-dir(ltr):not([mirror]) .statuspanel-inner {
 }
 
 /* Undo a bunch of stuff for app tabs */
-.tabbrowser-tab[pinned] {
-    position: inherit;
+.tabbrowser-tabs[positionpinnedtabs] > .tabbrowser-tab[pinned] {
+    position: inherit !important;
 }
 .tabbrowser-tab[pinned] > .tab-text {
     display: inherit;
