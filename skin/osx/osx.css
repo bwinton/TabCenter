@@ -53,10 +53,10 @@
     -moz-border-radius: 0 !important;
     -moz-box-align: stretch !important;
     margin: 0 !important;
-    padding: 8px 3px !important;
-    height: 32px !important;     /* height including border! */
-    min-height: 32px !important;
-    max-height: 32px !important;
+    padding: 7px 3px 6px !important;
+    height: 31px !important;     /* height including border! */
+    min-height: 31px !important;
+    max-height: 31px !important;
     width: 100% !important;
     min-width: 100% !important;
     max-width: 100% !important;
@@ -153,13 +153,11 @@
 /* Always display the favicon at 100% opacity */
 .tabbrowser-tab .tab-icon-image {
     opacity: 1.0 !important;
-    width: 20px !important;
 }
 
 /* Ensure app tab labels are not too close to the icon. */
 .tab-label[pinned] {
     margin: 2px 6px !important;
-    width: 100%;
     position: relative !important;
 }
 
