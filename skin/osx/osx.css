@@ -1,22 +1,16 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 #nav-bar {
-    margin-left: 60px;
-    margin-right: 22px;
-    margin-top: -22px;
-    background-image: none !important;
-    background-color: transparent !important;
+    background-image: url('chrome://browser/skin/Toolbar-background-noise.png'), linear-gradient(#D6D6D6, #D3D3D3) !important;
+}
+
+#nav-bar:-moz-window-inactive {
+    background-image: url('chrome://browser/skin/Toolbar-background-noise.png'), linear-gradient(#F2F2F2, #D3D3D3) !important;
 }
 
 #tab-view-deck {
     height: 44px !important;
 }
-
-/*
-#navigator-toolbox {
-    background-color: red !important;
-}
-*/
 
 /* Background colour for the tree sidebar (light blue when window is
    active, grey otherwise) */
@@ -24,10 +18,10 @@
     margin: 0 !important;
     padding: 0 !important;
     background: transparent !important;
-    background-color: #d4dde5 !important;
+    background-color: #333 !important;
 }
 .tabbrowser-tabs:-moz-window-inactive {
-    background-color: #e8e8e8 !important;
+    background-color: #333 !important;
 }
 
 .tabbrowser-arrowscrollbox > .arrowscrollbox-scrollbox {
@@ -51,7 +45,7 @@
     -moz-box-pack: start;
     -moz-box-flex: 0;
     -moz-appearance: none !important;
-    background: transparent !important;
+    background: #333 !important;
     -moz-border-top-colors: none !important;
     -moz-border-bottom-colors: none !important;
     -moz-border-right-colors: none !important;
@@ -59,17 +53,17 @@
     -moz-border-radius: 0 !important;
     -moz-box-align: stretch !important;
     margin: 0 !important;
-    padding: 2px 3px 2px 5px !important;
-    height: 22px !important;     /* height including border! */
-    min-height: 22px !important;
-    max-height: 22px !important;
+    padding: 8px 3px !important;
+    height: 32px !important;     /* height including border! */
+    min-height: 32px !important;
+    max-height: 32px !important;
     width: 100% !important;
     min-width: 100% !important;
     max-width: 100% !important;
     text-align: left !important;
     border: none;
-    border-top: 1px solid transparent !important;
-    overflow: hidden;  /* so that the heigh transition for collapsed works */
+    border-top: 1px solid rgba(255, 255, 255,0.05) !important;
+    border-bottom: 1px solid rgba(0,0,0,0.15) !important;
 }
 
 /* remove curvy tab ends */
@@ -103,13 +97,14 @@
 
 .tabbrowser-tab[selected="true"],
 .tabbrowser-tab[multiselect="true"] {
-    border-top: 1px solid #94A1C0 !important;
     background: -moz-linear-gradient(top, #A0B0CF, #7386AB) repeat-x !important;
+    background: #222 !important;
+
 }
 .tabbrowser-tab[selected="true"]:-moz-window-inactive,
 .tabbrowser-tab[multiselect="true"]:-moz-window-inactive {
-    border-top: 1px solid #979797 !important;
     background: -moz-linear-gradient(top, #B4B4B4, #8A8A8A) repeat-x !important;
+    background: #222 !important;
 }
 
 .tab-background-start, .tab-background-middle, .tab-background-end {
@@ -127,7 +122,14 @@
     -moz-image-region: auto !important;
     display: -moz-box;
     margin-left: 3px;
-    list-style-image: url("resource://verticaltabs/skin/osx/closetab.png");
+    margin-top: 1px;
+    background-image: url("resource://verticaltabs/skin/osx/closetab.svg") !important;
+    background-position: center right;
+    background-size: contain;
+    background-repeat: no-repeat;
+    list-style-image: none !important;
+    width: 14px;
+    height: 14px;
     opacity: 0.27;  /* turn black into #b9b9b9 */
 }
 .tab-close-button:active {
@@ -135,7 +137,12 @@
 }
 .tabbrowser-tab[selected="true"] .tab-close-button,
 .tabbrowser-tab[multiselect="true"] .tab-close-button {
-    list-style-image: url("resource://verticaltabs/skin/osx/closetab-white.png");
+    background-image: url("resource://verticaltabs/skin/osx/closetab-white.svg");
+    opacity: 0.8;
+}
+
+.tabbrowser-tab[selected="true"] .tab-close-button:hover,
+.tabbrowser-tab[multiselect="true"] .tab-close-button:hover {
     opacity: 1;
 }
 
@@ -146,11 +153,36 @@
 /* Always display the favicon at 100% opacity */
 .tabbrowser-tab .tab-icon-image {
     opacity: 1.0 !important;
+    width: 20px !important;
 }
 
 /* Ensure app tab labels are not too close to the icon. */
 .tab-label[pinned] {
     margin: 2px 6px !important;
+    width: 100%;
+    position: relative !important;
+}
+
+.tabbrowser-tab[pinned]:before {
+    position: relative !important;
+}
+
+.tabbrowser-tab[pinned][titlechanged] > .tab-stack > .tab-content {
+    background-image: none !important;
+}
+
+.tabbrowser-tab[pinned][titlechanged] .tab-text {
+    color: #F1F1F1 !important;
+}
+
+.tabbrowser-tab[pinned][titlechanged]:after {
+    content: '●' !important;
+    width: 18px;
+    height: 10px;
+    position: absolute !important;
+    color: #29B4FF;
+    line-height: 15px;
+    font-size: 150% !important;
 }
 
 /* Tab label is without special decoration except when selected: then
@@ -158,7 +190,7 @@
 .tab-text {
     font-size: 11px;
     font-weight: normal !important;
-    color: #000000 !important;
+    color: #BBB !important;
     text-shadow: none !important;
     margin-bottom: 1px;
     text-align: left !important;
@@ -166,7 +198,7 @@
 .tabbrowser-tab[selected="true"] .tab-text,
 .tabbrowser-tab[multiselect="true"] .tab-text {
     font-weight: bold !important;
-    color: #ffffff !important;
+    color: #DDD !important;
     text-shadow: 0 1px #404040 !important;
 }
 
@@ -183,7 +215,7 @@
 #TabsToolbar[tabsontop="false"]:not(:-moz-lwtheme),
 #TabsToolbar[tabsontop="false"]:not(:-moz-lwtheme):-moz-window-inactive {
     background: none;
-    background-color: transparent;
+    background-color: #4C9ED9;
 }
 
 #verticaltabs-groupbutton {

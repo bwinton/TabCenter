@@ -12,8 +12,8 @@ SOURCES = \
 	skin/bindings.css \
 	skin/groups.xml \
 	skin/linux/linux.css \
-	skin/osx/closetab-white.png \
-	skin/osx/closetab.png \
+	skin/osx/closetab-white.svg \
+	skin/osx/closetab.svg \
 	skin/osx/dropmarker.png \
 	skin/osx/osx.css \
 	skin/osx/twisty.png \
