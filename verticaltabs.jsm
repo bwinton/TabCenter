@@ -67,14 +67,14 @@ VerticalTabs.prototype = {
         this.installStylesheet("resource://verticaltabs/override-bindings.css");
         this.installStylesheet("resource://verticaltabs/skin/bindings.css");
         this.installStylesheet("resource://verticaltabs/skin/base.css");
-        switch (Services.appinfo.OS) {
-          case "WINNT":
+        switch (Services.prefs.getCharPref("extensions.verticaltabs.theme")) {
+          case "windows":
             this.installStylesheet("resource://verticaltabs/skin/win7/win7.css");
             break;
-          case "Darwin":
+          case "osx":
             this.installStylesheet("resource://verticaltabs/skin/osx/osx.css");
             break;
-          case "Linux":
+          case "linux":
             this.installStylesheet("resource://verticaltabs/skin/linux/linux.css");
             break;
         }
@@ -82,6 +82,7 @@ VerticalTabs.prototype = {
         this.rearrangeXUL();
         this.initContextMenu();
         this.observeRightPref();
+        this.observeThemePref();
 
         let tabs = this.document.getElementById("tabbrowser-tabs");
         this.tabIDs = new VTTabIDs(tabs);
@@ -288,6 +289,13 @@ VerticalTabs.prototype = {
       Services.prefs.addObserver("extensions.verticaltabs.right", this, false);
       this.unloaders.push(function () {
         Services.prefs.removeObserver("extensions.verticaltabs.right", this, false);
+      });
+    },
+
+    observeThemePref: function() {
+      Services.prefs.addObserver("extensions.verticaltabs.theme", this, false);
+      this.unloaders.push(function() {
+        Services.prefs.removeObserver("extensions.verticaltabs.theme", this, false);
       });
     },
 

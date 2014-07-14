@@ -3,4 +3,15 @@
   <setting type="bool"
            pref="extensions.verticaltabs.right"
            title="Display tabs on the right"/>
+  <setting type="menulist"
+           pref="extensions.verticaltabs.theme"
+          title="Theme">
+    <menulist>
+      <menupopup>
+      <menuitem value="windows" label="Windows" />
+      <menuitem value="osx" label="OS X" />
+      <menuitem value="linux" label="Linux" />
+      </menupopup>
+    </menulist>
+  </setting>
 </vbox>

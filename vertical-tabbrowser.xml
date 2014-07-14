@@ -147,7 +147,7 @@
                 let tab = this.childNodes[i];
                 tab.style.MozMarginStart = "";
               }
-  
+
               this.style.MozPaddingStart = "";
             }
           }
