@@ -93,6 +93,38 @@ statuspanel:-moz-locale-dir(ltr):not([mirror]) .statuspanel-inner {
   content: none !important;
 }
 
+/* Pinned tabs */
+.tabbrowser-tab[pinned] .tab-content {
+  -moz-padding-end: 0 !important;
+  -moz-padding-start: 0 !important;
+}
+
+.tabbrowser-tab[pinned] {
+    padding: 3px !important;
+    position: inherit;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    max-width: 22px !important;
+    max-height: 22px !important;
+    display: inline-block !important;
+}
+
+.tabbrowser-tab[pinned] .tab-throbber,
+.tabbrowser-tab[pinned] .tab-icon-image {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.tabbrowser-tab[pinned] .tab-text.tab-label,
+.tabbrowser-tab[pinned] .tab-close-button.close-icon {
+  display: none;
+}
+
+.tabbrowser-tab:not([pinned]) {
+  display: block;
+  width: 100%;
+}
+
 /* Make room for the close/max/min button on the right of the window */
 /* XXX this should probably be per-OS, yes? */
 /* XXX if I was smarter I'd find a way to make a swoop on the right side of the bar, under the window buttons */

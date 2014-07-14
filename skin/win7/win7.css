@@ -54,7 +54,6 @@
 
 .tabbrowser-tab[pinned] {
     position: inherit;
-    background: -moz-linear-gradient(left, gray, #ebf3fd) repeat-y !important;
 }
 
 .tabbrowser-tab[selected="true"],
@@ -117,6 +116,9 @@
     margin-bottom: 0 !important;
 }
 
+.tabbrowser-tab[pinned][selected] {
+  border: 1px solid #a0a0a0;
+}
 
 /*** Tab toolbar styling ***/
 

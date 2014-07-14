@@ -62,8 +62,10 @@
                           style="min-width: 1px;"
                           clicktoscroll="true"
                           class="tabbrowser-arrowscrollbox">
+                          <div>
         <children includes="tab"/>
         <children/>
+      </div>
         <xul:toolbarbutton class="tabs-newtab-button"
                            command="cmd_newNavigatorTab"
                            onclick="checkForMiddleClick(this, event);"
@@ -107,7 +109,7 @@
           if (doPosition) {
             this.setAttribute("positionpinnedtabs", "true");
 
-            if (verticalTabs) {
+          /*  if (verticalTabs) {
               let scrollButtonHeight = this.mTabstrip._scrollButtonDown.getBoundingClientRect().height;
               let paddingStart = this.mTabstrip._scrollbox.style.paddingTop;
               let height = 0;
@@ -147,9 +149,9 @@
                 let tab = this.childNodes[i];
                 tab.style.MozMarginStart = "";
               }
-  
+
               this.style.MozPaddingStart = "";
-            }
+            } */
           }
 
           if (this._lastNumPinned != numPinned) {
