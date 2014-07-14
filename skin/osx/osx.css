@@ -1,11 +1,13 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 #nav-bar {
-    background-image: url('chrome://browser/skin/Toolbar-background-noise.png'), linear-gradient(#D6D6D6, #D3D3D3) !important;
+    box-shadow: none;
+    /* background-image: url('chrome://browser/skin/Toolbar-background-noise.png'), linear-gradient(#D6D6D6, #D3D3D3); */
 }
 
 #nav-bar:-moz-window-inactive {
-    background-image: url('chrome://browser/skin/Toolbar-background-noise.png'), linear-gradient(#F2F2F2, #D3D3D3) !important;
+    box-shadow: none;
+    /* background-image: url('chrome://browser/skin/Toolbar-background-noise.png'), linear-gradient(#F2F2F2, #D3D3D3); */
 }
 
 #tab-view-deck {
