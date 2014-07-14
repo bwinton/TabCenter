@@ -1,13 +1,11 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 #verticaltabs-splitter {
-    min-width: 3px !important;
-    width: 3px !important;
-    border-top: none !important;
-    border-bottom: none !important;
-    border-left: 1px solid #fcfcfc !important;
-    border-right: 1px solid #fcfcfc !important;
-    background-color: #d6e5f5 !important;
+    min-width: 1px !important;
+    width: 1px !important;
+
+    border: none;
+    background-color: #a0a0a0 !important;
     margin: 0 0 23px 0 !important;
     -moz-border-top-colors: none !important;
     -moz-border-left-colors: none !important;
@@ -20,10 +18,12 @@
 }
 
 .tabbrowser-tabs {
-    /*margin: 0 !important;*/
-    /*padding: 1px 0px 1px 1px !important;*/
     background: transparent !important;
-    background-color: #fcfcfc !important; /* other Win7 apps seems to use this */
+    background-color: #f1f1f1 !important; /* match browser chrome */
+}
+
+.tabbrowser-tab:first-child {
+  margin-top: 4px;
 }
 
 .tabbrowser-tab {
@@ -31,11 +31,12 @@
     -moz-box-flex: 0;
     -moz-appearance: none ! important;
     background: transparent ! important;
+    background-image: none !important;
 
     border: 1px solid transparent;
     border-radius: 2.67px 0 0 2.67px;
 
-    margin: 0;
+    margin: 0 0 0 6px;
     padding: 1px 2px 2px 0px;
 
     /* XXX this height isn't correct, especially on higher dpi settings. */
@@ -47,40 +48,30 @@
     max-height: 21px;
 }
 
+/* get rid of the tab separator from horizontal tabs */
+.tabbrowser-tab:after,
+.tabbrowser-tab:before {
+  content: none !important;
+}
+
 .tabbrowser-tab:hover {
-    border-color: gray;
-    background: -moz-linear-gradient(top, #fafbfd, #ebf3fd) repeat-x !important;
+    border-width: 1px 0px 1px 1px;
+    border-color: #a0a0a0;
+    border-style: solid;
 }
 
 .tabbrowser-tab[pinned] {
     position: inherit;
-    background: -moz-linear-gradient(left, gray, #ebf3fd) repeat-y !important;
 }
 
 .tabbrowser-tab[selected="true"],
 .tabbrowser-tab[multiselect="true"] {
-    /*margin: 0 !important;*/
-    /*padding: 0 0 0 3px !important;*/
-
-    border-color: gray;
-    background: -moz-linear-gradient(top, #ebf4fe, #cfe4fe) repeat-x !important;
-
+    background: #d8d8d8 !important;
+    border-width: 1px 0px 1px 1px;
+    border-color: #a0a0a0;
+    border-style: solid;
     font-weight: normal;
     text-shadow: none;
-}
-.tabbrowser-tab[selected="true"]:-moz-window-inactive,
-.tabbrowser-tab[multiselect="true"]:-moz-window-inactive {
-    border: 1px solid !important;
-    -moz-border-top-colors: #d9d9d9 #fafafb !important;
-    -moz-border-bottom-colors: #d9d9d9 #f0f0f0 !important;
-    -moz-border-left-colors: #d9d9d9 #f8f8f8 !important;
-    -moz-border-right-colors: #d9d9d9 #f8f8f8 !important;
-    background: -moz-linear-gradient(top, #f8f8f8, #e5e5e5) repeat-x !important;
-}
-
-.tabbrowser-tab:not([selected="true"]):hover {
-    /*margin: 0 !important;*/
-    /*padding: 0 0 0 3px !important;*/
 }
 
 .tabbrowser-tab:-moz-lwtheme {
