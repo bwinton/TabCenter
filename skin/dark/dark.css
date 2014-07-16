@@ -1,0 +1,182 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+.tab-close-button {
+  position: absolute;
+  right: 4px;
+}
+
+
+.tabbrowser-tabs {
+    margin: 1px 0 0 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    background-color: #424F5A !important;
+}
+
+.tabbrowser-tab {
+    -moz-box-pack: start;
+    -moz-box-flex: 0;
+    -moz-appearance: none !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 1px 0 !important;
+    height: 24px !important;
+    min-height: 24px !important;
+    max-height: 24px !important;
+    color: #fbfbfb !important;
+}
+
+.tabbrowser-tab[selected="true"],
+.tabbrowser-tab[multiselect="true"] {
+    margin: 0 !important;
+    padding: 1px 0 !important;
+    background-color: #343F48 !important;
+    font-weight: normal;
+    text-shadow: none;
+    border-left: 4px solid #ff9500 !important;
+    border-radius: 0 !important;
+    font-weight: 600 !important;
+}
+.tabbrowser-tab[selected="true"]:-moz-window-inactive,
+.tabbrowser-tab[multiselect="true"]:-moz-window-inactive {
+    background-color: InactiveCaption !important;
+    color: InactiveCaptionText !important;
+   /* gnome/gtk/cleartype doesn't seem to have inactive states for selected items, lets try this */
+}
+
+.tabbrowser-tab:not([selected="true"]):hover {
+    margin: 0 !important;
+    padding: 1px 0 !important;
+}
+
+
+.tabbrowser-tab:not(:hover):not([selected="true"]) .tab-close-button {
+    visibility: collapse !important;
+}
+
+/* Keep the close button at a safe distance from the tab label. */
+.tab-close-button {
+    display: -moz-box;
+    margin-left: 3px !important;
+    margin-right: 1px !important;
+    margin-bottom: -3px !important;
+}
+
+.tab-label {
+  text-align: left !important;
+}
+
+/** Drop indicator for drag'n'drop of tabs - Works OOTB(TM)- Just needs a margin.**/
+.tab-drop-indicator {
+    margin-top: -11px !important;
+    margin-bottom: 0 !important;
+}
+
+
+/* Tab toolbar styling */
+
+#verticaltabs-groupbutton {
+    /* TODO need icon to symbolize tab group */
+    list-style-image: url("chrome://browser/skin/Toolbar.png");
+    -moz-image-region: rect(0, 234px, 18px, 216px);
+}
+
+
+/*** Group related styles ***/
+
+.tabbrowser-tab[verticaltabs-ingroup],
+.tabbrowser-tab[verticaltabs-ingroup]:hover {
+    padding-left: 16px !important;
+}
+
+.tabbrowser-tab[verticaltabs-group] {
+}
+
+.tabbrowser-tab[verticaltabs-group] .tab-close-button {
+    opacity: 1 !important;
+}
+
+.tabbrowser-tab[verticaltabs-group] .tab-text {
+    padding-left: 3px !important;
+}
+
+.verticaltabs-textbox {
+    margin: 0;
+}
+
+.verticaltabs-counter {
+    visibility: collapse;
+}
+
+.verticaltabs-droptarget {
+    background-color: Highlight !important;
+    color: HighlightText !important;
+}
+
+.verticaltabs-dropingroup {
+    margin-left: 10px !important;
+}
+
+.verticaltabs-droptonewgroup {
+    /* TODO need icon to symbolize tab group */
+    list-style-image: url("chrome://browser/skin/Toolbar.png");
+    -moz-image-region: rect(0, 234px, 18px, 216px);
+}
+
+.verticaltabs-twisty {
+    cursor: default !important;
+    margin-left: 1px !important;
+    margin-right: 2px !important;
+    -moz-appearance: treetwisty !important;
+}
+.tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-twisty {
+    -moz-appearance: treetwistyopen !important;
+}
+
+/*** Link Display ***/
+
+.statuspanel-label {
+    -moz-appearance: tooltip !important;
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+    box-shadow: 8px 3px 0 rgba(0,0,0,.18) !important; /* would otherwise display a transparent pixel on the tooltip's corner */
+}
+
+.statuspanel-inner {
+    height: 100% !important;
+}
+
+#main-window[sizemode="normal"]:not([inFullscreen="true"]) .statuspanel-inner {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+statuspanel[mirror]:-moz-locale-dir(ltr),
+statuspanel[mirror]:-moz-locale-dir(rtl) {
+    padding: 6px 6px 0px 0px !important;
+}
+
+statuspanel:-moz-locale-dir(ltr):not([mirror]),
+statuspanel:-moz-locale-dir(rtl):not([mirror]) {
+    padding: 0px 0px 0px 4px !important;
+}
+
+statuspanel[mirror]:-moz-locale-dir(ltr) .statuspanel-inner,
+statuspanel[mirror]:-moz-locale-dir(rtl) .statuspanel-inner {
+    margin-top: 8px !important;
+    margin-bottom: 10px !important;
+    box-shadow: 5px 5px 0 -4px rgba(0,0,0,.18), 5px 5px 0 -3px rgba(0,0,0,.15), 5px 5px 0 -2px rgba(0,0,0,.12), 5px 5px 0 -1px rgba(0,0,0,.09) !important;
+    padding: 0px 0px !important;
+    border-radius: 4px !important;
+}
+
+statuspanel:-moz-locale-dir(ltr):not([mirror]) .statuspanel-inner,
+statuspanel:-moz-locale-dir(rtl):not([mirror]) .statuspanel-inner {
+    margin-top: 14px !important;
+    margin-bottom: 5px !important;
+    box-shadow: 5px 5px 0 -4px rgba(0,0,0,.18), 5px 5px 0 -3px rgba(0,0,0,.15), 5px 5px 0 -2px rgba(0,0,0,.12), 5px 5px 0 -1px rgba(0,0,0,.09) !important;
+    padding: 0px 0px !important;
+    border-radius: 4px !important;
+}

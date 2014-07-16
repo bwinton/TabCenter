@@ -11,6 +11,7 @@
       <menuitem value="windows" label="Windows" />
       <menuitem value="osx" label="OS X" />
       <menuitem value="linux" label="Linux" />
+      <menuitem value="dark" label="Dark" />
       </menupopup>
     </menulist>
   </setting>
