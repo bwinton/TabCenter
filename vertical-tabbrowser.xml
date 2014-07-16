@@ -171,21 +171,6 @@
             this.selectedItem = draggedTab;
           }
 
-          if (!("animLastScreenPos" in draggedTab._dragData)) {
-            // XXX verticalTabs hack -- this isn't set on dragstart (only screenX is),
-            // but we can fake it here.  We also call scrollX scrollPosition.
-            draggedTab._dragData.screenY = event.screenY;
-            draggedTab._dragData.scrollPos = draggedTab._dragData.scrollX;
-            draggedTab._dragData.animLastScreenPos = draggedTab._dragData.screenY;
-          }
-
-          let screenPos = event.screenY;
-          if (screenPos == draggedTab._dragData.animLastScreenPos)
-            return;
-
-          let draggingForward = screenPos > draggedTab._dragData.animLastScreenPos;
-          draggedTab._dragData.animLastScreenPos = screenPos;
-
           let rtl = false; //(window.getComputedStyle(this).direction == "rtl");
           let pinned = draggedTab.pinned;
           let numPinned = this.tabbrowser._numPinnedTabs;
@@ -194,69 +179,119 @@
                                            pinned ? numPinned : undefined);
           if (rtl)
             tabs.reverse();
-          let tabSize = draggedTab.getBoundingClientRect().height;
 
-          // Move the dragged tab based on the mouse position.
+          if (!pinned) {
+            if (!("animLastScreenPos" in draggedTab._dragData)) {
+              // XXX verticalTabs hack -- this isn't set on dragstart (only screenX is),
+              // but we can fake it here.  We also call scrollX scrollPosition.
+              draggedTab._dragData.screenY = event.screenY;
+              draggedTab._dragData.scrollPos = draggedTab._dragData.scrollX;
+              draggedTab._dragData.animLastScreenPos = draggedTab._dragData.screenY;
+            }
 
-          let leftTab = tabs[0];
-          let rightTab = tabs[tabs.length - 1];
-          let tabScreenPos = draggedTab.boxObject.screenY;
-          console.log("tabScreenPos", tabScreenPos);
-          let translateVal = screenPos - draggedTab._dragData.screenY;
-          console.log("translateVal 1", translateVal);
-          if (!pinned)
+            if (!("animLastScreenPos" in draggedTab._dragData)) {
+              // XXX verticalTabs hack -- this isn't set on dragstart (only screenX is),
+              // but we can fake it here.  We also call scrollX scrollPosition.
+              draggedTab._dragData.screenY = event.screenY;
+              draggedTab._dragData.scrollPos = draggedTab._dragData.scrollX;
+              draggedTab._dragData.animLastScreenPos = draggedTab._dragData.screenY;
+            }
+
+            let screenPos = event.screenY;
+            if (screenPos == draggedTab._dragData.animLastScreenPos)
+              return;
+
+            let draggingForward = screenPos > draggedTab._dragData.animLastScreenPos;
+            draggedTab._dragData.animLastScreenPos = screenPos;
+
+            let tabSize = draggedTab.getBoundingClientRect().height;
+
+            // Move the dragged tab based on the mouse position.
+            let leftTab = tabs[0];
+            let rightTab = tabs[tabs.length - 1];
+            let tabScreenPos = draggedTab.boxObject.screenY;
+            console.log("tabScreenPos", tabScreenPos);
+            let translateVal = screenPos - draggedTab._dragData.screenY;
+            console.log("translateVal 1", translateVal);
+
             translateVal += this.mTabstrip.scrollPosition - draggedTab._dragData.scrollX; // XXX verticalTabs always scrollX here, it's actually the scrollPosition
-          let minBound = leftTab.boxObject.screenY - tabScreenPos;
-          let maxBound = (rightTab.boxObject.screenY + rightTab.boxObject.height) -
-                           (tabScreenPos + tabSize);
-          translateVal = Math.max(translateVal, minBound);
-          translateVal = Math.min(translateVal, maxBound);
-          draggedTab.style.transform = "translateY(" + translateVal + "px)";
-          console.log("draggedTab transform: " + draggedTab.style.transform + " should be " + "translateY(" + translateVal + "px)");
+            let minBound = leftTab.boxObject.screenY - tabScreenPos;
+            let maxBound = (rightTab.boxObject.screenY + rightTab.boxObject.height) -
+                             (tabScreenPos + tabSize);
+            translateVal = Math.max(translateVal, minBound);
+            translateVal = Math.min(translateVal, maxBound);
+            draggedTab.style.transform = "translateY(" + translateVal + "px)";
+            console.log("draggedTab transform: " + draggedTab.style.transform + " should be " + "translateY(" + translateVal + "px)");
 
-          // Determine what tab we're dragging over.
-          // * Point of reference is the center of the dragged tab. If that
-          //   point touches a background tab, the dragged tab would take that
-          //   tab's position when dropped.
-          // * We're doing a binary search in order to reduce the amount of
-          //   tabs we need to check.
+            // Determine what tab we're dragging over.
+            // * Point of reference is the center of the dragged tab. If that
+            //   point touches a background tab, the dragged tab would take that
+            //   tab's position when dropped.
+            // * We're doing a binary search in order to reduce the amount of
+            //   tabs we need to check.
 
-          let tabCenter = tabScreenPos + translateVal + tabSize / 2;
-          let newIndex = -1;
-          let oldIndex = "animDropIndex" in draggedTab._dragData ?
-                         draggedTab._dragData.animDropIndex : draggedTab._tPos;
-          let low = 0;
-          let high = tabs.length - 1;
-          while (low <= high) {
-            let mid = Math.floor((low + high) / 2);
-            if (tabs[mid] == draggedTab &&
-                ++mid > high)
-              break;
-            let boxObject = tabs[mid].boxObject;
-            let screenPos = boxObject.screenY + getTabShift(tabs[mid], oldIndex);
-            if (screenPos > tabCenter) {
-              high = mid - 1;
-            } else if (screenPos + boxObject.height < tabCenter) {
-              low = mid + 1;
-            } else {
-              newIndex = tabs[mid]._tPos;
-              break;
+            let tabCenter = tabScreenPos + translateVal + tabSize / 2;
+            let newIndex = -1;
+            let oldIndex = "animDropIndex" in draggedTab._dragData ?
+                           draggedTab._dragData.animDropIndex : draggedTab._tPos;
+            let low = 0;
+            let high = tabs.length - 1;
+            while (low <= high) {
+              let mid = Math.floor((low + high) / 2);
+              if (tabs[mid] == draggedTab &&
+                  ++mid > high)
+                break;
+              let boxObject = tabs[mid].boxObject;
+              let screenPos = boxObject.screenY + getTabShift(tabs[mid], oldIndex);
+              if (screenPos > tabCenter) {
+                high = mid - 1;
+              } else if (screenPos + boxObject.height < tabCenter) {
+                low = mid + 1;
+              } else {
+                newIndex = tabs[mid]._tPos;
+                break;
+              }
             }
-          }
-          if (newIndex >= oldIndex)
-            newIndex++;
-          if (newIndex < 0 || newIndex == oldIndex)
-            return;
-          draggedTab._dragData.animDropIndex = newIndex;
+            if (newIndex >= oldIndex)
+              newIndex++;
+            if (newIndex < 0 || newIndex == oldIndex)
+              return;
+            draggedTab._dragData.animDropIndex = newIndex;
 
-          // Shift background tabs to leave a gap where the dragged tab
-          // would currently be dropped.
+            // Shift background tabs to leave a gap where the dragged tab
+            // would currently be dropped.
 
-          for (let tab of tabs) {
-            if (tab != draggedTab) {
-              let shift = getTabShift(tab, newIndex);
-              tab.style.transform = shift ? "translateY(" + shift + "px)" : "";
+            for (let tab of tabs) {
+              if (tab != draggedTab) {
+                let shift = getTabShift(tab, newIndex);
+                tab.style.transform = shift ? "translateY(" + shift + "px)" : "";
+              }
             }
+          } else {
+            console.log("Dragging pinned tab…");
+            if (!("animLastScreenPos" in draggedTab._dragData)) {
+              // XXX verticalTabs hack -- this isn't set on dragstart (only screenX is),
+              // but we can fake it here.  We also call scrollX scrollPosition.
+              draggedTab._dragData.screenX = event.screenX;
+              draggedTab._dragData.scrollPos = draggedTab._dragData.scrollY;
+              draggedTab._dragData.animLastScreenPos = draggedTab._dragData.screenX;
+            }
+
+            let screenPos = event.screenX;
+            if (screenPos == draggedTab._dragData.animLastScreenPos)
+              return;
+
+            let draggingForward = screenPos > draggedTab._dragData.animLastScreenPos;
+            draggedTab._dragData.animLastScreenPos = screenPos;
+
+            let tabSize = draggedTab.getBoundingClientRect().width;
+
+            // Move the dragged tab based on the mouse position.
+            let topTab = tabs[0];
+            let bottomTab = tabs[tabs.length - 1];
+            let tabScreenPos = draggedTab.boxObject.screenX;
+            let translateVal = screenPos - draggedTab._dragData.screenY;
+            console.log(translateVal);
           }
 
           function getTabShift(tab, dropIndex) {
