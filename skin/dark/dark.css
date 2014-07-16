@@ -49,6 +49,7 @@
 .tabbrowser-tab:not([selected="true"]):hover {
     margin: 0 !important;
     padding: 1px 0 !important;
+    background-color: #5E6972 !important;
 }
 
 
