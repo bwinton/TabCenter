@@ -79,6 +79,10 @@ VerticalTabs.prototype = {
             break;
           case "dark":
             this.installStylesheet("resource://verticaltabs/skin/dark/dark.css");
+            break;
+          case "light":
+            this.installStylesheet("resource://verticaltabs/skin/light/light.css");
+            break;            
         }
 
         this.rearrangeXUL();

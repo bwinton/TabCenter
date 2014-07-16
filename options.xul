@@ -12,6 +12,7 @@
       <menuitem value="osx" label="OS X" />
       <menuitem value="linux" label="Linux" />
       <menuitem value="dark" label="Dark" />
+      <menuitem value="light" label="Light" />
       </menupopup>
     </menulist>
   </setting>
