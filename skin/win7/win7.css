@@ -51,12 +51,6 @@
   background-image: none !important; /* getting rid of ugly blue glow until we handle highlighting */
 }
 
-/* get rid of the tab separator from horizontal tabs */
-.tabbrowser-tab:after,
-.tabbrowser-tab:before {
-  content: none !important;
-}
-
 .tabbrowser-tab:hover {
     border-width: 1px 0px 1px 0px;
     border-color: #ccc;
