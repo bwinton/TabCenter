@@ -109,7 +109,7 @@
           if (doPosition) {
             this.setAttribute("positionpinnedtabs", "true");
 
-          /*  if (verticalTabs) {
+            if (verticalTabs) {
               let scrollButtonHeight = this.mTabstrip._scrollButtonDown.getBoundingClientRect().height;
               let paddingStart = this.mTabstrip._scrollbox.style.paddingTop;
               let height = 0;
@@ -151,7 +151,7 @@
               }
 
               this.style.MozPaddingStart = "";
-            } */
+            }
           }
 
           if (this._lastNumPinned != numPinned) {
