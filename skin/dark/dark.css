@@ -22,9 +22,9 @@
     border-radius: 0 !important;
     margin: 0 !important;
     padding: 1px 0 !important;
-    height: 24px !important;
-    min-height: 24px !important;
-    max-height: 24px !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    max-height: 28px !important;
     color: #fbfbfb !important;
     border-left: 4px solid transparent !important;
 }
@@ -68,11 +68,24 @@
 
 .tab-label {
   text-align: left !important;
-  /*-moz-margin-start: 20px !important;*/
+}
+
+.tab-label[pinned] {
+    margin-left: 6px !important;
+    position: relative !important;
 }
 
 .tab-content {
   -moz-margin-start: 0px;
+  margin-top: 1px;
+}
+
+.tab-icon-image {
+  padding: 3px;
+  background-color: #fbfbfb !important;
+  border-radius: 2px;
+  min-height: 22px !important;
+  min-width: 22px !important;
 }
 
 /** Drop indicator for drag'n'drop of tabs - Works OOTB(TM)- Just needs a margin.**/
