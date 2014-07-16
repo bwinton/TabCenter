@@ -26,6 +26,7 @@
     min-height: 24px !important;
     max-height: 24px !important;
     color: #fbfbfb !important;
+    border-left: 4px solid transparent !important;
 }
 
 .tabbrowser-tab[selected="true"],
@@ -67,6 +68,11 @@
 
 .tab-label {
   text-align: left !important;
+  /*-moz-margin-start: 20px !important;*/
+}
+
+.tab-content {
+  -moz-margin-start: 0px;
 }
 
 /** Drop indicator for drag'n'drop of tabs - Works OOTB(TM)- Just needs a margin.**/
