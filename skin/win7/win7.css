@@ -23,7 +23,7 @@
 }
 
 .tabbrowser-tab:first-child {
-  margin-top: 4px;
+  border-top: 0px;
 }
 
 .tabbrowser-tab {
@@ -34,18 +34,21 @@
     background-image: none !important;
 
     border: 1px solid transparent;
-    border-radius: 2.67px 0 0 2.67px;
 
-    margin: 0 0 0 6px;
-    padding: 1px 2px 2px 0px;
+    padding: 1px 4px 4px 0px;
 
-    /* XXX this height isn't correct, especially on higher dpi settings. */
+     /*XXX this height isn't correct, especially on higher dpi settings. */
     /* but we can force it with a font-size, so it'll be correct */
     font-size: 12px ! important;
 
-    height: 21px;
-    min-height: 21px;
-    max-height: 21px;
+    height: 26px;
+    min-height: 26px;
+    max-height: 26px;
+}
+
+.tab-content {
+  margin-top: 4px;
+  background-image: none !important; /* getting rid of ugly blue glow until we handle highlighting */
 }
 
 /* get rid of the tab separator from horizontal tabs */
@@ -55,8 +58,9 @@
 }
 
 .tabbrowser-tab:hover {
-    border-width: 1px 0px 1px 1px;
-    border-color: #a0a0a0;
+    border-width: 1px 0px 1px 0px;
+    border-color: #ccc;
+    background-color: #e1e1e1 !important;
     border-style: solid;
 }
 
@@ -67,8 +71,9 @@
 .tabbrowser-tab[selected="true"],
 .tabbrowser-tab[multiselect="true"] {
     background: #d8d8d8 !important;
-    border-width: 1px 0px 1px 1px;
-    border-color: #a0a0a0;
+    border-width: 1px 0px 1px 0px;
+    border-color: #c5c5c5;
+    border-top-color: #b3b3b3
     border-style: solid;
     font-weight: normal;
     text-shadow: none;
