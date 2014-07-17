@@ -11,6 +11,8 @@ SOURCES = \
 	skin/base.css \
 	skin/bindings.css \
 	skin/groups.xml \
+	skin/dark/dark.css \
+	skin/light/light.css \
 	skin/linux/linux.css \
 	skin/osx/closetab-white.svg \
 	skin/osx/closetab.svg \
