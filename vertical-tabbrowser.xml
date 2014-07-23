@@ -59,7 +59,7 @@
       <xul:arrowscrollbox anonid="arrowscrollbox"
                           flex="1"
                           xbl:inherits="orient"
-                          style="min-width: 1px;"
+                          style="min-width: 20px;"
                           clicktoscroll="true"
                           class="tabbrowser-arrowscrollbox">
         <children includes="tab"/>
