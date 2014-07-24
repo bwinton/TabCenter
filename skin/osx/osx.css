@@ -33,8 +33,10 @@
 
 /* Use the splitter to display the border of .tabbrowser-tabs */
 #verticaltabs-splitter {
-    width: 1px !important;
-    min-width: 1px !important;
+    min-width: 3px;
+    width: 3px;
+    -moz-margin-start: -3px;
+    position: relative;
     background-image: none;
     background-color: #404040;
 }
