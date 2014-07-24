@@ -2,20 +2,16 @@
 
 #nav-bar {
     box-shadow: none;
-    /* background-image: url('chrome://browser/skin/Toolbar-background-noise.png'), linear-gradient(#D6D6D6, #D3D3D3); */
 }
 
 #nav-bar:-moz-window-inactive {
     box-shadow: none;
-    /* background-image: url('chrome://browser/skin/Toolbar-background-noise.png'), linear-gradient(#F2F2F2, #D3D3D3); */
 }
 
 #tab-view-deck {
     height: 44px !important;
 }
 
-/* Background colour for the tree sidebar (light blue when window is
-   active, grey otherwise) */
 .tabbrowser-tabs {
     margin: 0 !important;
     padding: 0 !important;
@@ -44,7 +40,7 @@
   -moz-border-end: #404040;
 }
 #verticaltabs-splitter:-moz-window-inactive {
-    background-color: #868686;
+    background-color: transparent;
 }
 
 /* Style tabs themselves.  Get rid of most of the initial XUL styling */
@@ -104,13 +100,11 @@
 
 .tabbrowser-tab[selected="true"],
 .tabbrowser-tab[multiselect="true"] {
-    background: -moz-linear-gradient(top, #A0B0CF, #7386AB) repeat-x !important;
     background: #222 !important;
 
 }
 .tabbrowser-tab[selected="true"]:-moz-window-inactive,
 .tabbrowser-tab[multiselect="true"]:-moz-window-inactive {
-    background: -moz-linear-gradient(top, #B4B4B4, #8A8A8A) repeat-x !important;
     background: #222 !important;
 }
 
