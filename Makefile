@@ -27,8 +27,8 @@ SOURCES = \
 	verticaltabs.jsm \
 	$(NULL)
 
-all: release.xpi
+all: VerticalTabs.xpi
 
-release.xpi: $(SOURCES)
-	rm -f $@
-	zip -9r $@ $(SOURCES)
+VerticalTabs.xpi: $(SOURCES)
+	rm -f ../$@
+	zip -9r ../$@ $(SOURCES)
