@@ -5,6 +5,8 @@ This Firefox add-on arranges tabs in a vertical rather than horizontal
 fashion.  It is heavily inspired by and borrows ideas from the excellent
 Tree Style Tab add-on.
 
+Download & Install: http://people.mozilla.org/~rcampbell/VerticalTabs.xpi
+
 Goals:
 
 * Ability to arrange tabs in groups (instead of arbitrary trees) plus
