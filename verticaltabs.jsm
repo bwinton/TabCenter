@@ -66,26 +66,15 @@ VerticalTabs.prototype = {
             delete this.window.VerticalTabs;
         });
 
+        this.sss = Components.classes["@mozilla.org/content/style-sheet-service;1"]
+                    .getService(Components.interfaces.nsIStyleSheetService);
+        this.ios = Components.classes["@mozilla.org/network/io-service;1"]
+                    .getService(Components.interfaces.nsIIOService);
+
         this.installStylesheet("resource://verticaltabs/override-bindings.css");
         this.installStylesheet("resource://verticaltabs/skin/bindings.css");
         this.installStylesheet("resource://verticaltabs/skin/base.css");
-        switch (Services.prefs.getCharPref("extensions.verticaltabs.theme")) {
-          case "windows":
-            this.installStylesheet("resource://verticaltabs/skin/win7/win7.css");
-            break;
-          case "osx":
-            this.installStylesheet("resource://verticaltabs/skin/osx/osx.css");
-            break;
-          case "linux":
-            this.installStylesheet("resource://verticaltabs/skin/linux/linux.css");
-            break;
-          case "dark":
-            this.installStylesheet("resource://verticaltabs/skin/dark/dark.css");
-            break;
-          case "light":
-            this.installStylesheet("resource://verticaltabs/skin/light/light.css");
-            break;            
-        }
+        this.applyThemeStylesheet();
 
         this.rearrangeXUL();
         this.initContextMenu();
@@ -100,13 +89,41 @@ VerticalTabs.prototype = {
     },
 
     installStylesheet: function(uri) {
-        const document = this.document;
-        let pi = document.createProcessingInstruction(
-          "xml-stylesheet", "href=\"" + uri + "\" type=\"text/css\"");
-        document.insertBefore(pi, document.documentElement);
-        this.unloaders.push(function () {
-            document.removeChild(pi);
-        });
+        uri = this.ios.newURI(uri, null, null);
+        this.sss.loadAndRegisterSheet(uri, this.sss.USER_SHEET);
+    },
+
+    applyThemeStylesheet: function() {
+      this.theme = Services.prefs.getCharPref("extensions.verticaltabs.theme");
+      this.installStylesheet(this.getThemeStylesheet(this.theme));
+    },
+
+    removeThemeStylesheet: function() {
+      var uri = this.ios.newURI(this.getThemeStylesheet(this.theme), null, null);
+      this.sss.unregisterSheet(uri, this.sss.USER_SHEET);
+    },
+
+    getThemeStylesheet: function(theme) {
+      var stylesheet;
+      switch (theme) {
+        case "windows":
+          stylesheet = "resource://verticaltabs/skin/win7/win7.css";
+          break;
+        case "osx":
+          stylesheet = "resource://verticaltabs/skin/osx/osx.css";
+          break;
+        case "linux":
+          stylesheet = "resource://verticaltabs/skin/linux/linux.css";
+          break;
+        case "dark":
+          stylesheet = "resource://verticaltabs/skin/dark/dark.css";
+          break;
+        case "light":
+          stylesheet = "resource://verticaltabs/skin/light/light.css";
+          break;
+      }
+
+      return stylesheet;
     },
 
     rearrangeXUL: function() {
@@ -288,15 +305,26 @@ VerticalTabs.prototype = {
     },
 
     observe: function (subject, topic, data) {
-      if (topic != "nsPref:changed" || data != "extensions.verticaltabs.right") {
+      if (topic != "nsPref:changed") {
         return;
       }
-      let browserbox = this.document.getElementById("browser");
-      if (browserbox.dir != "reverse") {
-        browserbox.dir = "reverse";
-      } else {
-        browserbox.dir = "normal";
+
+      switch (data) {
+        case "extensions.verticaltabs.right":
+          let browserbox = this.document.getElementById("browser");
+          if (browserbox.dir != "reverse") {
+            browserbox.dir = "reverse";
+          } else {
+            browserbox.dir = "normal";
+          }
+          break;
+        case "extensions.verticaltabs.theme":
+          console.log("updating theme");
+          this.removeThemeStylesheet();
+          this.applyThemeStylesheet();
+          break;
       }
+
     },
 
     unload: function() {
