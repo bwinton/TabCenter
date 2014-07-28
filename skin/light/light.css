@@ -93,6 +93,10 @@
     margin-bottom: 0 !important;
 }
 
+.toolbar-primary {
+  background-color: #f2f2f2;
+}
+
 
 /* Tab toolbar styling */
 
