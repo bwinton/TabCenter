@@ -94,8 +94,18 @@
     margin-bottom: 0 !important;
 }
 
-.toolbar-primary {
-  background-color: #f2f2f2;
+#TabsToolbar:not(:-moz-lwtheme)  {
+    height: 24px;
+    /*margin: 0 -3px -1px 0px !important;*/
+    border-bottom-left-radius: 0px !important;
+    box-shadow: none !important;
+    -moz-appearance: none !important;
+    border-top: 1px solid rgb(160,160,160) !important;
+    /*border-right: 2px solid !important;*/
+    -moz-border-right-colors: #fcfcfc rgb(154,154,154) !important;
+    background-color: #f1f1f1 !important;
+    background-image: none !important;
+    /*border-right: 3px solid #a0a0a0 !important; /* 3px to get 1px border :( */*/
 }
 
 

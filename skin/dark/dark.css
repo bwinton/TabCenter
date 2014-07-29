@@ -94,6 +94,17 @@
     margin-bottom: 0 !important;
 }
 
+#TabsToolbar:not(:-moz-lwtheme)  {
+    height: 24px;
+    border-bottom-left-radius: 0px !important;
+    box-shadow: none !important;
+    -moz-appearance: none !important;
+    border-top: 1px solid rgb(160,160,160) !important;
+    -moz-border-right-colors: #fcfcfc rgb(154,154,154) !important;
+    background-color: #f1f1f1 !important;
+    background-image: none !important;
+}
+
 
 /* Tab toolbar styling */
 
