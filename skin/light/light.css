@@ -85,6 +85,7 @@
   border-radius: 2px;
   min-height: 22px !important;
   min-width: 22px !important;
+  opacity: 1 !important;
 }
 
 /** Drop indicator for drag'n'drop of tabs - Works OOTB(TM)- Just needs a margin.**/
