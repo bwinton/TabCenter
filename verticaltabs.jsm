@@ -75,6 +75,7 @@ VerticalTabs.prototype = {
         this.installStylesheet("resource://verticaltabs/skin/bindings.css");
         this.installStylesheet("resource://verticaltabs/skin/base.css");
         this.applyThemeStylesheet();
+        this.unloaders.push(this.removeThemeStylesheet);
 
         this.rearrangeXUL();
         this.initContextMenu();
@@ -106,14 +107,18 @@ VerticalTabs.prototype = {
     getThemeStylesheet: function(theme) {
       var stylesheet;
       switch (theme) {
-        case "windows":
-          stylesheet = "resource://verticaltabs/skin/win7/win7.css";
-          break;
-        case "osx":
-          stylesheet = "resource://verticaltabs/skin/osx/osx.css";
-          break;
-        case "linux":
-          stylesheet = "resource://verticaltabs/skin/linux/linux.css";
+        case "default":
+            switch(Services.appinfo.OS) {
+              case "WINNT":
+                stylesheet = "resource://verticaltabs/skin/win7/win7.css";
+                break;
+              case "Darwin":
+                stylesheet = "resource://verticaltabs/skin/osx/osx.css";
+                break;
+              case "Linux":
+                stylesheet = "resource://verticaltabs/skin/linux/linux.css";
+                break;
+            }
           break;
         case "dark":
           stylesheet = "resource://verticaltabs/skin/dark/dark.css";
