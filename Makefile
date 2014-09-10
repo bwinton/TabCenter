@@ -32,5 +32,5 @@ SOURCES = \
 all: VerticalTabs.xpi
 
 VerticalTabs.xpi: $(SOURCES)
-	rm -f ../$@
-	zip -9r ../$@ $(SOURCES)
+	rm -f ./$@
+	zip -9r ./$@ $(SOURCES)

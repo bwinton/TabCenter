@@ -31,7 +31,7 @@
 #verticaltabs-splitter {
   -moz-appearance: none;
   background-image: none;
-  background-color: transparent;
+  background-color: none;
   border: 0;
   min-width: 3px;
   width: 3px;
