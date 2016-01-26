@@ -157,17 +157,22 @@ VerticalTabs.prototype = {
 
         // Force tabs on bottom (for styling) after backing up the user's
         // setting.
-        try {
-          Services.prefs.getBoolPref("extensions.verticaltabs.tabsOnTop");
-        } catch (ex if (ex.result == Components.results.NS_ERROR_UNEXPECTED)) {
-          Services.prefs.setBoolPref("extensions.verticaltabs.tabsOnTop",
-                                     window.TabsOnTop.enabled);
+        if (window.TabsOnTop) {
+          try {
+            Services.prefs.getBoolPref("extensions.verticaltabs.tabsOnTop");
+          } catch (ex if (ex.result == Components.results.NS_ERROR_UNEXPECTED)) {
+            Services.prefs.setBoolPref("extensions.verticaltabs.tabsOnTop",
+                                       window.TabsOnTop.enabled);
+          }
+          window.TabsOnTop.enabled = false;          
         }
-        window.TabsOnTop.enabled = false;
+
         // Hide all menu items for tabs on top.
         let menu_tabsOnTop = document.getElementById("menu_tabsOnTop");
-        menu_tabsOnTop.collapsed = true;
-        menu_tabsOnTop.nextSibling.collapsed = true; // separator
+        if (menu_tabsOnTop) {
+          menu_tabsOnTop.collapsed = true;
+          menu_tabsOnTop.nextSibling.collapsed = true; // separator          
+        }
         let toolbar_context_menu = document.getElementById("toolbar-context-menu");
         toolbar_context_menu.firstChild.collapsed = true;
         toolbar_context_menu.firstChild.nextSibling.collapsed = true; // separator
@@ -177,7 +182,9 @@ VerticalTabs.prototype = {
         }
         // Disable the command just to be safe.
         let cmd_tabsOnTop = document.getElementById("cmd_ToggleTabsOnTop");
-        cmd_tabsOnTop.disabled = true;
+        if (cmd_tabsOnTop) {
+          cmd_tabsOnTop.disabled = true;
+        }
 
         // Fix up each individual tab for vertical layout, including
         // ones that are opened later on.

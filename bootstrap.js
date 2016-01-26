@@ -43,6 +43,7 @@ const PREF_BRANCH = "extensions.verticaltabs.";
 const DEFAULT_PREFS = {
   "extensions.verticaltabs.width": 250,
   "extensions.verticaltabs.right": false,
+  "extensions.verticaltabs.theme": "light",
   "browser.tabs.drawInTitlebar": false,
 };
 
