@@ -176,7 +176,7 @@ VerticalTabs.prototype = {
         toolbar.setAttribute("collapsed", "false"); // no more vanishing new tab toolbar
         toolbar._toolbox = null; // reset value set by constructor
         toolbar.setAttribute("toolboxid", "navigator-toolbox");
-        leftbox.appendChild(toolbar);
+        leftbox.insertBefore(toolbar, leftbox.firstChild);
 
         // Not sure what this does, it and all related code might be unnecessary
         window.TabsOnTop = window.TabsOnTop ? window.TabsOnTop : {};
