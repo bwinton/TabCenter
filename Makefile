@@ -29,8 +29,8 @@ SOURCES = \
 	verticaltabs.jsm \
 	$(NULL)
 
-all: VerticalTabs.xpi
+all: TabCenterTest.xpi
 
-VerticalTabs.xpi: $(SOURCES)
+TabCenterTest.xpi: $(SOURCES)
 	rm -f ./$@
 	zip -9r ./$@ $(SOURCES)
