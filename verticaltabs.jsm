@@ -142,6 +142,8 @@ VerticalTabs.prototype = {
         let contentbox = document.getElementById("appcontent");
         let bottom = document.getElementById("browser-bottombox");
         contentbox.appendChild(bottom);
+        let top = document.getElementById("navigator-toolbox");
+        contentbox.insertBefore(top, contentbox.firstChild);
 
         // Create a box next to the app content. It will hold the tab
         // bar and the tab toolbar.
@@ -176,6 +178,9 @@ VerticalTabs.prototype = {
         toolbar.setAttribute("collapsed", "false"); // no more vanishing new tab toolbar
         toolbar._toolbox = null; // reset value set by constructor
         toolbar.setAttribute("toolboxid", "navigator-toolbox");
+        let spacer = document.createElementNS(NS_XUL, "spacer");
+        spacer.id = "new-tab-spacer";
+        toolbar.insertBefore(spacer, toolbar.firstChild.nextSibling);
         leftbox.insertBefore(toolbar, leftbox.firstChild);
 
         // Not sure what this does, it and all related code might be unnecessary

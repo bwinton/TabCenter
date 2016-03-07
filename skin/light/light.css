@@ -108,6 +108,20 @@
     /*border-right: 3px solid #a0a0a0 !important; /* 3px to get 1px border :( */*/
 }
 
+#TabsToolbar {
+  /*-moz-box-pack: justify;*/
+  display: flex;
+}
+#TabsToolbar > #new-tab-button {
+  -moz-box-orient: horizontal !important;
+  padding-end: 5em;
+}
+#TabsToolbar #new-tab-button .toolbarbutton-text {
+  display: -moz-box;
+}
+#TabsToolbar #new-tab-spacer {
+  flex: 1;
+}
 
 /* Tab toolbar styling */
 
