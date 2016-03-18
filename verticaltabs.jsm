@@ -38,7 +38,7 @@
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://verticaltabs/tabdatastore.jsm");
 Components.utils.import("resource://verticaltabs/multiselect.jsm");
-Components.utils.import("resource://verticaltabs/groups.jsm");
+
 
 let console = (Components.utils.import("resource://gre/modules/devtools/Console.jsm", {})).console;
 
@@ -46,6 +46,20 @@ const EXPORTED_SYMBOLS = ["VerticalTabs"];
 
 const NS_XUL = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 const TAB_DROP_TYPE = "application/x-moz-tabbrowser-tab";
+
+/*
+ * Element creation utility function.
+ */
+function XUL(document, name, attributes, children) {
+  let rv = document.createElementNS(NS_XUL, name);
+  for (let attr in attributes) {
+    rv.setAttribute(attr, attributes[attr]);
+  }
+  children.forEach(child => {
+    rv.appendChild(child);
+  });
+  return rv;
+}
 
 /*
  * Vertical Tabs
@@ -71,12 +85,9 @@ VerticalTabs.prototype = {
         this.ios = Components.classes["@mozilla.org/network/io-service;1"]
                     .getService(Components.interfaces.nsIIOService);
 
-        this.installStylesheet("resource://verticaltabs/override-bindings.css");
-        this.installStylesheet("resource://verticaltabs/skin/bindings.css");
         this.installStylesheet("resource://verticaltabs/skin/base.css");
         this.applyThemeStylesheet();
         this.unloaders.push(this.removeThemeStylesheet);
-
         this.rearrangeXUL();
         this.initContextMenu();
         this.observeRightPref();
@@ -135,30 +146,22 @@ VerticalTabs.prototype = {
         const window = this.window;
         const document = this.document;
 
-        // Move the bottom stuff (findbar, addonbar, etc.) in with the
-        // tabbrowser.  That way it will share the same (horizontal)
-        // space as the brower.  In other words, the bottom stuff no
-        // longer extends across the whole bottom of the window.
         let contentbox = document.getElementById("appcontent");
-        let bottom = document.getElementById("browser-bottombox");
-        contentbox.appendChild(bottom);
-        let top = document.getElementById("navigator-toolbox");
-        contentbox.insertBefore(top, contentbox.firstChild);
-
         // Create a box next to the app content. It will hold the tab
         // bar and the tab toolbar.
         let browserbox = document.getElementById("browser");
-        let leftbox = document.createElementNS(NS_XUL, "vbox");
-        leftbox.id = "verticaltabs-box";
-        browserbox.insertBefore(leftbox, contentbox);
 
-        let splitter = document.createElementNS(NS_XUL, "splitter");
-        splitter.id = "verticaltabs-splitter";
-        splitter.className = "chromeclass-extrachrome";
-        browserbox.insertBefore(splitter, contentbox);
-        // Hook up event handler for splitter so that the width of the
-        // tab bar is persisted.
-        splitter.addEventListener("mouseup", this, false);
+        let browserPanel = document.getElementById("browser-panel");
+        // browserPanel.setAttribute("flex", "1");
+        let tabDeck = document.getElementById("tab-view-deck");
+        let leftbox = XUL(document, "hbox", {"id": "wrapper-container"}, [
+          XUL(document, "vbox", {"id":"tab-box"}, [
+            XUL(document, "hbox", {"id": "pinned-tabs", "height": "60"}, []),
+            XUL(document, "vbox", {"id": "unpinned-tabs", "flex": "1"}, [])
+          ]),
+          XUL(document, "vbox", {"id": "browser-box"}, [browserPanel])
+        ]);
+        tabDeck.insertBefore(leftbox, tabDeck.firstChild);
 
         // Move the tabs next to the app content, make them vertical,
         // and restore their width from previous session
@@ -167,21 +170,12 @@ VerticalTabs.prototype = {
         }
 
         let tabs = document.getElementById("tabbrowser-tabs");
-        leftbox.insertBefore(tabs, leftbox.firstChild);
-        tabs.orient = "vertical";
-        tabs.mTabstrip.orient = "vertical";
-        tabs.tabbox.orient = "horizontal"; // probably not necessary
-        tabs.setAttribute("width", Services.prefs.getIntPref("extensions.verticaltabs.width"));
+        // tabs.setAttribute("hidden", "true");
+        // tabs.selectedIndex = 0;
 
         // Move the tabs toolbar into the tab strip
-        let toolbar = document.getElementById("TabsToolbar");
-        toolbar.setAttribute("collapsed", "false"); // no more vanishing new tab toolbar
-        toolbar._toolbox = null; // reset value set by constructor
-        toolbar.setAttribute("toolboxid", "navigator-toolbox");
-        let spacer = document.createElementNS(NS_XUL, "spacer");
-        spacer.id = "new-tab-spacer";
-        toolbar.insertBefore(spacer, toolbar.firstChild.nextSibling);
-        leftbox.insertBefore(toolbar, leftbox.firstChild);
+        // let toolbar = document.getElementById("TabsToolbar");
+        // toolbar.setAttribute("collapsed", "true");
 
         // Not sure what this does, it and all related code might be unnecessary
         window.TabsOnTop = window.TabsOnTop ? window.TabsOnTop : {};
@@ -199,28 +193,8 @@ VerticalTabs.prototype = {
         this.window.addEventListener("resize", this, false);
 
         this.unloaders.push(function () {
-            // Move the bottom back to being the next sibling of contentbox.
-            browserbox.insertBefore(bottom, contentbox.nextSibling);
-
-            // Move the tabs toolbar back to where it was
-            toolbar._toolbox = null; // reset value set by constructor
-            toolbar.removeAttribute("toolboxid");
-            let toolbox = document.getElementById("navigator-toolbox");
-            let navbar = document.getElementById("nav-bar");
-            //toolbox.appendChild(toolbar);
-
-            // Restore the tab strip.
-            toolbox.insertBefore(toolbar, navbar);
-
-            let new_tab_button = document.getElementById("new-tab-button");
-
-            // Put the tabs back up dur
-            toolbar.insertBefore(tabs, new_tab_button);
-            tabs.orient = "horizontal";
-            tabs.mTabstrip.orient = "horizontal";
-            tabs.tabbox.orient = "vertical"; // probably not necessary
-            tabs.removeAttribute("width");
-            tabs.removeEventListener("TabOpen", this, false);
+            // toolbar.setAttribute("collapsed", "false");
+            // tabs.setAttribute("hidden", "false");
 
             // Restore tabs on top.
             window.TabsOnTop.enabled = Services.prefs.getBoolPref(
@@ -236,11 +210,9 @@ VerticalTabs.prototype = {
             }
 
             // Remove all the crap we added.
-            splitter.removeEventListener("mouseup", this, false);
             browserbox.removeChild(leftbox);
-            browserbox.removeChild(splitter);
             browserbox.dir = "normal";
-            leftbox = splitter = null;
+            leftbox = null;
         });
     },
 
@@ -250,12 +222,12 @@ VerticalTabs.prototype = {
 
         let closeMultiple = null;
         if (this.multiSelect) {
-            closeMultiple = document.createElementNS(NS_XUL, "menuitem");
-            closeMultiple.id = "context_verticalTabsCloseMultiple";
-            closeMultiple.setAttribute("label", "Close Selected Tabs"); //TODO l10n
-            closeMultiple.setAttribute("tbattr", "tabbrowser-multiple");
-            closeMultiple.setAttribute(
-                "oncommand", "gBrowser.tabContainer.VTMultiSelect.closeSelected();");
+            closeMultiple = XUL(document, "menuitem", {
+              "id": "context_verticalTabsCloseMultiple",
+              "label": "Close Selected Tabs",
+              "tbattr": "tabbrowser-multiple",
+              "oncommand": "gBrowser.tabContainer.VTMultiSelect.closeSelected();"
+            }, []);
             tabs.contextMenu.appendChild(closeMultiple);
         }
 
@@ -272,6 +244,23 @@ VerticalTabs.prototype = {
         aTab.setAttribute("align", "stretch");
         aTab.maxWidth = 65000;
         aTab.minWidth = 0;
+        let document = this.document;
+        let tabs = document.getElementById("unpinned-tabs");
+        console.log(aTab.getAttribute("visibleLabel") || "Unknown",
+          aTab.getAttribute("image") || "chrome://mozapps/skin/places/defaultFavicon@2x.png",
+          aTab);
+        tabs.appendChild(XUL(document, "hbox", {"class": "sidetab"}, [
+          XUL(document, "image", {
+            "class": "tab-icon-image",
+            "fadein": "true",
+            "src": aTab.getAttribute("image") || "chrome://mozapps/skin/places/defaultFavicon@2x.png"}, []),
+          XUL(document, "label", {
+            "class": "tab-text tab-label",
+            "crop": "end",
+            "fadein": "true",
+            "flex": "1",
+            "value": aTab.getAttribute("label") || "Unknown"}, [])
+        ]));
     },
 
     setPinnedSizes: function() {
@@ -354,9 +343,6 @@ VerticalTabs.prototype = {
             this.onTabOpen(aEvent);
             this.setPinnedSizes();
             return;
-        case "mouseup":
-            this.onMouseUp(aEvent);
-            return;
         case "popupshowing":
             this.onPopupShowing(aEvent);
             return;
@@ -368,12 +354,6 @@ VerticalTabs.prototype = {
 
     onTabOpen: function(aEvent) {
         this.initTab(aEvent.target);
-    },
-
-    onMouseUp: function(aEvent) {
-        if (aEvent.target.getAttribute("id") == "verticaltabs-splitter") {
-            this.onTabbarResized();
-        }
     },
 
     onPopupShowing: function(aEvent) {
