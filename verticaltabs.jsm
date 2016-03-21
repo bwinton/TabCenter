@@ -154,14 +154,15 @@ VerticalTabs.prototype = {
         let browserPanel = document.getElementById("browser-panel");
         // browserPanel.setAttribute("flex", "1");
         let tabDeck = document.getElementById("tab-view-deck");
+        tabDeck.style.display = "-moz-box";
+        tabDeck.style.MozOrientation = "horizontal";
         let leftbox = XUL(document, "hbox", {"id": "wrapper-container"}, [
           XUL(document, "vbox", {"id":"tab-box"}, [
             XUL(document, "hbox", {"id": "pinned-tabs", "height": "60"}, []),
             XUL(document, "vbox", {"id": "unpinned-tabs", "flex": "1"}, [])
-          ]),
-          XUL(document, "vbox", {"id": "browser-box"}, [browserPanel])
+          ])
         ]);
-        tabDeck.insertBefore(leftbox, tabDeck.firstChild);
+        tabDeck.insertBefore(leftbox, browserPanel);
 
         // Move the tabs next to the app content, make them vertical,
         // and restore their width from previous session

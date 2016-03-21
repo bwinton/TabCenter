@@ -31,8 +31,12 @@
 }
 
 #TabsToolbar {
-  display: none;
+  height: 0px !important;
+  min-height: 0px !important;
+  max-height: 0px !important;
 }
+
+
 
 #pinned-tabs {
   background: linear-gradient(to left, #d4d4d4, #ebebeb);
@@ -72,9 +76,12 @@
     border-radius: 0 !important;
     margin: 0 !important;
     padding: 1px 0 !important;
-    height: 28px !important;
-    min-height: 28px !important;
-    max-height: 28px !important;
+    /*height: 28px !important;*/
+    /*min-height: 28px !important;*/
+    /*max-height: 28px !important;*/
+    height: 0px !important;
+    min-height: 0px !important;
+    max-height: 0px !important;
     color: #333333 !important;
     border-left: 4px solid transparent !important;
 }
@@ -133,7 +140,8 @@
   padding: 3px;
   background-color: transparent !important;
   border-radius: 2px;
-  min-height: 22px !important;
+  /*min-height: 22px !important;*/
+  min-height: 0px !important;
   min-width: 22px !important;
   opacity: 1 !important;
 }
