@@ -171,7 +171,14 @@ VerticalTabs.prototype = {
         toolbar.setAttribute("toolboxid", "navigator-toolbox");
         let spacer = document.createElementNS(NS_XUL, "spacer");
         spacer.id = "new-tab-spacer";
-        toolbar.insertBefore(spacer, toolbar.firstChild.nextSibling);
+        toolbar.appendChild(spacer);
+        let pin_button = document.createElementNS(NS_XUL, "toolbarbutton");
+        pin_button.id = "pin-button";
+        pin_button.setAttribute("onclick", `
+          let box = document.getElementById('verticaltabs-box');
+          let newstate = box.getAttribute('pinned') == 'true' ? 'false' : 'true';
+          box.setAttribute('pinned', newstate);`)
+        toolbar.appendChild(pin_button);
         leftbox.insertBefore(toolbar, leftbox.firstChild);
 
         // Not sure what this does, it and all related code might be unnecessary

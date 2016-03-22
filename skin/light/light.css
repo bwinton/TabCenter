@@ -28,13 +28,23 @@
   z-index: 3;
 }
 
-#verticaltabs-box:hover {
+#verticaltabs-box:hover,
+#verticaltabs-box[pinned="true"] {
   box-shadow: 0 0 10px rgba(0,0,0,0.4);
   width: 260px;
 }
 
 #alltabs-button {
   width: 12px;
+}
+
+#pin-button {
+  width: 40px;
+  background: rebeccapurple !important;
+}
+
+#verticaltabs-box[pinned="true"] #pin-button {
+  background: #C7AEFF !important;
 }
 
 /*#browser-box {*/
@@ -129,6 +139,7 @@
   padding: 3px;
   background-color: transparent !important;
   border-radius: 2px;
+  display: -moz-box !important;
   min-height: 22px !important;
   min-width: 22px !important;
   opacity: 1 !important;
