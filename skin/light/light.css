@@ -53,9 +53,18 @@
   position: absolute;
 }
 
+#verticaltabs-box[pinned="true"] + #appcontent {
+  left: 260px;
+}
+
 #navigator-toolbox,
 .browserContainer {
   width: calc(100vw - 40px);
+}
+
+#verticaltabs-box[pinned="true"] + #appcontent #navigator-toolbox,
+#verticaltabs-box[pinned="true"] + #appcontent .browserContainer {
+  width: calc(100vw - 260px);
 }
 
 .browserContainer {
