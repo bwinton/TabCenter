@@ -152,14 +152,6 @@ VerticalTabs.prototype = {
         leftbox.id = "verticaltabs-box";
         browserbox.insertBefore(leftbox, contentbox);
 
-        let splitter = document.createElementNS(NS_XUL, "splitter");
-        splitter.id = "verticaltabs-splitter";
-        splitter.className = "chromeclass-extrachrome";
-        browserbox.insertBefore(splitter, contentbox);
-        // Hook up event handler for splitter so that the width of the
-        // tab bar is persisted.
-        splitter.addEventListener("mouseup", this, false);
-
         // Move the tabs next to the app content, make them vertical,
         // and restore their width from previous session
         if (Services.prefs.getBoolPref("extensions.verticaltabs.right")) {
@@ -171,7 +163,6 @@ VerticalTabs.prototype = {
         tabs.orient = "vertical";
         tabs.mTabstrip.orient = "vertical";
         tabs.tabbox.orient = "horizontal"; // probably not necessary
-        tabs.setAttribute("width", Services.prefs.getIntPref("extensions.verticaltabs.width"));
 
         // Move the tabs toolbar into the tab strip
         let toolbar = document.getElementById("TabsToolbar");
@@ -236,11 +227,9 @@ VerticalTabs.prototype = {
             }
 
             // Remove all the crap we added.
-            splitter.removeEventListener("mouseup", this, false);
             browserbox.removeChild(leftbox);
-            browserbox.removeChild(splitter);
             browserbox.dir = "normal";
-            leftbox = splitter = null;
+            leftbox = null;
         });
     },
 
@@ -294,10 +283,6 @@ VerticalTabs.prototype = {
     onTabbarResized: function() {
         let tabs = this.document.getElementById("tabbrowser-tabs");
         this.setPinnedSizes();
-        this.window.setTimeout(function() {
-            Services.prefs.setIntPref("extensions.verticaltabs.width",
-                                      tabs.boxObject.width);
-        }, 10);
     },
 
     observeRightPref: function () {
@@ -368,12 +353,6 @@ VerticalTabs.prototype = {
 
     onTabOpen: function(aEvent) {
         this.initTab(aEvent.target);
-    },
-
-    onMouseUp: function(aEvent) {
-        if (aEvent.target.getAttribute("id") == "verticaltabs-splitter") {
-            this.onTabbarResized();
-        }
     },
 
     onPopupShowing: function(aEvent) {
