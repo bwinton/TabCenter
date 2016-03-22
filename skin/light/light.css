@@ -1,11 +1,5 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
-.tab-close-button {
-  position: absolute;
-  right: 4px;
-}
-
-
 .tabbrowser-tabs {
     background-color: #FBFBFB !important;
     height: 100vh;
@@ -99,8 +93,7 @@
     background-color: #ebebeb !important;
 }
 
-
-.tabbrowser-tab:not(:hover):not([selected="true"]) .tab-close-button {
+.tabbrowser-tab:not(:hover) .tab-close-button {
     visibility: collapse !important;
 }
 
@@ -108,7 +101,14 @@
 .tab-close-button {
     display: -moz-box;
     margin-left: 3px !important;
-    margin-right: 1px !important;
+    margin-right: 0px !important;
+    color: #fff !important;
+    width: 40px;
+    height: 40px;
+}
+
+.tab-close-button:hover {
+    background-color: #d92215 !important;
 }
 
 .tab-label {
@@ -121,8 +121,8 @@
 }
 
 .tab-content {
-  -moz-margin-start: 0px;
-  margin-top: 1px;
+  padding: 0px !important;
+  margin: 0px !important;
 }
 
 .tab-icon-image {
