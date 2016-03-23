@@ -40,11 +40,13 @@
 
 #pin-button {
   width: 40px;
-  background: rebeccapurple !important;
+  background: no-repeat center/16px url("resource://verticaltabs/skin/pin.png");
+  background-color: #C7AEFF !important;
 }
 
 #verticaltabs-box[pinned="true"] #pin-button {
-  background: #C7AEFF !important;
+  background-image: url("resource://verticaltabs/skin/pinWhite.png");
+  background-color: rebeccapurple !important;
 }
 
 /*#browser-box {*/
