@@ -5,8 +5,8 @@
     <em:type>2</em:type>
     <em:bootstrap>true</em:bootstrap>
     <em:name>Tab Center Test</em:name>
-    <em:version>0.9</em:version>
-    <em:homepageURL>https://github.com/darrinhenein/VerticalTabs</em:homepageURL>
+    <em:version>1.0</em:version>
+    <em:homepageURL>https://github.com/bwinton/VerticalTabs</em:homepageURL>
     <em:creator>Vlad Vukicevic</em:creator>
     <em:contributor>Darrin Henein</em:contributor>
     <em:contributor>Philipp von Weitershausen (original author)</em:contributor>
@@ -14,6 +14,7 @@
     <em:contributor>bb10 (Linux and Windows theme contributions)</em:contributor>
     <em:contributor>Frank Yan (various theming fixes)</em:contributor>
     <em:contributor>Rob Campbell (some UI love)</em:contributor>
+    <em:contributor>Blake Winton (Modify for TabCenter Tests)</em:contributor>
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox -->

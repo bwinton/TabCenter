@@ -23,7 +23,7 @@
   overflow-y: scroll;
   position: absolute;
   top: 0;
-  transition: width 500ms ease-in-out;
+  transition: width 500ms ease-in-out 300ms;
   width: 40px;
   z-index: 3;
 }
@@ -154,6 +154,10 @@
   min-height: 22px !important;
   min-width: 22px !important;
   opacity: 1 !important;
+}
+
+.tabbrowser-tab[busy] .tab-icon-image {
+  display: none !important;
 }
 
 /** Drop indicator for drag'n'drop of tabs - Works OOTB(TM)- Just needs a margin.**/
