@@ -123,3 +123,6 @@ function shutdown(data, reason) {
   // Unloaders might want access to prefs, so do this last
   Services.prefs.getDefaultBranch(PREF_BRANCH).deleteBranch("");
 }
+
+function uninstall() {
+}

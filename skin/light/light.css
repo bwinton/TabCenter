@@ -36,18 +36,18 @@
 
 #alltabs-button {
   width: 12px;
+  min-height: var(--tab-min-height);
 }
 
 #pin-button {
   background: no-repeat center/16px url("resource://verticaltabs/skin/pin.png");
-  background-color: #C7AEFF !important;
   margin: 0 !important;
   width: 40px;
 }
 
 #verticaltabs-box[pinned="true"] #pin-button {
-  background-image: url("resource://verticaltabs/skin/pinWhite.png");
-  background-color: rebeccapurple !important;
+  background-image: url("resource://verticaltabs/skin/pin-hover.png");
+  background-color: #808080 !important;
 }
 
 /*#browser-box {*/
@@ -173,7 +173,7 @@
 }
 
 #TabsToolbar:not(:-moz-lwtheme)  {
-    height: 24px;
+    min-height: var(--tab-min-height);
     border-bottom-left-radius: 0px !important;
     box-shadow: none !important;
     -moz-appearance: none !important;
@@ -188,10 +188,12 @@
 }
 #TabsToolbar > #new-tab-button {
   -moz-box-orient: horizontal !important;
-  padding-end: 5em;
+  padding: 0 5px !important;
+  min-height: var(--tab-min-height);
 }
 #TabsToolbar #new-tab-button .toolbarbutton-text {
   display: -moz-box;
+  padding: 0 2px !important;
 }
 #TabsToolbar #new-tab-spacer {
   flex: 1;

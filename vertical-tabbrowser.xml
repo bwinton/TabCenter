@@ -199,9 +199,9 @@
           let leftTab = tabs[0];
           let rightTab = tabs[tabs.length - 1];
           let tabScreenPos = draggedTab.boxObject.screenY;
-          console.log("tabScreenPos", tabScreenPos);
+          // console.log("tabScreenPos", tabScreenPos);
           let translateVal = screenPos - draggedTab._dragData.screenY;
-          console.log("translateVal 1", translateVal);
+          // console.log("translateVal 1", translateVal);
           if (!pinned)
             translateVal += this.mTabstrip.scrollPosition - draggedTab._dragData.scrollX; // XXX verticalTabs always scrollX here, it's actually the scrollPosition
           let minBound = leftTab.boxObject.screenY - tabScreenPos;
@@ -210,7 +210,7 @@
           translateVal = Math.max(translateVal, minBound);
           translateVal = Math.min(translateVal, maxBound);
           draggedTab.style.transform = "translateY(" + translateVal + "px)";
-          console.log("draggedTab transform: " + draggedTab.style.transform + " should be " + "translateY(" + translateVal + "px)");
+          // console.log("draggedTab transform: " + draggedTab.style.transform + " should be " + "translateY(" + translateVal + "px)");
 
           // Determine what tab we're dragging over.
           // * Point of reference is the center of the dragged tab. If that
@@ -337,7 +337,10 @@
 
     <handlers>
       <handler event="dragover"><![CDATA[
-        var effects = this._setEffectAllowedForDataTransfer(event);
+        var effects = "";
+        if (this._setEffectAllowedForDataTransfer) {
+          effects = this._setEffectAllowedForDataTransfer(event);
+        }
 
         var ind = this._tabDropIndicator;
         if (effects == "" || effects == "none") {
@@ -371,7 +374,7 @@
 
         if (effects == "move" &&
             this == event.dataTransfer.mozGetDataAt(TAB_DROP_TYPE, 0).parentNode) {
-          console.log("animateTabMove!");
+          // console.log("animateTabMove!");
           ind.collapsed = true;
           this._animateTabMove(event);
           return;
