@@ -7,6 +7,11 @@
     padding: 0 !important;
 }
 
+#tabbrowser-tabs::before,
+#tabbrowser-tabs + hbox {
+  display: none !important;
+}
+
 #browser {
   display: block;
   height: 100vh;
@@ -14,17 +19,18 @@
 }
 
 #verticaltabs-box {
+  border-right: 1px solid ThreeDShadow;
   box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
   display: flex;
   flex-direction: column;
   height: 100vh;
   left: 0;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: absolute;
   top: 0;
-  transition: width 500ms ease-in-out 300ms;
-  width: 40px;
+  transition: width 250ms ease-in-out 150ms;
+  width: 45px;
   z-index: 3;
 }
 
@@ -42,6 +48,7 @@
 #pin-button {
   background: no-repeat center/16px url("resource://verticaltabs/skin/pin.png");
   margin: 0 !important;
+  -moz-appearance: none !important;
   width: 40px;
 }
 
@@ -52,7 +59,7 @@
 
 /*#browser-box {*/
 #appcontent {
-  left: 40px;
+  left: 45px;
   position: absolute;
 }
 
@@ -62,7 +69,7 @@
 
 #navigator-toolbox,
 .browserContainer {
-  width: calc(100vw - 40px);
+  width: calc(100vw - 45px);
 }
 
 #verticaltabs-box[pinned="true"] + #appcontent #navigator-toolbox,
