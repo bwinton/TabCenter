@@ -121,15 +121,20 @@
 /* Keep the close button at a safe distance from the tab label. */
 .tab-close-button {
     display: -moz-box;
+    background: no-repeat center/16px url("resource://verticaltabs/skin/stop.svg") !important;
     margin-left: 3px !important;
     margin-right: 0px !important;
-    color: #fff !important;
     width: 40px;
     height: 40px;
 }
 
 .tab-close-button:hover {
-    background-color: #d92215 !important;
+    background: no-repeat center/16px url("resource://verticaltabs/skin/stop-hover.svg") !important;
+    background-color: #d94141 !important;
+}
+
+.tab-close-button > .toolbarbutton-icon {
+  display: none;
 }
 
 .tab-label {
