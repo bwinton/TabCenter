@@ -3,7 +3,7 @@
 .tabbrowser-tabs {
     background-color: #FBFBFB !important;
     height: 100vh;
-    margin: 0 0 0 0 !important;
+    margin: 0 !important;
     padding: 0 !important;
 }
 
@@ -39,9 +39,10 @@
 }
 
 #pin-button {
-  width: 40px;
   background: no-repeat center/16px url("resource://verticaltabs/skin/pin.png");
   background-color: #C7AEFF !important;
+  margin: 0 !important;
+  width: 40px;
 }
 
 #verticaltabs-box[pinned="true"] #pin-button {
@@ -81,7 +82,6 @@
     border: 0 !important;
     border-radius: 0 !important;
     margin: 0 !important;
-    padding: 1px 0 !important;
     height: 28px !important;
     min-height: 28px !important;
     max-height: 28px !important;
@@ -93,7 +93,6 @@
 .tabbrowser-tab[selected="true"],
 .tabbrowser-tab[multiselect="true"] {
     margin: 0 !important;
-    padding: 1px 0 !important;
     background-color: #dadada !important;
     font-weight: normal;
     text-shadow: none;
@@ -110,7 +109,6 @@
 
 .tabbrowser-tab:not([selected="true"]):hover {
     margin: 0 !important;
-    padding: 1px 0 !important;
     background-color: #ebebeb !important;
 }
 
@@ -118,12 +116,15 @@
     visibility: collapse !important;
 }
 
+.tab-stack {
+  min-height: 28px;
+}
+
 /* Keep the close button at a safe distance from the tab label. */
 .tab-close-button {
     display: -moz-box;
     background: no-repeat center/16px url("resource://verticaltabs/skin/stop.svg") !important;
-    margin-left: 3px !important;
-    margin-right: 0px !important;
+    margin: 0 0 0 3px !important;
     width: 40px;
     height: 40px;
 }
@@ -173,20 +174,16 @@
 
 #TabsToolbar:not(:-moz-lwtheme)  {
     height: 24px;
-    /*margin: 0 -3px -1px 0px !important;*/
     border-bottom-left-radius: 0px !important;
     box-shadow: none !important;
     -moz-appearance: none !important;
     border-top: 1px solid rgb(160,160,160) !important;
-    /*border-right: 2px solid !important;*/
     -moz-border-right-colors: #fcfcfc rgb(154,154,154) !important;
     background-color: #f1f1f1 !important;
     background-image: none !important;
-    /*border-right: 3px solid #a0a0a0 !important; /* 3px to get 1px border :( */*/
 }
 
 #TabsToolbar {
-  /*-moz-box-pack: justify;*/
   display: flex;
 }
 #TabsToolbar > #new-tab-button {
