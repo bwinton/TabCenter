@@ -131,6 +131,16 @@ VerticalTabs.prototype = {
       return stylesheet;
     },
 
+    createElement: function (label, attrs) {
+      let rv = this.document.createElementNS(NS_XUL, label);
+      if (attrs) {
+        for (attr in attrs) {
+          rv.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return rv;
+    },
+
     rearrangeXUL: function() {
         const window = this.window;
         const document = this.document;
@@ -148,8 +158,8 @@ VerticalTabs.prototype = {
         // Create a box next to the app content. It will hold the tab
         // bar and the tab toolbar.
         let browserbox = document.getElementById("browser");
-        let leftbox = document.createElementNS(NS_XUL, "vbox");
-        leftbox.id = "verticaltabs-box";
+        let leftbox = this.createElement("vbox", {"id": "verticaltabs-box"});
+        console.log(leftbox);
         browserbox.insertBefore(leftbox, contentbox);
 
         // Move the tabs next to the app content, make them vertical,
@@ -169,15 +179,14 @@ VerticalTabs.prototype = {
         toolbar.setAttribute("collapsed", "false"); // no more vanishing new tab toolbar
         toolbar._toolbox = null; // reset value set by constructor
         toolbar.setAttribute("toolboxid", "navigator-toolbox");
-        let spacer = document.createElementNS(NS_XUL, "spacer");
-        spacer.id = "new-tab-spacer";
+        let spacer = this.createElement("spacer", {"id": "new-tab-spacer"});
         toolbar.appendChild(spacer);
-        let pin_button = document.createElementNS(NS_XUL, "toolbarbutton");
-        pin_button.id = "pin-button";
-        pin_button.setAttribute("onclick", `
-          let box = document.getElementById('verticaltabs-box');
-          let newstate = box.getAttribute('pinned') == 'true' ? 'false' : 'true';
-          box.setAttribute('pinned', newstate);`)
+        let pin_button = this.createElement("toolbarbutton", {
+          "id": "pin-button",
+          "onclick": `let box = document.getElementById('verticaltabs-box');
+            let newstate = box.getAttribute('pinned') == 'true' ? 'false' : 'true';
+            box.setAttribute('pinned', newstate);`
+        });
         toolbar.appendChild(pin_button);
         leftbox.insertBefore(toolbar, leftbox.firstChild);
 
@@ -246,12 +255,12 @@ VerticalTabs.prototype = {
 
         let closeMultiple = null;
         if (this.multiSelect) {
-            closeMultiple = document.createElementNS(NS_XUL, "menuitem");
-            closeMultiple.id = "context_verticalTabsCloseMultiple";
-            closeMultiple.setAttribute("label", "Close Selected Tabs"); //TODO l10n
-            closeMultiple.setAttribute("tbattr", "tabbrowser-multiple");
-            closeMultiple.setAttribute(
-                "oncommand", "gBrowser.tabContainer.VTMultiSelect.closeSelected();");
+            closeMultiple = this.createElement("menuitem", {
+              "id": "context_verticalTabsCloseMultiple",
+              "label": "Close Selected Tabs",
+              "tbattr": "tabbrowser-multiple",
+              "oncommand": "gBrowser.tabContainer.VTMultiSelect.closeSelected();"
+            });
             tabs.contextMenu.appendChild(closeMultiple);
         }
 
