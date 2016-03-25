@@ -34,6 +34,10 @@
   z-index: 3;
 }
 
+#main-window[inFullscreen][inDOMFullscreen] #verticaltabs-box {
+  visibility: collapse;
+}
+
 #verticaltabs-box:hover,
 #verticaltabs-box[pinned="true"] {
   box-shadow: 0 0 10px rgba(0,0,0,0.4);
@@ -67,6 +71,10 @@
   left: 260px;
 }
 
+#main-window[inFullscreen][inDOMFullscreen] #appcontent {
+  left: 0 !important
+}
+
 #navigator-toolbox,
 .browserContainer {
   width: calc(100vw - 45px);
@@ -75,6 +83,10 @@
 #verticaltabs-box[pinned="true"] + #appcontent #navigator-toolbox,
 #verticaltabs-box[pinned="true"] + #appcontent .browserContainer {
   width: calc(100vw - 260px);
+}
+
+#main-window[inFullscreen][inDOMFullscreen] .browserContainer {
+  width: 100vw !important;
 }
 
 .browserContainer {
