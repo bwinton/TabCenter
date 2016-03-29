@@ -110,9 +110,9 @@
     border: 0 !important;
     border-radius: 0 !important;
     margin: 0 !important;
-    height: 28px !important;
-    min-height: 28px !important;
-    max-height: 28px !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
     color: #333333 !important;
     border-left: 4px solid transparent !important;
     width: 260px !important;
@@ -178,6 +178,7 @@
 .tab-content {
   padding: 0px !important;
   margin: 0px !important;
+  transform: translate(0, 3px);
 }
 
 .tab-icon-image {
