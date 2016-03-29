@@ -38,10 +38,14 @@
   visibility: collapse;
 }
 
-#verticaltabs-box:hover,
-#verticaltabs-box[pinned="true"] {
+#verticaltabs-box:hover {
   box-shadow: 0 0 10px rgba(0,0,0,0.4), inset 0 0 10px rgba(0,0,0,0.0);
   width: 260px;
+}
+
+#verticaltabs-box[pinned="true"] {
+  transition: box-shadow 0ms ease-in-out 0ms;
+  box-shadow: none;
 }
 
 #alltabs-button {
