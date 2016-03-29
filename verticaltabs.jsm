@@ -159,7 +159,6 @@ VerticalTabs.prototype = {
         // bar and the tab toolbar.
         let browserbox = document.getElementById("browser");
         let leftbox = this.createElement("vbox", {"id": "verticaltabs-box"});
-        console.log(leftbox);
         browserbox.insertBefore(leftbox, contentbox);
 
         // Move the tabs next to the app content, make them vertical,

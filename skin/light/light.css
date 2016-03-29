@@ -93,6 +93,11 @@
   height: calc(100vh - 40px);
 }
 
+#main-window[inFullscreen][inDOMFullscreen] .browserContainer {
+  height: calc(100vh + 4px);
+  margin-top: -14px;
+}
+
 .tabbrowser-tab {
     -moz-box-pack: start;
     -moz-box-flex: 0;
