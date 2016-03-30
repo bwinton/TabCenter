@@ -198,9 +198,11 @@ VerticalTabs.prototype = {
         toolbar_context_menu.firstChild.nextSibling.collapsed = true; // separator
 
         tabs.addEventListener("TabOpen", this, false);
-        for (let i=0; i < tabs.childNodes.length; i++) {
+        window.setTimeout(() => {
+          for (let i=0; i < tabs.childNodes.length; i++) {
             this.initTab(tabs.childNodes[i]);
-        }
+          }
+        }, 150);
 
         this.window.addEventListener("resize", this, false);
 
@@ -238,6 +240,7 @@ VerticalTabs.prototype = {
             for (let i = 0; i < tabs.childNodes.length; i++) {
               let tab = tabs.childNodes[i];
               tab.removeAttribute("align");
+              aTab.setAttribute("crop", "end");
               tab.maxWidth = tab.minWidth = "";
             }
 
@@ -276,6 +279,9 @@ VerticalTabs.prototype = {
         aTab.setAttribute("align", "stretch");
         aTab.maxWidth = 65000;
         aTab.minWidth = 0;
+        this.window.setTimeout(() => {
+          aTab.removeAttribute("crop");
+        }, 100);
     },
 
     setPinnedSizes: function() {

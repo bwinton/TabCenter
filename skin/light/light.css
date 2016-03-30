@@ -44,8 +44,9 @@
 }
 
 #verticaltabs-box[pinned="true"] {
-  transition: box-shadow 0ms ease-in-out 0ms;
   box-shadow: none;
+  transition: box-shadow 0ms ease-in-out 0ms;
+  width: 260px;
 }
 
 #alltabs-button {
@@ -150,7 +151,7 @@
 
 /* Keep the close button at a safe distance from the tab label. */
 .tab-close-button {
-    display: -moz-box;
+    display: -moz-box !important;
     background: no-repeat center/16px url("resource://verticaltabs/skin/stop.svg") !important;
     margin: 0 0 0 3px !important;
     width: 40px;
@@ -178,9 +179,11 @@
 .tab-content {
   padding: 0px !important;
   margin: 0px !important;
-  transform: translate(0, 3px);
+  min-height: 36px;
+  max-height: 36px;
 }
 
+.tab-throbber,
 .tab-icon-image {
   padding: 3px;
   background-color: transparent !important;
@@ -191,10 +194,14 @@
   opacity: 1 !important;
 }
 
+.tab-throbber,
 .tabbrowser-tab[busy] .tab-icon-image {
   display: none !important;
 }
 
+.tabbrowser-tab[busy] .tab-throbber {
+  display: -moz-box !important;
+}
 /** Drop indicator for drag'n'drop of tabs - Works OOTB(TM)- Just needs a margin.**/
 .tab-drop-indicator {
     margin-top: -11px !important;
