@@ -302,7 +302,6 @@ VerticalTabs.prototype = {
     },
 
     onTabbarResized: function() {
-        let tabs = this.document.getElementById("tabbrowser-tabs");
         this.setPinnedSizes();
     },
 
@@ -373,7 +372,14 @@ VerticalTabs.prototype = {
     },
 
     onTabOpen: function(aEvent) {
-        this.initTab(aEvent.target);
+      let tab = aEvent.target;
+      this.initTab(tab);
+      // Wait for the document to load…
+      this.window.setTimeout(() => {
+        if (tab.linkedBrowser.contentDocument.URL === "about:newtab") {
+          this.window.gBrowser.moveTabTo(tab, 0);
+        }
+      }, 50);
     },
 
     onPopupShowing: function(aEvent) {
