@@ -232,7 +232,7 @@
   padding: 0 2px !important;
 }
 #TabsToolbar #new-tab-spacer {
-  flex: 1;
+  flex: 1 0 181px;
 }
 
 /* Tab toolbar styling */
