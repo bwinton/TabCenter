@@ -68,6 +68,7 @@
 
 /*#browser-box {*/
 #appcontent {
+  border-top: 1px solid rgb(160,160,160);
   left: 45px;
   position: absolute;
 }
