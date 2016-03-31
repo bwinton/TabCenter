@@ -295,6 +295,7 @@ VerticalTabs.prototype = {
 
     initTab: function(aTab) {
         aTab.setAttribute("align", "stretch");
+        aTab.removeAttribute("crop");
         aTab.maxWidth = 65000;
         aTab.minWidth = 0;
     },
