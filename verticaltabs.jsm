@@ -84,8 +84,26 @@ VerticalTabs.prototype = {
 
         let tabs = this.document.getElementById("tabbrowser-tabs");
         this.tabIDs = new VTTabIDs(tabs);
+        this.tabObserver = new this.document.defaultView.MutationObserver((mutations) => {
+          this.tabObserver.disconnect();
+          mutations.forEach((mutation) => {
+            if (mutation.type === "attributes" &&
+                mutation.attributeName === "crop" &&
+                mutation.target.localName === "tab") {
+              mutation.target.removeAttribute("crop");
+            } else if (mutation.type === "childList") {
+              for (let node of mutation.addedNodes) {
+                node.removeAttribute("crop");
+              }
+            }
+          });
+          this.tabObserver.observe(tabs, {childList: true, attributes: true, subtree: true});
+        });
+        this.tabObserver.observe(tabs, {childList: true, attributes: true, subtree: true});
+
         this.unloaders.push(function() {
             this.tabIDs.unload();
+            this.tabObserver.disconnect();
         });
     },
 
@@ -279,9 +297,6 @@ VerticalTabs.prototype = {
         aTab.setAttribute("align", "stretch");
         aTab.maxWidth = 65000;
         aTab.minWidth = 0;
-        this.window.setTimeout(() => {
-          aTab.removeAttribute("crop");
-        }, 100);
     },
 
     setPinnedSizes: function() {
