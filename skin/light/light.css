@@ -2,10 +2,14 @@
 
 .tabbrowser-tabs {
     background-color: #FBFBFB !important;
-    height: 100vh;
+    height: calc(100vh - 31px);
     margin: 0 !important;
     overflow-y: auto;
     padding: 0 !important;
+}
+
+.tabbrowser-arrowscrollbox {
+  height: calc(100vh - 31px);
 }
 
 #tabbrowser-tabs::before,
