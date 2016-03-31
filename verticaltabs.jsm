@@ -89,9 +89,11 @@ VerticalTabs.prototype = {
           mutations.forEach((mutation) => {
             if (mutation.type === "attributes" &&
                 mutation.attributeName === "crop" &&
-                mutation.target.localName === "tab") {
+                mutation.target.localName === "tab" &&
+                !tabs.expanded) {
               mutation.target.removeAttribute("crop");
-            } else if (mutation.type === "childList") {
+            } else if (mutation.type === "childList" &&
+                !tabs.expanded) {
               for (let node of mutation.addedNodes) {
                 node.removeAttribute("crop");
               }
@@ -207,6 +209,30 @@ VerticalTabs.prototype = {
         toolbar.appendChild(pin_button);
         leftbox.insertBefore(toolbar, leftbox.firstChild);
 
+        let enter = (event) => {
+          tabs.expanded = true;
+          if (event.pageX <= 4) {
+            leftbox.style.transition = "none";
+            window.setTimeout(() => {
+              leftbox.style.transition = "";
+            }, 300);
+          }
+          window.setTimeout(() => {
+            for (let i=0; i < tabs.childNodes.length; i++) {
+              tabs.childNodes[i].crop = "end";
+            }
+          }, 300);
+        };
+        leftbox.addEventListener("mouseenter", enter);
+        leftbox.addEventListener("mousemove", enter);
+        leftbox.addEventListener("mouseleave", () => {
+          tabs.expanded = false;
+          for (let i=0; i < tabs.childNodes.length; i++) {
+            tabs.childNodes[i].crop = "none";
+          }
+        });
+
+
         // Not sure what this does, it and all related code might be unnecessary
         window.TabsOnTop = window.TabsOnTop ? window.TabsOnTop : {};
         window.TabsOnTop.enabled = false;
@@ -257,9 +283,7 @@ VerticalTabs.prototype = {
             // Restore all individual tabs.
             for (let i = 0; i < tabs.childNodes.length; i++) {
               let tab = tabs.childNodes[i];
-              tab.removeAttribute("align");
               aTab.setAttribute("crop", "end");
-              tab.maxWidth = tab.minWidth = "";
             }
 
             // Remove all the crap we added.
@@ -294,10 +318,7 @@ VerticalTabs.prototype = {
     },
 
     initTab: function(aTab) {
-        aTab.setAttribute("align", "stretch");
         aTab.removeAttribute("crop");
-        aTab.maxWidth = 65000;
-        aTab.minWidth = 0;
     },
 
     setPinnedSizes: function() {

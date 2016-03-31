@@ -2,18 +2,19 @@
 
 .tabbrowser-tabs {
     background-color: #FBFBFB !important;
-    height: calc(100vh - 31px);
+    height: calc(100vh - 42px);
     margin: 0 !important;
     overflow-y: auto;
     padding: 0 !important;
 }
 
 .tabbrowser-arrowscrollbox {
-  height: calc(100vh - 31px);
+  height: calc(100vh - 42px);
 }
 
 #tabbrowser-tabs::before,
-#tabbrowser-tabs + hbox {
+#tabbrowser-tabs + hbox,
+#tabbrowser-tabs > hbox {
   display: none !important;
 }
 
@@ -220,7 +221,7 @@
 }
 
 #TabsToolbar:not(:-moz-lwtheme)  {
-    min-height: var(--tab-min-height);
+    min-height: 42px !important;
     border-bottom-left-radius: 0px !important;
     box-shadow: none !important;
     -moz-appearance: none !important;
@@ -233,10 +234,13 @@
 #TabsToolbar {
   display: flex;
 }
+#TabsToolbar > toolbarbutton {
+  min-height: 100% !important;
+}
+
 #TabsToolbar > #new-tab-button {
   -moz-box-orient: horizontal !important;
   padding: 0 5px !important;
-  min-height: var(--tab-min-height);
   width: auto !important;
 }
 #TabsToolbar #new-tab-button .toolbarbutton-text {
