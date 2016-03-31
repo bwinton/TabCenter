@@ -212,7 +212,7 @@ VerticalTabs.prototype = {
         let enter = (event) => {
           tabs.expanded = true;
           if (event.pageX <= 4) {
-            leftbox.style.transition = "none";
+            leftbox.style.transition = "box-shadow 150ms ease-out, width 150ms ease-out";
             window.setTimeout(() => {
               leftbox.style.transition = "";
             }, 300);
