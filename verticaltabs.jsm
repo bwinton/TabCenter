@@ -88,10 +88,16 @@ VerticalTabs.prototype = {
           this.tabObserver.disconnect();
           mutations.forEach((mutation) => {
             if (mutation.type === "attributes" &&
-                mutation.attributeName === "crop" &&
-                mutation.target.localName === "tab" &&
-                !tabs.expanded) {
-              mutation.target.removeAttribute("crop");
+                mutation.target.localName === "tab") {
+              let tab = mutation.target;
+              if (mutation.attributeName === "crop" && !tabs.expanded) {
+                tab.removeAttribute("crop");
+              } else if (mutation.attributeName === "progress" &&
+                  !tab.getAttribute("progress")) {
+                if (tab.linkedBrowser.contentDocument.URL === "about:newtab") {
+                  this.window.gBrowser.moveTabTo(tab, 0);
+                }
+              }
             } else if (mutation.type === "childList" &&
                 !tabs.expanded) {
               for (let node of mutation.addedNodes) {
@@ -411,12 +417,6 @@ VerticalTabs.prototype = {
     onTabOpen: function(aEvent) {
       let tab = aEvent.target;
       this.initTab(tab);
-      // Wait for the document to load…
-      this.window.setTimeout(() => {
-        if (tab.linkedBrowser.contentDocument.URL === "about:newtab") {
-          this.window.gBrowser.moveTabTo(tab, 0);
-        }
-      }, 50);
     },
 
     onPopupShowing: function(aEvent) {
