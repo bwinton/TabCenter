@@ -208,6 +208,7 @@ VerticalTabs.prototype = {
         toolbar.appendChild(spacer);
         let pin_button = this.createElement("toolbarbutton", {
           "id": "pin-button",
+          "tooltiptext": "Keep sidebar open",
           "onclick": `let box = document.getElementById('verticaltabs-box');
             let newstate = box.getAttribute('pinned') == 'true' ? 'false' : 'true';
             box.setAttribute('pinned', newstate);`
@@ -289,7 +290,7 @@ VerticalTabs.prototype = {
             // Restore all individual tabs.
             for (let i = 0; i < tabs.childNodes.length; i++) {
               let tab = tabs.childNodes[i];
-              aTab.setAttribute("crop", "end");
+              tab.setAttribute("crop", "end");
             }
 
             // Remove all the crap we added.

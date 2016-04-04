@@ -121,7 +121,9 @@ function unload(callback, container) {
     try {
       callback();
     }
-    catch(ex) {}
+    catch(ex) {
+      console.error(ex);
+    }
   }
   unloaders.push(unloader);
 
@@ -149,7 +151,9 @@ function watchWindows(callback) {
       if (documentElement.getAttribute("windowtype") == "navigator:browser")
         callback(window);
     }
-    catch(ex) {}
+    catch(ex) {
+      console.error(ex);
+    }
   }
 
   // Wait for the window to finish loading before running the callback
