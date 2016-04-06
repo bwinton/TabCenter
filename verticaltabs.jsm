@@ -112,12 +112,20 @@ VerticalTabs.prototype = {
         this.unloaders.push(function() {
             this.tabIDs.unload();
             this.tabObserver.disconnect();
+            this.removeStylesheet("resource://verticaltabs/override-bindings.css");
+            this.removeStylesheet("resource://verticaltabs/skin/bindings.css");
+            this.removeStylesheet("resource://verticaltabs/skin/base.css");
         });
     },
 
     installStylesheet: function(uri) {
         uri = this.ios.newURI(uri, null, null);
         this.sss.loadAndRegisterSheet(uri, this.sss.USER_SHEET);
+    },
+
+    removeStylesheet: function(uri) {
+      uri = this.ios.newURI(uri, null, null);
+      this.sss.unregisterSheet(uri, this.sss.USER_SHEET);
     },
 
     applyThemeStylesheet: function() {
@@ -194,6 +202,7 @@ VerticalTabs.prototype = {
         }
 
         let tabs = document.getElementById("tabbrowser-tabs");
+        tabs.setAttribute("vertical", true);
         leftbox.insertBefore(tabs, leftbox.firstChild);
         tabs.orient = "vertical";
         tabs.mTabstrip.orient = "vertical";
@@ -258,28 +267,24 @@ VerticalTabs.prototype = {
         this.window.addEventListener("resize", this, false);
 
         this.unloaders.push(function () {
-            // Move the bottom back to being the next sibling of contentbox.
-            browserbox.insertBefore(bottom, contentbox.nextSibling);
-
             // Move the tabs toolbar back to where it was
             toolbar._toolbox = null; // reset value set by constructor
             toolbar.removeAttribute("toolboxid");
+            toolbar.removeAttribute("collapsed");
+            toolbar.removeChild(spacer);
+            toolbar.removeChild(pin_button);
             let toolbox = document.getElementById("navigator-toolbox");
             let navbar = document.getElementById("nav-bar");
-            //toolbox.appendChild(toolbar);
-
-            // Restore the tab strip.
-            toolbox.insertBefore(toolbar, navbar);
-
+            let browserPanel = document.getElementById("browser-panel");
             let new_tab_button = document.getElementById("new-tab-button");
 
-            // Put the tabs back up dur
-            toolbar.insertBefore(tabs, new_tab_button);
+            // Put the tabs back up top
             tabs.orient = "horizontal";
             tabs.mTabstrip.orient = "horizontal";
             tabs.tabbox.orient = "vertical"; // probably not necessary
             tabs.removeAttribute("width");
             tabs.removeEventListener("TabOpen", this, false);
+            tabs.removeAttribute("vertical");
 
             // Restore tabs on top.
             window.TabsOnTop.enabled = Services.prefs.getBoolPref(
@@ -291,12 +296,20 @@ VerticalTabs.prototype = {
             for (let i = 0; i < tabs.childNodes.length; i++) {
               let tab = tabs.childNodes[i];
               tab.setAttribute("crop", "end");
+              tab.removeAttribute("verticaltabs-id");
             }
 
             // Remove all the crap we added.
             browserbox.removeChild(leftbox);
-            browserbox.dir = "normal";
+            browserbox.removeAttribute("dir");
             leftbox = null;
+
+            // Restore the tab strip.
+            toolbar.insertBefore(tabs, new_tab_button);
+            toolbox.insertBefore(toolbar, navbar);
+            browserPanel.insertBefore(toolbox, browserPanel.firstChild)
+            browserPanel.insertBefore(bottom, document.getElementById("fullscreen-warning").nextSibling);
+            this.window.TabsInTitlebar.updateAppearance(true);
         });
     },
 

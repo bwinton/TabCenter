@@ -119,6 +119,7 @@ function shutdown(data, reason) {
   if (reason == APP_SHUTDOWN) {
     return;
   }
+  Services.prefs.getDefaultBranch("").setBoolPref("browser.tabs.drawInTitlebar", true);
   unload();
   // Unloaders might want access to prefs, so do this last
   Services.prefs.getDefaultBranch(PREF_BRANCH).deleteBranch("");

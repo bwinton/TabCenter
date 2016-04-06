@@ -25,7 +25,6 @@
           return; // Ignore other-direction events
 
         var tabs = document.getBindingParent(this);
-        tabs.removeAttribute("overflow");
 
         if (tabs._lastTabClosedByMouse)
           tabs._expandSpacerBy(this._scrollButtonDown.clientWidth);
@@ -43,7 +42,6 @@
         if (numberOfTabs == 1)
           return;
 
-        tabs.setAttribute("overflow", "true");
         tabs._positionPinnedTabs();
         tabs._handleTabSelect(false);
       ]]></handler>
@@ -57,13 +55,13 @@
         <xul:image class="tab-drop-indicator" anonid="tab-drop-indicator" collapsed="true"/>
       </xul:hbox>
       <xul:arrowscrollbox anonid="arrowscrollbox"
+                          vertical="true"
                           flex="1"
                           xbl:inherits="orient"
                           style="min-width: 40px;"
                           clicktoscroll="true"
                           class="tabbrowser-arrowscrollbox">
         <children includes="tab"/>
-        <children/>
         <xul:toolbarbutton class="tabs-newtab-button"
                            command="cmd_newNavigatorTab"
                            onclick="checkForMiddleClick(this, event);"
