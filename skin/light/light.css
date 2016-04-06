@@ -95,6 +95,7 @@
 #appcontent {
   border-top: 1px solid rgb(160,160,160);
   left: 45px;
+  top: 0;
   position: absolute;
 }
 
@@ -369,4 +370,27 @@ statuspanel:-moz-locale-dir(rtl):not([mirror]) .statuspanel-inner {
     box-shadow: 5px 5px 0 -4px rgba(0,0,0,.18), 5px 5px 0 -3px rgba(0,0,0,.15), 5px 5px 0 -2px rgba(0,0,0,.12), 5px 5px 0 -1px rgba(0,0,0,.09) !important;
     padding: 0px 0px !important;
     border-radius: 4px !important;
+}
+
+@media (-moz-os-version: windows-win7), (-moz-os-version: windows-win8) {
+  #appcontent {
+    top: 1px;
+  }
+  #verticaltabs-box {
+    top: 1px;
+    border-left: 1px solid rgb(160,160,160);
+  }
+  #TabsToolbar {
+    height: 44px !important;
+    margin: 0 !important;
+  }
+  #nav-bar {
+    border-left: none !important;
+  }
+
+  .tabbrowser-tabs,
+  .tabbrowser-arrowscrollbox {
+    height: calc(100vh - 43.5px);
+  }
+
 }
