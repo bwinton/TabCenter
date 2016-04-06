@@ -3,14 +3,28 @@
 .tabbrowser-tabs {
     background-color: #FBFBFB !important;
     height: calc(100vh - 42px);
+    overflow-y: hidden;
     margin: 0 !important;
-    overflow-y: auto;
     padding: 0 !important;
+}
+
+#verticaltabs-box:hover .tabbrowser-tabs,
+#verticaltabs-box[pinned="true"] .tabbrowser-tabs {
+  overflow-y: auto;
 }
 
 .tabbrowser-arrowscrollbox {
   height: calc(100vh - 42px);
 }
+
+#verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
+    overflow-y: hidden !important;
+}
+
+#verticaltabs-box:hover .tabbrowser-arrowscrollbox > scrollbox,
+#verticaltabs-box[pinned="true"] .tabbrowser-arrowscrollbox > scrollbox {
+  overflow-y: auto !important;
+}}
 
 #tabbrowser-tabs::before,
 #tabbrowser-tabs + hbox,
