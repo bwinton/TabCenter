@@ -81,7 +81,6 @@ VerticalTabs.prototype = {
 
         this.rearrangeXUL();
         this.initContextMenu();
-        this.observeRightPref();
 
         let tabs = this.document.getElementById("tabbrowser-tabs");
         this.tabIDs = new VTTabIDs(tabs);
@@ -161,10 +160,6 @@ VerticalTabs.prototype = {
 
         // Move the tabs next to the app content, make them vertical,
         // and restore their width from previous session
-        if (Services.prefs.getBoolPref("extensions.verticaltabs.right")) {
-            browserbox.dir = "reverse";
-        }
-
         let tabs = document.getElementById("tabbrowser-tabs");
         tabs.setAttribute("vertical", true);
         leftbox.insertBefore(tabs, leftbox.firstChild);
@@ -324,31 +319,6 @@ VerticalTabs.prototype = {
 
     onTabbarResized: function() {
         this.setPinnedSizes();
-    },
-
-    observeRightPref: function () {
-      Services.prefs.addObserver("extensions.verticaltabs.right", this, false);
-      this.unloaders.push(function () {
-        Services.prefs.removeObserver("extensions.verticaltabs.right", this, false);
-      });
-    },
-
-    observe: function (subject, topic, data) {
-      if (topic != "nsPref:changed") {
-        return;
-      }
-
-      switch (data) {
-        case "extensions.verticaltabs.right":
-          let browserbox = this.document.getElementById("browser");
-          if (browserbox.dir != "reverse") {
-            browserbox.dir = "reverse";
-          } else {
-            browserbox.dir = "normal";
-          }
-          break;
-      }
-
     },
 
     unload: function() {
