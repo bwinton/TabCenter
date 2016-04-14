@@ -39,10 +39,8 @@ const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 Cu.import("resource://gre/modules/Services.jsm");
 
 const RESOURCE_HOST = "tabcenter";
-const PREF_BRANCH = "extensions.verticaltabs.";
 const DEFAULT_PREFS = {
-  "extensions.verticaltabs.width": 250,
-  "extensions.verticaltabs.tabsOnTop": false,
+  "browser.tabs.animate": false,
   "browser.tabs.drawInTitlebar": false
 };
 
@@ -54,23 +52,27 @@ function include(src) {
   Services.scriptloader.loadSubScript(src, GLOBAL_SCOPE);
 }
 
-/**
- * Declare a bunch of default preferences.
- */
 function setDefaultPrefs() {
   let branch = Services.prefs.getDefaultBranch("");
   for (let [name, value] in Iterator(DEFAULT_PREFS)) {
     switch (typeof value) {
-      case "boolean":
-        branch.setBoolPref(name, value);
-        break;
-      case "number":
-        branch.setIntPref(name, value);
-        break;
-      case "string":
-        branch.setCharPref(name, value);
-        break;
+    case "boolean":
+      Services.prefs.setBoolPref(name, value);
+      break;
+    case "number":
+      Services.prefs.setIntPref(name, value);
+      break;
+    case "string":
+      Services.prefs.setCharPref(name, value);
+      break;
     }
+  }
+}
+
+function removeDefaultPrefs() {
+  let branch = Services.prefs.getDefaultBranch("");
+  for (let [name, value] in Iterator(DEFAULT_PREFS)) {
+    branch.clearUserPref(name);
   }
 }
 
@@ -81,20 +83,6 @@ function startup(data, reason) {
   // Load helpers from utils.js.
   include(data.resourceURI.spec + "utils.js");
 
-  // Back up 'browser.tabs.animate' pref before overwriting it.
-  try {
-    Services.prefs.getBoolPref("extensions.verticaltabs.animate");
-  } catch (ex if (ex.result == Components.results.NS_ERROR_UNEXPECTED)) {
-    let animate = Services.prefs.getBoolPref("browser.tabs.animate");
-    Services.prefs.setBoolPref("extensions.verticaltabs.animate", animate);
-    Services.prefs.setBoolPref("browser.tabs.animate", false);
-  }
-  unload(function () {
-    let animate = Services.prefs.getBoolPref("extensions.verticaltabs.animate");
-    Services.prefs.setBoolPref("browser.tabs.animate", animate);
-  });
-
-  // Set default preferences.
   setDefaultPrefs();
 
   // Register the resource:// alias.
@@ -117,10 +105,8 @@ function shutdown(data, reason) {
   if (reason == APP_SHUTDOWN) {
     return;
   }
-  Services.prefs.getDefaultBranch("").setBoolPref("browser.tabs.drawInTitlebar", true);
+  removeDefaultPrefs();
   unload();
-  // Unloaders might want access to prefs, so do this last
-  Services.prefs.getDefaultBranch(PREF_BRANCH).deleteBranch("");
 }
 
 function uninstall() {
