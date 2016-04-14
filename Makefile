@@ -1,12 +1,11 @@
 
 SOURCES = \
-	README.txt \
+	README.md \
 	bootstrap.js \
 	chrome.manifest \
 	groups.jsm \
 	install.rdf \
 	multiselect.jsm \
-	options.xul \
 	override-bindings.css \
 	skin/* \
 	tabdatastore.jsm \

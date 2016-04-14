@@ -7,7 +7,8 @@
     <em:name>Tab Center Test</em:name>
     <em:version>1.9</em:version>
     <em:homepageURL>https://github.com/bwinton/VerticalTabs</em:homepageURL>
-    <em:creator>Vlad Vukicevic</em:creator>
+    <em:creator>Mozilla</em:creator>
+    <em:contributor>Vlad Vukicevic</em:contributor>
     <em:contributor>Darrin Henein</em:contributor>
     <em:contributor>Philipp von Weitershausen (original author)</em:contributor>
     <em:contributor>SHIMODA Hiroshi (creator of Tree Style Tab)</em:contributor>
