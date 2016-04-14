@@ -3,15 +3,4 @@
   <setting type="bool"
            pref="extensions.verticaltabs.right"
            title="Display tabs on the right"/>
-  <setting type="menulist"
-           pref="extensions.verticaltabs.theme"
-          title="Theme">
-    <menulist>
-      <menupopup>
-      <menuitem value="default" label="Default" />
-      <menuitem value="dark" label="Dark" />
-      <menuitem value="light" label="Light" />
-      </menupopup>
-    </menulist>
-  </setting>
 </vbox>

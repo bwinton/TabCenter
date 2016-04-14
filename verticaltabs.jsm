@@ -74,13 +74,14 @@ VerticalTabs.prototype = {
         this.installStylesheet("resource://tabcenter/override-bindings.css");
         this.installStylesheet("resource://tabcenter/skin/bindings.css");
         this.installStylesheet("resource://tabcenter/skin/base.css");
-        this.applyThemeStylesheet();
-        this.unloaders.push(this.removeThemeStylesheet);
+        this.installStylesheet("resource://tabcenter/skin/light/light.css");
+        this.unloaders.push(() => {
+          this.removeStylesheet("resource://tabcenter/skin/light/light.css");
+        });
 
         this.rearrangeXUL();
         this.initContextMenu();
         this.observeRightPref();
-        this.observeThemePref();
 
         let tabs = this.document.getElementById("tabbrowser-tabs");
         this.tabIDs = new VTTabIDs(tabs);
@@ -126,43 +127,6 @@ VerticalTabs.prototype = {
     removeStylesheet: function(uri) {
       uri = this.ios.newURI(uri, null, null);
       this.sss.unregisterSheet(uri, this.sss.USER_SHEET);
-    },
-
-    applyThemeStylesheet: function() {
-      this.theme = Services.prefs.getCharPref("extensions.verticaltabs.theme");
-      this.installStylesheet(this.getThemeStylesheet(this.theme));
-    },
-
-    removeThemeStylesheet: function() {
-      var uri = this.ios.newURI(this.getThemeStylesheet(this.theme), null, null);
-      this.sss.unregisterSheet(uri, this.sss.USER_SHEET);
-    },
-
-    getThemeStylesheet: function(theme) {
-      var stylesheet;
-      switch (theme) {
-        case "default":
-            switch(Services.appinfo.OS) {
-              case "WINNT":
-                stylesheet = "resource://tabcenter/skin/win7/win7.css";
-                break;
-              case "Darwin":
-                stylesheet = "resource://tabcenter/skin/osx/osx.css";
-                break;
-              case "Linux":
-                stylesheet = "resource://tabcenter/skin/linux/linux.css";
-                break;
-            }
-          break;
-        case "dark":
-          stylesheet = "resource://tabcenter/skin/dark/dark.css";
-          break;
-        case "light":
-          stylesheet = "resource://tabcenter/skin/light/light.css";
-          break;
-      }
-
-      return stylesheet;
     },
 
     createElement: function (label, attrs) {
@@ -369,13 +333,6 @@ VerticalTabs.prototype = {
       });
     },
 
-    observeThemePref: function() {
-      Services.prefs.addObserver("extensions.verticaltabs.theme", this, false);
-      this.unloaders.push(function() {
-        Services.prefs.removeObserver("extensions.verticaltabs.theme", this, false);
-      });
-    },
-
     observe: function (subject, topic, data) {
       if (topic != "nsPref:changed") {
         return;
@@ -389,11 +346,6 @@ VerticalTabs.prototype = {
           } else {
             browserbox.dir = "normal";
           }
-          break;
-        case "extensions.verticaltabs.theme":
-          console.log("updating theme");
-          this.removeThemeStylesheet();
-          this.applyThemeStylesheet();
           break;
       }
 

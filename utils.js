@@ -38,44 +38,6 @@
 "use strict";
 
 /**
- * Helper that adds event listeners and remembers to remove on unload
- */
-function listen(window, node, event, func, capture) {
-  // Default to use capture
-  if (capture == null)
-    capture = true;
-
-  node.addEventListener(event, func, capture);
-  function undoListen() {
-    node.removeEventListener(event, func, capture);
-  }
-
-  // Undo the listener on unload and provide a way to undo everything
-  let undoUnload = unload(undoListen, window);
-  return function() {
-    undoListen();
-    undoUnload();
-  };
-}
-
-/**
- * Load various packaged styles for the add-on and undo on unload
- *
- * @usage loadStyles(addon, styles): Load specified styles
- * @param [object] addon: Add-on object from AddonManager
- * @param [array of strings] styles: Style files to load
- */
-function loadStyles(addon, styles) {
-  let sss = Cc["@mozilla.org/content/style-sheet-service;1"].
-            getService(Ci.nsIStyleSheetService);
-  styles.forEach(function(fileName) {
-    let fileURI = addon.getResourceURI("styles/" + fileName + ".css");
-    sss.loadAndRegisterSheet(fileURI, sss.USER_SHEET);
-    unload(function() sss.unregisterSheet(fileURI, sss.USER_SHEET));
-  });
-}
-
-/**
  * Save callbacks to run when unloading. Optionally scope the callback to a
  * container, e.g., window. Provide a way to run all the callbacks.
  *
