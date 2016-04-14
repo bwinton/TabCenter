@@ -121,7 +121,7 @@
   width: 100vw !important;
 }
 
-.browserContainer {
+#panel-3-1 {
   height: calc(100vh - 40px);
 }
 
