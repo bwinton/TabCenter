@@ -51,7 +51,7 @@
  */
 
 const EXPORTED_SYMBOLS = ["VTGroups"];
-Components.utils.import("resource://verticaltabs/tabdatastore.jsm");
+Components.utils.import("resource://tabcenter/tabdatastore.jsm");
 
 const TAB_DROP_TYPE = "application/x-moz-tabbrowser-tab";
 
@@ -125,7 +125,7 @@ VTGroups.prototype = {
      * applied to the group.  Otherwise the label will be made
      * editable.
      */
-    addGroup: function(aLabel) {        
+    addGroup: function(aLabel) {
         let group = this.tabs.tabbrowser.addTab();
         VTTabDataStore.setTabValue(group, this.kGroup, "true");
 
@@ -198,7 +198,7 @@ VTGroups.prototype = {
         // Apply the group's collapsed state to the tab
         let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed)
                          == "true");
-        this._tabCollapseExpand(aTab, collapsed); 
+        this._tabCollapseExpand(aTab, collapsed);
     },
 
     addChildren: function(aGroup, aTabs) {

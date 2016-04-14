@@ -24,7 +24,7 @@
 #verticaltabs-box:hover .tabbrowser-arrowscrollbox > scrollbox,
 #verticaltabs-box[pinned="true"] .tabbrowser-arrowscrollbox > scrollbox {
   overflow-y: auto !important;
-}}
+}
 
 #tabbrowser-tabs::before,
 #tabbrowser-tabs + hbox,
@@ -79,7 +79,7 @@
 }
 
 #pin-button {
-  background: no-repeat center/16px url("resource://verticaltabs/skin/pin.png");
+  background: no-repeat center/16px url("resource://tabcenter/skin/pin.png");
   border: none !important;
   margin: 0 !important;
   -moz-appearance: none !important;
@@ -87,7 +87,7 @@
 }
 
 #verticaltabs-box[pinned="true"] #pin-button {
-  background-image: url("resource://verticaltabs/skin/pin-hover.png");
+  background-image: url("resource://tabcenter/skin/pin-hover.png");
   background-color: #808080 !important;
 }
 
@@ -179,14 +179,14 @@
 /* Keep the close button at a safe distance from the tab label. */
 .tab-close-button {
     display: -moz-box !important;
-    background: no-repeat center/16px url("resource://verticaltabs/skin/stop.svg") !important;
+    background: no-repeat center/16px url("resource://tabcenter/skin/stop.svg") !important;
     margin: 0 0 0 3px !important;
     width: 40px;
     height: 40px;
 }
 
 .tab-close-button:hover {
-    background: no-repeat center/16px url("resource://verticaltabs/skin/stop-hover.svg") !important;
+    background: no-repeat center/16px url("resource://tabcenter/skin/stop-hover.svg") !important;
     background-color: #d94141 !important;
 }
 

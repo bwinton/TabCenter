@@ -36,9 +36,9 @@
  * ***** END LICENSE BLOCK ***** */
 
 Components.utils.import("resource://gre/modules/Services.jsm");
-Components.utils.import("resource://verticaltabs/tabdatastore.jsm");
-Components.utils.import("resource://verticaltabs/multiselect.jsm");
-Components.utils.import("resource://verticaltabs/groups.jsm");
+Components.utils.import("resource://tabcenter/tabdatastore.jsm");
+Components.utils.import("resource://tabcenter/multiselect.jsm");
+Components.utils.import("resource://tabcenter/groups.jsm");
 
 let console = (Components.utils.import("resource://gre/modules/devtools/Console.jsm", {})).console;
 
@@ -71,9 +71,9 @@ VerticalTabs.prototype = {
         this.ios = Components.classes["@mozilla.org/network/io-service;1"]
                     .getService(Components.interfaces.nsIIOService);
 
-        this.installStylesheet("resource://verticaltabs/override-bindings.css");
-        this.installStylesheet("resource://verticaltabs/skin/bindings.css");
-        this.installStylesheet("resource://verticaltabs/skin/base.css");
+        this.installStylesheet("resource://tabcenter/override-bindings.css");
+        this.installStylesheet("resource://tabcenter/skin/bindings.css");
+        this.installStylesheet("resource://tabcenter/skin/base.css");
         this.applyThemeStylesheet();
         this.unloaders.push(this.removeThemeStylesheet);
 
@@ -112,9 +112,9 @@ VerticalTabs.prototype = {
         this.unloaders.push(function() {
             this.tabIDs.unload();
             this.tabObserver.disconnect();
-            this.removeStylesheet("resource://verticaltabs/override-bindings.css");
-            this.removeStylesheet("resource://verticaltabs/skin/bindings.css");
-            this.removeStylesheet("resource://verticaltabs/skin/base.css");
+            this.removeStylesheet("resource://tabcenter/override-bindings.css");
+            this.removeStylesheet("resource://tabcenter/skin/bindings.css");
+            this.removeStylesheet("resource://tabcenter/skin/base.css");
         });
     },
 
@@ -144,21 +144,21 @@ VerticalTabs.prototype = {
         case "default":
             switch(Services.appinfo.OS) {
               case "WINNT":
-                stylesheet = "resource://verticaltabs/skin/win7/win7.css";
+                stylesheet = "resource://tabcenter/skin/win7/win7.css";
                 break;
               case "Darwin":
-                stylesheet = "resource://verticaltabs/skin/osx/osx.css";
+                stylesheet = "resource://tabcenter/skin/osx/osx.css";
                 break;
               case "Linux":
-                stylesheet = "resource://verticaltabs/skin/linux/linux.css";
+                stylesheet = "resource://tabcenter/skin/linux/linux.css";
                 break;
             }
           break;
         case "dark":
-          stylesheet = "resource://verticaltabs/skin/dark/dark.css";
+          stylesheet = "resource://tabcenter/skin/dark/dark.css";
           break;
         case "light":
-          stylesheet = "resource://verticaltabs/skin/light/light.css";
+          stylesheet = "resource://tabcenter/skin/light/light.css";
           break;
       }
 

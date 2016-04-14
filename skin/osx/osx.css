@@ -124,7 +124,7 @@
     display: -moz-box;
     margin-left: 3px;
     margin-top: 1px;
-    background-image: url("resource://verticaltabs/skin/osx/closetab.svg") !important;
+    background-image: url("resource://tabcenter/skin/osx/closetab.svg") !important;
     background-position: center right;
     background-size: contain;
     background-repeat: no-repeat;
@@ -138,7 +138,7 @@
 }
 .tabbrowser-tab[selected="true"] .tab-close-button,
 .tabbrowser-tab[multiselect="true"] .tab-close-button {
-    background-image: url("resource://verticaltabs/skin/osx/closetab-white.svg");
+    background-image: url("resource://tabcenter/skin/osx/closetab-white.svg");
     opacity: 0.8;
 }
 
@@ -204,7 +204,7 @@
 
 /* Drop indicator for drag'n'drop of tabs */
 .tab-drop-indicator {
-    list-style-image: url("resource://verticaltabs/skin/osx/dropmarker.png");
+    list-style-image: url("resource://tabcenter/skin/osx/dropmarker.png");
     margin-top: -12px !important; /* height of the above image */
     margin-bottom: 0 !important;
 }
@@ -313,7 +313,7 @@
 }
 
 .verticaltabs-twisty {
-    list-style-image: url("resource://verticaltabs/skin/osx/twisty.png");
+    list-style-image: url("resource://tabcenter/skin/osx/twisty.png");
     opacity: 0.38;
     -moz-transition-property: -moz-transform;
     -moz-transition-duration: .1s;

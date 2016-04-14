@@ -38,7 +38,7 @@ const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 
 Cu.import("resource://gre/modules/Services.jsm");
 
-const RESOURCE_HOST = "verticaltabs";
+const RESOURCE_HOST = "tabcenter";
 const PREF_BRANCH = "extensions.verticaltabs.";
 const DEFAULT_PREFS = {
   "extensions.verticaltabs.width": 250,
@@ -108,7 +108,7 @@ function startup(data, reason) {
   });
 
   // Initialize VerticalTabs object for each window.
-  Cu.import("resource://verticaltabs/verticaltabs.jsm");
+  Cu.import("resource://tabcenter/verticaltabs.jsm");
   watchWindows(function(window) {
     let vt = new VerticalTabs(window);
     unload(vt.unload.bind(vt), window);
