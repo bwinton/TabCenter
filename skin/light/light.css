@@ -91,6 +91,14 @@
   background-color: #808080 !important;
 }
 
+[devtoolstheme="dark"] #pin-button {
+  background-image: url("resource://tabcenter/skin/pin-hover.png");
+}
+
+[devtoolstheme="dark"] #verticaltabs-box[pinned="true"] #pin-button {
+  background-image: url("resource://tabcenter/skin/pin.png");
+}
+
 /*#browser-box {*/
 #appcontent {
   border-top: 1px solid rgb(160,160,160);
