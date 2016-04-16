@@ -9,7 +9,7 @@
 }
 
 #verticaltabs-box:hover .tabbrowser-tabs,
-#verticaltabs-box[pinned="true"] .tabbrowser-tabs {
+#browser[tabspinned="true"] #verticaltabs-box .tabbrowser-tabs {
   overflow-y: auto;
 }
 
@@ -22,7 +22,7 @@
 }
 
 #verticaltabs-box:hover .tabbrowser-arrowscrollbox > scrollbox,
-#verticaltabs-box[pinned="true"] .tabbrowser-arrowscrollbox > scrollbox {
+#browser[tabspinned="true"] #verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
   overflow-y: auto !important;
 }
 
@@ -62,7 +62,7 @@
   width: 260px;
 }
 
-#verticaltabs-box[pinned="true"] {
+#browser[tabspinned="true"] #verticaltabs-box {
   box-shadow: none;
   transition: box-shadow 0ms ease-in-out 0ms;
   width: 260px;
@@ -74,7 +74,7 @@
 }
 
 #verticaltabs-box:hover #alltabs-button,
-#verticaltabs-box[pinned="true"] #alltabs-button {
+#browse[tabspinned="true"] #verticaltabs-box #alltabs-button {
   display: -moz-box;
 }
 
@@ -86,7 +86,7 @@
   width: 40px;
 }
 
-#verticaltabs-box[pinned="true"] #pin-button {
+#browser[tabspinned="true"] #verticaltabs-box #pin-button {
   background-image: url("resource://tabcenter/skin/pin-hover.png");
   background-color: #808080 !important;
 }
@@ -95,7 +95,7 @@
   background-image: url("resource://tabcenter/skin/pin-hover.png");
 }
 
-[devtoolstheme="dark"] #verticaltabs-box[pinned="true"] #pin-button {
+[devtoolstheme="dark"] #browser[tabspinned="true"] #verticaltabs-box #pin-button {
   background-image: url("resource://tabcenter/skin/pin.png");
 }
 
@@ -107,7 +107,7 @@
   position: absolute;
 }
 
-#verticaltabs-box[pinned="true"] + #appcontent {
+#rbwoser[tabspinned="true"] #verticaltabs-box + #appcontent {
   left: 260px;
 }
 
@@ -120,8 +120,8 @@
   width: calc(100vw - 45px);
 }
 
-#verticaltabs-box[pinned="true"] + #appcontent #navigator-toolbox,
-#verticaltabs-box[pinned="true"] + #appcontent .browserContainer {
+#browser[tabspinned="true"] #verticaltabs-box + #appcontent #navigator-toolbox,
+#browser[tabspinned="true"] #verticaltabs-box + #appcontent .browserContainer {
   width: calc(100vw - 260px);
 }
 

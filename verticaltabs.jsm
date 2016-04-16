@@ -157,6 +157,7 @@ VerticalTabs.prototype = {
         let browserbox = document.getElementById("browser");
         let leftbox = this.createElement("vbox", {"id": "verticaltabs-box"});
         browserbox.insertBefore(leftbox, contentbox);
+        browserbox.setAttribute("persist", "tabspinned");
 
         // Move the tabs next to the app content, make them vertical,
         // and restore their width from previous session
@@ -177,9 +178,9 @@ VerticalTabs.prototype = {
         let pin_button = this.createElement("toolbarbutton", {
           "id": "pin-button",
           "tooltiptext": "Keep sidebar open",
-          "onclick": `let box = document.getElementById('verticaltabs-box');
-            let newstate = box.getAttribute('pinned') == 'true' ? 'false' : 'true';
-            box.setAttribute('pinned', newstate);`
+          "onclick": `let box = document.getElementById('browser');
+            let newstate = box.getAttribute('tabspinned') == 'true' ? 'false' : 'true';
+            box.setAttribute('tabspinned', newstate);`
         });
         toolbar.appendChild(pin_button);
         leftbox.insertBefore(toolbar, leftbox.firstChild);
@@ -206,7 +207,6 @@ VerticalTabs.prototype = {
             tabs.childNodes[i].crop = "none";
           }
         });
-
 
         let toolbar_context_menu = document.getElementById("toolbar-context-menu");
         toolbar_context_menu.firstChild.collapsed = true;
@@ -254,6 +254,8 @@ VerticalTabs.prototype = {
             // Remove all the crap we added.
             browserbox.removeChild(leftbox);
             browserbox.removeAttribute("dir");
+            browserbox.removeAttribute("tabspinned");
+            browserbox.removeAttribute("persist");
             leftbox = null;
 
             // Restore the tab strip.
