@@ -107,7 +107,7 @@
   position: absolute;
 }
 
-#rbwoser[tabspinned="true"] #verticaltabs-box + #appcontent {
+#browser[tabspinned="true"] #verticaltabs-box + #appcontent {
   left: 260px;
 }
 
