@@ -1,8 +1,9 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 .tabbrowser-tabs {
-    background-color: #FBFBFB !important;
-    height: calc(100vh - 42px);
+    border-top: 1px solid rgba(160,160,160,.5);
+    box-sizing: border-box;
+    flex: 1 0;
     overflow-y: hidden;
     margin: 0 !important;
     padding: 0 !important;
@@ -14,7 +15,7 @@
 }
 
 .tabbrowser-arrowscrollbox {
-  height: calc(100vh - 42px);
+    flex: 1 0;
 }
 
 #verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
@@ -39,8 +40,11 @@
 }
 
 #verticaltabs-box {
+  background-color: #fbfbfb !important;
   border-right: 1px solid ThreeDShadow;
-  box-shadow: 0 0 10px rgba(0,0,0,0.0), inset 0 0 10px rgba(0,0,0,0.4);
+  border-top: 1px solid rgb(160,160,160) !important;
+  box-shadow: 0 0 10px rgba(0,0,0,0.0), inset 0 0 10px rgba(0,0,0,0.2);
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -58,7 +62,7 @@
 }
 
 #verticaltabs-box:hover {
-  box-shadow: 0 0 10px rgba(0,0,0,0.4), inset 0 0 10px rgba(0,0,0,0.0);
+  box-shadow: 0 0 10px rgba(0,0,0,0.2), inset 0 0 10px rgba(0,0,0,0.0);
   width: 260px;
 }
 
@@ -88,7 +92,7 @@
 
 #browser[tabspinned="true"] #verticaltabs-box #pin-button {
   background-image: url("resource://tabcenter/skin/pin-hover.png");
-  background-color: #808080 !important;
+  background-color: #bbb !important;
 }
 
 [devtoolstheme="dark"] #pin-button {
@@ -182,6 +186,28 @@
 
 .tab-stack {
   min-height: 28px;
+  text-shadow: none;
+}
+
+/* devtools dark color overrides
+   needs the second attrib selector b/c
+   the devtools flag is always on if the user is in dev edition
+   even if they transition back to the default australis UI
+*/
+
+[devtoolstheme~="dark"][lwtheme="true"] .tabbrowser-tab {
+  font-weight: 400 !important;
+  color: #fff !important;
+}
+
+[devtoolstheme~="dark"][lwtheme="true"] .tabbrowser-tab[selected="true"],
+[devtoolstheme~="dark"][lwtheme="true"] .tabbrowser-tab[multiselect="true"] {
+  background-color: #3C4146 !important;
+  box-shadow: none !important;
+}
+
+[devtoolstheme~="dark"][lwtheme="true"] .tabbrowser-tab:not([selected="true"]):hover {
+    background-color: #2C3136 !important;
 }
 
 /* Keep the close button at a safe distance from the tab label. */
@@ -244,11 +270,9 @@
 }
 
 #TabsToolbar:not(:-moz-lwtheme)  {
-    min-height: 42px !important;
     border-bottom-left-radius: 0px !important;
     box-shadow: none !important;
     -moz-appearance: none !important;
-    border-top: 1px solid rgb(160,160,160) !important;
     -moz-border-right-colors: #fcfcfc rgb(154,154,154) !important;
     background-color: #f1f1f1 !important;
     background-image: none !important;
@@ -256,7 +280,10 @@
 
 #TabsToolbar {
   display: flex;
+  flex: 0 0 40px;
+  color: black;
 }
+
 #TabsToolbar > toolbarbutton {
   min-height: 100% !important;
 }
@@ -389,16 +416,10 @@ statuspanel:-moz-locale-dir(rtl):not([mirror]) .statuspanel-inner {
     border-left: 1px solid rgb(160,160,160);
   }
   #TabsToolbar {
-    height: 44px !important;
+    flex: 0 0 44px !important;
     margin: 0 !important;
   }
   #nav-bar {
     border-left: none !important;
   }
-
-  .tabbrowser-tabs,
-  .tabbrowser-arrowscrollbox {
-    height: calc(100vh - 43.5px);
-  }
-
 }

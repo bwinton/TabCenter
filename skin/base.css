@@ -105,3 +105,9 @@ statuspanel:-moz-locale-dir(ltr):not([mirror]) .statuspanel-inner {
 #verticaltabs-box .private-browsing-indicator {
   display: none;
 }
+
+#TabsToolbar[brighttext] .tabs-newtab-button,
+#TabsToolbar[brighttext] > #new-tab-button,
+#TabsToolbar[brighttext] > toolbarpaletteitem > #new-tab-button {
+    list-style-image: url(chrome://browser/skin/tabbrowser/newtab.png);
+}
