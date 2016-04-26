@@ -133,7 +133,7 @@
   width: 100vw !important;
 }
 
-.browserContainer {
+#content notificationbox {
   height: calc(100vh - 40px);
 }
 
