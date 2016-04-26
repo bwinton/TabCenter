@@ -1,5 +1,9 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
+#main-window[privatebrowsingmode="temporary"] #titlebar-buttonbox-container {
+  margin-top: 4px;
+}
+
 .tabbrowser-tabs {
     border-top: 1px solid rgba(160,160,160,.5);
     box-sizing: border-box;
