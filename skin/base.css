@@ -100,3 +100,8 @@ statuspanel:-moz-locale-dir(ltr):not([mirror]) .statuspanel-inner {
 /*#nav-bar {
   margin-right: 100px;
 }*/
+
+/* hide private browsing indicator in the vertical tab box */
+#verticaltabs-box .private-browsing-indicator {
+  display: none;
+}
