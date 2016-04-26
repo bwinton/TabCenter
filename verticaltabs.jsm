@@ -42,10 +42,38 @@ Components.utils.import("resource://tabcenter/groups.jsm");
 
 let console = (Components.utils.import("resource://gre/modules/devtools/Console.jsm", {})).console;
 
-const EXPORTED_SYMBOLS = ["VerticalTabs"];
+const EXPORTED_SYMBOLS = ["VerticalTabs", "vtInit"];
 
 const NS_XUL = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 const TAB_DROP_TYPE = "application/x-moz-tabbrowser-tab";
+
+function vtInit() {
+  let sss = Components.classes["@mozilla.org/content/style-sheet-service;1"]
+              .getService(Components.interfaces.nsIStyleSheetService);
+  let ios = Components.classes["@mozilla.org/network/io-service;1"]
+              .getService(Components.interfaces.nsIIOService);
+
+  let installStylesheet = function(uri) {
+    uri = ios.newURI(uri, null, null);
+    sss.loadAndRegisterSheet(uri, sss.USER_SHEET);
+  };
+
+  let removeStylesheet = function(uri) {
+    uri = ios.newURI(uri, null, null);
+    sss.unregisterSheet(uri, sss.USER_SHEET);
+  };
+
+  installStylesheet("resource://tabcenter/override-bindings.css");
+  installStylesheet("resource://tabcenter/skin/bindings.css");
+  installStylesheet("resource://tabcenter/skin/base.css");
+  installStylesheet("resource://tabcenter/skin/light/light.css");
+  return () => {
+    removeStylesheet("resource://tabcenter/skin/light/light.css");
+    removeStylesheet("resource://tabcenter/override-bindings.css");
+    removeStylesheet("resource://tabcenter/skin/bindings.css");
+    removeStylesheet("resource://tabcenter/skin/base.css");
+  };
+}
 
 /*
  * Vertical Tabs
@@ -64,19 +92,6 @@ VerticalTabs.prototype = {
         this.window.VerticalTabs = this;
         this.unloaders.push(function() {
             delete this.window.VerticalTabs;
-        });
-
-        this.sss = Components.classes["@mozilla.org/content/style-sheet-service;1"]
-                    .getService(Components.interfaces.nsIStyleSheetService);
-        this.ios = Components.classes["@mozilla.org/network/io-service;1"]
-                    .getService(Components.interfaces.nsIIOService);
-
-        this.installStylesheet("resource://tabcenter/override-bindings.css");
-        this.installStylesheet("resource://tabcenter/skin/bindings.css");
-        this.installStylesheet("resource://tabcenter/skin/base.css");
-        this.installStylesheet("resource://tabcenter/skin/light/light.css");
-        this.unloaders.push(() => {
-          this.removeStylesheet("resource://tabcenter/skin/light/light.css");
         });
 
         this.rearrangeXUL();
@@ -112,20 +127,7 @@ VerticalTabs.prototype = {
         this.unloaders.push(function() {
             this.tabIDs.unload();
             this.tabObserver.disconnect();
-            this.removeStylesheet("resource://tabcenter/override-bindings.css");
-            this.removeStylesheet("resource://tabcenter/skin/bindings.css");
-            this.removeStylesheet("resource://tabcenter/skin/base.css");
         });
-    },
-
-    installStylesheet: function(uri) {
-        uri = this.ios.newURI(uri, null, null);
-        this.sss.loadAndRegisterSheet(uri, this.sss.USER_SHEET);
-    },
-
-    removeStylesheet: function(uri) {
-      uri = this.ios.newURI(uri, null, null);
-      this.sss.unregisterSheet(uri, this.sss.USER_SHEET);
     },
 
     createElement: function (label, attrs) {

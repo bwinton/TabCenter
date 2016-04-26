@@ -95,6 +95,7 @@ function startup(data, reason) {
 
   // Initialize VerticalTabs object for each window.
   Cu.import("resource://tabcenter/verticaltabs.jsm");
+  unload(vtInit());
   watchWindows(function(window) {
     let vt = new VerticalTabs(window);
     unload(vt.unload.bind(vt), window);
