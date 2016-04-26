@@ -195,16 +195,15 @@ VerticalTabs.prototype = {
           }
           window.setTimeout(() => {
             for (let i=0; i < tabs.childNodes.length; i++) {
-              tabs.childNodes[i].crop = "end";
+              tabs.childNodes[i].setAttribute("crop", "end");
             }
           }, 300);
         };
         leftbox.addEventListener("mouseenter", enter);
         leftbox.addEventListener("mousemove", enter);
         leftbox.addEventListener("mouseleave", () => {
-          tabs.expanded = false;
-          for (let i=0; i < tabs.childNodes.length; i++) {
-            tabs.childNodes[i].crop = "none";
+          if (browserbox.getAttribute("tabspinned") !== "true") {
+            tabs.expanded = false;
           }
         });
 
@@ -214,6 +213,9 @@ VerticalTabs.prototype = {
 
         tabs.addEventListener("TabOpen", this, false);
         window.setTimeout(() => {
+          if (browserbox.getAttribute("tabspinned") === "true") {
+            tabs.expanded = true;
+          }
           for (let i=0; i < tabs.childNodes.length; i++) {
             this.initTab(tabs.childNodes[i]);
           }
@@ -292,7 +294,11 @@ VerticalTabs.prototype = {
     },
 
     initTab: function(aTab) {
+      if (this.document.getElementById("browser").getAttribute("tabspinned") !== "true") {
         aTab.removeAttribute("crop");
+      } else {
+        aTab.setAttribute("crop", "end");
+      }
     },
 
     setPinnedSizes: function() {
