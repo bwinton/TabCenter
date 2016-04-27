@@ -214,6 +214,13 @@
     background-color: #2C3136 !important;
 }
 
+.tab-icon-sound {
+  display: none;
+}
+.tab-icon-overlay[soundplaying] {
+  display: -moz-box !important;
+}
+
 /* Keep the close button at a safe distance from the tab label. */
 .tab-close-button {
     display: -moz-box !important;
