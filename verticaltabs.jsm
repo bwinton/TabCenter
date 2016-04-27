@@ -206,6 +206,10 @@ VerticalTabs.prototype = {
         leftbox.addEventListener("mouseleave", () => {
           if (browserbox.getAttribute("tabspinned") !== "true") {
             tabs.expanded = false;
+            let tabsPopup = document.getElementById("alltabs-popup");
+            if (tabsPopup.state === "open") {
+              tabsPopup.hidePopup();
+            }
           }
         });
 

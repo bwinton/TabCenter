@@ -77,13 +77,13 @@
 }
 
 #alltabs-button {
-  display: none;
+  visibility: hidden;
   min-height: var(--tab-min-height);
 }
 
 #verticaltabs-box:hover #alltabs-button,
-#browse[tabspinned="true"] #verticaltabs-box #alltabs-button {
-  display: -moz-box;
+#browser[tabspinned="true"] #verticaltabs-box #alltabs-button {
+  visibility: visible;
 }
 
 #pin-button {
