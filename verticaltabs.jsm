@@ -74,7 +74,8 @@ function vtInit() {
     removeStylesheet("resource://tabcenter/skin/base.css");
     let windows = Services.wm.getEnumerator(null);
     while (windows.hasMoreElements()) {
-      let tabs = windows.getNext().document.getElementById("tabbrowser-tabs");
+      let window = windows.getNext();
+      let tabs = window.document.getElementById("tabbrowser-tabs");
       tabs._positionPinnedTabs();
     }
   };
