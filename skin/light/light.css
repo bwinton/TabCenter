@@ -8,6 +8,7 @@
     border-top: 1px solid rgba(160,160,160,.5);
     box-sizing: border-box;
     flex: 1 0;
+    height: calc(100vh - 42px);
     overflow-y: hidden;
     margin: 0 !important;
     padding: 0 !important;
@@ -19,7 +20,8 @@
 }
 
 .tabbrowser-arrowscrollbox {
-    flex: 1 0;
+  flex: 1 0;
+  height: calc(100vh - 42px);
 }
 
 #verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {

@@ -17,6 +17,13 @@
   <binding id="tabbrowser-arrowscrollbox" extends="chrome://browser/content/tabbrowser.xml#tabbrowser-arrowscrollbox">
     <implementation>
       <property name="_verticalTabs" onget="return this.orient == 'vertical';"/>
+
+      <method name="_canScrollToElement">
+        <parameter name="tab"/>
+        <body><![CDATA[
+          return !tab.hidden;
+        ]]></body>
+      </method>
     </implementation>
 
     <handlers>
