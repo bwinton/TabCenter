@@ -31,8 +31,6 @@
 
         tabs.tabbrowser._removingTabs.forEach(tabs.tabbrowser.removeTab,
                                               tabs.tabbrowser);
-
-        tabs._positionPinnedTabs();
       ]]></handler>
       <handler event="overflow"><![CDATA[
         if (event.detail == (this._verticalTabs ? 1 : 0))
@@ -42,7 +40,6 @@
         if (numberOfTabs == 1)
           return;
 
-        tabs._positionPinnedTabs();
         tabs._handleTabSelect(false);
       ]]></handler>
     </handlers>
@@ -91,69 +88,6 @@
         <body><![CDATA[
           // XXX I don't think this is necessary for vertical tabs
           return;
-        ]]></body>
-      </method>
-
-      <method name="_positionPinnedTabs">
-        <body><![CDATA[
-          let verticalTabs = this._verticalTabs;
-
-          var numPinned = this.tabbrowser._numPinnedTabs;
-          var doPosition = this.getAttribute("overflow") == "true" &&
-                           numPinned > 0;
-
-          if (doPosition) {
-            this.setAttribute("positionpinnedtabs", "true");
-
-            if (verticalTabs) {
-              let scrollButtonHeight = this.mTabstrip._scrollButtonDown.getBoundingClientRect().height;
-              let paddingStart = this.mTabstrip._scrollbox.style.paddingTop;
-              let height = 0;
-
-              for (let i = numPinned - 1; i >= 0; i--) {
-                let tab = this.childNodes[i];
-                height += tab.getBoundingClientRect().height;
-                tab.style.marginTop = - (height + scrollButtonHeight + paddingStart) + "px";
-              }
-
-              this.style.paddingTop = height + paddingStart + "px";
-            } else {
-              let scrollButtonWidth = this.mTabstrip._scrollButtonDown.getBoundingClientRect().width;
-              let paddingStart = this.mTabstrip.scrollboxPaddingStart;
-              let width = 0;
-
-              for (let i = numPinned - 1; i >= 0; i--) {
-                let tab = this.childNodes[i];
-                width += tab.getBoundingClientRect().width;
-                tab.style.MozMarginStart = - (width + scrollButtonWidth + paddingStart) + "px";
-              }
-
-              this.style.MozPaddingStart = width + paddingStart + "px";
-            }
-          } else {
-            this.removeAttribute("positionpinnedtabs");
-
-            if (verticalTabs) {
-              for (let i = 0; i < numPinned; i++) {
-                let tab = this.childNodes[i];
-                tab.style.marginTop = "";
-              }
-
-              this.style.paddingTop = "";
-            } else {
-              for (let i = 0; i < numPinned; i++) {
-                let tab = this.childNodes[i];
-                tab.style.MozMarginStart = "";
-              }
-
-              this.style.MozPaddingStart = "";
-            }
-          }
-
-          if (this._lastNumPinned != numPinned) {
-            this._lastNumPinned = numPinned;
-            this._handleTabSelect(false);
-          }
         ]]></body>
       </method>
 

@@ -72,6 +72,11 @@ function vtInit() {
     removeStylesheet("resource://tabcenter/override-bindings.css");
     removeStylesheet("resource://tabcenter/skin/bindings.css");
     removeStylesheet("resource://tabcenter/skin/base.css");
+    let windows = Services.wm.getEnumerator(null);
+    while (windows.hasMoreElements()) {
+      let tabs = windows.getNext().document.getElementById("tabbrowser-tabs");
+      tabs._positionPinnedTabs();
+    }
   };
 }
 
@@ -227,8 +232,6 @@ VerticalTabs.prototype = {
           }
         }, 150);
 
-        this.window.addEventListener("resize", this, false);
-
         this.unloaders.push(function () {
             // Move the tabs toolbar back to where it was
             toolbar._toolbox = null; // reset value set by constructor
@@ -307,27 +310,6 @@ VerticalTabs.prototype = {
       }
     },
 
-    setPinnedSizes: function() {
-        let tabs = this.document.getElementById("tabbrowser-tabs");
-        // awfulness
-        let numPinned = tabs.tabbrowser._numPinnedTabs;
-
-        if (tabs.getAttribute("positionpinnedtabs")) {
-            let width = tabs.boxObject.width;
-            for (let i = 0; i < numPinned; ++i) {
-                tabs.childNodes[i].style.width = tabs.boxObject.width + "px";
-            }
-        } else {
-            for (let i = 0; i < numPinned; ++i) {
-                tabs.childNodes[i].style.width = "";
-            }
-        }
-    },
-
-    onTabbarResized: function() {
-        this.setPinnedSizes();
-    },
-
     unload: function() {
       this.unloaders.forEach(function(func) {
         func.call(this);
@@ -343,16 +325,12 @@ VerticalTabs.prototype = {
             return;
         case "TabOpen":
             this.onTabOpen(aEvent);
-            this.setPinnedSizes();
             return;
         case "mouseup":
             this.onMouseUp(aEvent);
             return;
         case "popupshowing":
             this.onPopupShowing(aEvent);
-            return;
-        case "resize":
-            this.setPinnedSizes();
             return;
         }
     },
