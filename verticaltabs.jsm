@@ -160,6 +160,10 @@ VerticalTabs.prototype = {
         let bottom = document.getElementById("browser-bottombox");
         contentbox.appendChild(bottom);
         let top = document.getElementById("navigator-toolbox");
+
+        // save the label of the first tab for later…
+        let tabs = document.getElementById("tabbrowser-tabs");
+        let label = tabs.firstChild.label;
         contentbox.insertBefore(top, contentbox.firstChild);
 
         // Create a box next to the app content. It will hold the tab
@@ -171,12 +175,14 @@ VerticalTabs.prototype = {
 
         // Move the tabs next to the app content, make them vertical,
         // and restore their width from previous session
-        let tabs = document.getElementById("tabbrowser-tabs");
         tabs.setAttribute("vertical", true);
         leftbox.insertBefore(tabs, leftbox.firstChild);
         tabs.orient = "vertical";
         tabs.mTabstrip.orient = "vertical";
         tabs.tabbox.orient = "horizontal"; // probably not necessary
+
+        // And restore the label here.
+        tabs.firstChild.label = label;
 
         // Move the tabs toolbar into the tab strip
         let toolbar = document.getElementById("TabsToolbar");
