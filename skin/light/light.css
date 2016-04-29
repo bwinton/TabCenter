@@ -374,6 +374,10 @@
     -moz-appearance: treetwistyopen !important;
 }
 
+#customization-titlebar-visibility-button {
+  display: none;
+}
+
 /*** Link Display ***/
 
 .statuspanel-label {
