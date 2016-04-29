@@ -76,7 +76,9 @@ function vtInit() {
     while (windows.hasMoreElements()) {
       let window = windows.getNext();
       let tabs = window.document.getElementById("tabbrowser-tabs");
-      tabs._positionPinnedTabs();
+      if (tabs) {
+        tabs._positionPinnedTabs();
+      }
     }
   };
 }
