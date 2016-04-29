@@ -378,6 +378,17 @@
   display: none;
 }
 
+.tabbrowser-tab[pinned][titlechanged]:not([visuallyselected="true"]) {
+  background-image: radial-gradient(22px at left center, rgba(76,158,217,0.9) 19%, transparent 22%) !important;
+  background-position: -4px center !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% !important;
+}
+
+.tabbrowser-tab > .tab-stack > .tab-content[pinned][titlechanged]:not([visuallyselected="true"]) {
+  background-image: none !important;
+}
+
 /*** Link Display ***/
 
 .statuspanel-label {
