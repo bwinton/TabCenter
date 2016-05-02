@@ -77,6 +77,7 @@ function vtInit() {
       let window = windows.getNext();
       let tabs = window.document.getElementById("tabbrowser-tabs");
       if (tabs) {
+        tabs.removeAttribute("overflow");
         tabs._positionPinnedTabs();
       }
     }
