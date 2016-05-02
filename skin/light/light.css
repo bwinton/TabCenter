@@ -80,12 +80,6 @@
 
 #alltabs-button {
   visibility: hidden;
-  min-height: var(--tab-min-height);
-}
-
-#verticaltabs-box:hover #alltabs-button,
-#browser[tabspinned="true"] #verticaltabs-box #alltabs-button {
-  visibility: visible;
 }
 
 #pin-button {
