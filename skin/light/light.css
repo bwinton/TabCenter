@@ -181,11 +181,16 @@
    /* gnome/gtk/cleartype doesn't seem to have inactive states for selected items, lets try this */
 }
 
+.tabbrowser-tab[pinned] {
+  border-left: 4px solid #0996f8 !important;
+}
+
 .tabbrowser-tab:not([selected="true"]):hover {
     margin: 0 !important;
     background-color: #ebebeb !important;
 }
 
+.tabbrowser-tab[pinned] .tab-close-button,
 .tabbrowser-tab:not(:hover) .tab-close-button {
     visibility: collapse !important;
 }
@@ -243,11 +248,6 @@
 
 .tab-label {
   text-align: left !important;
-}
-
-.tab-label[pinned] {
-    margin-left: 6px !important;
-    position: relative !important;
 }
 
 .tab-content {
@@ -379,8 +379,8 @@
 }
 
 .tabbrowser-tab[pinned][titlechanged]:not([visuallyselected="true"]) {
-  background-image: radial-gradient(22px at left center, rgba(76,158,217,0.9) 19%, transparent 22%) !important;
-  background-position: -4px center !important;
+  background-image: radial-gradient(22px at left center,#0996f8 19%, transparent 22%) !important;
+  background-position: -2px center !important;
   background-repeat: no-repeat !important;
   background-size: 100% !important;
 }
