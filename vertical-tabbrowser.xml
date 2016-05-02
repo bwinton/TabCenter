@@ -98,6 +98,25 @@
         ]]></body>
       </method>
 
+      <method name="_positionPinnedTabs">
+        <body><![CDATA[
+          var numPinned = this.tabbrowser._numPinnedTabs;
+          this.removeAttribute("positionpinnedtabs");
+
+          for (let i = 0; i < numPinned; i++) {
+            let tab = this.childNodes[i];
+            tab.style.MozMarginStart = "";
+          }
+
+          this.style.MozPaddingStart = "";
+
+          if (this._lastNumPinned != numPinned) {
+            this._lastNumPinned = numPinned;
+            this._handleTabSelect(false);
+          }
+        ]]></body>
+      </method>
+
       <method name="_animateTabMove">
         <parameter name="event"/>
         <body><![CDATA[
