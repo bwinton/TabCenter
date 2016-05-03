@@ -107,6 +107,11 @@ VerticalTabs.prototype = {
         this.initContextMenu();
 
         let tabs = this.document.getElementById("tabbrowser-tabs");
+        let results = this.document.getElementById("PopupAutoCompleteRichResult");
+
+        if (results) {
+          results.removeAttribute("width");
+        }
         this.tabIDs = new VTTabIDs(tabs);
         this.tabObserver = new this.document.defaultView.MutationObserver((mutations) => {
           this.tabObserver.disconnect();
@@ -122,6 +127,10 @@ VerticalTabs.prototype = {
                   this.window.gBrowser.moveTabTo(tab, 0);
                 }
               }
+            } else if (mutation.type === "attributes" &&
+                       mutation.target.id === "PopupAutoCompleteRichResult" &&
+                       mutation.attributeName === "width") {
+              results.removeAttribute("width");
             } else if (mutation.type === "childList" &&
                 !tabs.expanded) {
               for (let node of mutation.addedNodes) {
@@ -130,8 +139,14 @@ VerticalTabs.prototype = {
             }
           });
           this.tabObserver.observe(tabs, {childList: true, attributes: true, subtree: true});
+          if (results) {
+            this.tabObserver.observe(results, {attributes: true});
+          }
         });
         this.tabObserver.observe(tabs, {childList: true, attributes: true, subtree: true});
+        if (results) {
+          this.tabObserver.observe(results, {attributes: true});
+        }
 
         this.unloaders.push(function() {
             this.tabIDs.unload();
@@ -157,6 +172,7 @@ VerticalTabs.prototype = {
         // tabbrowser.  That way it will share the same (horizontal)
         // space as the brower.  In other words, the bottom stuff no
         // longer extends across the whole bottom of the window.
+        let mainWindow = document.getElementById("main-window");
         let contentbox = document.getElementById("appcontent");
         let bottom = document.getElementById("browser-bottombox");
         contentbox.appendChild(bottom);
@@ -172,7 +188,8 @@ VerticalTabs.prototype = {
         let browserbox = document.getElementById("browser");
         let leftbox = this.createElement("vbox", {"id": "verticaltabs-box"});
         browserbox.insertBefore(leftbox, contentbox);
-        browserbox.setAttribute("persist", "tabspinned");
+        mainWindow.setAttribute("persist",
+          mainWindow.getAttribute("persist") + " tabspinned");
 
         // Move the tabs next to the app content, make them vertical,
         // and restore their width from previous session
@@ -195,7 +212,7 @@ VerticalTabs.prototype = {
         let pin_button = this.createElement("toolbarbutton", {
           "id": "pin-button",
           "tooltiptext": "Keep sidebar open",
-          "onclick": `let box = document.getElementById('browser');
+          "onclick": `let box = document.getElementById('main-window');
             let newstate = box.getAttribute('tabspinned') == 'true' ? 'false' : 'true';
             box.setAttribute('tabspinned', newstate);`
         });
@@ -219,7 +236,7 @@ VerticalTabs.prototype = {
         leftbox.addEventListener("mouseenter", enter);
         leftbox.addEventListener("mousemove", enter);
         leftbox.addEventListener("mouseleave", () => {
-          if (browserbox.getAttribute("tabspinned") !== "true") {
+          if (mainWindow.getAttribute("tabspinned") !== "true") {
             tabs.expanded = false;
             let tabsPopup = document.getElementById("alltabs-popup");
             if (tabsPopup.state === "open") {
@@ -234,7 +251,7 @@ VerticalTabs.prototype = {
 
         tabs.addEventListener("TabOpen", this, false);
         window.setTimeout(() => {
-          if (browserbox.getAttribute("tabspinned") === "true") {
+          if (mainWindow.getAttribute("tabspinned") === "true") {
             tabs.expanded = true;
           }
           for (let i=0; i < tabs.childNodes.length; i++) {
@@ -275,8 +292,9 @@ VerticalTabs.prototype = {
             // Remove all the crap we added.
             browserbox.removeChild(leftbox);
             browserbox.removeAttribute("dir");
-            browserbox.removeAttribute("tabspinned");
-            browserbox.removeAttribute("persist");
+            mainWindow.removeAttribute("tabspinned");
+            mainWindow.setAttribute("persist",
+              mainWindow.getAttribute("persist").replace(" tabspinnned", ""));
             leftbox = null;
 
             // Restore the tab strip.
@@ -313,7 +331,7 @@ VerticalTabs.prototype = {
     },
 
     initTab: function(aTab) {
-      if (this.document.getElementById("browser").getAttribute("tabspinned") !== "true") {
+      if (this.document.getElementById("main-window").getAttribute("tabspinned") !== "true") {
         aTab.removeAttribute("crop");
       } else {
         aTab.setAttribute("crop", "end");

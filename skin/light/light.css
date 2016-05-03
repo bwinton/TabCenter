@@ -15,7 +15,7 @@
 }
 
 #verticaltabs-box:hover .tabbrowser-tabs,
-#browser[tabspinned="true"] #verticaltabs-box .tabbrowser-tabs {
+#main-window[tabspinned="true"] #verticaltabs-box .tabbrowser-tabs {
   overflow-y: auto;
 }
 
@@ -29,7 +29,7 @@
 }
 
 #verticaltabs-box:hover .tabbrowser-arrowscrollbox > scrollbox,
-#browser[tabspinned="true"] #verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
+#main-window[tabspinned="true"] #verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
   overflow-y: auto !important;
 }
 
@@ -72,7 +72,7 @@
   width: 260px;
 }
 
-#browser[tabspinned="true"] #verticaltabs-box {
+#main-window[tabspinned="true"] #verticaltabs-box {
   box-shadow: none;
   transition: box-shadow 0ms ease-in-out 0ms;
   width: 260px;
@@ -90,7 +90,7 @@
   width: 40px;
 }
 
-#browser[tabspinned="true"] #verticaltabs-box #pin-button {
+#main-window[tabspinned="true"] #verticaltabs-box #pin-button {
   background-image: url("resource://tabcenter/skin/pin-hover.png");
   background-color: #bbb !important;
 }
@@ -99,37 +99,50 @@
   background-image: url("resource://tabcenter/skin/pin-hover.png");
 }
 
-[devtoolstheme="dark"] #browser[tabspinned="true"] #verticaltabs-box #pin-button {
+#main-window[devtoolstheme="dark"][tabspinned="true"] #verticaltabs-box #pin-button {
   background-image: url("resource://tabcenter/skin/pin.png");
 }
 
 /*#browser-box {*/
 #appcontent {
   border-top: 1px solid rgb(160,160,160);
-  left: 45px;
   top: 0;
   position: absolute;
 }
 
-#browser[tabspinned="true"] #verticaltabs-box + #appcontent {
+#appcontent,
+#PopupAutoCompleteRichResult {
+  left: 45px;
+}
+
+#main-window[tabspinned="true"] #verticaltabs-box + #appcontent,
+#main-window[tabspinned="true"] #PopupAutoCompleteRichResult {
   left: 260px;
 }
 
-#main-window[inFullscreen][inDOMFullscreen] #appcontent {
+#main-window[inFullscreen][inDOMFullscreen] #appcontent,
+#main-window[inFullscreen][inDOMFullscreen] #PopupAutoCompleteRichResult {
   left: 0 !important
 }
 
 #navigator-toolbox,
-.browserContainer {
+.browserContainer,
+#PopupAutoCompleteRichResult {
   width: calc(100vw - 45px);
 }
 
-#browser[tabspinned="true"] #verticaltabs-box + #appcontent #navigator-toolbox,
-#browser[tabspinned="true"] #verticaltabs-box + #appcontent .browserContainer {
+#PopupAutoCompleteRichResult {
+  margin-left: -32px !important;
+}
+
+#main-window[tabspinned="true"] #verticaltabs-box + #appcontent #navigator-toolbox,
+#main-window[tabspinned="true"] #verticaltabs-box + #appcontent .browserContainer,
+#main-window[tabspinned="true"] #PopupAutoCompleteRichResult {
   width: calc(100vw - 260px);
 }
 
-#main-window[inFullscreen][inDOMFullscreen] .browserContainer {
+#main-window[inFullscreen][inDOMFullscreen] .browserContainer
+#main-window[inFullscreen][inDOMFullscreen] #PopupAutoCompleteRichResult {
   width: 100vw !important;
 }
 
