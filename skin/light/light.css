@@ -383,52 +383,6 @@
   background-image: none !important;
 }
 
-/*** Link Display ***/
-
-.statuspanel-label {
-    -moz-appearance: tooltip !important;
-    margin-right: 0px !important;
-    margin-left: 0px !important;
-    box-shadow: 8px 3px 0 rgba(0,0,0,.18) !important; /* would otherwise display a transparent pixel on the tooltip's corner */
-}
-
-.statuspanel-inner {
-    height: 100% !important;
-}
-
-#main-window[sizemode="normal"]:not([inFullscreen="true"]) .statuspanel-inner {
-    padding-left: 0px !important;
-    padding-right: 0px !important;
-}
-
-statuspanel[mirror]:-moz-locale-dir(ltr),
-statuspanel[mirror]:-moz-locale-dir(rtl) {
-    padding: 6px 6px 0px 0px !important;
-}
-
-statuspanel:-moz-locale-dir(ltr):not([mirror]),
-statuspanel:-moz-locale-dir(rtl):not([mirror]) {
-    padding: 0px 0px 0px 4px !important;
-}
-
-statuspanel[mirror]:-moz-locale-dir(ltr) .statuspanel-inner,
-statuspanel[mirror]:-moz-locale-dir(rtl) .statuspanel-inner {
-    margin-top: 8px !important;
-    margin-bottom: 10px !important;
-    box-shadow: 5px 5px 0 -4px rgba(0,0,0,.18), 5px 5px 0 -3px rgba(0,0,0,.15), 5px 5px 0 -2px rgba(0,0,0,.12), 5px 5px 0 -1px rgba(0,0,0,.09) !important;
-    padding: 0px 0px !important;
-    border-radius: 4px !important;
-}
-
-statuspanel:-moz-locale-dir(ltr):not([mirror]) .statuspanel-inner,
-statuspanel:-moz-locale-dir(rtl):not([mirror]) .statuspanel-inner {
-    margin-top: 14px !important;
-    margin-bottom: 5px !important;
-    box-shadow: 5px 5px 0 -4px rgba(0,0,0,.18), 5px 5px 0 -3px rgba(0,0,0,.15), 5px 5px 0 -2px rgba(0,0,0,.12), 5px 5px 0 -1px rgba(0,0,0,.09) !important;
-    padding: 0px 0px !important;
-    border-radius: 4px !important;
-}
-
 @media (-moz-os-version: windows-win7), (-moz-os-version: windows-win8) {
   #appcontent {
     top: 1px;
