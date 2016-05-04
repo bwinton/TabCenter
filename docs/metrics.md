@@ -99,7 +99,7 @@ Tab Center will record and report each of the following metrics:
   - Tab Center unpins
   - Tab Center contraction events
   - Tab Center expansion events
-  - Tab Center inaction contraction
+  - Tab Center inaction contraction (Version 2)
 
 This data will be used in three ways:
 
@@ -127,14 +127,14 @@ An example payload (within the full Telemetry ping):
     “tabs_unpinned”: 4,
     “tab_center_pinned”: 1,
     “tab_center_unpinned”: 0,
-    “tab_center_expanded”: 9999,
-    “tab_center_teased”: 1234
+    “tab_center_expanded”: 9999
+    /* “tab_center_teased”: 1234  (Version 2) */
   }
 }
 ```
 
 And the schema we will use for Redshift:
-```js
+```sql
 local schema = {
 --   column name              field type    length  attributes   field name
     {"timestamp",             "TIMESTAMP",  nil,    "SORTKEY",  "Timestamp"},
@@ -149,7 +149,7 @@ local schema = {
     {"tab_center_pinned",     "INTEGER",    nil,    nil,        "payload[tab_center_pinned]"},
     {"tab_center_unpinned",   "INTEGER",    nil,    nil,        "payload[tab_center_unpinned]"},
     {"tab_center_expanded",   "INTEGER",    nil,    nil,        "payload[tab_center_expanded]"}
-    {"tab_center_teased",     "INTEGER",    nil,    nil,        "payload[tab_center_teased]"}
+--  {"tab_center_teased",     "INTEGER",    nil,    nil,        "payload[tab_center_teased]"}  (Version 2)
 }
 
 ```

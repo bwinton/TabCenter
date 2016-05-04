@@ -79,6 +79,8 @@ function removeDefaultPrefs() {
 function install() {
 }
 
+var timer = Cc["@mozilla.org/timer;1"].createInstance(Ci.nsITimer);
+
 function startup(data, reason) {
   // Load helpers from utils.js.
   include(data.resourceURI.spec + "utils.js");
@@ -97,12 +99,17 @@ function startup(data, reason) {
   Cu.import("resource://tabcenter/verticaltabs.jsm");
   unload(vtInit());
   watchWindows(function(window) {
-    let vt = new VerticalTabs(window);
+    let vt = new VerticalTabs(window, {newPayload, addPingStats});
     unload(vt.unload.bind(vt), window);
   }, "navigator:browser");
+  timer.initWithCallback({notify: () => {
+    sendPing();
+  }}, 24*60*60*1000, Ci.nsITimer.TYPE_REPEATING_SLACK);  // Every 24h.
+  // }}, 20*1000, Ci.nsITimer.TYPE_REPEATING_SLACK);  // Every 20s for debugging.
 };
 
 function shutdown(data, reason) {
+  sendPing();
   if (reason == APP_SHUTDOWN) {
     return;
   }

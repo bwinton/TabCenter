@@ -89,10 +89,13 @@ function vtInit() {
  *
  * Main entry point of this add-on.
  */
-function VerticalTabs(window) {
+function VerticalTabs(window, {newPayload, addPingStats}) {
     this.window = window;
     this.document = window.document;
     this.unloaders = [];
+    this.addPingStats = addPingStats;
+    this.newPayload = newPayload;
+    this.stats = this.newPayload();
     this.init();
 }
 VerticalTabs.prototype = {
@@ -102,6 +105,9 @@ VerticalTabs.prototype = {
         this.unloaders.push(function() {
             delete this.window.VerticalTabs;
         });
+        this.window.onunload = () => {
+          this.sendStats();
+        }
 
         this.rearrangeXUL();
         this.initContextMenu();
@@ -217,12 +223,21 @@ VerticalTabs.prototype = {
           "tooltiptext": "Keep sidebar open",
           "onclick": `let box = document.getElementById('main-window');
             let newstate = box.getAttribute('tabspinned') == 'true' ? 'false' : 'true';
-            box.setAttribute('tabspinned', newstate);`
+            box.setAttribute('tabspinned', newstate);
+            if (newstate == 'true') {
+              window.VerticalTabs.stats.tab_center_pinned++;
+            } else {
+              window.VerticalTabs.stats.tab_center_unpinned++;
+            }
+            `
         });
         toolbar.appendChild(pin_button);
         leftbox.insertBefore(toolbar, leftbox.firstChild);
 
         let enter = (event) => {
+          if (event.type === "mouseenter" && !tabs.expanded) {
+            this.stats.tab_center_expanded++;
+          }
           tabs.expanded = true;
           if (event.pageX <= 4) {
             leftbox.style.transition = "box-shadow 150ms ease-out, width 150ms ease-out";
@@ -249,6 +264,9 @@ VerticalTabs.prototype = {
         });
 
         tabs.addEventListener("TabOpen", this, false);
+        tabs.addEventListener("TabClose", this, false);
+        tabs.addEventListener("TabPinned", this, false);
+        tabs.addEventListener("TabUnpinned", this, false);
         window.setTimeout(() => {
           if (mainWindow.getAttribute("tabspinned") === "true") {
             tabs.expanded = true;
@@ -276,6 +294,9 @@ VerticalTabs.prototype = {
             tabs.tabbox.orient = "vertical"; // probably not necessary
             tabs.removeAttribute("width");
             tabs.removeEventListener("TabOpen", this, false);
+            tabs.removeEventListener("TabClose", this, false);
+            tabs.removeEventListener("TabPinned", this, false);
+            tabs.removeEventListener("TabUnpinned", this, false);
             tabs.removeAttribute("vertical");
 
             // Restore all individual tabs.
@@ -350,6 +371,15 @@ VerticalTabs.prototype = {
         case "TabOpen":
             this.onTabOpen(aEvent);
             return;
+        case "TabClose":
+            this.onTabClose(aEvent);
+            return;
+        case "TabPinned":
+            this.onTabPinned(aEvent);
+            return;
+        case "TabUnpinned":
+            this.onTabUnpinned(aEvent);
+            return;
         case "mouseup":
             this.onMouseUp(aEvent);
             return;
@@ -361,7 +391,20 @@ VerticalTabs.prototype = {
 
     onTabOpen: function(aEvent) {
       let tab = aEvent.target;
+      this.stats.tabs_created++;
       this.initTab(tab);
+    },
+
+    onTabClose: function(aEvent) {
+      this.stats.tabs_destroyed++;
+    },
+
+    onTabPinned: function(aEvent) {
+      this.stats.tabs_pinned++;
+    },
+
+    onTabUnpinned: function(aEvent) {
+      this.stats.tabs_unpinned++;
     },
 
     onPopupShowing: function(aEvent) {
@@ -375,6 +418,11 @@ VerticalTabs.prototype = {
         } else {
             closeTabs.disabled = true;
         }
-    }
+    },
+
+  sendStats: function(payload) {
+    this.addPingStats(this.stats);
+    this.stats = this.newPayload();
+  }
 
 };

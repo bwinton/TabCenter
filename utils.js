@@ -149,3 +149,64 @@ function watchWindows(callback) {
   // Make sure to stop watching for windows if we're unloading
   unload(function() Services.ww.unregisterNotification(windowWatcher));
 }
+
+const PAYLOAD_KEYS = [
+  "tabs_created",
+  "tabs_destroyed",
+  "tabs_pinned",
+  "tabs_unpinned",
+  "tab_center_pinned",
+  "tab_center_unpinned",
+  "tab_center_expanded"
+]
+
+function newPayload() {
+  let rv = {};
+  PAYLOAD_KEYS.forEach(key => {
+    rv[key] = 0;
+  });
+  return rv;
+}
+
+var payload = newPayload();
+
+function addPingStats(stats) {
+  PAYLOAD_KEYS.forEach(key => {
+    payload[key] += stats[key] || 0;
+  });
+}
+
+function sendPing() {
+  const observerService = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
+  // This looks strange, but it's required to send over the test ID.
+  const subject = {
+    wrappedJSObject: {
+      observersModuleSubjectWrapper: true,
+      object: 'tabcentertest1@mozilla.com'
+    }
+  };
+
+  let userAgent = Cc["@mozilla.org/network/protocol;1?name=http"]
+                    .getService(Ci.nsIHttpProtocolHandler).userAgent;
+
+  let windows = Services.wm.getEnumerator(null);
+  while (windows.hasMoreElements()) {
+    let vt = windows.getNext().VerticalTabs;
+    if (vt) {
+      vt.sendStats();
+    }
+  }
+
+  let ping = JSON.stringify({
+    "test": "tabcentertest1@mozilla.com",  // The em:id field from the add-on
+    "agent": userAgent,
+    "version": 1,  // Just in case we need to drastically change the format later
+    "payload": payload
+  });
+  payload = newPayload();
+  // Send metrics to the main Test Pilot add-on.
+  // let console = (Components.utils.import("resource://gre/modules/devtools/Console.jsm", {})).console;
+  // console.log("Sending ping", ping);
+  observerService.notifyObservers(subject, 'testpilot::send-metric', ping);
+  // Clear out the metrics for next time…
+}
