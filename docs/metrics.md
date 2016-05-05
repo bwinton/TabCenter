@@ -9,93 +9,6 @@ A summary of the metrics the Tab Center add-on will record.
 - **Tab Center** — The vertical tab tray on the right side of the browser.
 - **Pin/Unpin Tab Center** — Locking or unlocking the tab center UI to/from a fixed position.
 
-## Data collection
-
-Metrics gathered from the Tab Center add-on will be reported to the Test Pilot add-on, which will augment that information and relay it to Firefox’s telemetry system via `submitExternalPing`. 
-
-### Telemetry Based Diagnostic Measures
-
-We will collect measures on how users use Tab Center so that if the engagement metrics collected by Test Pilot rise or fall, we can diagnose why/how users might be using the feature differently.
-
-The following Telemetry metrics will be important for optimizing tab Center
-
-- Session Length
-- Browser/Client metrics
-  - Release Channel
-  - OS
-  - Firefox Version
-  - Using Lightweight theme?
-- Window metrics
-  - Is browser in fullscreen mode?
-  - Client window dimensions?
-  - Display resolution
-
-Tab Center will record and report each of the following metrics:
-
--  Tab behaviors, specifically: 
-  - Tab creations
-  - Tab destructions
-  - Tab pins
-  - Tab unpins
-- Tab Center actions, specifically: 
-  - Tab Center pins
-  - Tab Center unpins
-  - Tab Center contraction events
-  - Tab Center expansion events
-  - Tab Center inaction contraction
-
-This data will be used in three ways:
-
-1. To gain a deeper understanding of how users make use of Tab Center.
-2. To gain a deeper understanding of how Tab Center users compared to non-Tab Center users.
-3. To segment users into categories that suggest actionable UI changes to Tab Center.
-
-## Data Collection Details
-
-Tab Center is a purely client-side experiment so we will only be collecting metrics from the client leveraging Test Pilot’s reporting functionality with the `testpilottest` type identifier.  
-
-Tab Center will record data and submit it periodically (vs sending data continuously).  At launch, we will record and send data every 24 hours or on shutdown of the browser, whichever is first.
-
-An example payload (within the full Telemetry ping):
-
-```js
-{
- "test": "tabcentertest1@mozilla.com",  // The em:id field from the add-on
- "agent": "User Agent String",
- "version": 1,  // Just in case we need to drastically change the format later
- "payload": {
-    “tabs_created”: 1000,
-    “tabs_destroyed”: 1000,
-    “tabs_pinned”: 5,
-    “tabs_unpinned”: 4,
-    “tab_center_pinned”: 1,
-    “tab_center_unpinned”: 0,
-    “tab_center_expanded”: 9999,
-    “tab_center_teased”: 1234
-  }
-}
-```
-And the schema we will use for Redshift:
-```js
-local schema = {
---   column name field type   length  attributes   field name
-    {"timestamp", "TIMESTAMP", nil, "SORTKEY", "Timestamp"},
-    {"uuid", "VARCHAR", 36, nil,get_uuid},
-    {"service", "VARCHAR", 255, nil, "test"},
-    {"agent", "VARCHAR", 45, nil, "agent"},
-
- {"tabs_created", "INTEGER", nil, nil, "payload[tabs_created]"},
- {"tabs_destroyed", "INTEGER", nil, nil, "payload[tabs_destroyed]"},
- {"tabs_pinned", "INTEGER", nil ,nil, "payload[tabs_pinned]"},
- {"tabs_unpinned", "INTEGER", nil, nil ,"payload[tabs_unpinned]"},
- {"tab_center_pinned", "INTEGER", nil, nil, "payload[tab_center_pinned]"},
- {"tab_center_unpinned", "INTEGER", nil, nil, "payload[tab_center_unpinned]"},
- {"tab_center_expanded", "INTEGER", nil, nil, "payload[tab_center_expanded]"}
- {"tab_center_teased", "INTEGER", nil, nil, "payload[tab_center_teased]"}
-}
-
-```
-
 ## Data analysis
 
 The collected data will primarily be used to answer the following questions.
@@ -152,3 +65,91 @@ Themes can specify color schemes, this metric tracks what % of our users make us
 
 <img src="images/tc-graphs-03.png">
 
+
+## Data collection
+
+Metrics gathered from the Tab Center add-on will be reported to the Test Pilot add-on, which will augment that information and relay it to Firefox’s telemetry system via `submitExternalPing`.
+
+### Telemetry Based Diagnostic Measures
+
+We will collect measures on how users use Tab Center so that if the engagement metrics collected by Test Pilot rise or fall, we can diagnose why/how users might be using the feature differently.
+
+The following Telemetry metrics will be important for optimizing tab Center
+
+- Session Length
+- Browser/Client metrics
+  - Release Channel
+  - OS
+  - Firefox Version
+  - Using Lightweight theme?
+- Window metrics
+  - Is browser in fullscreen mode?
+  - Client window dimensions?
+  - Display resolution
+
+Tab Center will record and report each of the following metrics:
+
+-  Tab behaviors, specifically:
+  - Tab creations
+  - Tab destructions
+  - Tab pins
+  - Tab unpins
+- Tab Center actions, specifically:
+  - Tab Center pins
+  - Tab Center unpins
+  - Tab Center contraction events
+  - Tab Center expansion events
+  - Tab Center inaction contraction
+
+This data will be used in three ways:
+
+1. To gain a deeper understanding of how users make use of Tab Center.
+2. To gain a deeper understanding of how Tab Center users compared to non-Tab Center users.
+3. To segment users into categories that suggest actionable UI changes to Tab Center.
+
+## Data Collection Details
+
+Tab Center is a purely client-side experiment so we will only be collecting metrics from the client leveraging Test Pilot’s reporting functionality with the `testpilottest` type identifier.
+
+Tab Center will record data and submit it periodically (vs sending data continuously).  At launch, we will record and send data every 24 hours or on shutdown of the browser, whichever is first.
+
+An example payload (within the full Telemetry ping):
+
+```js
+{
+ "test": "tabcentertest1@mozilla.com",  // The em:id field from the add-on
+ "agent": "User Agent String",
+ "version": 1,  // Just in case we need to drastically change the format later
+ "payload": {
+    “tabs_created”: 1000,
+    “tabs_destroyed”: 1000,
+    “tabs_pinned”: 5,
+    “tabs_unpinned”: 4,
+    “tab_center_pinned”: 1,
+    “tab_center_unpinned”: 0,
+    “tab_center_expanded”: 9999,
+    “tab_center_teased”: 1234
+  }
+}
+```
+
+And the schema we will use for Redshift:
+```js
+local schema = {
+--   column name              field type    length  attributes   field name
+    {"timestamp",             "TIMESTAMP",  nil,    "SORTKEY",  "Timestamp"},
+    {"uuid",                  "VARCHAR",    36,     nil,        get_uuid},
+    {"service",               "VARCHAR",    255,    nil,        "test"},
+    {"agent",                 "VARCHAR",    45,     nil,        "agent"},
+
+    {"tabs_created",          "INTEGER",    nil,    nil,        "payload[tabs_created]"},
+    {"tabs_destroyed",        "INTEGER",    nil,    nil,        "payload[tabs_destroyed]"},
+    {"tabs_pinned",           "INTEGER",    nil,    nil,        "payload[tabs_pinned]"},
+    {"tabs_unpinned",         "INTEGER",    nil,    nil,        "payload[tabs_unpinned]"},
+    {"tab_center_pinned",     "INTEGER",    nil,    nil,        "payload[tab_center_pinned]"},
+    {"tab_center_unpinned",   "INTEGER",    nil,    nil,        "payload[tab_center_unpinned]"},
+    {"tab_center_expanded",   "INTEGER",    nil,    nil,        "payload[tab_center_expanded]"}
+    {"tab_center_teased",     "INTEGER",    nil,    nil,        "payload[tab_center_teased]"}
+}
+
+```
