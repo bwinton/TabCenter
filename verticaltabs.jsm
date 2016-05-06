@@ -245,10 +245,6 @@ VerticalTabs.prototype = {
           }
         });
 
-        let toolbar_context_menu = document.getElementById("toolbar-context-menu");
-        toolbar_context_menu.firstChild.collapsed = true;
-        toolbar_context_menu.firstChild.nextSibling.collapsed = true; // separator
-
         tabs.addEventListener("TabOpen", this, false);
         window.setTimeout(() => {
           if (mainWindow.getAttribute("tabspinned") === "true") {
@@ -278,9 +274,6 @@ VerticalTabs.prototype = {
             tabs.removeAttribute("width");
             tabs.removeEventListener("TabOpen", this, false);
             tabs.removeAttribute("vertical");
-
-            toolbar_context_menu.firstChild.collapsed = false;
-            toolbar_context_menu.firstChild.nextSibling.collapsed = false; // separator
 
             // Restore all individual tabs.
             for (let i = 0; i < tabs.childNodes.length; i++) {
