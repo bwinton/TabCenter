@@ -178,9 +178,11 @@ VerticalTabs.prototype = {
         contentbox.appendChild(bottom);
         let top = document.getElementById("navigator-toolbox");
 
-        // save the label of the first tab for later…
+        // save the label of the first tab, and the toolbox palette for later…
         let tabs = document.getElementById("tabbrowser-tabs");
         let label = tabs.firstChild.label;
+        let palette = top.palette;
+
         contentbox.insertBefore(top, contentbox.firstChild);
 
         // Create a box next to the app content. It will hold the tab
@@ -199,8 +201,9 @@ VerticalTabs.prototype = {
         tabs.mTabstrip.orient = "vertical";
         tabs.tabbox.orient = "horizontal"; // probably not necessary
 
-        // And restore the label here.
+        // And restore the label and palette here.
         tabs.firstChild.label = label;
+        top.palette = palette;
 
         // Move the tabs toolbar into the tab strip
         let toolbar = document.getElementById("TabsToolbar");
