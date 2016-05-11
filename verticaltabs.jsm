@@ -264,6 +264,7 @@ VerticalTabs.prototype = {
         });
 
         tabs.addEventListener("TabOpen", this, false);
+        tabs.addEventListener("TabSelect", this, false);
         tabs.addEventListener("TabClose", this, false);
         tabs.addEventListener("TabPinned", this, false);
         tabs.addEventListener("TabUnpinned", this, false);
@@ -294,6 +295,7 @@ VerticalTabs.prototype = {
             tabs.tabbox.orient = "vertical"; // probably not necessary
             tabs.removeAttribute("width");
             tabs.removeEventListener("TabOpen", this, false);
+            tabs.removeEventListener("TabSelect", this, false);
             tabs.removeEventListener("TabClose", this, false);
             tabs.removeEventListener("TabPinned", this, false);
             tabs.removeEventListener("TabUnpinned", this, false);
@@ -386,7 +388,15 @@ VerticalTabs.prototype = {
         case "popupshowing":
             this.onPopupShowing(aEvent);
             return;
+        case "TabSelect":
+            this.onTabSelect(aEvent);
+            return;
         }
+    },
+
+    onTabSelect: function(aEvent) {
+      let tab = aEvent.target;
+      tab.scrollIntoView();
     },
 
     onTabOpen: function(aEvent) {
