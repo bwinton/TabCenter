@@ -15,7 +15,9 @@
     ],
     "globals": {
         "Components": false,
-        "Services": false
+        "Services": false,
+        "Cc": false,
+        "Ci": false
     },
     "rules": {
       "mozilla/import-globals-from": 1,
@@ -25,7 +27,7 @@
       "comma-spacing": 2,
       "computed-property-spacing": [2, "never"],
       "default-case": 0,
-      "eqeqeq": 2,
+      "eqeqeq": [2, "smart"],
       "func-names": 0,
       "func-style": 0,
       "generator-star-spacing": [2, {"before": false, "after": false}],
@@ -53,7 +55,7 @@
       "no-var": 2,
       "prefer-const": 0,
       "prefer-reflect": 0,
-      "quotes": [2, "double", "avoid-escape"],
+      "quotes": [2, "single", "avoid-escape"],
       "semi": [2, "always"],
       "space-before-function-paren": [2, {"anonymous": "never", "named": "never"}],
       "space-infix-ops": 2,
