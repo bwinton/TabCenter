@@ -21,7 +21,6 @@
 
 .tabbrowser-arrowscrollbox {
   flex: 1 0;
-  height: calc(100vh - 42px);
 }
 
 #verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
@@ -53,13 +52,13 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  height: 100vh;
   left: 0;
   overflow-x: hidden;
   position: absolute;
   top: 0;
   transition: box-shadow 150ms ease-out 300ms, width 150ms ease-out 300ms;
   width: 45px;
+  height: 100%;
   z-index: 3;
 }
 
@@ -107,51 +106,47 @@
 #appcontent {
   border-top: 1px solid rgb(160,160,160);
   top: 0;
+  height: 100%;
   position: absolute;
 }
 
-#appcontent,
-#PopupAutoCompleteRichResult {
+#content {
+  height: 100%;
+}
+
+#appcontent {
   left: 45px;
 }
 
-#main-window[tabspinned="true"] #verticaltabs-box + #appcontent,
-#main-window[tabspinned="true"] #PopupAutoCompleteRichResult {
+#main-window[tabspinned="true"] #verticaltabs-box + #appcontent {
   left: 260px;
 }
 
-#main-window[inFullscreen][inDOMFullscreen] #appcontent,
-#main-window[inFullscreen][inDOMFullscreen] #PopupAutoCompleteRichResult {
-  left: 0 !important
+#main-window[inFullscreen][inDOMFullscreen] #appcontent {
+  left: 0 !important;
+  width: 100%;
 }
 
 #navigator-toolbox,
-.browserContainer,
-#PopupAutoCompleteRichResult {
+.browserContainer {
   width: calc(100vw - 45px);
 }
 
 #PopupAutoCompleteRichResult {
-  margin-left: -32px !important;
+  width: 100vw;
+  /*margin-left: -32px !important;*/
 }
 
 #main-window[tabspinned="true"] #verticaltabs-box + #appcontent #navigator-toolbox,
-#main-window[tabspinned="true"] #verticaltabs-box + #appcontent .browserContainer,
-#main-window[tabspinned="true"] #PopupAutoCompleteRichResult {
+#main-window[tabspinned="true"] #verticaltabs-box + #appcontent .browserContainer {
   width: calc(100vw - 260px);
 }
 
-#main-window[inFullscreen][inDOMFullscreen] .browserContainer
-#main-window[inFullscreen][inDOMFullscreen] #PopupAutoCompleteRichResult {
-  width: 100vw !important;
-}
-
-#content notificationbox {
-  height: calc(100vh - 40px);
+#main-window[inFullscreen][inDOMFullscreen] #content {
+  width: 100% !important;
 }
 
 #main-window[inFullscreen][inDOMFullscreen] .browserContainer {
-  height: calc(100vh + 4px);
   margin-top: -14px;
 }
 
@@ -403,6 +398,7 @@
   #verticaltabs-box {
     top: 1px;
     border-left: 1px solid rgb(160,160,160);
+    height: 100%
   }
   #TabsToolbar {
     flex: 0 0 44px !important;

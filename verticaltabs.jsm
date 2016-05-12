@@ -189,8 +189,6 @@ VerticalTabs.prototype = {
         let label = tabs.firstChild.label;
         let palette = top.palette;
 
-        contentbox.insertBefore(top, contentbox.firstChild);
-
         // Create a box next to the app content. It will hold the tab
         // bar and the tab toolbar.
         let browserbox = document.getElementById("browser");
@@ -319,7 +317,6 @@ VerticalTabs.prototype = {
             // Restore the tab strip.
             toolbar.insertBefore(tabs, new_tab_button);
             toolbox.insertBefore(toolbar, navbar);
-            browserPanel.insertBefore(toolbox, browserPanel.firstChild)
             browserPanel.insertBefore(bottom, document.getElementById("fullscreen-warning").nextSibling);
             this.window.TabsInTitlebar.updateAppearance(true);
         });
