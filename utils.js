@@ -62,7 +62,7 @@ function unload(callback, container) {
   }
   // Calling with no arguments runs all the unloader callbacks
   if (callback == null) {
-    unloaders.slice().forEach(function(unloader) { unloader(); });
+    unloaders.slice().forEach(function (unloader) { unloader(); });
     unloaders.length = 0;
     return;
   }
@@ -74,7 +74,7 @@ function unload(callback, container) {
 
     // Wrap the callback to additionally remove the unload listener
     let origCallback = callback;
-    callback = function() {
+    callback = function () {
       container.removeEventListener('unload', removeUnloader, false);
       origCallback();
     };
@@ -153,7 +153,7 @@ function watchWindows(callback) {
   Services.ww.registerNotification(windowWatcher);
 
   // Make sure to stop watching for windows if we're unloading
-  unload(function() { Services.ww.unregisterNotification(windowWatcher); });
+  unload(function () { Services.ww.unregisterNotification(windowWatcher); });
 }
 
 const PAYLOAD_KEYS = [

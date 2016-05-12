@@ -49,7 +49,7 @@ const EXPORTED_SYMBOLS = ['VTTabDataStore', 'VTTabIDs'];
 Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
 
 let VTTabDataStore = {
-  getTabValue: function(aTab, aKey) {
+  getTabValue: function (aTab, aKey) {
     let value = null;
     try {
       value = this.sessionStore.getTabValue(aTab, aKey);
@@ -59,7 +59,7 @@ let VTTabDataStore = {
     return value;
   },
 
-  setTabValue: function(aTab, aKey, aValue) {
+  setTabValue: function (aTab, aKey, aValue) {
     if (!aValue) {
       this.deleteTabValue(aTab, aKey);
     }
@@ -73,7 +73,7 @@ let VTTabDataStore = {
     }
   },
 
-  deleteTabValue: function(aTab, aKey) {
+  deleteTabValue: function (aTab, aKey) {
     aTab.removeAttribute(aKey);
     try {
       this.checkCachedSessionDataExpiration(aTab);
@@ -85,7 +85,7 @@ let VTTabDataStore = {
   },
 
   // workaround for http://piro.sakura.ne.jp/latest/blosxom/mozilla/extension/treestyletab/2009-09-29_debug.htm
-  checkCachedSessionDataExpiration: function(aTab) {
+  checkCachedSessionDataExpiration: function (aTab) {
     let data = aTab.linkedBrowser.__SS_data;
     if (data &&
       data._tabStillLoading &&
@@ -110,7 +110,7 @@ function VTTabIDs(tabs) {
 }
 VTTabIDs.prototype = {
 
-  init: function() {
+  init: function () {
     const tabs = this.tabs;
     tabs.VTTabIDs = this;
     tabs.addEventListener('TabOpen', this, true);
@@ -129,18 +129,18 @@ VTTabIDs.prototype = {
 
   kId: 'verticaltabs-id',
 
-  id: function(aTab) {
+  id: function (aTab) {
     return aTab.getAttribute(this.kId);
   },
 
-  get: function(aID) {
+  get: function (aID) {
     let elements = this.tabs.getElementsByAttribute(this.kId, aID);
     return elements.length ? elements[0] : undefined;
   },
 
   /*** Event handlers ***/
 
-  handleEvent: function(aEvent) {
+  handleEvent: function (aEvent) {
     switch (aEvent.type) {
     case 'TabOpen':
       this.initTab(aEvent.originalTarget);
@@ -151,11 +151,11 @@ VTTabIDs.prototype = {
     }
   },
 
-  makeNewId: function() {
+  makeNewId: function () {
     return this.uuidGen.generateUUID().toString();
   },
 
-  initTab: function(aTab) {
+  initTab: function (aTab) {
     if (aTab.hasAttribute(this.kId)) {
       return;
     }
@@ -164,7 +164,7 @@ VTTabIDs.prototype = {
     VTTabDataStore.setTabValue(aTab, this.kId, id);
   },
 
-  restoreTab: function(aTab) {
+  restoreTab: function (aTab) {
     // Restore the original ID
     let newId = VTTabDataStore.getTabValue(aTab, this.kId);
     if (newId) {

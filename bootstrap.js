@@ -94,14 +94,14 @@ function startup(data, reason) {
   let resource = Services.io.getProtocolHandler('resource')
                          .QueryInterface(Ci.nsIResProtocolHandler);
   resource.setSubstitution(RESOURCE_HOST, data.resourceURI);
-  unload(function() {
+  unload(function () {
     resource.setSubstitution(RESOURCE_HOST, null);
   });
 
   // Initialize VerticalTabs object for each window.
   Cu.import('resource://tabcenter/verticaltabs.jsm');
   unload(vtInit());
-  watchWindows(function(window) {
+  watchWindows(function (window) {
     let vt = new VerticalTabs(window, {newPayload, addPingStats});
     unload(vt.unload.bind(vt), window);
   }, 'navigator:browser');

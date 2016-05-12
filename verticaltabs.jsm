@@ -54,12 +54,12 @@ function vtInit() {
   let ios = Components.classes['@mozilla.org/network/io-service;1']
               .getService(Components.interfaces.nsIIOService);
 
-  let installStylesheet = function(uri) {
+  let installStylesheet = function (uri) {
     uri = ios.newURI(uri, null, null);
     sss.loadAndRegisterSheet(uri, sss.USER_SHEET);
   };
 
-  let removeStylesheet = function(uri) {
+  let removeStylesheet = function (uri) {
     uri = ios.newURI(uri, null, null);
     sss.unregisterSheet(uri, sss.USER_SHEET);
   };
@@ -101,9 +101,9 @@ function VerticalTabs(window, {newPayload, addPingStats}) {
 }
 VerticalTabs.prototype = {
 
-  init: function() {
+  init: function () {
     this.window.VerticalTabs = this;
-    this.unloaders.push(function() {
+    this.unloaders.push(function () {
       delete this.window.VerticalTabs;
     });
     this.window.onunload = () => {
@@ -155,13 +155,13 @@ VerticalTabs.prototype = {
       this.tabObserver.observe(results, {attributes: true});
     }
 
-    this.unloaders.push(function() {
+    this.unloaders.push(function () {
       this.tabIDs.unload();
       this.tabObserver.disconnect();
     });
   },
 
-  createElement: function(label, attrs) {
+  createElement: function (label, attrs) {
     let rv = this.document.createElementNS(NS_XUL, label);
     if (attrs) {
       for (let attr in attrs) {
@@ -171,7 +171,7 @@ VerticalTabs.prototype = {
     return rv;
   },
 
-  rearrangeXUL: function() {
+  rearrangeXUL: function () {
     const window = this.window;
     const document = this.document;
 
@@ -278,7 +278,7 @@ VerticalTabs.prototype = {
       }
     }, 150);
 
-    this.unloaders.push(function() {
+    this.unloaders.push(function () {
       // Move the tabs toolbar back to where it was
       toolbar._toolbox = null; // reset value set by constructor
       toolbar.removeAttribute('toolboxid');
@@ -326,7 +326,7 @@ VerticalTabs.prototype = {
     });
   },
 
-  initContextMenu: function() {
+  initContextMenu: function () {
     const document = this.document;
     const tabs = document.getElementById('tabbrowser-tabs');
 
@@ -343,7 +343,7 @@ VerticalTabs.prototype = {
 
     tabs.contextMenu.addEventListener('popupshowing', this, false);
 
-    this.unloaders.push(function() {
+    this.unloaders.push(function () {
       if (closeMultiple) {
         tabs.contextMenu.removeChild(closeMultiple);
       }
@@ -351,7 +351,7 @@ VerticalTabs.prototype = {
     });
   },
 
-  initTab: function(aTab) {
+  initTab: function (aTab) {
     if (this.document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
       aTab.removeAttribute('crop');
     } else {
@@ -359,15 +359,15 @@ VerticalTabs.prototype = {
     }
   },
 
-  unload: function() {
-    this.unloaders.forEach(function(func) {
+  unload: function () {
+    this.unloaders.forEach(function (func) {
       func.call(this);
     }, this);
   },
 
   /*** Event handlers ***/
 
-  handleEvent: function(aEvent) {
+  handleEvent: function (aEvent) {
     switch (aEvent.type) {
     case 'DOMContentLoaded':
       this.init();
@@ -396,30 +396,30 @@ VerticalTabs.prototype = {
     }
   },
 
-  onTabSelect: function(aEvent) {
+  onTabSelect: function (aEvent) {
     let tab = aEvent.target;
     tab.scrollIntoView();
   },
 
-  onTabOpen: function(aEvent) {
+  onTabOpen: function (aEvent) {
     let tab = aEvent.target;
     this.stats.tabs_created++;
     this.initTab(tab);
   },
 
-  onTabClose: function(aEvent) {
+  onTabClose: function (aEvent) {
     this.stats.tabs_destroyed++;
   },
 
-  onTabPinned: function(aEvent) {
+  onTabPinned: function (aEvent) {
     this.stats.tabs_pinned++;
   },
 
-  onTabUnpinned: function(aEvent) {
+  onTabUnpinned: function (aEvent) {
     this.stats.tabs_unpinned++;
   },
 
-  onPopupShowing: function(aEvent) {
+  onPopupShowing: function (aEvent) {
     if (!this.multiSelect) {
       return;
     }
@@ -433,7 +433,7 @@ VerticalTabs.prototype = {
     }
   },
 
-  sendStats: function(payload) {
+  sendStats: function (payload) {
     this.addPingStats(this.stats);
     this.stats = this.newPayload();
   }
