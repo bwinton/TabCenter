@@ -17,7 +17,11 @@
         "Components": false,
         "Services": false,
         "Cc": false,
-        "Ci": false
+        "Ci": false,
+        "VTTabDataStore": false,
+        "VerticalTabs": false,
+        "TAB_DROP_TYPE": false,
+        "TabsInTitlebar": false
     },
     "rules": {
       "mozilla/import-globals-from": 1,
@@ -49,7 +53,7 @@
       "no-shadow": 0,
       "no-trailing-spaces": [2, {"skipBlankLines": false}],
       "no-underscore-dangle": 0,
-      "no-unused-vars": [2, {"vars": "all", "args": "none"}],
+      "no-unused-vars": [2, {"vars": "local", "args": "none"}],
       "no-warning-comments": 0,
       "object-curly-spacing": [2, "never"],
       "no-var": 2,
