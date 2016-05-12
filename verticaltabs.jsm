@@ -35,12 +35,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+/*global VTTabIDs:false*/
+/* exported EXPORTED_SYMBOLS, TAB_DROP_TYPE, vtInit*/
+
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://tabcenter/tabdatastore.jsm");
 Components.utils.import("resource://tabcenter/multiselect.jsm");
 Components.utils.import("resource://tabcenter/groups.jsm");
-
-let console = (Components.utils.import("resource://gre/modules/devtools/Console.jsm", {})).console;
 
 const EXPORTED_SYMBOLS = ["VerticalTabs", "vtInit"];
 
@@ -107,7 +108,7 @@ VerticalTabs.prototype = {
         });
         this.window.onunload = () => {
           this.sendStats();
-        }
+        };
 
         this.rearrangeXUL();
         this.initContextMenu();
@@ -160,10 +161,10 @@ VerticalTabs.prototype = {
         });
     },
 
-    createElement: function (label, attrs) {
+    createElement: function(label, attrs) {
       let rv = this.document.createElementNS(NS_XUL, label);
       if (attrs) {
-        for (attr in attrs) {
+        for ( let attr in attrs) {
           rv.setAttribute(attr, attrs[attr]);
         }
       }
@@ -246,7 +247,7 @@ VerticalTabs.prototype = {
             }, 300);
           }
           window.setTimeout(() => {
-            for (let i=0; i < tabs.childNodes.length; i++) {
+            for (let i = 0; i < tabs.childNodes.length; i++) {
               tabs.childNodes[i].setAttribute("crop", "end");
             }
           }, 300);
@@ -272,12 +273,12 @@ VerticalTabs.prototype = {
           if (mainWindow.getAttribute("tabspinned") === "true") {
             tabs.expanded = true;
           }
-          for (let i=0; i < tabs.childNodes.length; i++) {
+          for (let i = 0; i < tabs.childNodes.length; i++) {
             this.initTab(tabs.childNodes[i]);
           }
         }, 150);
 
-        this.unloaders.push(function () {
+        this.unloaders.push(function() {
             // Move the tabs toolbar back to where it was
             toolbar._toolbox = null; // reset value set by constructor
             toolbar.removeAttribute("toolboxid");
@@ -319,7 +320,7 @@ VerticalTabs.prototype = {
             // Restore the tab strip.
             toolbar.insertBefore(tabs, new_tab_button);
             toolbox.insertBefore(toolbar, navbar);
-            browserPanel.insertBefore(toolbox, browserPanel.firstChild)
+            browserPanel.insertBefore(toolbox, browserPanel.firstChild);
             browserPanel.insertBefore(bottom, document.getElementById("fullscreen-warning").nextSibling);
             this.window.TabsInTitlebar.updateAppearance(true);
         });
@@ -342,7 +343,7 @@ VerticalTabs.prototype = {
 
         tabs.contextMenu.addEventListener("popupshowing", this, false);
 
-        this.unloaders.push(function () {
+        this.unloaders.push(function() {
             if (closeMultiple)
                 tabs.contextMenu.removeChild(closeMultiple);
             tabs.contextMenu.removeEventListener("popupshowing", this, false);
