@@ -34,6 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+ /* global Iterator:false, unload:false, vtInit:false, watchWindows:false, VerticalTabs:false, newPayload:false, sendPing:false, addPingStats:false, APP_SHUTDOWN:false */
+
 const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 
 Cu.import("resource://gre/modules/Services.jsm");
@@ -53,7 +55,7 @@ function include(src) {
 }
 
 function setDefaultPrefs() {
-  let branch = Services.prefs.getDefaultBranch("");
+  // let branch = Services.prefs.getDefaultBranch("");
   for (let [name, value] in Iterator(DEFAULT_PREFS)) {
     switch (typeof value) {
     case "boolean":
@@ -71,7 +73,7 @@ function setDefaultPrefs() {
 
 function removeDefaultPrefs() {
   let branch = Services.prefs.getDefaultBranch("");
-  for (let [name, value] in Iterator(DEFAULT_PREFS)) {
+  for (let [name] in Iterator(DEFAULT_PREFS)) {
     branch.clearUserPref(name);
   }
 }
@@ -106,7 +108,7 @@ function startup(data, reason) {
     sendPing();
   }}, 24*60*60*1000, Ci.nsITimer.TYPE_REPEATING_SLACK);  // Every 24h.
   // }}, 20*1000, Ci.nsITimer.TYPE_REPEATING_SLACK);  // Every 20s for debugging.
-};
+}
 
 function shutdown(data, reason) {
   sendPing();

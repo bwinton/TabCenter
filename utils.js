@@ -35,6 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+/* global Cc:false, Ci:false */
 "use strict";
 
 /**
@@ -60,7 +61,7 @@ function unload(callback, container) {
 
   // Calling with no arguments runs all the unloader callbacks
   if (callback == null) {
-    unloaders.slice().forEach(function(unloader) unloader());
+    unloaders.slice().forEach(function(unloader) { unloader() });
     unloaders.length = 0;
     return;
   }
@@ -84,7 +85,7 @@ function unload(callback, container) {
       callback();
     }
     catch(ex) {
-      console.error(ex);
+      // console.error(ex);
     }
   }
   unloaders.push(unloader);
@@ -114,7 +115,7 @@ function watchWindows(callback) {
         callback(window);
     }
     catch(ex) {
-      console.error(ex);
+      // console.error(ex);
     }
   }
 
@@ -147,7 +148,7 @@ function watchWindows(callback) {
   Services.ww.registerNotification(windowWatcher);
 
   // Make sure to stop watching for windows if we're unloading
-  unload(function() Services.ww.unregisterNotification(windowWatcher));
+  unload(function() { Services.ww.unregisterNotification(windowWatcher) });
 }
 
 const PAYLOAD_KEYS = [
