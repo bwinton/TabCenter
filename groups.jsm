@@ -49,7 +49,7 @@
  *   - But we have to make sure that groups don't behave like tabs at
  *     all.
  */
-
+/*eslint-disable */
 /*exported EXPORTED_SYMBOLS*/
 const EXPORTED_SYMBOLS = ['VTGroups'];
 Components.utils.import('resource://tabcenter/tabdatastore.jsm');

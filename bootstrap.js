@@ -57,7 +57,6 @@ function include(src) {
 }
 
 function setDefaultPrefs() {
-  // let branch = Services.prefs.getDefaultBranch('');
   for (let [name, value] in Iterator(DEFAULT_PREFS)) {
     switch (typeof value) {
     case 'boolean':

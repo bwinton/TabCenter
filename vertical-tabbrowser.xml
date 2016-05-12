@@ -16,7 +16,7 @@
 
   <binding id="tabbrowser-arrowscrollbox" extends="chrome://browser/content/tabbrowser.xml#tabbrowser-arrowscrollbox">
     <implementation>
-      <property name="_verticalTabs" onget="return this.orient  'vertical';"/>
+      <property name="_verticalTabs" onget="return this.orient == 'vertical';"/>
 
       <method name="_canScrollToElement">
         <parameter name="tab"/>
@@ -241,45 +241,45 @@
         <body><![CDATA[
           let width, height, relatedTarget;
           switch (aEvent.type) {
-            case 'load':
-              this.updateVisibility();
+          case 'load':
+            this.updateVisibility();
+            break;
+          case 'resize':
+            if (aEvent.target !== window) {
               break;
-            case 'resize':
-              if (aEvent.target !== window) {
-                break;
-              }
+            }
 
-              TabsInTitlebar.updateAppearance();
+            TabsInTitlebar.updateAppearance();
 
-              width = this.mTabstrip.boxObject.width;
-              height = this.mTabstrip.boxObject.height;
-              if ((!this._verticalTabs && width !== this.mTabstripWidth) ||
-                  (this._verticalTabs && height !== this.mTabstripHeight))
-              {
-                this.adjustTabstrip();
-                this._fillTrailingGap();
-                this._handleTabSelect();
-                this.mTabstripWidth = width;
-                this.mTabstripHeight = height;
-              }
+            width = this.mTabstrip.boxObject.width;
+            height = this.mTabstrip.boxObject.height;
+            if ((!this._verticalTabs && width !== this.mTabstripWidth) ||
+                (this._verticalTabs && height !== this.mTabstripHeight))
+            {
+              this.adjustTabstrip();
+              this._fillTrailingGap();
+              this._handleTabSelect();
+              this.mTabstripWidth = width;
+              this.mTabstripHeight = height;
+            }
 
-              this.tabbrowser.updateWindowResizers();
-              break;
-            case 'mouseout':
-              // If the 'related target' (the node to which the pointer went) is not
-              // a child of the current document, the mouse just left the window.
-              relatedTarget = aEvent.relatedTarget;
-              if (!relatedTarget || relatedTarget.ownerDocument !== document) {
-                if (document.getElementById('tabContextMenu').state !== 'open') {
-                  this._unlockTabSizing();
-                }
-              }
-              break;
-            case 'mousemove':
+            this.tabbrowser.updateWindowResizers();
+            break;
+          case 'mouseout':
+            // If the 'related target' (the node to which the pointer went) is not
+            // a child of the current document, the mouse just left the window.
+            relatedTarget = aEvent.relatedTarget;
+            if (!relatedTarget || relatedTarget.ownerDocument !== document) {
               if (document.getElementById('tabContextMenu').state !== 'open') {
                 this._unlockTabSizing();
               }
-              break;
+            }
+            break;
+          case 'mousemove':
+            if (document.getElementById('tabContextMenu').state !== 'open') {
+              this._unlockTabSizing();
+            }
+            break;
           }
         ]]></body>
       </method>
@@ -343,12 +343,12 @@
         if (this.getAttribute('overflow') === 'true') {
           let targetAnonid = event.originalTarget.getAttribute('anonid');
           switch (targetAnonid) {
-            case 'scrollbutton-up':
-              pixelsToScroll = tabStrip.scrollIncrement * -1;
-              break;
-            case 'scrollbutton-down':
-              pixelsToScroll = tabStrip.scrollIncrement;
-              break;
+          case 'scrollbutton-up':
+            pixelsToScroll = tabStrip.scrollIncrement * -1;
+            break;
+          case 'scrollbutton-down':
+            pixelsToScroll = tabStrip.scrollIncrement;
+            break;
           }
           if (pixelsToScroll) {
             tabStrip.scrollByPixels((ltr ? 1 : -1) * pixelsToScroll);
@@ -516,8 +516,8 @@
           window.focus();
         } else {
           this.tabbrowser.replaceTabWithWindow(draggedTab, {screenX: left,
-                                                             screenY: top,
-                                                             });
+                                                            screenY: top,
+                                                            });
         }
         event.stopPropagation();
       ]]></handler>

@@ -4,12 +4,6 @@
         "es6": true
     },
     "extends": "eslint:recommended",
-    "installedESLint": true,
-    "parserOptions": {
-        "ecmaFeatures": {
-            "experimentalObjectRestSpread": true
-        }
-    },
     "plugins": [
         "mozilla"
     ],
@@ -18,8 +12,6 @@
         "Services": false,
         "Cc": false,
         "Ci": false,
-        "VTTabDataStore": false,
-        "VerticalTabs": false,
         "TAB_DROP_TYPE": false,
         "TabsInTitlebar": false
     },
@@ -30,6 +22,7 @@
       "comma-dangle": 0,
       "comma-spacing": 2,
       "computed-property-spacing": [2, "never"],
+      "curly": 2,
       "default-case": 0,
       "eqeqeq": [2, "smart"],
       "func-names": 0,
@@ -39,6 +32,7 @@
       "id-blacklist": 0,
       "id-length": 0,
       "id-match": 0,
+      "indent": [2, 2],
       "init-declarations": 0,
       "max-len": 0,
       "max-params": 0,
@@ -49,6 +43,7 @@
       "no-inline-comments": 0,
       "no-invalid-this": 0,
       "no-magic-numbers": 0,
+      "no-mixed-spaces-and-tabs": [2, "smart-tabs"],
       "no-negated-condition": 0,
       "no-shadow": 0,
       "no-trailing-spaces": [2, {"skipBlankLines": false}],
@@ -56,7 +51,6 @@
       "no-unused-vars": [2, {"vars": "local", "args": "none"}],
       "no-warning-comments": 0,
       "object-curly-spacing": [2, "never"],
-      "curly": 2,
       "no-var": 2,
       "prefer-const": 0,
       "prefer-reflect": 0,

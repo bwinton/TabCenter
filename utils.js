@@ -57,7 +57,7 @@
 function unload(callback, container) {
   // Initialize the array of unloaders on the first usage
   let unloaders = unload.unloaders;
-  if (unloaders == null){
+  if (unloaders == null) {
     unloaders = unload.unloaders = [];
   }
   // Calling with no arguments runs all the unloader callbacks
@@ -139,7 +139,7 @@ function watchWindows(callback) {
     if (window.document.readyState === 'complete'){
       watcher(window);
     // Wait for the window to load before continuing
-    }else {
+    } else {
       runOnLoad(window);
     }
   }
@@ -211,8 +211,6 @@ function sendPing() {
   });
   payload = newPayload();
   // Send metrics to the main Test Pilot add-on.
-  // let console = (Components.utils.import('resource://gre/modules/devtools/Console.jsm', {})).console;
-  // console.log('Sending ping', ping);
   observerService.notifyObservers(subject, 'testpilot::send-metric', ping);
   // Clear out the metrics for next time…
 }
