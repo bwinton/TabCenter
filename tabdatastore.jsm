@@ -1,4 +1,4 @@
-/* ***** BEGIN LICENSE BLOCK ***** 
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -35,17 +35,20 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ******/
- 
+
 /**
  * Persistently store tab attributes in the session store service.
  *
  * Heavily inspired by Tree Style Tab's TreeStyleTabUtils.
  */
 
+/* exported EXPORTED_SYMBOLS */
+/* global XPCOMUtils:false*/
+
 const EXPORTED_SYMBOLS = ["VTTabDataStore", "VTTabIDs"];
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-var VTTabDataStore = {
+let VTTabDataStore = {
 
     getTabValue: function(aTab, aKey) {
         let value = null;
@@ -56,7 +59,7 @@ var VTTabDataStore = {
         }
         return value;
     },
- 
+
     setTabValue: function(aTab, aKey, aValue) {
         if (!aValue) {
             this.deleteTabValue(aTab, aKey);
@@ -70,7 +73,7 @@ var VTTabDataStore = {
             // Ignore
         }
     },
- 
+
     deleteTabValue: function(aTab, aKey) {
         aTab.removeAttribute(aKey);
         try {
@@ -87,7 +90,7 @@ var VTTabDataStore = {
         let data = aTab.linkedBrowser.__SS_data;
         if (data &&
             data._tabStillLoading &&
-            aTab.getAttribute("busy") != "true")
+            aTab.getAttribute("busy") !== "true")
             data._tabStillLoading = false;
     }
 };
@@ -114,7 +117,7 @@ VTTabIDs.prototype = {
         tabs.VTTabIDs = this;
         tabs.addEventListener("TabOpen", this, true);
         tabs.addEventListener("SSTabRestoring", this, true);
-        for (let i=0; i < tabs.childNodes.length; i++) {
+        for (let i = 0; i < tabs.childNodes.length; i++) {
             this.initTab(tabs.childNodes[i]);
         }
     },
