@@ -57,9 +57,9 @@
 function unload(callback, container) {
   // Initialize the array of unloaders on the first usage
   let unloaders = unload.unloaders;
-  if (unloaders == null)
+  if (unloaders == null){
     unloaders = unload.unloaders = [];
-
+  }
   // Calling with no arguments runs all the unloader callbacks
   if (callback == null) {
     unloaders.slice().forEach(function(unloader) { unloader(); });
@@ -94,8 +94,9 @@ function unload(callback, container) {
   // Provide a way to remove the unloader
   function removeUnloader() {
     let index = unloaders.indexOf(unloader);
-    if (index !== -1)
+    if (index !== -1) {
       unloaders.splice(index, 1);
+    }
   }
   return removeUnloader;
 }
@@ -112,8 +113,9 @@ function watchWindows(callback) {
     try {
       // Now that the window has loaded, only handle browser windows
       let {documentElement} = window.document;
-      if (documentElement.getAttribute('windowtype') === 'navigator:browser')
+      if (documentElement.getAttribute('windowtype') === 'navigator:browser') {
         callback(window);
+      }
     }
     catch(ex) {
       // console.error(ex);
@@ -134,17 +136,19 @@ function watchWindows(callback) {
   while (windows.hasMoreElements()) {
     // Only run the watcher immediately if the window is completely loaded
     let window = windows.getNext();
-    if (window.document.readyState === 'complete')
+    if (window.document.readyState === 'complete'){
       watcher(window);
     // Wait for the window to load before continuing
-    else
+    }else {
       runOnLoad(window);
+    }
   }
 
   // Watch for new browser windows opening then wait for it to load
   function windowWatcher(subject, topic) {
-    if (topic === 'domwindowopened')
+    if (topic === 'domwindowopened') {
       runOnLoad(subject);
+    }
   }
   Services.ww.registerNotification(windowWatcher);
 
