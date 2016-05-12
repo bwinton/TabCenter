@@ -20,6 +20,17 @@
     "url": "git+https://github.com/bwinton/VerticalTabs.git"
   },
   "author": "Mozilla",
+  "contributors": [
+    {"name": "Blake Winton"},
+    {"name": "Vlad Vukicevic"},
+    {"name": "Darrin Henein"},
+    {"name": "Philipp von Weitershausen"},
+    {"name": "SHIMODA Hiroshi"},
+    {"name": "bb10"},
+    {"name": "Frank Yan"},
+    {"name": "Rob Campbel"},
+    {"name": "Erica Wright"}
+  ],
   "license": "MPL-2.0",
   "bugs": {
     "url": "https://github.com/bwinton/VerticalTabs/issues"
