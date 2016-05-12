@@ -36,14 +36,16 @@
 
  /* global Iterator:false, unload:false, vtInit:false, watchWindows:false, VerticalTabs:false, newPayload:false, sendPing:false, addPingStats:false, APP_SHUTDOWN:false */
 
+ /*exported install, startup, shutdown, uninstall*/
+
 const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 
-Cu.import("resource://gre/modules/Services.jsm");
+Cu.import('resource://gre/modules/Services.jsm');
 
-const RESOURCE_HOST = "tabcenter";
+const RESOURCE_HOST = 'tabcenter';
 const DEFAULT_PREFS = {
-  "browser.tabs.animate": false,
-  "browser.tabs.drawInTitlebar": false
+  'browser.tabs.animate': false,
+  'browser.tabs.drawInTitlebar': false
 };
 
 /**
@@ -55,16 +57,16 @@ function include(src) {
 }
 
 function setDefaultPrefs() {
-  // let branch = Services.prefs.getDefaultBranch("");
+  // let branch = Services.prefs.getDefaultBranch('');
   for (let [name, value] in Iterator(DEFAULT_PREFS)) {
     switch (typeof value) {
-    case "boolean":
+    case 'boolean':
       Services.prefs.setBoolPref(name, value);
       break;
-    case "number":
+    case 'number':
       Services.prefs.setIntPref(name, value);
       break;
-    case "string":
+    case 'string':
       Services.prefs.setCharPref(name, value);
       break;
     }
@@ -72,7 +74,7 @@ function setDefaultPrefs() {
 }
 
 function removeDefaultPrefs() {
-  let branch = Services.prefs.getDefaultBranch("");
+  let branch = Services.prefs.getDefaultBranch('');
   for (let [name] in Iterator(DEFAULT_PREFS)) {
     branch.clearUserPref(name);
   }
@@ -81,38 +83,38 @@ function removeDefaultPrefs() {
 function install() {
 }
 
-var timer = Cc["@mozilla.org/timer;1"].createInstance(Ci.nsITimer);
+let timer = Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer);
 
 function startup(data, reason) {
   // Load helpers from utils.js.
-  include(data.resourceURI.spec + "utils.js");
+  include(data.resourceURI.spec + 'utils.js');
 
   setDefaultPrefs();
 
   // Register the resource:// alias.
-  let resource = Services.io.getProtocolHandler("resource")
+  let resource = Services.io.getProtocolHandler('resource')
                          .QueryInterface(Ci.nsIResProtocolHandler);
   resource.setSubstitution(RESOURCE_HOST, data.resourceURI);
-  unload(function () {
+  unload(function() {
     resource.setSubstitution(RESOURCE_HOST, null);
   });
 
   // Initialize VerticalTabs object for each window.
-  Cu.import("resource://tabcenter/verticaltabs.jsm");
+  Cu.import('resource://tabcenter/verticaltabs.jsm');
   unload(vtInit());
   watchWindows(function(window) {
     let vt = new VerticalTabs(window, {newPayload, addPingStats});
     unload(vt.unload.bind(vt), window);
-  }, "navigator:browser");
+  }, 'navigator:browser');
   timer.initWithCallback({notify: () => {
     sendPing();
-  }}, 24*60*60*1000, Ci.nsITimer.TYPE_REPEATING_SLACK);  // Every 24h.
+  }}, 24 * 60 * 60 * 1000, Ci.nsITimer.TYPE_REPEATING_SLACK);  // Every 24h.
   // }}, 20*1000, Ci.nsITimer.TYPE_REPEATING_SLACK);  // Every 20s for debugging.
 }
 
 function shutdown(data, reason) {
   sendPing();
-  if (reason == APP_SHUTDOWN) {
+  if (reason === APP_SHUTDOWN) {
     return;
   }
   removeDefaultPrefs();

@@ -45,8 +45,8 @@
 /* exported EXPORTED_SYMBOLS */
 /* global XPCOMUtils:false*/
 
-const EXPORTED_SYMBOLS = ["VTTabDataStore", "VTTabIDs"];
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+const EXPORTED_SYMBOLS = ['VTTabDataStore', 'VTTabIDs'];
+Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
 
 let VTTabDataStore = {
 
@@ -78,7 +78,7 @@ let VTTabDataStore = {
         aTab.removeAttribute(aKey);
         try {
             this.checkCachedSessionDataExpiration(aTab);
-            this.sessionStore.setTabValue(aTab, aKey, "");
+            this.sessionStore.setTabValue(aTab, aKey, '');
             this.sessionStore.deleteTabValue(aTab, aKey);
         } catch(ex) {
             // Ignore
@@ -90,13 +90,13 @@ let VTTabDataStore = {
         let data = aTab.linkedBrowser.__SS_data;
         if (data &&
             data._tabStillLoading &&
-            aTab.getAttribute("busy") !== "true")
+            aTab.getAttribute('busy') !== 'true')
             data._tabStillLoading = false;
     }
 };
-XPCOMUtils.defineLazyServiceGetter(VTTabDataStore, "sessionStore",
-                                   "@mozilla.org/browser/sessionstore;1",
-                                   "nsISessionStore");
+XPCOMUtils.defineLazyServiceGetter(VTTabDataStore, 'sessionStore',
+                                   '@mozilla.org/browser/sessionstore;1',
+                                   'nsISessionStore');
 
 
 /*
@@ -115,8 +115,8 @@ VTTabIDs.prototype = {
     init: function() {
         const tabs = this.tabs;
         tabs.VTTabIDs = this;
-        tabs.addEventListener("TabOpen", this, true);
-        tabs.addEventListener("SSTabRestoring", this, true);
+        tabs.addEventListener('TabOpen', this, true);
+        tabs.addEventListener('SSTabRestoring', this, true);
         for (let i = 0; i < tabs.childNodes.length; i++) {
             this.initTab(tabs.childNodes[i]);
         }
@@ -125,11 +125,11 @@ VTTabIDs.prototype = {
     unload: function unload() {
         const tabs = this.tabs;
         delete tabs.VTTabIDs;
-        tabs.removeEventListener("TabOpen", this, true);
-        tabs.removeEventListener("SSTabRestoring", this, true);
+        tabs.removeEventListener('TabOpen', this, true);
+        tabs.removeEventListener('SSTabRestoring', this, true);
     },
 
-    kId: "verticaltabs-id",
+    kId: 'verticaltabs-id',
 
     id: function(aTab) {
         return aTab.getAttribute(this.kId);
@@ -144,10 +144,10 @@ VTTabIDs.prototype = {
 
     handleEvent: function(aEvent) {
         switch (aEvent.type) {
-        case "TabOpen":
+        case 'TabOpen':
             this.initTab(aEvent.originalTarget);
             return;
-        case "SSTabRestoring":
+        case 'SSTabRestoring':
             this.restoreTab(aEvent.originalTarget);
             return;
         }
@@ -175,6 +175,6 @@ VTTabIDs.prototype = {
     }
 
 };
-XPCOMUtils.defineLazyServiceGetter(VTTabIDs.prototype, "uuidGen",
-                                   "@mozilla.org/uuid-generator;1",
-                                   "nsIUUIDGenerator");
+XPCOMUtils.defineLazyServiceGetter(VTTabIDs.prototype, 'uuidGen',
+                                   '@mozilla.org/uuid-generator;1',
+                                   'nsIUUIDGenerator');
