@@ -60,7 +60,7 @@
         "margin-right",
         "margin-bottom",
         "margin-left"
-      ]}], { "unspecified": "bottom" }],
+      ]}], { "unspecified": "bottomAlphabetical" }],
     "declaration-block-semicolon-newline-after": "always",
     "declaration-block-semicolon-space-before": "never",
     "declaration-block-single-line-max-declarations": 1,
@@ -115,6 +115,7 @@
     "selector-type-case": "lower",
     "shorthand-property-no-redundant-values": true,
     "string-no-newline": true,
+    "string-quotes": "double",
     "unit-case": "lower",
     "unit-no-unknown": true,
     "value-list-comma-newline-after": "always-multi-line",

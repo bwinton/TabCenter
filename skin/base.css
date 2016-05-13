@@ -39,14 +39,14 @@
 
 /* Ensure the twisty image doesn't stretch. */
 .verticaltabs-twisty-container {
-  -moz-box-pack: start;
   -moz-box-align: center;
+  -moz-box-pack: start;
 }
 
 /* Collapse/expand animation */
 .tabbrowser-tab[fadein]:not([pinned]) {
-  -moz-transition-property: visibility, height, min-height, max-height, padding-left;
   -moz-transition-duration: 0.1s;
+  -moz-transition-property: visibility, height, min-height, max-height, padding-left;
   -moz-transition-timing-function: ease-out;
 }
 
@@ -83,7 +83,7 @@
 /* XXX if I was smarter I'd find a way to make a swoop on the right side of the bar, under the window buttons */
 /* Maybe not - this conveniently leaves a hit target for dragging. */
 /*#nav-bar {
-margin-right: 100px;
+  margin-right: 100px;
 }*/
 
 /* hide private browsing indicator in the vertical tab box */
