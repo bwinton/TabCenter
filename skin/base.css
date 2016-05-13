@@ -2,77 +2,79 @@
 
 /* Style the scrollbox for vertical arrangements. */
 .tabbrowser-arrowscrollbox > scrollbox {
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
 }
 
 /* Since we get an actual scrollbar in this vertical arrangement, we
    don't need these extra scroll buttons. */
 .tabbrowser-arrowscrollbox > .scrollbutton-up,
 .tabbrowser-arrowscrollbox > .scrollbutton-down {
-    visibility: collapse !important;
+  visibility: collapse !important;
 }
 
 /* Ensure the tab favicon doesn't stretch. */
 .tab-icon-image {
-    max-width: 16px;
-    max-height: 16px;
+  max-width: 16px;
+  max-height: 16px;
 }
 
 /* Hide the original tab toolbar buttons. */
 .tabs-newtab-button {
-    visibility: collapse;
+  visibility: collapse;
 }
 
 /* Undo a bunch of stuff for app tabs */
 .tabbrowser-tabs[positionpinnedtabs] > .tabbrowser-tab[pinned] {
-    position: inherit !important;
+  position: inherit !important;
 }
+
 .tabbrowser-tab[pinned] > .tab-text {
-    display: inherit;
+  display: inherit;
 }
+
 .tab-label[pinned] {
-    width: auto ! important;
+  width: auto !important;
 }
 
 /* Ensure the twisty image doesn't stretch. */
 .verticaltabs-twisty-container {
-    -moz-box-pack: start;
-    -moz-box-align: center;
+  -moz-box-align: center;
+  -moz-box-pack: start;
 }
 
 /* Collapse/expand animation */
 .tabbrowser-tab[fadein]:not([pinned]) {
-    -moz-transition-property: visibility, height, min-height, max-height, padding-left;
-    -moz-transition-duration: .1s;
-    -moz-transition-timing-function: ease-out;
+  -moz-transition-duration: 0.1s;
+  -moz-transition-property: visibility, height, min-height, max-height, padding-left;
+  -moz-transition-timing-function: ease-out;
 }
 
 .verticaltabs-collapsed {
-    height: 0px !important;  /* animation shrinks height */
-    min-height: 0px !important;
-    max-height: 0px !important;
-    visibility: collapse;
+  height: 0 !important;  /* animation shrinks height */
+  min-height: 0 !important;
+  max-height: 0 !important;
+  visibility: collapse;
 }
 
 .tab-background {
-    display: none ! important;
+  display: none !important;
 }
 
 .tabbrowser-tab {
-    pointer-events: auto ! important;
-    min-width: 30px ! important;
-    max-width: 100% ! important;
+  min-width: 30px !important;
+  max-width: 100% !important;
+  pointer-events: auto !important;
 }
 
 .tabbrowser-arrowscrollbox > .arrowscrollbox-scrollbox {
-    -moz-padding-end: 0px ! important;
-    -moz-padding-start: 0px ! important;
+  -moz-padding-end: 0 !important;
+  -moz-padding-start: 0 !important;
 }
 
 /* get rid of the tab separator from horizontal tabs */
-.tabbrowser-tab:after,
-.tabbrowser-tab:before {
+.tabbrowser-tab::after,
+.tabbrowser-tab::before {
   content: none !important;
 }
 
@@ -92,5 +94,5 @@
 #TabsToolbar[brighttext] .tabs-newtab-button,
 #TabsToolbar[brighttext] > #new-tab-button,
 #TabsToolbar[brighttext] > toolbarpaletteitem > #new-tab-button {
-    list-style-image: url(chrome://browser/skin/tabbrowser/newtab.png);
+  list-style-image: url(chrome://browser/skin/tabbrowser/newtab.png);
 }
