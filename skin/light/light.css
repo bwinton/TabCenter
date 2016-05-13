@@ -8,7 +8,6 @@
     border-top: 1px solid rgba(160,160,160,.5);
     box-sizing: border-box;
     flex: 1 0;
-    height: calc(100vh - 42px);
     overflow-y: hidden;
     margin: 0 !important;
     padding: 0 !important;
@@ -21,7 +20,6 @@
 
 .tabbrowser-arrowscrollbox {
   flex: 1 0;
-  height: calc(100vh - 42px);
 }
 
 #verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
@@ -40,7 +38,6 @@
 }
 
 #browser {
-  display: block;
   height: 100vh;
   position:relative;
 }
@@ -107,22 +104,21 @@
 #appcontent {
   border-top: 1px solid rgb(160,160,160);
   top: 0;
-  position: absolute;
 }
 
 #appcontent,
 #PopupAutoCompleteRichResult {
-  left: 45px;
+  margin-left: 45px;
 }
 
 #main-window[tabspinned="true"] #verticaltabs-box + #appcontent,
 #main-window[tabspinned="true"] #PopupAutoCompleteRichResult {
-  left: 260px;
+  margin-left: 260px;
 }
 
 #main-window[inFullscreen][inDOMFullscreen] #appcontent,
 #main-window[inFullscreen][inDOMFullscreen] #PopupAutoCompleteRichResult {
-  left: 0 !important
+  margin-left: 0 !important
 }
 
 #navigator-toolbox,
@@ -146,13 +142,8 @@
   width: 100vw !important;
 }
 
-#content notificationbox {
-  height: calc(100vh - 40px);
-}
-
 #main-window[inFullscreen][inDOMFullscreen] .browserContainer {
-  height: calc(100vh + 4px);
-  margin-top: -14px;
+  margin-top: -1px;
 }
 
 .tabbrowser-tab {
