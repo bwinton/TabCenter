@@ -3,7 +3,6 @@ SOURCES = \
 	README.md \
 	bootstrap.js \
 	chrome.manifest \
-	groups.jsm \
 	install.rdf \
 	multiselect.jsm \
 	override-bindings.css \

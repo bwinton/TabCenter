@@ -41,7 +41,6 @@
 Components.utils.import('resource://gre/modules/Services.jsm');
 Components.utils.import('resource://tabcenter/tabdatastore.jsm');
 Components.utils.import('resource://tabcenter/multiselect.jsm');
-Components.utils.import('resource://tabcenter/groups.jsm');
 
 const EXPORTED_SYMBOLS = ['VerticalTabs', 'vtInit'];
 
@@ -65,13 +64,11 @@ function vtInit() {
   };
 
   installStylesheet('resource://tabcenter/override-bindings.css');
-  installStylesheet('resource://tabcenter/skin/bindings.css');
   installStylesheet('resource://tabcenter/skin/base.css');
   installStylesheet('resource://tabcenter/skin/light/light.css');
   return () => {
     removeStylesheet('resource://tabcenter/skin/light/light.css');
     removeStylesheet('resource://tabcenter/override-bindings.css');
-    removeStylesheet('resource://tabcenter/skin/bindings.css');
     removeStylesheet('resource://tabcenter/skin/base.css');
     let windows = Services.wm.getEnumerator(null);
     while (windows.hasMoreElements()) {
