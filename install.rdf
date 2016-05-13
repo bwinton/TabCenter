@@ -8,7 +8,7 @@
     <em:version>1.16</em:version>
     <em:homepageURL>https://github.com/bwinton/VerticalTabs</em:homepageURL>
     <em:updateURL>https://people.mozilla.com/~bwinton/TabCenter/tab-center.update.rdf</em:updateURL>
-    <em:iconURL>resource://tabcenter/skin/icon.png</em:iconURL>
+    <em:iconURL>chrome://tabcenter/skin/icon.png</em:iconURL>
     <em:description>A new, vertical, arrangement for your tabs. Learn more about this Test Pilot experiment at https://testpilot.firefox.com/.</em:description>
     <em:creator>Mozilla</em:creator>
     <em:developer>Blake Winton (Modify for TabCenter Tests)</em:developer>

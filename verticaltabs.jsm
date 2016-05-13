@@ -64,14 +64,12 @@ function vtInit() {
   };
 
   installStylesheet("resource://tabcenter/override-bindings.css");
-  installStylesheet("resource://tabcenter/skin/bindings.css");
-  installStylesheet("resource://tabcenter/skin/base.css");
-  installStylesheet("resource://tabcenter/skin/light/light.css");
+  installStylesheet("chrome://tabcenter/skin/base.css");
+  installStylesheet("chrome://tabcenter/skin/light/light.css");
   return () => {
-    removeStylesheet("resource://tabcenter/skin/light/light.css");
     removeStylesheet("resource://tabcenter/override-bindings.css");
-    removeStylesheet("resource://tabcenter/skin/bindings.css");
-    removeStylesheet("resource://tabcenter/skin/base.css");
+    removeStylesheet("chrome://tabcenter/skin/light/light.css");
+    removeStylesheet("chrome://tabcenter/skin/base.css");
     let windows = Services.wm.getEnumerator(null);
     while (windows.hasMoreElements()) {
       let window = windows.getNext();

@@ -5,3 +5,7 @@
 .tabbrowser-arrowscrollbox[vertical="true"] {
   -moz-binding: url("chrome://tabcenter/content/vertical-tabbrowser.xml#tabbrowser-arrowscrollbox") ! important;
 }
+
+.tabbrowser-tab[verticaltabs-group] {
+  -moz-binding: url("chrome://tabcenter/content/groups.xml");
+}

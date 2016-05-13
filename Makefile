@@ -4,6 +4,7 @@ SOURCES = \
 	bootstrap.js \
 	chrome.manifest \
 	groups.jsm \
+	groups.xml \
 	install.rdf \
 	multiselect.jsm \
 	override-bindings.css \
