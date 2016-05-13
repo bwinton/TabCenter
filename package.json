@@ -9,11 +9,12 @@
   "dependencies": {},
   "devDependencies": {
     "eslint-plugin-mozilla": "0.0.3",
-    "eslint": "2.9.0"
+    "eslint": "2.9.0",
+    "stylelint":"6.3.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "eslint": "eslint . --ext=js,jsm && eslint vertical-tabbrowser.xml"
+    "lint": "eslint . --ext=js,jsm vertical-tabbrowser.xml && stylelint \"**/*.css\""
   },
   "repository": {
     "type": "git",
