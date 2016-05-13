@@ -108,13 +108,21 @@
   border-top: 1px solid rgb(160, 160, 160);
 }
 
-#appcontent,
-#PopupAutoCompleteRichResult {
+#sidebar-box[hidden="true"] ~ #appcontent,
+#sidebar-box[hidden="true"] ~ #PopupAutoCompleteRichResult {
   margin-left: 45px;
 }
 
-#main-window[tabspinned="true"] #verticaltabs-box + #appcontent,
-#main-window[tabspinned="true"] #PopupAutoCompleteRichResult {
+#sidebar-box {
+  margin-left: 45px;
+}
+
+#main-window[tabspinned="true"] #sidebar-box[hidden="true"] ~ #appcontent,
+#main-window[tabspinned="true"] #sidebar-box[hidden="true"] ~ #PopupAutoCompleteRichResult {
+  margin-left: 260px;
+}
+
+#main-window[tabspinned="true"] #sidebar-box {
   margin-left: 260px;
 }
 
