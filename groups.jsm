@@ -49,11 +49,12 @@
  *   - But we have to make sure that groups don't behave like tabs at
  *     all.
  */
+/*eslint-disable */
+/*exported EXPORTED_SYMBOLS*/
+const EXPORTED_SYMBOLS = ['VTGroups'];
+Components.utils.import('resource://tabcenter/tabdatastore.jsm');
 
-const EXPORTED_SYMBOLS = ["VTGroups"];
-Components.utils.import("resource://tabcenter/tabdatastore.jsm");
-
-const TAB_DROP_TYPE = "application/x-moz-tabbrowser-tab";
+const TAB_DROP_TYPE = 'application/x-moz-tabbrowser-tab';
 
 function VTGroups(tabs) {
     this.tabs = tabs;
@@ -127,12 +128,12 @@ VTGroups.prototype = {
      */
     addGroup: function(aLabel) {
         let group = this.tabs.tabbrowser.addTab();
-        VTTabDataStore.setTabValue(group, this.kGroup, "true");
+        VTTabDataStore.setTabValue(group, this.kGroup, 'true');
 
         let window = this.tabs.ownerDocument.defaultView;
         function makeLabelEditable() {
             // XBL bindings aren't applied synchronously.
-            if (typeof group.editLabel !== "function") {
+            if (typeof group.editLabel !== 'function') {
                 window.setTimeout(makeLabelEditable, 10);
                 return;
             }
@@ -170,7 +171,7 @@ VTGroups.prototype = {
                 window.setTimeout(update, 10);
                 return;
             }
-            aGroup.mCounter.firstChild.nodeValue = "" + count;
+            aGroup.mCounter.firstChild.nodeValue = '' + count;
         }
         update();
     },
@@ -197,14 +198,14 @@ VTGroups.prototype = {
 
         // Apply the group's collapsed state to the tab
         let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed)
-                         == "true");
+                         === 'true');
         this._tabCollapseExpand(aTab, collapsed);
     },
 
     addChildren: function(aGroup, aTabs) {
-        for each (let tab in aTabs) {
-            this.addChild(aGroup, tab);
-        }
+      aTabs.forEach((tab) => {
+        this.addChild(aGroup, tab);
+      });
     },
 
     /*
@@ -224,9 +225,9 @@ VTGroups.prototype = {
     },
 
     removeChildren: function(aTabs) {
-        for each (let tab in aTabs) {
+        aTabs.forEach((tab) => {
             this.removeChild(tab);
-        }
+        });
     },
 
     /*
@@ -235,11 +236,11 @@ VTGroups.prototype = {
     createGroupFromMultiSelect: function() {
         let group = this.addGroup();
         let children = this.tabs.VTMultiSelect.getSelected();
-        for each (let tab in children) {
+        children.forEach((tab) => {
             // Moving the tabs to the right position is enough, the
             // TabMove handler knows the right thing to do.
-            this.tabs.tabbrowser.moveTabTo(tab, group._tPos+1);
-        }
+            this.tabs.tabbrowser.moveTabTo(tab, group._tPos + 1);
+        });
         this.tabs.VTMultiSelect.clear();
     },
 
@@ -247,7 +248,7 @@ VTGroups.prototype = {
      * Return true if a given tab is a group tab.
      */
     isGroup: function(aTab) {
-        return (VTTabDataStore.getTabValue(aTab, this.kGroup) == "true");
+        return (VTTabDataStore.getTabValue(aTab, this.kGroup) === 'true');
     },
 
     /*
@@ -258,13 +259,13 @@ VTGroups.prototype = {
             return;
         }
         let collapsed = (VTTabDataStore.getTabValue(aGroup, this.kCollapsed)
-                         == "true");
-        for each (let tab in this.getChildren(aGroup)) {
+                         === 'true');
+        this.getChildren(aGroup).forEach((tab) => {
             this._tabCollapseExpand(tab, !collapsed);
             if (!collapsed && tab.selected) {
                 this.tabs.tabbrowser.selectedTab = aGroup;
             }
-        }
+        });
         VTTabDataStore.setTabValue(aGroup, this.kCollapsed, !collapsed);
     },
 
@@ -273,34 +274,34 @@ VTGroups.prototype = {
 
     handleEvent: function(aEvent) {
         switch (aEvent.type) {
-        case "SSTabRestoring":
+        case 'SSTabRestoring':
             this.onTabRestoring(aEvent.originalTarget);
             return;
-        case "TabSelect":
+        case 'TabSelect':
             this.onTabSelect(aEvent);
             return;
-        case "TabMove":
+        case 'TabMove':
             this.onTabMove(aEvent);
             return;
-        case "TabClose":
+        case 'TabClose':
             this.onTabClose(aEvent);
             return;
-        case "click":
+        case 'click':
             this.onClick(aEvent);
             return;
-        case "dragover":
+        case 'dragover':
             this.onDragOver(aEvent);
             return;
-        case "dragenter":
+        case 'dragenter':
             this.onDragEnter(aEvent);
             return;
-        case "dragleave":
+        case 'dragleave':
             this.onDragLeave(aEvent);
             return;
-        case "dragend":
+        case 'dragend':
             this._clearDropTargets();
             return;
-        case "drop":
+        case 'drop':
             this.onDrop(aEvent);
             return;
         }
@@ -309,15 +310,12 @@ VTGroups.prototype = {
     onTabRestoring: function(aTab) {
         // Restore tab attributes from session data (this isn't done
         // automatically).  kId is restored by VTTabIDs.
-        for each (let attr in [this.kGroup,
-                               this.kInGroup,
-                               this.kLabel,
-                               this.kCollapsed]) {
+        [this.kGroup, this.kInGroup, this.kLabel, this.kCollapsed].forEach((attr) => {
             let value = VTTabDataStore.getTabValue(aTab, attr);
             if (value) {
                 aTab.setAttribute(attr, value);
             }
-        }
+        });
 
         // Restore collapsed state if we belong to a group.
         let groupId = VTTabDataStore.getTabValue(aTab, this.kInGroup);
@@ -336,7 +334,7 @@ VTGroups.prototype = {
             }
             self._updateCount(group);
             let collapsed = (VTTabDataStore.getTabValue(group, self.kCollapsed)
-                             == "true");
+                             === 'true');
             self._tabCollapseExpand(aTab, collapsed);
         }
         restoreCollapsedState();
@@ -353,14 +351,14 @@ VTGroups.prototype = {
     onTabSelect: function(aEvent) {
         let tab = aEvent.target;
         let document = tab.ownerDocument;
-        let urlbar = document.getElementById("urlbar");
+        let urlbar = document.getElementById('urlbar');
 
         let isGroup = this.isGroup(tab);
         if (isGroup) {
             //TODO l10n
-            urlbar.placeholder = "Group: " + tab.groupLabel;
+            urlbar.placeholder = 'Group: ' + tab.groupLabel;
         } else {
-            urlbar.placeholder = urlbar.getAttribute("bookmarkhistoryplaceholder");
+            urlbar.placeholder = urlbar.getAttribute('bookmarkhistoryplaceholder');
             // Selecting a tab that's in a collapsed group will expand
             // the group.
             if (tab.classList.contains(this.kCollapsed)) {
@@ -374,8 +372,8 @@ VTGroups.prototype = {
         urlbar.disabled = isGroup;
 
         //XXX this doesn't quite work:
-        let buttons = ["reload-button", "home-button", "urlbar", "searchbar"];
-        for (let i=0; i < buttons.length; i++) {
+        let buttons = ['reload-button', 'home-button', 'urlbar', 'searchbar'];
+        for (let i = 0; i < buttons.length; i++) {
             let element = document.getElementById(buttons[i]);
             element.disabled = isGroup;
         }
@@ -383,7 +381,7 @@ VTGroups.prototype = {
 
     onClick: function(aEvent) {
         let tab = aEvent.target;
-        if (tab.localName != "tab") {
+        if (tab.localName !== 'tab') {
             return;
         }
         if (aEvent.originalTarget !== tab.mTwisty) {
@@ -400,13 +398,13 @@ VTGroups.prototype = {
         let groups = this.tabs.getElementsByClassName(this.kDropTarget);
         // Make a copy of the array before modifying its contents.
         groups = Array.prototype.slice.call(groups);
-        for (let i=0; i < groups.length; i++) {
+        for (let i = 0; i < groups.length; i++) {
             groups[i].classList.remove(this.kDropTarget);
         }
     },
 
     onDragOver: function(aEvent) {
-        if (aEvent.target.localName != "tab") {
+        if (aEvent.target.localName !== 'tab') {
             return;
         }
         // Potentially remove drop target style
@@ -417,7 +415,7 @@ VTGroups.prototype = {
         // Disable drop indicator, mark tab as drop target.
         if (this.isGroup(aEvent.target)
            || (aEvent.originalTarget.classList
-               && aEvent.originalTarget.classList.contains("tab-icon-image"))) {
+               && aEvent.originalTarget.classList.contains('tab-icon-image'))) {
             aEvent.target.classList.add(this.kDropTarget);
             this.tabs._tabDropIndicator.collapsed = true;
             return;
@@ -439,25 +437,25 @@ VTGroups.prototype = {
     },
 
     onDragEnter: function(aEvent) {
-        if (aEvent.target.localName != "tab") {
+        if (aEvent.target.localName !== 'tab') {
             return;
         }
         // Dragging a tab over a tab's icon changes the icon to the
-        // "create group" icon.
+        // 'create group' icon.
         if (aEvent.originalTarget.classList
-            && aEvent.originalTarget.classList.contains("tab-icon-image")) {
+            && aEvent.originalTarget.classList.contains('tab-icon-image')) {
             aEvent.originalTarget.classList.add(this.kDropToNewGroup);
         }
     },
 
     onDragLeave: function(aEvent) {
-        if (aEvent.target.localName != "tab") {
+        if (aEvent.target.localName !== 'tab') {
             return;
         }
-        // Change the tab's icon back from the "create group" to
+        // Change the tab's icon back from the 'create group' to
         // whatever it was before.
         if (aEvent.originalTarget.classList
-            && aEvent.originalTarget.classList.contains("tab-icon-image")) {
+            && aEvent.originalTarget.classList.contains('tab-icon-image')) {
             aEvent.originalTarget.classList.remove(this.kDropToNewGroup);
         }
     },
@@ -475,10 +473,10 @@ VTGroups.prototype = {
         // Dropping a tab on another tab's icon will create a new
         // group with those two tabs in it.
         if (aEvent.originalTarget.classList
-            && aEvent.originalTarget.classList.contains("tab-icon-image")) {
+            && aEvent.originalTarget.classList.contains('tab-icon-image')) {
             let group = this.addGroup();
-            this.tabs.tabbrowser.moveTabTo(tab, group._tPos+1);
-            this.tabs.tabbrowser.moveTabTo(draggedTab, group._tPos+1);
+            this.tabs.tabbrowser.moveTabTo(tab, group._tPos + 1);
+            this.tabs.tabbrowser.moveTabTo(draggedTab, group._tPos + 1);
             return;
         }
 
@@ -491,7 +489,7 @@ VTGroups.prototype = {
                 return;
             }
             // Dropping onto a collapsed group should select the group.
-            if (VTTabDataStore.getTabValue(tab, this.kCollapsed) == "true") {
+            if (VTTabDataStore.getTabValue(tab, this.kCollapsed) === 'true') {
                 this.tabs.tabbrowser.selectedTab = tab;
             }
             this.addChild(tab, draggedTab);
@@ -500,7 +498,7 @@ VTGroups.prototype = {
 
     onTabMove: function(aEvent) {
         let tab = aEvent.target;
-        if (tab.getAttribute(this.kIgnoreMove) == "true") {
+        if (tab.getAttribute(this.kIgnoreMove) === 'true') {
             tab.removeAttribute(this.kIgnoreMove);
             return;
         }
@@ -515,7 +513,7 @@ VTGroups.prototype = {
                 offset = 1;
             }
             for (let i = 0; i < children.length; i++) {
-                children[i].setAttribute(this.kIgnoreMove, "true");
+                children[i].setAttribute(this.kIgnoreMove, 'true');
                 this.tabs.tabbrowser.moveTabTo(children[i],
                                                tab._tPos + i + offset);
             }
@@ -575,7 +573,7 @@ VTGroups.prototype = {
         // If a collapsed group is removed, close its children as
         // well.  Otherwise just remove their group pointer.
         let collapsed = (VTTabDataStore.getTabValue(tab, this.kCollapsed)
-                         == "true");
+                         === 'true');
         let children = this.getChildren(tab);
 
         if (!collapsed) {
@@ -587,9 +585,9 @@ VTGroups.prototype = {
         let tabbrowser = this.tabs.tabbrowser;
         // Remove children async to avoid confusing tabbrowser.removeTab()
         window.setTimeout(function() {
-            for each (let tab in children) {
+            children.forEach((tab) => {
                 tabbrowser.removeTab(tab);
-            }
+            });
         }, 10);
     }
 

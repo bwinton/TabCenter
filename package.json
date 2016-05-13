@@ -1,0 +1,39 @@
+{
+  "name": "tab-center",
+  "version": "1.16.0",
+  "description": "Tab Center is an attempt to solve some of the issues that have emerged from the way people use tabs (most notably the “too many tabs” problem) and provide a more versatile UI basis for future innovation. The first version of this Firefox add-on arranges tabs in a vertical rather than horizontal fashion. It is heavily inspired by and borrows ideas from the excellent VerticalTabs add-on.",
+  "main": "bootstrap.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint-plugin-mozilla": "0.0.3",
+    "eslint": "2.9.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eslint": "eslint . --ext=js,jsm && eslint vertical-tabbrowser.xml"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bwinton/VerticalTabs.git"
+  },
+  "author": "Mozilla",
+  "contributors": [
+    {"name": "Blake Winton"},
+    {"name": "Vlad Vukicevic"},
+    {"name": "Darrin Henein"},
+    {"name": "Philipp von Weitershausen"},
+    {"name": "SHIMODA Hiroshi"},
+    {"name": "bb10"},
+    {"name": "Frank Yan"},
+    {"name": "Rob Campbel"},
+    {"name": "Erica Wright"}
+  ],
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/bwinton/VerticalTabs/issues"
+  },
+  "homepage": "https://github.com/bwinton/VerticalTabs#readme"
+}

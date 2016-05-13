@@ -35,7 +35,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-"use strict";
+/* global Cc:false, Ci:false */
+/*exported sendPing, addPingStats, watchWindows*/
+'use strict';
 
 /**
  * Save callbacks to run when unloading. Optionally scope the callback to a
@@ -55,12 +57,12 @@
 function unload(callback, container) {
   // Initialize the array of unloaders on the first usage
   let unloaders = unload.unloaders;
-  if (unloaders == null)
+  if (unloaders == null) {
     unloaders = unload.unloaders = [];
-
+  }
   // Calling with no arguments runs all the unloader callbacks
   if (callback == null) {
-    unloaders.slice().forEach(function(unloader) unloader());
+    unloaders.slice().forEach(function (unloader) { unloader(); });
     unloaders.length = 0;
     return;
   }
@@ -68,14 +70,14 @@ function unload(callback, container) {
   // The callback is bound to the lifetime of the container if we have one
   if (container != null) {
     // Remove the unloader when the container unloads
-    container.addEventListener("unload", removeUnloader, false);
+    container.addEventListener('unload', removeUnloader, false);
 
     // Wrap the callback to additionally remove the unload listener
     let origCallback = callback;
-    callback = function() {
-      container.removeEventListener("unload", removeUnloader, false);
+    callback = function () {
+      container.removeEventListener('unload', removeUnloader, false);
       origCallback();
-    }
+    };
   }
 
   // Wrap the callback in a function that ignores failures
@@ -84,7 +86,7 @@ function unload(callback, container) {
       callback();
     }
     catch(ex) {
-      console.error(ex);
+      // console.error(ex);
     }
   }
   unloaders.push(unloader);
@@ -92,8 +94,9 @@ function unload(callback, container) {
   // Provide a way to remove the unloader
   function removeUnloader() {
     let index = unloaders.indexOf(unloader);
-    if (index != -1)
+    if (index !== -1) {
       unloaders.splice(index, 1);
+    }
   }
   return removeUnloader;
 }
@@ -110,19 +113,20 @@ function watchWindows(callback) {
     try {
       // Now that the window has loaded, only handle browser windows
       let {documentElement} = window.document;
-      if (documentElement.getAttribute("windowtype") == "navigator:browser")
+      if (documentElement.getAttribute('windowtype') === 'navigator:browser') {
         callback(window);
+      }
     }
     catch(ex) {
-      console.error(ex);
+      // console.error(ex);
     }
   }
 
   // Wait for the window to finish loading before running the callback
   function runOnLoad(window) {
     // Listen for one load event before checking the window type
-    window.addEventListener("load", function runOnce() {
-      window.removeEventListener("load", runOnce, false);
+    window.addEventListener('load', function runOnce() {
+      window.removeEventListener('load', runOnce, false);
       watcher(window);
     }, false);
   }
@@ -132,33 +136,35 @@ function watchWindows(callback) {
   while (windows.hasMoreElements()) {
     // Only run the watcher immediately if the window is completely loaded
     let window = windows.getNext();
-    if (window.document.readyState == "complete")
+    if (window.document.readyState === 'complete'){
       watcher(window);
     // Wait for the window to load before continuing
-    else
+    } else {
       runOnLoad(window);
+    }
   }
 
   // Watch for new browser windows opening then wait for it to load
   function windowWatcher(subject, topic) {
-    if (topic == "domwindowopened")
+    if (topic === 'domwindowopened') {
       runOnLoad(subject);
+    }
   }
   Services.ww.registerNotification(windowWatcher);
 
   // Make sure to stop watching for windows if we're unloading
-  unload(function() Services.ww.unregisterNotification(windowWatcher));
+  unload(function () { Services.ww.unregisterNotification(windowWatcher); });
 }
 
 const PAYLOAD_KEYS = [
-  "tabs_created",
-  "tabs_destroyed",
-  "tabs_pinned",
-  "tabs_unpinned",
-  "tab_center_pinned",
-  "tab_center_unpinned",
-  "tab_center_expanded"
-]
+  'tabs_created',
+  'tabs_destroyed',
+  'tabs_pinned',
+  'tabs_unpinned',
+  'tab_center_pinned',
+  'tab_center_unpinned',
+  'tab_center_expanded'
+];
 
 function newPayload() {
   let rv = {};
@@ -168,7 +174,7 @@ function newPayload() {
   return rv;
 }
 
-var payload = newPayload();
+let payload = newPayload();
 
 function addPingStats(stats) {
   PAYLOAD_KEYS.forEach(key => {
@@ -186,7 +192,7 @@ function sendPing() {
     }
   };
 
-  let userAgent = Cc["@mozilla.org/network/protocol;1?name=http"]
+  let userAgent = Cc['@mozilla.org/network/protocol;1?name=http']
                     .getService(Ci.nsIHttpProtocolHandler).userAgent;
 
   let windows = Services.wm.getEnumerator(null);
@@ -198,15 +204,13 @@ function sendPing() {
   }
 
   let ping = JSON.stringify({
-    "test": "tabcentertest1@mozilla.com",  // The em:id field from the add-on
-    "agent": userAgent,
-    "version": 1,  // Just in case we need to drastically change the format later
-    "payload": payload
+    'test': 'tabcentertest1@mozilla.com',  // The em:id field from the add-on
+    'agent': userAgent,
+    'version': 1,  // Just in case we need to drastically change the format later
+    'payload': payload
   });
   payload = newPayload();
   // Send metrics to the main Test Pilot add-on.
-  // let console = (Components.utils.import("resource://gre/modules/devtools/Console.jsm", {})).console;
-  // console.log("Sending ping", ping);
   observerService.notifyObservers(subject, 'testpilot::send-metric', ping);
   // Clear out the metrics for next time…
 }

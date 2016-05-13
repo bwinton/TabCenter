@@ -28,25 +28,28 @@
 
     <handlers>
       <handler event="underflow" phase="capturing"><![CDATA[
-        if (event.detail == (this._verticalTabs ? 1 : 0))
+        if (event.detail === (this._verticalTabs ? 1 : 0)){
           return; // Ignore other-direction events
+        }
 
-        var tabs = document.getBindingParent(this);
+        let tabs = document.getBindingParent(this);
 
-        if (tabs._lastTabClosedByMouse)
+        if (tabs._lastTabClosedByMouse) {
           tabs._expandSpacerBy(this._scrollButtonDown.clientWidth);
+        }
 
         tabs.tabbrowser._removingTabs.forEach(tabs.tabbrowser.removeTab,
                                               tabs.tabbrowser);
       ]]></handler>
       <handler event="overflow"><![CDATA[
-        if (event.detail == (this._verticalTabs ? 1 : 0))
+        if (event.detail === (this._verticalTabs ? 1 : 0)){
           return; // Ignore other-direction events
-        var tabs = document.getBindingParent(this);
-        var numberOfTabs = tabs.tabbrowser.visibleTabs.length;
-        if (numberOfTabs == 1)
+        }
+        let tabs = document.getBindingParent(this);
+        let numberOfTabs = tabs.tabbrowser.visibleTabs.length;
+        if (numberOfTabs === 1) {
           return;
-
+        }
         tabs._handleTabSelect(false);
       ]]></handler>
     </handlers>
@@ -78,9 +81,9 @@
     </content>
 
     <implementation implements="nsIDOMEventListener">
-      <field name="mTabstripHeight">0</field>
+      <field name="mTabstripHeight">0;</field>
 
-      <property name="_verticalTabs" onget="return this.orient == 'vertical';"/>
+      <property name="_verticalTabs" onget="return this.orient === 'vertical';"/>
 
       <!-- Try to keep the active tab's close button under the mouse cursor -->
       <method name="_lockTabSizing">
@@ -100,17 +103,17 @@
 
       <method name="_positionPinnedTabs">
         <body><![CDATA[
-          var numPinned = this.tabbrowser._numPinnedTabs;
-          this.removeAttribute("positionpinnedtabs");
+          let numPinned = this.tabbrowser._numPinnedTabs;
+          this.removeAttribute('positionpinnedtabs');
 
           for (let i = 0; i < numPinned; i++) {
             let tab = this.childNodes[i];
-            tab.style.MozMarginStart = "";
+            tab.style.MozMarginStart = '';
           }
 
-          this.style.MozPaddingStart = "";
+          this.style.MozPaddingStart = '';
 
-          if (this._lastNumPinned != numPinned) {
+          if (this._lastNumPinned !== numPinned) {
             this._lastNumPinned = numPinned;
             this._handleTabSelect(false);
           }
@@ -122,12 +125,12 @@
         <body><![CDATA[
           let draggedTab = event.dataTransfer.mozGetDataAt(TAB_DROP_TYPE, 0);
 
-          if (this.getAttribute("movingtab") != "true") {
-            this.setAttribute("movingtab", "true");
+          if (this.getAttribute('movingtab') !== 'true') {
+            this.setAttribute('movingtab', 'true');
             this.selectedItem = draggedTab;
           }
 
-          if (!("animLastScreenPos" in draggedTab._dragData)) {
+          if (!('animLastScreenPos' in draggedTab._dragData)) {
             // XXX verticalTabs hack -- this isn't set on dragstart (only screenX is),
             // but we can fake it here.  We also call scrollX scrollPosition.
             draggedTab._dragData.screenY = event.screenY;
@@ -136,20 +139,22 @@
           }
 
           let screenPos = event.screenY;
-          if (screenPos == draggedTab._dragData.animLastScreenPos)
+          if (screenPos === draggedTab._dragData.animLastScreenPos) {
             return;
+          }
 
-          let draggingForward = screenPos > draggedTab._dragData.animLastScreenPos;
           draggedTab._dragData.animLastScreenPos = screenPos;
 
-          let rtl = false; //(window.getComputedStyle(this).direction == "rtl");
+          let rtl = false; //(window.getComputedStyle(this).direction === 'rtl');
           let pinned = draggedTab.pinned;
           let numPinned = this.tabbrowser._numPinnedTabs;
           let tabs = this.tabbrowser.visibleTabs
                                     .slice(pinned ? 0 : numPinned,
                                            pinned ? numPinned : undefined);
-          if (rtl)
+          if (rtl) {
             tabs.reverse();
+          }
+
           let tabSize = draggedTab.getBoundingClientRect().height;
 
           // Move the dragged tab based on the mouse position.
@@ -157,18 +162,19 @@
           let leftTab = tabs[0];
           let rightTab = tabs[tabs.length - 1];
           let tabScreenPos = draggedTab.boxObject.screenY;
-          // console.log("tabScreenPos", tabScreenPos);
+          // console.log('tabScreenPos', tabScreenPos);
           let translateVal = screenPos - draggedTab._dragData.screenY;
-          // console.log("translateVal 1", translateVal);
-          if (!pinned)
+          // console.log('translateVal 1', translateVal);
+          if (!pinned){
             translateVal += this.mTabstrip.scrollPosition - draggedTab._dragData.scrollX; // XXX verticalTabs always scrollX here, it's actually the scrollPosition
+          }
           let minBound = leftTab.boxObject.screenY - tabScreenPos;
           let maxBound = (rightTab.boxObject.screenY + rightTab.boxObject.height) -
                            (tabScreenPos + tabSize);
           translateVal = Math.max(translateVal, minBound);
           translateVal = Math.min(translateVal, maxBound);
-          draggedTab.style.transform = "translateY(" + translateVal + "px)";
-          // console.log("draggedTab transform: " + draggedTab.style.transform + " should be " + "translateY(" + translateVal + "px)");
+          draggedTab.style.transform = 'translateY(' + translateVal + 'px)';
+          // console.log('draggedTab transform: ' + draggedTab.style.transform + ' should be ' + 'translateY(' + translateVal + 'px)');
 
           // Determine what tab we're dragging over.
           // * Point of reference is the center of the dragged tab. If that
@@ -179,15 +185,16 @@
 
           let tabCenter = tabScreenPos + translateVal + tabSize / 2;
           let newIndex = -1;
-          let oldIndex = "animDropIndex" in draggedTab._dragData ?
+          let oldIndex = 'animDropIndex' in draggedTab._dragData ?
                          draggedTab._dragData.animDropIndex : draggedTab._tPos;
           let low = 0;
           let high = tabs.length - 1;
           while (low <= high) {
             let mid = Math.floor((low + high) / 2);
-            if (tabs[mid] == draggedTab &&
-                ++mid > high)
+            if (tabs[mid] === draggedTab &&
+                ++mid > high) {
               break;
+            }
             let boxObject = tabs[mid].boxObject;
             let screenPos = boxObject.screenY + getTabShift(tabs[mid], oldIndex);
             if (screenPos > tabCenter) {
@@ -199,27 +206,31 @@
               break;
             }
           }
-          if (newIndex >= oldIndex)
+          if (newIndex >= oldIndex) {
             newIndex++;
-          if (newIndex < 0 || newIndex == oldIndex)
+          }
+          if (newIndex < 0 || newIndex === oldIndex) {
             return;
+          }
           draggedTab._dragData.animDropIndex = newIndex;
 
           // Shift background tabs to leave a gap where the dragged tab
           // would currently be dropped.
 
           for (let tab of tabs) {
-            if (tab != draggedTab) {
+            if (tab !== draggedTab) {
               let shift = getTabShift(tab, newIndex);
-              tab.style.transform = shift ? "translateY(" + shift + "px)" : "";
+              tab.style.transform = shift ? 'translateY(' + shift + 'px)' : '';
             }
           }
 
           function getTabShift(tab, dropIndex) {
-            if (tab._tPos < draggedTab._tPos && tab._tPos >= dropIndex)
+            if (tab._tPos < draggedTab._tPos && tab._tPos >= dropIndex) {
               return rtl ? -tabSize : tabSize;
-            if (tab._tPos > draggedTab._tPos && tab._tPos < dropIndex)
+            }
+            if (tab._tPos > draggedTab._tPos && tab._tPos < dropIndex) {
               return rtl ? tabSize : -tabSize;
+            }
             return 0;
           }
         ]]></body>
@@ -228,40 +239,47 @@
       <method name="handleEvent">
         <parameter name="aEvent"/>
         <body><![CDATA[
+          let width, height, relatedTarget;
           switch (aEvent.type) {
-            case "load":
-              this.updateVisibility();
+          case 'load':
+            this.updateVisibility();
+            break;
+          case 'resize':
+            if (aEvent.target !== window) {
               break;
-            case "resize":
-              if (aEvent.target != window)
-                break;
+            }
 
-              TabsInTitlebar.updateAppearance();
+            TabsInTitlebar.updateAppearance();
 
-              var width = this.mTabstrip.boxObject.width;
-              var height = this.mTabstrip.boxObject.height;
-              if ((!this._verticalTabs && width != this.mTabstripWidth) ||
-                  (this._verticalTabs && height != this.mTabstripHeight))
-              {
-                this.adjustTabstrip();
-                this._fillTrailingGap();
-                this._handleTabSelect();
-                this.mTabstripWidth = width;
-                this.mTabstripHeight = height;
-              }
+            width = this.mTabstrip.boxObject.width;
+            height = this.mTabstrip.boxObject.height;
+            if ((!this._verticalTabs && width !== this.mTabstripWidth) ||
+                (this._verticalTabs && height !== this.mTabstripHeight))
+            {
+              this.adjustTabstrip();
+              this._fillTrailingGap();
+              this._handleTabSelect();
+              this.mTabstripWidth = width;
+              this.mTabstripHeight = height;
+            }
 
-              this.tabbrowser.updateWindowResizers();
-              break;
-            case "mouseout":
-              // If the "related target" (the node to which the pointer went) is not
-              // a child of the current document, the mouse just left the window.
-              let relatedTarget = aEvent.relatedTarget;
-              if (relatedTarget && relatedTarget.ownerDocument == document)
-                break;
-            case "mousemove":
-              if (document.getElementById("tabContextMenu").state != "open")
+            this.tabbrowser.updateWindowResizers();
+            break;
+          case 'mouseout':
+            // If the 'related target' (the node to which the pointer went) is not
+            // a child of the current document, the mouse just left the window.
+            relatedTarget = aEvent.relatedTarget;
+            if (!relatedTarget || relatedTarget.ownerDocument !== document) {
+              if (document.getElementById('tabContextMenu').state !== 'open') {
                 this._unlockTabSizing();
-              break;
+              }
+            }
+            break;
+          case 'mousemove':
+            if (document.getElementById('tabContextMenu').state !== 'open') {
+              this._unlockTabSizing();
+            }
+            break;
           }
         ]]></body>
       </method>
@@ -273,20 +291,26 @@
         <body><![CDATA[
           let verticalTabs = this._verticalTabs;
 
-          var tabs = this.childNodes;
-          var tab = this._getDragTargetTab(event);
+          let tabs = this.childNodes;
+          let tab = this._getDragTargetTab(event);
           if (verticalTabs) {
-            for (let i = tab ? tab._tPos : 0; i < tabs.length; i++)
-              if (event.screenY < tabs[i].boxObject.screenY + tabs[i].boxObject.height / 2)
+            for (let i = tab ? tab._tPos : 0; i < tabs.length; i++) {
+              if (event.screenY < tabs[i].boxObject.screenY + tabs[i].boxObject.height / 2) {
                 return i;
-          } else if (window.getComputedStyle(this, null).direction == "ltr") {
-            for (let i = tab ? tab._tPos : 0; i < tabs.length; i++)
-              if (event.screenX < tabs[i].boxObject.screenX + tabs[i].boxObject.width / 2)
+              }
+            }
+          } else if (window.getComputedStyle(this, null).direction === 'ltr') {
+            for (let i = tab ? tab._tPos : 0; i < tabs.length; i++) {
+              if (event.screenX < tabs[i].boxObject.screenX + tabs[i].boxObject.width / 2) {
                 return i;
+              }
+            }
           } else {
-            for (let i = tab ? tab._tPos : 0; i < tabs.length; i++)
-              if (event.screenX > tabs[i].boxObject.screenX + tabs[i].boxObject.width / 2)
+            for (let i = tab ? tab._tPos : 0; i < tabs.length; i++) {
+              if (event.screenX > tabs[i].boxObject.screenX + tabs[i].boxObject.width / 2) {
                 return i;
+              }
+            }
           }
           return tabs.length;
         ]]></body>
@@ -295,44 +319,45 @@
 
     <handlers>
       <handler event="dragover"><![CDATA[
-        var effects = "";
+        let effects = '';
         if (this._setEffectAllowedForDataTransfer) {
           effects = this._setEffectAllowedForDataTransfer(event);
         }
 
-        var ind = this._tabDropIndicator;
-        if (effects == "" || effects == "none") {
+        let ind = this._tabDropIndicator;
+        if (effects === '' || effects === 'none') {
           ind.collapsed = true;
           return;
         }
         event.preventDefault();
         event.stopPropagation();
 
-        var tabStrip = this.mTabstrip;
-        var verticalTabs = this._verticalTabs;
-        var ltr = verticalTabs || (window.getComputedStyle(this, null).direction == "ltr");
+        let tabStrip = this.mTabstrip;
+        let verticalTabs = this._verticalTabs;
+        let ltr = verticalTabs || (window.getComputedStyle(this, null).direction === 'ltr');
 
         // autoscroll the tab strip if we drag over the scroll
         // buttons, even if we aren't dragging a tab, but then
         // return to avoid drawing the drop indicator
-        var pixelsToScroll = 0;
-        if (this.getAttribute("overflow") == "true") {
-          var targetAnonid = event.originalTarget.getAttribute("anonid");
+        let pixelsToScroll = 0;
+        if (this.getAttribute('overflow') === 'true') {
+          let targetAnonid = event.originalTarget.getAttribute('anonid');
           switch (targetAnonid) {
-            case "scrollbutton-up":
-              pixelsToScroll = tabStrip.scrollIncrement * -1;
-              break;
-            case "scrollbutton-down":
-              pixelsToScroll = tabStrip.scrollIncrement;
-              break;
+          case 'scrollbutton-up':
+            pixelsToScroll = tabStrip.scrollIncrement * -1;
+            break;
+          case 'scrollbutton-down':
+            pixelsToScroll = tabStrip.scrollIncrement;
+            break;
           }
-          if (pixelsToScroll)
+          if (pixelsToScroll) {
             tabStrip.scrollByPixels((ltr ? 1 : -1) * pixelsToScroll);
+          }
         }
 
-        if (effects == "move" &&
-            this == event.dataTransfer.mozGetDataAt(TAB_DROP_TYPE, 0).parentNode) {
-          // console.log("animateTabMove!");
+        if (effects === 'move' &&
+            this === event.dataTransfer.mozGetDataAt(TAB_DROP_TYPE, 0).parentNode) {
+          // console.log('animateTabMove!');
           ind.collapsed = true;
           this._animateTabMove(event);
           return;
@@ -340,20 +365,22 @@
 
         this._finishAnimateTabMove();
 
-        if (effects == "link") {
+        if (effects === 'link') {
           let tab = this._getDragTargetTab(event);
           if (tab) {
-            if (!this._dragTime)
+            if (!this._dragTime) {
               this._dragTime = Date.now();
-            if (Date.now() >= this._dragTime + this._dragOverDelay)
+            }
+            if (Date.now() >= this._dragTime + this._dragOverDelay) {
               this.selectedItem = tab;
+            }
             ind.collapsed = true;
             return;
           }
         }
 
-        var rect = tabStrip.getBoundingClientRect();
-        var newMargin;
+        let rect = tabStrip.getBoundingClientRect();
+        let newMargin;
         if (pixelsToScroll) {
           // if we are scrolling, put the drop indicator at the edge
           // so that it doesn't jump while scrolling
@@ -368,49 +395,55 @@
             let minMargin = scrollRect.left - rect.left;
             let maxMargin = Math.min(minMargin + scrollRect.width,
                                      scrollRect.right);
-            if (!ltr)
+            if (!ltr) {
               [minMargin, maxMargin] = [this.clientWidth - maxMargin,
                                         this.clientWidth - minMargin];
+            }
             newMargin = (pixelsToScroll > 0) ? maxMargin : minMargin;
           }
         }
         else {
           let newIndex = this._getDropIndex(event);
-          if (newIndex == this.childNodes.length) {
-            let tabRect = this.childNodes[newIndex-1].getBoundingClientRect();
-            if (verticalTabs)
+          if (newIndex === this.childNodes.length) {
+            let tabRect = this.childNodes[newIndex - 1].getBoundingClientRect();
+            if (verticalTabs) {
               newMargin = tabRect.bottom - rect.top;
-            else if (ltr)
+            } else if (ltr) {
               newMargin = tabRect.right - rect.left;
-            else
+            } else {
               newMargin = rect.right - tabRect.left;
+            }
           }
           else {
             let tabRect = this.childNodes[newIndex].getBoundingClientRect();
-            if (verticalTabs)
+            if (verticalTabs) {
               newMargin = tabRect.top - rect.top;
-            else if (ltr)
+            } else if (ltr) {
               newMargin = tabRect.left - rect.left;
-            else
+            } else {
               newMargin = rect.right - tabRect.right;
+            }
           }
         }
 
         ind.collapsed = false;
 
-        if (verticalTabs)
+        if (verticalTabs) {
           newMargin += ind.clientHeight / 2;
-        else
+        } else {
           newMargin += ind.clientWidth / 2;
+        }
 
-        if (!ltr)
+        if (!ltr) {
           newMargin *= -1;
+        }
 
-        ind.style.transform = "translate(" + Math.round(newMargin) + "px)";
-        if (verticalTabs)
-          ind.style.marginTop = (-ind.clientHeight) + "px";
-        else
-          ind.style.MozMarginStart = (-ind.clientWidth) + "px";
+        ind.style.transform = 'translate(' + Math.round(newMargin) + 'px)';
+        if (verticalTabs) {
+          ind.style.marginTop = (-ind.clientHeight) + 'px';
+        } else {
+          ind.style.MozMarginStart = (-ind.clientWidth) + 'px';
+        }
       ]]></handler>
 
       <handler event="dragend"><![CDATA[
@@ -420,18 +453,18 @@
 
         this._finishAnimateTabMove();
 
-        var dt = event.dataTransfer;
-        var draggedTab = dt.mozGetDataAt(TAB_DROP_TYPE, 0);
-        if (dt.mozUserCancelled || dt.dropEffect != "none" || this._isCustomizing) {
+        let dt = event.dataTransfer;
+        let draggedTab = dt.mozGetDataAt(TAB_DROP_TYPE, 0);
+        if (dt.mozUserCancelled || dt.dropEffect !== 'none' || this._isCustomizing) {
           delete draggedTab._dragData;
           return;
         }
 
         // Disable detach within the browser toolbox
-        var eX = event.screenX;
-        var eY = event.screenY;
-        var wX = window.screenX;
-        var wY = window.screenY;
+        let eX = event.screenX;
+        let eY = event.screenY;
+        let wX = window.screenX;
+        let wY = window.screenY;
 
         if (this._verticalTabs) {
           // check if the drop point is horizontally within the window
@@ -440,8 +473,9 @@
             // also avoid detaching if the the tab was dropped too close to
             // the tabbar (half a tab)
             let endScreenX = bo.screenX + 1.5 * bo.width;
-            if (eX < endScreenX && eX > window.screenX)
+            if (eX < endScreenX && eX > window.screenX) {
               return;
+            }
           }
         } else {
           // check if the drop point is horizontally within the window
@@ -450,29 +484,30 @@
             // also avoid detaching if the the tab was dropped too close to
             // the tabbar (half a tab)
             let endScreenY = bo.screenY + 1.5 * bo.height;
-            if (eY < endScreenY && eY > window.screenY)
+            if (eY < endScreenY && eY > window.screenY) {
               return;
+            }
           }
         }
 
         // screen.availLeft et. al. only check the screen that this window is on,
         // but we want to look at the screen the tab is being dropped onto.
-        var sX = {}, sY = {}, sWidth = {}, sHeight = {};
-        Cc["@mozilla.org/gfx/screenmanager;1"]
+        let sX = {}, sY = {}, sWidth = {}, sHeight = {};
+        Cc['@mozilla.org/gfx/screenmanager;1']
           .getService(Ci.nsIScreenManager)
           .screenForRect(eX, eY, 1, 1)
           .GetAvailRect(sX, sY, sWidth, sHeight);
         // ensure new window entirely within screen
-        var winWidth = Math.min(window.outerWidth, sWidth.value);
-        var winHeight = Math.min(window.outerHeight, sHeight.value);
-        var left = Math.min(Math.max(eX - draggedTab._dragData.offsetX, sX.value),
+        let winWidth = Math.min(window.outerWidth, sWidth.value);
+        let winHeight = Math.min(window.outerHeight, sHeight.value);
+        let left = Math.min(Math.max(eX - draggedTab._dragData.offsetX, sX.value),
                             sX.value + sWidth.value - winWidth);
-        var top = Math.min(Math.max(eY - draggedTab._dragData.offsetY, sY.value),
+        let top = Math.min(Math.max(eY - draggedTab._dragData.offsetY, sY.value),
                            sY.value + sHeight.value - winHeight);
 
         delete draggedTab._dragData;
 
-        if (this.tabbrowser.tabs.length == 1) {
+        if (this.tabbrowser.tabs.length === 1) {
           // resize _before_ move to ensure the window fits the new screen.  if
           // the window is too large for its screen, the window manager may do
           // automatic repositioning.
@@ -480,9 +515,9 @@
           window.moveTo(left, top);
           window.focus();
         } else {
-          this.tabbrowser.replaceTabWithWindow(draggedTab, { screenX: left,
-                                                             screenY: top,
-                                                             });
+          this.tabbrowser.replaceTabWithWindow(draggedTab, {screenX: left,
+                                                            screenY: top,
+                                                            });
         }
         event.stopPropagation();
       ]]></handler>

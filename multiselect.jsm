@@ -36,15 +36,17 @@
 
 /**
  * Support for "selecting" multiple tabs.
- * 
+ *
  * The idea is to this work for tabs exactly like it does for a
  * regular list or tree widget: hold Ctrl/Cmd or Shift and click.
  * To make it work in the UI, tabs with multiselect="true" need to be
  * styled like selected tabs.
- * 
+ *
  * Use getMultiSelect() to obtain a list of selected tabs.  For most
  * cases this will be the only API you ever need.
  */
+
+ /*eslint-disable */ /*this file may be removed in future*/
 
 const EXPORTED_SYMBOLS = ["VTMultiSelect"];
 
