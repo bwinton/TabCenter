@@ -83,7 +83,7 @@
 }
 
 #pin-button {
-  background: no-repeat center/16px url("resource://tabcenter/skin/pin.png");
+  background: no-repeat center/16px url("chrome://tabcenter/skin/pin.png");
   border: none !important;
   margin: 0 !important;
   -moz-appearance: none !important;
@@ -91,16 +91,16 @@
 }
 
 #main-window[tabspinned="true"] #verticaltabs-box #pin-button {
-  background-image: url("resource://tabcenter/skin/pin-hover.png");
+  background-image: url("chrome://tabcenter/skin/pin-hover.png");
   background-color: #bbb !important;
 }
 
 [devtoolstheme="dark"] #pin-button {
-  background-image: url("resource://tabcenter/skin/pin-hover.png");
+  background-image: url("chrome://tabcenter/skin/pin-hover.png");
 }
 
 #main-window[devtoolstheme="dark"][tabspinned="true"] #verticaltabs-box #pin-button {
-  background-image: url("resource://tabcenter/skin/pin.png");
+  background-image: url("chrome://tabcenter/skin/pin.png");
 }
 
 /*#browser-box {*/
@@ -238,14 +238,14 @@
 /* Keep the close button at a safe distance from the tab label. */
 .tab-close-button {
     display: -moz-box !important;
-    background: no-repeat center/16px url("resource://tabcenter/skin/stop.svg") !important;
+    background: no-repeat center/16px url("chrome://tabcenter/skin/stop.svg") !important;
     margin: 0 0 0 3px !important;
     width: 40px;
     height: 40px;
 }
 
 .tab-close-button:hover {
-    background: no-repeat center/16px url("resource://tabcenter/skin/stop-hover.svg") !important;
+    background: no-repeat center/16px url("chrome://tabcenter/skin/stop-hover.svg") !important;
     background-color: #d94141 !important;
 }
 
