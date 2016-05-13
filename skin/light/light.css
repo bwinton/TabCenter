@@ -20,6 +20,7 @@
 
 .tabbrowser-arrowscrollbox {
   flex: 1 0;
+  height: calc(100vh - 42px);
 }
 
 #verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
