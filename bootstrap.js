@@ -102,8 +102,10 @@ function startup(data, reason) {
   Cu.import('resource://tabcenter/verticaltabs.jsm');
   unload(vtInit());
   watchWindows(function (window) {
-    let vt = new VerticalTabs(window, {newPayload, addPingStats});
-    unload(vt.unload.bind(vt), window);
+    if (window.toolbar.visible) {
+      let vt = new VerticalTabs(window, {newPayload, addPingStats});
+      unload(vt.unload.bind(vt), window);
+    }
   }, 'navigator:browser');
   timer.initWithCallback({notify: () => {
     sendPing();
