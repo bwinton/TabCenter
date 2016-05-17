@@ -126,6 +126,10 @@
   margin-left: 260px;
 }
 
+#main-window[chromehidden*="toolbar"] #appcontent {
+  margin-left: 0;
+}
+
 #main-window[inFullscreen][inDOMFullscreen] #appcontent,
 #main-window[inFullscreen][inDOMFullscreen] #PopupAutoCompleteRichResult {
   margin-left: 0 !important;
