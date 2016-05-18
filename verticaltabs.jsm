@@ -395,7 +395,16 @@ VerticalTabs.prototype = {
 
   onTabSelect: function (aEvent) {
     let tab = aEvent.target;
-    tab.scrollIntoView();
+    let elemTop = tab.getBoundingClientRect().top;
+    let elemBottom = tab.getBoundingClientRect().bottom;
+    let overTop = elemTop < 63;
+    let overBottom = elemBottom > this.window.innerHeight;
+
+    if (overTop) {
+      tab.scrollIntoView(true);
+    } else if (overBottom) {
+      tab.scrollIntoView(false);
+    }
   },
 
   onTabOpen: function (aEvent) {
