@@ -87,12 +87,13 @@ function vtInit() {
  *
  * Main entry point of this add-on.
  */
-function VerticalTabs(window, {newPayload, addPingStats, AppConstants}) {
+function VerticalTabs(window, {newPayload, addPingStats, AppConstants, setDefaultPrefs}) {
   this.window = window;
   this.document = window.document;
   this.unloaders = [];
   this.addPingStats = addPingStats;
   this.newPayload = newPayload;
+  this.setDefaultPrefs = setDefaultPrefs;
   this.AppConstants = AppConstants;
   this.stats = this.newPayload();
   this.init();
@@ -220,6 +221,7 @@ VerticalTabs.prototype = {
     let bottom = document.getElementById('browser-bottombox');
     contentbox.appendChild(bottom);
     let top = document.getElementById('navigator-toolbox');
+    let browserPanel = document.getElementById('browser-panel');
 
     // save the label of the first tab, and the toolbox palette for later…
     let tabs = document.getElementById('tabbrowser-tabs');
@@ -314,6 +316,20 @@ VerticalTabs.prototype = {
       }
     }, 150);
 
+    window.addEventListener('beforecustomization', function () {
+      browserPanel.insertBefore(top, browserPanel.firstChild);
+      top.palette = palette;
+    });
+
+    window.addEventListener('customizationchange', () => {
+      this.setDefaultPrefs();
+    });
+
+    window.addEventListener('aftercustomization', function () {
+      contentbox.insertBefore(top, contentbox.firstChild);
+      top.palette = palette;
+    });
+
     this.unloaders.push(function () {
       // Move the tabs toolbar back to where it was
       toolbar._toolbox = null; // reset value set by constructor
@@ -325,6 +341,11 @@ VerticalTabs.prototype = {
       let navbar = document.getElementById('nav-bar');
       let browserPanel = document.getElementById('browser-panel');
       let new_tab_button = document.getElementById('new-tab-button');
+
+      //remove customization event listeners which move the toolbox
+      window.removeEventListener('beforecustomization');
+      window.removeEventListener('aftercustomization');
+      window.removeEventListener('customizationchange');
 
       // Put the tabs back up top
       tabs.orient = 'horizontal';
