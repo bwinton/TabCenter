@@ -87,12 +87,13 @@ function vtInit() {
  *
  * Main entry point of this add-on.
  */
-function VerticalTabs(window, {newPayload, addPingStats}) {
+function VerticalTabs(window, {newPayload, addPingStats, AppConstants}) {
   this.window = window;
   this.document = window.document;
   this.unloaders = [];
   this.addPingStats = addPingStats;
   this.newPayload = newPayload;
+  this.AppConstants = AppConstants;
   this.stats = this.newPayload();
   this.init();
 }
@@ -100,7 +101,45 @@ VerticalTabs.prototype = {
 
   init: function () {
     this.window.VerticalTabs = this;
+    this.inferFromText = this.window.ToolbarIconColor.inferFromText;
+    let AppConstants = this.AppConstants;
+    let window = this.window;
+    let document = this.document;
+    window.ToolbarIconColor.inferFromText = function () {
+      if (!this._initialized){
+        return;
+      }
+
+      function parseRGB(aColorString) {
+        let rgb = aColorString.match(/^rgba?\((\d+), (\d+), (\d+)/);
+        rgb.shift();
+        return rgb.map(x => parseInt(x));
+      }
+
+      let toolbarSelector = '#verticaltabs-box, #verticaltabs-box > toolbar:not([collapsed=true]):not(#addon-bar)';
+      if (AppConstants.platform === 'macosx') {
+        toolbarSelector += ':not([type=menubar])';
+      }
+      // The getComputedStyle calls and setting the brighttext are separated in
+      // two loops to avoid flushing layout and making it dirty repeatedly.
+
+      let luminances = new Map;
+      for (let toolbar of document.querySelectorAll(toolbarSelector)) {
+        let [r, g, b] = parseRGB(window.getComputedStyle(toolbar).color);
+        let luminance = 0.2125 * r + 0.7154 * g + 0.0721 * b;
+        luminances.set(toolbar, luminance);
+      }
+
+      for (let [toolbar, luminance] of luminances) {
+        if (luminance <= 110) {
+          toolbar.removeAttribute('brighttext');
+        } else {
+          toolbar.setAttribute('brighttext', 'true');
+        }
+      }
+    }.bind(this.window.ToolbarIconColor);
     this.unloaders.push(function () {
+      this.window.ToolbarIconColor.inferFromText = this.inferFromText;
       delete this.window.VerticalTabs;
     });
     this.window.onunload = () => {
