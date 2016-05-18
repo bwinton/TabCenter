@@ -106,7 +106,7 @@ function startup(data, reason) {
   unload(vtInit());
   watchWindows(function (window) {
     if (window.toolbar.visible) {
-      let vt = new VerticalTabs(window, {newPayload, addPingStats, AppConstants});
+      let vt = new VerticalTabs(window, {newPayload, addPingStats, AppConstants, setDefaultPrefs});
       unload(vt.unload.bind(vt), window);
     }
   }, 'navigator:browser');
