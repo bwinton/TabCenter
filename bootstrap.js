@@ -34,12 +34,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
- /* global Iterator:false, unload:false, vtInit:false, watchWindows:false, VerticalTabs:false, newPayload:false, sendPing:false, addPingStats:false, APP_SHUTDOWN:false */
+ /* global Iterator:false, unload:false, vtInit:false, watchWindows:false,
+           VerticalTabs:false, newPayload:false, sendPing:false,
+           addPingStats:false, APP_SHUTDOWN:false, AppConstants: false */
 
  /*exported install, startup, shutdown, uninstall*/
 
 const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 
+Cu.import('resource://gre/modules/AppConstants.jsm');
 Cu.import('resource://gre/modules/Services.jsm');
 
 const RESOURCE_HOST = 'tabcenter';
@@ -103,7 +106,7 @@ function startup(data, reason) {
   unload(vtInit());
   watchWindows(function (window) {
     if (window.toolbar.visible) {
-      let vt = new VerticalTabs(window, {newPayload, addPingStats});
+      let vt = new VerticalTabs(window, {newPayload, addPingStats, AppConstants});
       unload(vt.unload.bind(vt), window);
     }
   }, 'navigator:browser');

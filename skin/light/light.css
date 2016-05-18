@@ -61,6 +61,10 @@
   transition: box-shadow 150ms ease-out 300ms, width 150ms ease-out 300ms;
 }
 
+#verticaltabs-box[brighttext] {
+  background-color: #333 !important;
+}
+
 #main-window[inFullscreen][inDOMFullscreen] #verticaltabs-box {
   visibility: collapse;
 }
@@ -93,15 +97,13 @@
   background-image: url("resource://tabcenter/skin/pin-hover.png");
 }
 
-[devtoolstheme="dark"] #pin-button {
+#TabsToolbar[brighttext] #pin-button {
   background-image: url("resource://tabcenter/skin/pin-hover.png");
 }
 
-#main-window[devtoolstheme="dark"][tabspinned="true"] #verticaltabs-box #pin-button {
+#main-window[tabspinned="true"] #TabsToolbar[brighttext] #pin-button {
   background-image: url("resource://tabcenter/skin/pin.png");
 }
-
-/*#browser-box {*/
 
 #appcontent {
   top: 0;
@@ -191,6 +193,7 @@
 .tabbrowser-tab[multiselect="true"]:-moz-window-inactive {
   background-color: InactiveCaption !important;
   color: InactiveCaptionText !important;
+
   /* gnome/gtk/cleartype doesn't seem to have inactive states for selected items, lets try this */
 }
 
@@ -213,24 +216,20 @@
   text-shadow: none;
 }
 
-/* devtools dark color overrides
-   needs the second attrib selector b/c
-   the devtools flag is always on if the user is in dev edition
-   even if they transition back to the default australis UI
-*/
+/* dark theme colour overrides */
 
-[devtoolstheme~="dark"][lwtheme="true"] .tabbrowser-tab {
+#verticaltabs-box[brighttext] .tabbrowser-tab {
   color: #fff !important;
   font-weight: 400 !important;
 }
 
-[devtoolstheme~="dark"][lwtheme="true"] .tabbrowser-tab[selected="true"],
-[devtoolstheme~="dark"][lwtheme="true"] .tabbrowser-tab[multiselect="true"] {
+#verticaltabs-box[brighttext] .tabbrowser-tab[selected="true"],
+#verticaltabs-box[brighttext] .tabbrowser-tab[multiselect="true"] {
   background-color: #3c4146 !important;
   box-shadow: none !important;
 }
 
-[devtoolstheme~="dark"][lwtheme="true"] .tabbrowser-tab:not([selected="true"]):hover {
+#verticaltabs-box[brighttext] .tabbrowser-tab:not([selected="true"]):hover {
   background-color: #2c3136 !important;
 }
 
@@ -292,7 +291,7 @@
   display: -moz-box !important;
 }
 
-/** Drop indicator for drag'n'drop of tabs - Works OOTB(TM)- Just needs a margin.**/
+/* Drop indicator for drag'n'drop of tabs - Works OOTB(TM)- Just needs a margin. */
 
 .tab-drop-indicator {
   margin-top: -11px !important;
@@ -303,14 +302,12 @@
   border-bottom-left-radius: 0 !important;
   -moz-border-right-colors: #fcfcfc rgb(154, 154, 154) !important;
   -moz-appearance: none !important;
-  background-color: #f1f1f1 !important;
   background-image: none !important;
   box-shadow: none !important;
 }
 
 #TabsToolbar {
   display: flex;
-  color: black;
   flex: 0 0 40px;
 }
 
