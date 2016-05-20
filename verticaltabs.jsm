@@ -101,6 +101,13 @@ function VerticalTabs(window, {newPayload, addPingStats, AppConstants, setDefaul
 VerticalTabs.prototype = {
 
   init: function () {
+    this.BrowserOpenTab = this.window.BrowserOpenTab;
+    this.window.BrowserOpenTab = function () {
+      this.pushToTop = true;
+      this.window.openUILinkIn(this.window.BROWSER_NEW_TAB_URL, 'tab');
+      this.pushToTop = false;
+    }.bind(this);
+
     this.window.VerticalTabs = this;
     this.inferFromText = this.window.ToolbarIconColor.inferFromText;
     let AppConstants = this.AppConstants;
@@ -141,6 +148,7 @@ VerticalTabs.prototype = {
     }.bind(this.window.ToolbarIconColor);
     this.unloaders.push(function () {
       this.window.ToolbarIconColor.inferFromText = this.inferFromText;
+      this.window.BrowserOpenTab = this.BrowserOpenTab;
       delete this.window.VerticalTabs;
     });
     this.window.onunload = () => {
@@ -165,11 +173,6 @@ VerticalTabs.prototype = {
           let tab = mutation.target;
           if (mutation.attributeName === 'crop' && !tabs.expanded) {
             tab.removeAttribute('crop');
-          } else if (mutation.attributeName === 'progress' &&
-              !tab.getAttribute('progress')) {
-            if (tab.linkedBrowser.contentDocument.URL === 'about:newtab') {
-              this.window.gBrowser.moveTabTo(tab, 0);
-            }
           }
         } else if (mutation.type === 'attributes' &&
                    mutation.target.id === 'PopupAutoCompleteRichResult' &&
@@ -409,6 +412,9 @@ VerticalTabs.prototype = {
   },
 
   initTab: function (aTab) {
+    if (this.pushToTop) {
+      this.window.gBrowser.moveTabTo(aTab, 0);
+    }
     if (this.document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
       aTab.removeAttribute('crop');
     } else {
