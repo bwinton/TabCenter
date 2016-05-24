@@ -164,9 +164,6 @@
 
 .tabbrowser-tab {
   width: 260px !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  max-height: 36px !important;
   margin: 0 !important;
   border: 0 !important;
   border-left: 4px solid transparent !important;
@@ -176,6 +173,44 @@
   -moz-box-flex: 0;
   -moz-box-pack: start;
   color: #333 !important;
+}
+
+.tabbrowser-tab.only-fade-in {
+  min-height: 36px;
+  max-height: 36px;
+  animation: 0.5s fade-in;
+  animation-fill-mode: forwards;
+}
+
+.tabbrowser-tab.tab-hidden {
+  min-height:36px;
+  animation: 0.5s fade-out, 0.5s 0.5s slide-out;
+  animation-fill-mode: forwards;
+}
+
+.tabbrowser-tab.tab-visible {
+  animation: 0.5s slide-in, 0.5s 0.5s fade-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fade-out {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes slide-out {
+  0% { max-height: 36px; min-height: 36px; opacity: 0; }
+  100% { max-height: 0; min-height: 0; opacity: 0; }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slide-in {
+  0% { max-height: 0; min-height: 0; opacity: 0; }
+  100% { max-height: 36px; min-height: 36px; opacity: 0; }
 }
 
 .tabbrowser-tab[selected="true"],

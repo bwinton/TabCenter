@@ -109,6 +109,7 @@ VerticalTabs.prototype = {
     }.bind(this);
 
     this.window.VerticalTabs = this;
+    this.removeTab = this.window.gBrowser.removeTab.bind(this.window.gBrowser);
     this.inferFromText = this.window.ToolbarIconColor.inferFromText;
     let AppConstants = this.AppConstants;
     let window = this.window;
@@ -148,6 +149,7 @@ VerticalTabs.prototype = {
     }.bind(this.window.ToolbarIconColor);
     this.unloaders.push(function () {
       this.window.ToolbarIconColor.inferFromText = this.inferFromText;
+      this.window.gBrowser.removeTab = this.removeTab;
       this.window.BrowserOpenTab = this.BrowserOpenTab;
       delete this.window.VerticalTabs;
     });
@@ -420,6 +422,25 @@ VerticalTabs.prototype = {
     } else {
       aTab.setAttribute('crop', 'end');
     }
+    aTab.classList.remove('tab-hidden');
+    if (aTab.attributes['last-tab'] === true) {
+      aTab.classList.add('only-fade-in');
+    }else {
+      aTab.classList.add('tab-visible');
+    }
+
+    this.window.gBrowser.removeTab = (aTab) => {
+      aTab.classList.remove('tab-visible', 'only-fade-in');
+      aTab.classList.add('tab-hidden');
+      aTab.addEventListener('animationend', (e) => {
+        if (e.animationName === 'fade-out') {
+          let tabStack = this.document.getAnonymousElementByAttribute(aTab, 'class', 'tab-stack');
+          tabStack.collapsed = true; //there is a visual jump if we do not collapse the tab before the end of the animation
+        } else if (e.animationName === 'slide-out') {
+          this.removeTab(aTab);
+        }
+      });
+    };
   },
 
   unload: function () {
