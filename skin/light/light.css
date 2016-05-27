@@ -226,6 +226,7 @@
 
 .tabbrowser-tab[pinned] {
   border-left: 4px solid #0996f8 !important;
+  background-image: linear-gradient(to right, #0996f8, transparent 10%) !important;
 }
 
 .tabbrowser-tab:not([selected="true"]):hover {
@@ -419,10 +420,8 @@
 }
 
 .tabbrowser-tab[pinned][titlechanged]:not([visuallyselected="true"]) {
-  background-image: radial-gradient(22px at left center, #0996f8 19%, transparent 22%) !important;
-  background-position: -2px center !important;
-  background-repeat: no-repeat !important;
-  background-size: 100% !important;
+  border-left: 4px solid #ff9500 !important;
+  background-image: linear-gradient(to right, #0996f8, transparent 10%) !important;
 }
 
 .tabbrowser-tab > .tab-stack > .tab-content[pinned][titlechanged]:not([visuallyselected="true"]) {
