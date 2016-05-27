@@ -1,7 +1,7 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 :root {
-  --tab-animation-time: 0.5s;
+  --tab-animation-time: 150ms;
 }
 
 #main-window[privatebrowsingmode="temporary"] #titlebar-buttonbox-container {
@@ -186,7 +186,7 @@
 }
 
 .tabbrowser-tab.tab-visible {
-  animation: 1s slide-fade-in;
+  animation: 300ms slide-fade-in;
 }
 
 @keyframes fade-out {
