@@ -88,12 +88,15 @@
   visibility: hidden;
 }
 
-#pin-button {
+#TabsToolbar > #pin-button {
   width: 40px;
   margin: 0 !important;
   border: none !important;
+  display: -moz-box;
   -moz-appearance: none !important;
   background: no-repeat center/16px url("resource://tabcenter/skin/pin.png");
+  opacity: 0;
+  transition: opacity 125ms ease-in-out 300ms;
 }
 
 #main-window[tabspinned="true"] #verticaltabs-box #pin-button {
@@ -107,6 +110,11 @@
 
 #main-window[tabspinned="true"] #TabsToolbar[brighttext] #pin-button {
   background-image: url("resource://tabcenter/skin/pin.png");
+}
+
+#verticaltabs-box:hover #pin-button,
+#main-window[tabspinned="true"] #pin-button {
+  opacity: 1;
 }
 
 #appcontent {
@@ -339,12 +347,18 @@
   flex: 0 0 40px;
 }
 
-#TabsToolbar > toolbarbutton {
+#main-window[tabsintitlebar] #TabsToolbar {
+  padding: 0 !important;
+}
+
+#TabsToolbar > toolbarbutton,
+#TabsToolbar > toolbaritem {
   min-height: 100% !important;
+  display: none;
 }
 
 #TabsToolbar > #new-tab-button {
-  width: auto !important;
+  display: inline;
   padding: 0 5px !important;
   -moz-box-orient: horizontal !important;
 }
@@ -355,7 +369,7 @@
 }
 
 #TabsToolbar #new-tab-spacer {
-  flex: 1;
+  flex: 1 0 20px;
 }
 
 /* Tab toolbar styling */

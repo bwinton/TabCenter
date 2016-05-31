@@ -233,6 +233,16 @@ VerticalTabs.prototype = {
     let label = tabs.firstChild.label;
     let palette = top.palette;
 
+    // Save the position of the tabs in the toolbar, for later restoring.
+    let toolbar = document.getElementById('TabsToolbar');
+    let tabsIndex = 0;
+    for (let i = 0; i < toolbar.children.length; i++) {
+      if (toolbar.children[i] === tabs) {
+        tabsIndex = i;
+        break;
+      }
+    }
+
     contentbox.insertBefore(top, contentbox.firstChild);
 
     // Create a box next to the app content. It will hold the tab
@@ -256,7 +266,6 @@ VerticalTabs.prototype = {
     top.palette = palette;
 
     // Move the tabs toolbar into the tab strip
-    let toolbar = document.getElementById('TabsToolbar');
     toolbar.setAttribute('collapsed', 'false'); // no more vanishing new tab toolbar
     toolbar._toolbox = null; // reset value set by constructor
     toolbar.setAttribute('toolboxid', 'navigator-toolbox');
@@ -345,7 +354,6 @@ VerticalTabs.prototype = {
       let toolbox = document.getElementById('navigator-toolbox');
       let navbar = document.getElementById('nav-bar');
       let browserPanel = document.getElementById('browser-panel');
-      let new_tab_button = document.getElementById('new-tab-button');
 
       //remove customization event listeners which move the toolbox
       window.removeEventListener('beforecustomization');
@@ -380,7 +388,7 @@ VerticalTabs.prototype = {
       leftbox = null;
 
       // Restore the tab strip.
-      toolbar.insertBefore(tabs, new_tab_button);
+      toolbar.insertBefore(tabs, toolbar.children[tabsIndex]);
       toolbox.insertBefore(toolbar, navbar);
       browserPanel.insertBefore(toolbox, browserPanel.firstChild);
       browserPanel.insertBefore(bottom, document.getElementById('fullscreen-warning').nextSibling);
