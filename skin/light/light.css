@@ -128,7 +128,8 @@
   margin-left: 260px;
 }
 
-#main-window[chromehidden*="toolbar"] #appcontent {
+#main-window[chromehidden*="toolbar"] #appcontent,
+#main-window[chromehidden*="toolbar"] #sidebar-box[hidden="true"] ~ #appcontent {
   margin-left: 0;
 }
 
