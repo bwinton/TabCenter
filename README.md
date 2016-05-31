@@ -15,10 +15,11 @@ horizontal fashion.  It is heavily inspired by and borrows ideas from the
 excellent VerticalTabs add-on.
 
 Feel free to [install the add-on][784891c9], read
-[the full proposal][93e83452], file [a new bug][94aea942], or maybe
-[fix some][7c43e6dd]!
+[the full proposal][93e83452], or file [a new bug][94aea942]!  We also have a
+[Contributor’s document](CONTRIBUTING.md), if you want to get involved and maybe
+[fix some bugs][7c43e6dd].
 
-[784891c9]: https://people.mozilla.org/~bwinton/TabCenter/tab-center.xpi "A link to the add-on."
+[784891c9]: https://testpilot.firefox.com/experiments/tab-center "A link to Test Pilot."
 [93e83452]: https://mozilla.invisionapp.com/share/GT22ZN6QW#/screens "The full multi-phase spec."
 [94aea942]: https://github.com/bwinton/VerticalTabs/issues/new "Make a new GitHub issue."
 [7c43e6dd]: https://github.com/bwinton/VerticalTabs/issues "The big list of issues."
