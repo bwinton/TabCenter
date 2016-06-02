@@ -288,6 +288,10 @@ VerticalTabs.prototype = {
     toolbar.appendChild(pin_button);
     leftbox.insertBefore(toolbar, leftbox.firstChild);
 
+    // change the text in the tab context box
+    let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
+    close_next_tabs_message.setAttribute('label', 'Close Tabs Below');
+
     let enter = (event) => {
       if (event.type === 'mouseenter' && leftbox.getAttribute('expanded') !== 'true') {
         this.stats.tab_center_expanded++;
