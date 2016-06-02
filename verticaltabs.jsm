@@ -162,6 +162,7 @@ VerticalTabs.prototype = {
 
     let tabs = this.document.getElementById('tabbrowser-tabs');
     let results = this.document.getElementById('PopupAutoCompleteRichResult');
+    let leftbox = this.document.getElementById('verticaltabs-box');
 
     if (results) {
       results.removeAttribute('width');
@@ -173,7 +174,7 @@ VerticalTabs.prototype = {
         if (mutation.type === 'attributes' &&
             mutation.target.localName === 'tab') {
           let tab = mutation.target;
-          if (mutation.attributeName === 'crop' && !tabs.expanded) {
+          if (mutation.attributeName === 'crop' && leftbox.getAttribute('expanded') !== 'true') {
             tab.removeAttribute('crop');
           }
         } else if (mutation.type === 'attributes' &&
@@ -181,7 +182,7 @@ VerticalTabs.prototype = {
                    mutation.attributeName === 'width') {
           results.removeAttribute('width');
         } else if (mutation.type === 'childList' &&
-            !tabs.expanded) {
+            leftbox.getAttribute('expanded') !== 'true') {
           for (let node of mutation.addedNodes) {
             node.removeAttribute('crop');
           }
@@ -287,11 +288,15 @@ VerticalTabs.prototype = {
     toolbar.appendChild(pin_button);
     leftbox.insertBefore(toolbar, leftbox.firstChild);
 
+    // change the text in the tab context box
+    let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
+    close_next_tabs_message.setAttribute('label', 'Close Tabs Below');
+
     let enter = (event) => {
-      if (event.type === 'mouseenter' && !tabs.expanded) {
+      if (event.type === 'mouseenter' && leftbox.getAttribute('expanded') !== 'true') {
         this.stats.tab_center_expanded++;
+        leftbox.setAttribute('expanded', 'true');
       }
-      tabs.expanded = true;
       if (event.pageX <= 4) {
         leftbox.style.transition = 'box-shadow 150ms ease-out, width 150ms ease-out';
         window.setTimeout(() => {
@@ -308,7 +313,7 @@ VerticalTabs.prototype = {
     leftbox.addEventListener('mousemove', enter);
     leftbox.addEventListener('mouseleave', () => {
       if (mainWindow.getAttribute('tabspinned') !== 'true') {
-        tabs.expanded = false;
+        leftbox.removeAttribute('expanded');
         let tabsPopup = document.getElementById('alltabs-popup');
         if (tabsPopup.state === 'open') {
           tabsPopup.hidePopup();
@@ -323,7 +328,7 @@ VerticalTabs.prototype = {
     tabs.addEventListener('TabUnpinned', this, false);
     window.setTimeout(() => {
       if (mainWindow.getAttribute('tabspinned') === 'true') {
-        tabs.expanded = true;
+        leftbox.setAttribute('expanded', 'true');
       }
       for (let i = 0; i < tabs.childNodes.length; i++) {
         this.initTab(tabs.childNodes[i]);
@@ -342,6 +347,18 @@ VerticalTabs.prototype = {
     window.addEventListener('aftercustomization', function () {
       contentbox.insertBefore(top, contentbox.firstChild);
       top.palette = palette;
+    });
+
+    let tab_context_menu = document.getElementById('tabContextMenu');
+
+    tab_context_menu.addEventListener('mouseover', function () {
+      leftbox.setAttribute('expanded', 'true');
+    });
+
+    tab_context_menu.addEventListener('mouseout', function () {
+      if (mainWindow.getAttribute('tabspinned') !== 'true') {
+        leftbox.removeAttribute('expanded');
+      }
     });
 
     this.unloaders.push(function () {

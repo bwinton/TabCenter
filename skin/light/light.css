@@ -17,7 +17,7 @@
   flex: 1 0;
 }
 
-#verticaltabs-box:hover .tabbrowser-tabs,
+#verticaltabs-box[expanded="true"] .tabbrowser-tabs,
 #main-window[tabspinned="true"] #verticaltabs-box .tabbrowser-tabs {
   overflow-y: auto;
 }
@@ -31,7 +31,7 @@
   overflow-y: hidden !important;
 }
 
-#verticaltabs-box:hover .tabbrowser-arrowscrollbox > scrollbox,
+#verticaltabs-box[expanded="true"] .tabbrowser-arrowscrollbox > scrollbox,
 #main-window[tabspinned="true"] #verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
   overflow-y: auto !important;
 }
@@ -73,7 +73,7 @@
   visibility: collapse;
 }
 
-#verticaltabs-box:hover {
+#verticaltabs-box[expanded="true"] {
   width: 260px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(0, 0, 0, 0);
 }
@@ -112,7 +112,7 @@
   background-image: url("resource://tabcenter/skin/pin.png");
 }
 
-#verticaltabs-box:hover #pin-button,
+#verticaltabs-box[expanded="true"] #pin-button,
 #main-window[tabspinned="true"] #pin-button {
   opacity: 1;
 }
