@@ -167,7 +167,7 @@ const PAYLOAD_KEYS = [
 ];
 
 function newPayload() {
-  let rv = {};
+  let rv = {'version': 1};
   PAYLOAD_KEYS.forEach(key => {
     rv[key] = 0;
   });
@@ -192,9 +192,6 @@ function sendPing() {
     }
   };
 
-  let userAgent = Cc['@mozilla.org/network/protocol;1?name=http']
-                    .getService(Ci.nsIHttpProtocolHandler).userAgent;
-
   let windows = Services.wm.getEnumerator(null);
   while (windows.hasMoreElements()) {
     let vt = windows.getNext().VerticalTabs;
@@ -203,12 +200,7 @@ function sendPing() {
     }
   }
 
-  let ping = JSON.stringify({
-    'test': 'tabcentertest1@mozilla.com',  // The em:id field from the add-on
-    'agent': userAgent,
-    'version': 1,  // Just in case we need to drastically change the format later
-    'payload': payload
-  });
+  let ping = JSON.stringify(payload);
   payload = newPayload();
   // Send metrics to the main Test Pilot add-on.
   observerService.notifyObservers(subject, 'testpilot::send-metric', ping);

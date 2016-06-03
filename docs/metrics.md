@@ -117,19 +117,15 @@ An example payload (within the full Telemetry ping):
 
 ```js
 {
- "test": "tabcentertest1@mozilla.com",  // The em:id field from the add-on
- "agent": "User Agent String",
- "version": 1,  // Just in case we need to drastically change the format later
- "payload": {
-    “tabs_created”: 1000,
-    “tabs_destroyed”: 1000,
-    “tabs_pinned”: 5,
-    “tabs_unpinned”: 4,
-    “tab_center_pinned”: 1,
-    “tab_center_unpinned”: 0,
-    “tab_center_expanded”: 9999
-    /* “tab_center_teased”: 1234  (Version 2) */
-  }
+  "version": 1,  // Just in case we need to drastically change the format later
+  "tabs_created": 1000,
+  "tabs_destroyed": 1000,
+  "tabs_pinned": 5,
+  "tabs_unpinned": 4,
+  "tab_center_pinned": 1,
+  "tab_center_unpinned": 0,
+  "tab_center_expanded": 9999
+  /* "tab_center_teased": 1234  (Version 2) */
 }
 ```
 
@@ -140,15 +136,14 @@ local schema = {
     {"timestamp",             "TIMESTAMP",  nil,    "SORTKEY",  "Timestamp"},
     {"uuid",                  "VARCHAR",    36,     nil,        get_uuid},
     {"service",               "VARCHAR",    255,    nil,        "test"},
-    {"agent",                 "VARCHAR",    45,     nil,        "agent"},
 
-    {"tabs_created",          "INTEGER",    nil,    nil,        "payload[tabs_created]"},
-    {"tabs_destroyed",        "INTEGER",    nil,    nil,        "payload[tabs_destroyed]"},
-    {"tabs_pinned",           "INTEGER",    nil,    nil,        "payload[tabs_pinned]"},
-    {"tabs_unpinned",         "INTEGER",    nil,    nil,        "payload[tabs_unpinned]"},
-    {"tab_center_pinned",     "INTEGER",    nil,    nil,        "payload[tab_center_pinned]"},
-    {"tab_center_unpinned",   "INTEGER",    nil,    nil,        "payload[tab_center_unpinned]"},
-    {"tab_center_expanded",   "INTEGER",    nil,    nil,        "payload[tab_center_expanded]"}
+    {"tabs_created",          "INTEGER",    nil,    nil,        "tabs_created"},
+    {"tabs_destroyed",        "INTEGER",    nil,    nil,        "tabs_destroyed"},
+    {"tabs_pinned",           "INTEGER",    nil,    nil,        "tabs_pinned"},
+    {"tabs_unpinned",         "INTEGER",    nil,    nil,        "tabs_unpinned"},
+    {"tab_center_pinned",     "INTEGER",    nil,    nil,        "tab_center_pinned"},
+    {"tab_center_unpinned",   "INTEGER",    nil,    nil,        "tab_center_unpinned"},
+    {"tab_center_expanded",   "INTEGER",    nil,    nil,        "tab_center_expanded"}
 --  {"tab_center_teased",     "INTEGER",    nil,    nil,        "payload[tab_center_teased]"}  (Version 2)
 }
 
