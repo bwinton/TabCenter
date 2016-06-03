@@ -243,6 +243,9 @@
           switch (aEvent.type) {
           case 'load':
             this.updateVisibility();
+            if (typeof TabsInTitlebar._updateOnInit != 'undefined') {
+              TabsInTitlebar.init();
+            }
             break;
           case 'resize':
             if (aEvent.target !== window) {
