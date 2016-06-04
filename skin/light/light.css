@@ -23,8 +23,19 @@
 }
 
 .tabbrowser-arrowscrollbox {
-  height: calc(100vh - 42px);
+  height: calc(100vh - 63px);
   flex: 1 0;
+}
+
+.tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
+  height: calc(100vh - 41px);
+}
+
+@media (-moz-os-version: windows-xp), (-moz-os-version: windows-vista), (-moz-os-version: windows-win7), (-moz-os-version: windows-win8), (-moz-os-version: windows-win10) {
+  .tabbrowser-arrowscrollbox,
+  .tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
+    height: calc(100vh - 42px);
+  }
 }
 
 #verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
