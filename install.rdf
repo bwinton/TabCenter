@@ -5,7 +5,7 @@
     <em:type>2</em:type>
     <em:bootstrap>true</em:bootstrap>
     <em:name>Tab Center</em:name>
-    <em:version>1.19</em:version>
+    <em:version>1.20</em:version>
     <em:homepageURL>https://github.com/bwinton/VerticalTabs</em:homepageURL>
     <em:updateURL>https://people.mozilla.com/~bwinton/TabCenter/tab-center.update.rdf</em:updateURL>
     <em:iconURL>resource://tabcenter/skin/icon.png</em:iconURL>
