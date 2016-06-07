@@ -101,19 +101,23 @@ function VerticalTabs(window, {newPayload, addPingStats, AppConstants, setDefaul
 VerticalTabs.prototype = {
 
   init: function () {
-    this.BrowserOpenTab = this.window.BrowserOpenTab;
-    this.window.BrowserOpenTab = function () {
-      this.pushToTop = true;
-      this.window.openUILinkIn(this.window.BROWSER_NEW_TAB_URL, 'tab');
-      this.pushToTop = false;
-    }.bind(this);
-
     this.window.VerticalTabs = this;
     this._endRemoveTab = this.window.gBrowser._endRemoveTab;
     this.inferFromText = this.window.ToolbarIconColor.inferFromText;
     let AppConstants = this.AppConstants;
     let window = this.window;
     let document = this.document;
+
+    let mainWindow = document.getElementById('main-window');
+    this.BrowserOpenTab = this.window.BrowserOpenTab;
+    this.window.BrowserOpenTab = function () {
+      if (mainWindow.getAttribute('tablocation') === 'top'){
+        this.pushToTop = true;
+      }
+      this.window.openUILinkIn(this.window.BROWSER_NEW_TAB_URL, 'tab');
+      this.pushToTop = false;
+    }.bind(this);
+
     window.ToolbarIconColor.inferFromText = function () {
       if (!this._initialized){
         return;
@@ -252,7 +256,8 @@ VerticalTabs.prototype = {
     let leftbox = this.createElement('vbox', {'id': 'verticaltabs-box'});
     browserbox.insertBefore(leftbox, contentbox);
     mainWindow.setAttribute('persist',
-      mainWindow.getAttribute('persist') + ' tabspinned');
+      mainWindow.getAttribute('persist') + ' tabspinned tablocation');
+
 
     // Move the tabs next to the app content, make them vertical,
     // and restore their width from previous session
@@ -285,6 +290,16 @@ VerticalTabs.prototype = {
         }
         `
     });
+    let direction_button = this.createElement('toolbarbutton', {
+      'id': 'direction-button',
+      'tooltiptext': 'toggle where new tabs are created',
+      'onclick': `let box = document.getElementById('main-window');
+        let newstate = box.getAttribute('tablocation') == 'top' ? 'bottom' : 'top';
+        box.setAttribute('tablocation', newstate);
+        `
+    });
+
+    toolbar.appendChild(direction_button);
     toolbar.appendChild(pin_button);
     leftbox.insertBefore(toolbar, leftbox.firstChild);
 

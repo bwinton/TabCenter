@@ -110,6 +110,24 @@
   transition: opacity 125ms ease-in-out 300ms;
 }
 
+#direction-button {
+  width: 40px;
+  margin: 0 !important;
+  border: none !important;
+  display: -moz-box !important;
+  color: #bbb;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+#direction-button::after {
+  content: "\2304";
+}
+
+#main-window[tablocation="top"] #direction-button::after {
+  content: "\2303";
+}
+
 #main-window[tabspinned="true"] #verticaltabs-box #pin-button {
   background-color: #bbb !important;
   background-image: url("resource://tabcenter/skin/pin-hover.png");
