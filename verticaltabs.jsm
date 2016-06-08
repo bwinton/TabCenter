@@ -114,6 +114,13 @@ VerticalTabs.prototype = {
     let AppConstants = this.AppConstants;
     let window = this.window;
     let document = this.document;
+
+    window.addEventListener('animationend', function (e) {
+      if (e.animationName === 'slide-fade-in') {
+        e.target.classList.remove('tab-visible');
+      }
+    });
+
     window.ToolbarIconColor.inferFromText = function () {
       if (!this._initialized){
         return;
@@ -453,7 +460,6 @@ VerticalTabs.prototype = {
     }
 
     this.window.gBrowser._endRemoveTab = (aTab) => {
-      aTab.classList.remove('tab-visible');
       aTab.classList.add('tab-hidden');
       aTab.addEventListener('animationend', (e) => {
         if (e.animationName === 'fade-out') {
