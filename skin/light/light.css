@@ -31,13 +31,6 @@
   height: calc(100vh - 41px);
 }
 
-@media (-moz-os-version: windows-xp), (-moz-os-version: windows-vista), (-moz-os-version: windows-win7), (-moz-os-version: windows-win8), (-moz-os-version: windows-win10) {
-  .tabbrowser-arrowscrollbox,
-  .tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
-    height: calc(100vh - 42px);
-  }
-}
-
 #verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
   overflow-y: hidden !important;
 }
@@ -452,6 +445,13 @@
   background-image: none !important;
 }
 
+@media (-moz-os-version: windows-xp), (-moz-os-version: windows-vista), (-moz-os-version: windows-win10) {
+  .tabbrowser-arrowscrollbox,
+  .tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
+    height: calc(100vh - 42px);
+  }
+}
+
 @media (-moz-os-version: windows-win7), (-moz-os-version: windows-win8) {
   #appcontent {
     top: 1px;
@@ -468,6 +468,11 @@
 
   #nav-bar {
     border-left: none !important;
+  }
+
+  .tabbrowser-arrowscrollbox,
+  .tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
+    height: calc(100vh - 46px);
   }
 }
 
