@@ -354,12 +354,9 @@
 }
 
 #TabsToolbar {
+  padding: 0 !important;
   display: flex;
   flex: 0 0 40px;
-}
-
-#main-window[tabsintitlebar] #TabsToolbar {
-  padding: 0 !important;
 }
 
 #TabsToolbar > toolbarbutton,
