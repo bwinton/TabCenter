@@ -445,6 +445,13 @@
   background-image: none !important;
 }
 
+@media (-moz-os-version: windows-xp), (-moz-os-version: windows-vista), (-moz-os-version: windows-win10), (-moz-os-version: windows-win7), (-moz-os-version: windows-win8) {
+  /*remove clear bottom border in themes*/
+  #TabsToolbar {
+    border-bottom: 1px solid ThreeDShadow !important;
+  }
+}
+
 @media (-moz-os-version: windows-xp), (-moz-os-version: windows-vista), (-moz-os-version: windows-win10) {
   .tabbrowser-arrowscrollbox,
   .tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
