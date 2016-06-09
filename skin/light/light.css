@@ -476,10 +476,19 @@
   #nav-bar {
     border-left: none !important;
   }
+}
 
+@media (-moz-os-version: windows-win8) {
   .tabbrowser-arrowscrollbox,
   .tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
     height: calc(100vh - 46px);
+  }
+}
+
+@media (-moz-os-version: windows-win7) {
+  .tabbrowser-arrowscrollbox,
+  .tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
+    height: calc(100vh - 44px);
   }
 }
 
