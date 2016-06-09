@@ -474,3 +474,10 @@
     border-left: none !important;
   }
 }
+
+/* win10 needs to be 1 px smaller*/
+@media (-moz-os-version: windows-win10) {
+  #TabsToolbar {
+    flex: 0 0 39px;
+  }
+}
