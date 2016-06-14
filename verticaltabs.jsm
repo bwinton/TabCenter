@@ -114,6 +114,23 @@ VerticalTabs.prototype = {
     let AppConstants = this.AppConstants;
     let window = this.window;
     let document = this.document;
+
+    window.addEventListener('animationend', (e) => {
+      let tab = e.target;
+      if (e.animationName === 'slide-fade-in') {
+        tab.classList.remove('tab-visible');
+      } else if (e.animationName === 'fade-out') {
+        let tabStack = this.document.getAnonymousElementByAttribute(tab, 'class', 'tab-stack');
+        tabStack.collapsed = true; //there is a visual jump if we do not collapse the tab before the end of the animation
+      } else if (e.animationName === 'slide-out') {
+        this._endRemoveTab.bind(this.window.gBrowser)(tab);
+      }
+    });
+
+    window.gBrowser._endRemoveTab = (aTab) => {
+      aTab.classList.add('tab-hidden');
+    };
+
     window.ToolbarIconColor.inferFromText = function () {
       if (!this._initialized){
         return;
@@ -451,19 +468,6 @@ VerticalTabs.prototype = {
     } else {
       aTab.setAttribute('crop', 'end');
     }
-
-    this.window.gBrowser._endRemoveTab = (aTab) => {
-      aTab.classList.remove('tab-visible');
-      aTab.classList.add('tab-hidden');
-      aTab.addEventListener('animationend', (e) => {
-        if (e.animationName === 'fade-out') {
-          let tabStack = this.document.getAnonymousElementByAttribute(aTab, 'class', 'tab-stack');
-          tabStack.collapsed = true; //there is a visual jump if we do not collapse the tab before the end of the animation
-        } else if (e.animationName === 'slide-out') {
-          this._endRemoveTab.bind(this.window.gBrowser)(aTab);
-        }
-      });
-    };
   },
 
   unload: function () {
