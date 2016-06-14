@@ -284,6 +284,7 @@
   display: none;
 }
 
+.tab-icon-overlay[muted],
 .tab-icon-overlay[soundplaying] {
   display: -moz-box !important;
 }
