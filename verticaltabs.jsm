@@ -176,6 +176,8 @@ VerticalTabs.prototype = {
           let tab = mutation.target;
           if (mutation.attributeName === 'crop' && leftbox.getAttribute('expanded') !== 'true') {
             tab.removeAttribute('crop');
+          } else if (mutation.attributeName === 'selected' && tab.getAttribute('visuallyselected') !== 'true'){
+            this.checkScrollToTab(tab);
           }
         } else if (mutation.type === 'attributes' &&
                    mutation.target.id === 'PopupAutoCompleteRichResult' &&
@@ -322,7 +324,6 @@ VerticalTabs.prototype = {
     });
 
     tabs.addEventListener('TabOpen', this, false);
-    tabs.addEventListener('TabSelect', this, false);
     tabs.addEventListener('TabClose', this, false);
     tabs.addEventListener('TabPinned', this, false);
     tabs.addEventListener('TabUnpinned', this, false);
@@ -383,7 +384,6 @@ VerticalTabs.prototype = {
       tabs.tabbox.orient = 'vertical'; // probably not necessary
       tabs.removeAttribute('width');
       tabs.removeEventListener('TabOpen', this, false);
-      tabs.removeEventListener('TabSelect', this, false);
       tabs.removeEventListener('TabClose', this, false);
       tabs.removeEventListener('TabPinned', this, false);
       tabs.removeEventListener('TabUnpinned', this, false);
@@ -472,6 +472,18 @@ VerticalTabs.prototype = {
     }, this);
   },
 
+  checkScrollToTab: function (tab) {
+    let elemTop = tab.getBoundingClientRect().top;
+    let elemBottom = tab.getBoundingClientRect().bottom;
+    let overTop = elemTop < 63;
+    let overBottom = elemBottom > this.window.innerHeight;
+    if (overTop) {
+      tab.scrollIntoView(true);
+    } else if (overBottom) {
+      tab.scrollIntoView(false);
+    }
+  },
+
   /*** Event handlers ***/
 
   handleEvent: function (aEvent) {
@@ -497,23 +509,6 @@ VerticalTabs.prototype = {
     case 'popupshowing':
       this.onPopupShowing(aEvent);
       return;
-    case 'TabSelect':
-      this.onTabSelect(aEvent);
-      return;
-    }
-  },
-
-  onTabSelect: function (aEvent) {
-    let tab = aEvent.target;
-    let elemTop = tab.getBoundingClientRect().top;
-    let elemBottom = tab.getBoundingClientRect().bottom;
-    let overTop = elemTop < 63;
-    let overBottom = elemBottom > this.window.innerHeight;
-
-    if (overTop) {
-      tab.scrollIntoView(true);
-    } else if (overBottom) {
-      tab.scrollIntoView(false);
     }
   },
 
