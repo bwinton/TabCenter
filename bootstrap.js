@@ -93,6 +93,17 @@ function startup(data, reason) {
 
   setDefaultPrefs();
 
+  //set new tabs to open at top as default -- only if undefined
+  try {
+    Services.prefs.getBoolPref('extensions.verticaltabs.opentabstop');
+  } catch (ex) {
+    if (ex.result === Components.results.NS_ERROR_UNEXPECTED) {
+      Services.prefs.setBoolPref('extensions.verticaltabs.opentabstop', true);
+    } else {
+      throw(ex);
+    }
+  }
+
   // Register the resource:// alias.
   let resource = Services.io.getProtocolHandler('resource')
                          .QueryInterface(Ci.nsIResProtocolHandler);
