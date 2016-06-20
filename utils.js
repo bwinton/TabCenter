@@ -199,10 +199,11 @@ function sendPing() {
       vt.sendStats();
     }
   }
-
+  payload.tab_center_tabs_on_top = Services.prefs.getBoolPref('extensions.verticaltabs.opentabstop');
   let ping = JSON.stringify(payload);
   payload = newPayload();
   // Send metrics to the main Test Pilot add-on.
   observerService.notifyObservers(subject, 'testpilot::send-metric', ping);
+
   // Clear out the metrics for next time…
 }
