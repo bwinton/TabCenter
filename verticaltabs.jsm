@@ -101,19 +101,27 @@ function VerticalTabs(window, {newPayload, addPingStats, AppConstants, setDefaul
 VerticalTabs.prototype = {
 
   init: function () {
-    this.BrowserOpenTab = this.window.BrowserOpenTab;
-    this.window.BrowserOpenTab = function () {
-      this.pushToTop = true;
-      this.window.openUILinkIn(this.window.BROWSER_NEW_TAB_URL, 'tab');
-      this.pushToTop = false;
-    }.bind(this);
-
     this.window.VerticalTabs = this;
     this._endRemoveTab = this.window.gBrowser._endRemoveTab;
     this.inferFromText = this.window.ToolbarIconColor.inferFromText;
     let AppConstants = this.AppConstants;
     let window = this.window;
     let document = this.document;
+
+    try {
+      Services.prefs.getBoolPref('extensions.verticaltabs.opentabstop');
+    } catch (ex) {
+      if (ex.result === Components.results.NS_ERROR_UNEXPECTED) {
+        Services.prefs.setBoolPref('extensions.verticaltabs.opentabstop', true);
+      }
+    }
+
+    this.BrowserOpenTab = this.window.BrowserOpenTab;
+    this.window.BrowserOpenTab = function () {
+      this.pushToTop = Services.prefs.getBoolPref('extensions.verticaltabs.opentabstop');
+      this.window.openUILinkIn(this.window.BROWSER_NEW_TAB_URL, 'tab');
+    }.bind(this);
+
     window.ToolbarIconColor.inferFromText = function () {
       if (!this._initialized){
         return;
