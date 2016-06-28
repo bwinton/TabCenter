@@ -2,6 +2,7 @@
 
 :root {
   --tab-animation-time: 150ms;
+  --pinned-width: 260px;
 }
 
 #main-window[privatebrowsingmode="temporary"] #titlebar-buttonbox-container {
@@ -83,7 +84,7 @@
 }
 
 #main-window[tabspinned="true"] #verticaltabs-box {
-  width: 260px;
+  width: var(--pinned-width);
   box-shadow: none;
   transition: box-shadow 0ms ease-in-out 0ms;
 }
@@ -137,11 +138,11 @@
 
 #main-window[tabspinned="true"] #sidebar-box[hidden="true"] ~ #appcontent,
 #main-window[tabspinned="true"] #sidebar-box[hidden="true"] ~ #PopupAutoCompleteRichResult {
-  margin-left: 260px;
+  margin-left: var(--pinned-width);
 }
 
 #main-window[tabspinned="true"] #sidebar-box {
-  margin-left: 260px;
+  margin-left: var(--pinned-width);
 }
 
 #main-window[chromehidden*="toolbar"] #appcontent,
@@ -167,7 +168,7 @@
 #main-window[tabspinned="true"] #verticaltabs-box + #appcontent #navigator-toolbox,
 #main-window[tabspinned="true"] #verticaltabs-box + #appcontent .browserContainer,
 #main-window[tabspinned="true"] #PopupAutoCompleteRichResult {
-  width: calc(100vw - 260px);
+  width: calc(100vw - var(--pinned-width));
 }
 
 #main-window[inFullscreen][inDOMFullscreen] .browserContainer
@@ -192,6 +193,10 @@
   -moz-box-flex: 0;
   -moz-box-pack: start;
   color: #333 !important;
+}
+
+#main-window[tabspinned="true"] .tabbrowser-tab {
+  width: var(--pinned-width) !important;
 }
 
 .tabbrowser-tab.tab-hidden {
