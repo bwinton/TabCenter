@@ -1,8 +1,8 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 :root {
-  --tab-animation-time: 150ms;
-  --pinned-width: 260px;
+  --tab-animation-time:150ms;
+  --pinned-width:260px;
 }
 
 #main-window[privatebrowsingmode="temporary"] #titlebar-buttonbox-container {
@@ -83,6 +83,18 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(0, 0, 0, 0);
 }
 
+#verticaltabs-splitter {
+  display: none;
+  margin-left: var(--pinned-width);
+  min-width: 3px !important;
+  width: 3px;
+  cursor: ew-resize;
+}
+
+#main-window[tabspinned="true"] #verticaltabs-splitter {
+  display: -moz-box;
+}
+
 #main-window[tabspinned="true"] #verticaltabs-box {
   width: var(--pinned-width);
   box-shadow: none;
@@ -127,22 +139,16 @@
   border-top: 1px solid rgb(160, 160, 160);
 }
 
+#sidebar-box,
 #sidebar-box[hidden="true"] ~ #appcontent,
 #sidebar-box[hidden="true"] ~ #PopupAutoCompleteRichResult {
   margin-left: 45px;
 }
 
-#sidebar-box {
-  margin-left: 45px;
-}
-
+#main-window[tabspinned="true"] #sidebar-box,
 #main-window[tabspinned="true"] #sidebar-box[hidden="true"] ~ #appcontent,
 #main-window[tabspinned="true"] #sidebar-box[hidden="true"] ~ #PopupAutoCompleteRichResult {
-  margin-left: var(--pinned-width);
-}
-
-#main-window[tabspinned="true"] #sidebar-box {
-  margin-left: var(--pinned-width);
+  margin-left: 0;
 }
 
 #main-window[chromehidden*="toolbar"] #appcontent,
