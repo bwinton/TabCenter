@@ -241,6 +241,10 @@
   border-left: 4px solid #0996f8 !important;
 }
 
+.tabbrowser-tab[pinned] + .tabbrowser-tab:not([pinned]) {
+  border-top: 1px solid black !important;
+}
+
 .tabbrowser-tab:not([selected="true"]):hover {
   margin: 0 !important;
   background-color: #ebebeb !important;
