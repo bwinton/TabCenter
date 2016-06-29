@@ -5,6 +5,7 @@ SOURCES = \
 	chrome.manifest \
 	install.rdf \
 	multiselect.jsm \
+	options.xul \
 	override-bindings.css \
 	skin/* \
 	tabdatastore.jsm \
