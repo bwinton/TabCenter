@@ -10,6 +10,7 @@
 }
 
 .tabbrowser-tabs {
+  overflow-x: hidden;
   overflow-y: hidden;
   box-sizing: border-box;
   margin: 0 !important;
@@ -107,6 +108,7 @@
 
 #TabsToolbar > #pin-button {
   width: 40px;
+  min-width: 40px;
   margin: 0 !important;
   border: none !important;
   display: -moz-box;
