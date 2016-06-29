@@ -448,6 +448,7 @@ VerticalTabs.prototype = {
 
       // Remove all the crap we added.
       browserbox.removeChild(leftbox);
+      browserbox.removeChild(splitter);
       browserbox.removeAttribute('dir');
       mainWindow.removeAttribute('tabspinned');
       mainWindow.removeAttribute('tabspinnedwidth');
