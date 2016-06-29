@@ -19,6 +19,23 @@ Feel free to [install the add-on][784891c9], read
 [Contributor’s document](CONTRIBUTING.md), if you want to get involved and maybe
 [fix some bugs][7c43e6dd].
 
+#### Incompatibility Notes
+
+We are incompatible with a number of add-ons:
+
+- Hide Caption Titlebar Plus
+- HTitle
+- Tab Mix Plus
+- Tab Groups
+  - Tab Groups Helper
+- Tree-Style Tabs
+- TooManyTabs
+- All-In-One Sidebar
+- Firebug
+
+Please let us know if you find any problems with extensions not mentioned.
+
+
 [784891c9]: https://testpilot.firefox.com/experiments/tab-center "A link to Test Pilot."
 [93e83452]: https://mozilla.invisionapp.com/share/GT22ZN6QW#/screens "The full multi-phase spec."
 [94aea942]: https://github.com/bwinton/VerticalTabs/issues/new "Make a new GitHub issue."
