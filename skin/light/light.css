@@ -1,7 +1,8 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 :root {
-  --tab-animation-time: 150ms;
+  --tab-animation-time:150ms;
+  --pinned-width:260px;
 }
 
 #main-window[privatebrowsingmode="temporary"] #titlebar-buttonbox-container {
@@ -9,6 +10,7 @@
 }
 
 .tabbrowser-tabs {
+  overflow-x: hidden;
   overflow-y: hidden;
   box-sizing: border-box;
   margin: 0 !important;
@@ -82,8 +84,20 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(0, 0, 0, 0);
 }
 
+#verticaltabs-splitter {
+  display: none;
+  margin-left: var(--pinned-width);
+  min-width: 3px !important;
+  width: 3px;
+  cursor: ew-resize;
+}
+
+#main-window[tabspinned="true"] #verticaltabs-splitter {
+  display: -moz-box;
+}
+
 #main-window[tabspinned="true"] #verticaltabs-box {
-  width: 260px;
+  width: var(--pinned-width);
   box-shadow: none;
   transition: box-shadow 0ms ease-in-out 0ms;
 }
@@ -94,6 +108,7 @@
 
 #TabsToolbar > #pin-button {
   width: 40px;
+  min-width: 40px;
   margin: 0 !important;
   border: none !important;
   display: -moz-box;
@@ -126,22 +141,16 @@
   border-top: 1px solid rgb(160, 160, 160);
 }
 
+#sidebar-box,
 #sidebar-box[hidden="true"] ~ #appcontent,
 #sidebar-box[hidden="true"] ~ #PopupAutoCompleteRichResult {
   margin-left: 45px;
 }
 
-#sidebar-box {
-  margin-left: 45px;
-}
-
+#main-window[tabspinned="true"] #sidebar-box,
 #main-window[tabspinned="true"] #sidebar-box[hidden="true"] ~ #appcontent,
 #main-window[tabspinned="true"] #sidebar-box[hidden="true"] ~ #PopupAutoCompleteRichResult {
-  margin-left: 260px;
-}
-
-#main-window[tabspinned="true"] #sidebar-box {
-  margin-left: 260px;
+  margin-left: 0;
 }
 
 #main-window[chromehidden*="toolbar"] #appcontent,
@@ -167,7 +176,7 @@
 #main-window[tabspinned="true"] #verticaltabs-box + #appcontent #navigator-toolbox,
 #main-window[tabspinned="true"] #verticaltabs-box + #appcontent .browserContainer,
 #main-window[tabspinned="true"] #PopupAutoCompleteRichResult {
-  width: calc(100vw - 260px);
+  width: calc(100vw - var(--pinned-width));
 }
 
 #main-window[inFullscreen][inDOMFullscreen] .browserContainer
@@ -192,6 +201,10 @@
   -moz-box-flex: 0;
   -moz-box-pack: start;
   color: #333 !important;
+}
+
+#main-window[tabspinned="true"] .tabbrowser-tab {
+  width: var(--pinned-width) !important;
 }
 
 .tabbrowser-tab.tab-hidden {
