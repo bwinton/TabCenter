@@ -322,8 +322,29 @@ VerticalTabs.prototype = {
     toolbar.setAttribute('collapsed', 'false'); // no more vanishing new tab toolbar
     toolbar._toolbox = null; // reset value set by constructor
     toolbar.setAttribute('toolboxid', 'navigator-toolbox');
-    let spacer = this.createElement('spacer', {'id': 'new-tab-spacer'});
-    toolbar.appendChild(spacer);
+    let find_input = this.createElement('textbox', {
+      'id': 'find-input',
+      'class': 'searchbar-textbox'
+    });
+
+    let search_icon = this.createElement('image', {
+      'id': 'tabs-search'
+    });
+    find_input.appendChild(search_icon);
+    toolbar.appendChild(find_input);
+
+    find_input.addEventListener('input', function (e) {
+      let input_value = e.target.value.toLowerCase();
+      for (let i = 0; i < tabs.childNodes.length; i++) {
+        let tab = tabs.childNodes[i];
+        if (tab.label.toLowerCase().match(input_value) || tab.linkedBrowser.currentURI.spec.toLowerCase().match(input_value)) {
+          tab.style.visibility = 'visible';
+        } else {
+          tab.style.visibility = 'collapse';
+        }
+      }
+    });
+
     let pin_button = this.createElement('toolbarbutton', {
       'id': 'pin-button',
       'tooltiptext': 'Keep sidebar open',
@@ -417,7 +438,7 @@ VerticalTabs.prototype = {
       toolbar._toolbox = null; // reset value set by constructor
       toolbar.removeAttribute('toolboxid');
       toolbar.removeAttribute('collapsed');
-      toolbar.removeChild(spacer);
+      toolbar.removeChild(find_input);
       toolbar.removeChild(pin_button);
       let toolbox = document.getElementById('navigator-toolbox');
       let navbar = document.getElementById('nav-bar');
