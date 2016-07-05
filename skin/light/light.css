@@ -255,6 +255,11 @@
   animation: 300ms slide-fade-in;
 }
 
+.filler-tab image,
+.filler-tab toolbarbutton {
+  display: none !important;
+}
+
 @keyframes fade-out {
   0% { opacity: 1; }
   100% { opacity: 0; }

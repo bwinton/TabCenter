@@ -333,17 +333,34 @@ VerticalTabs.prototype = {
     find_input.appendChild(search_icon);
     toolbar.appendChild(find_input);
 
-    find_input.addEventListener('input', function (e) {
-      let input_value = e.target.value.toLowerCase();
-      for (let i = 0; i < tabs.childNodes.length; i++) {
+    let hidden_tab = this.createElement('tab', {'class': 'tabbrowser-tab filler-tab',
+                                                 'fadein':'true'});
+    hidden_tab.addEventListener('click', function (){
+      find_input.value = '';
+      filtertabs();
+    });
+
+    find_input.addEventListener('input', filtertabs);
+
+    function filtertabs() {
+      let input_value = find_input.value.toLowerCase();
+      let hidden_counter = 0;
+      for (let i = 0; i < tabs.childNodes.length - 1; i++) {
         let tab = tabs.childNodes[i];
         if (tab.label.toLowerCase().match(input_value) || tab.linkedBrowser.currentURI.spec.toLowerCase().match(input_value)) {
           tab.style.visibility = 'visible';
         } else {
+          hidden_counter += 1;
           tab.style.visibility = 'collapse';
         }
       }
-    });
+      if (hidden_counter > 0) {
+        hidden_tab.setAttribute('label', `${hidden_counter} more tab${hidden_counter > 1 ? 's' : ''}...`);
+        tabs.appendChild(hidden_tab);
+      } else {
+        tabs.removeChild(hidden_tab);
+      }
+    }
 
     let pin_button = this.createElement('toolbarbutton', {
       'id': 'pin-button',
