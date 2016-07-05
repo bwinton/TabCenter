@@ -1,3 +1,18 @@
+# v1.21 - Sidebar updates, part 1.
+
+The first batch of sidebar changes…
+
+### Features:
+
+* Set pref in options to change new tab opening location. 👆👇‽ 👌 (Fixes #322.)
+* Make the pinned sidebar resizable. ⟸║⟹ 😃 (Fixes #23.)
+
+### Fixes:
+
+* Remove slide-in animation from dragging tabs. 🐉 📑  (Fixes #326.)
+* Reopening a tab scrolls to it instead of the bottom.  (Fixes #338.)
+* Show muted icon if no sound playing. 🙊  (Fixes #323.)
+
 # v1.20 - More fixes.
 
 Keeping on knocking out the most reported problems.
