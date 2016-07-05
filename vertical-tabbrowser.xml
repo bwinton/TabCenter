@@ -69,6 +69,9 @@
                           clicktoscroll="true"
                           class="tabbrowser-arrowscrollbox">
         <children includes="tab"/>
+        <xul:vbox pack="center" id="filler-tab" hidden="true">
+          <xul:label/>
+        </xul:vbox>
         <xul:toolbarbutton class="tabs-newtab-button"
                            command="cmd_newNavigatorTab"
                            onclick="checkForMiddleClick(this, event);"

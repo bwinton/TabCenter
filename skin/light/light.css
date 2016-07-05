@@ -158,6 +158,18 @@
   vertical-align: super;
 }
 
+#main-window[inFullscreen][inDOMFullscreen] #find-input {
+  display: none;
+}
+
+#verticaltabs-box:not([expanded="true"]) #find-input {
+  visibility: collapse !important;
+}
+
+#verticaltabs-box:not([expanded="true"]) #new-tab-spacer {
+  visibility: visible !important;
+}
+
 #main-window[tabspinned="true"] #verticaltabs-box #pin-button {
   background-color: #bbb !important;
   background-image: url("resource://tabcenter/skin/pin-hover.png");
@@ -255,9 +267,23 @@
   animation: 300ms slide-fade-in;
 }
 
-.filler-tab image,
-.filler-tab toolbarbutton {
-  display: none !important;
+#filler-tab {
+  height: 36px;
+  width: var(--pinned-width);
+}
+
+#filler-tab:hover {
+  background-color: #ebebeb;
+}
+
+#verticaltabs-box[brighttext] #filler-tab:hover {
+  background-color: #3c4146 !important;
+}
+
+#filler-tab label {
+  -moz-margin-start: 31px !important;
+  font: message-box;
+  text-shadow: none;
 }
 
 @keyframes fade-out {
@@ -426,6 +452,10 @@
 #TabsToolbar #new-tab-button .toolbarbutton-text {
   display: -moz-box;
   padding: 0 2px !important;
+}
+
+#TabsToolbar #new-tab-spacer {
+  flex: 1 0 20px;
 }
 
 /* Tab toolbar styling */
