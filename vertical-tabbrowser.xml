@@ -529,4 +529,59 @@
       ]]></handler>
     </handlers>
   </binding>
+
+  <binding id="tabbrowser-tab"
+           extends="chrome://browser/content/tabbrowser.xml#tabbrowser-tab">
+    <content context="tabContextMenu">
+      <xul:stack class="tab-stack" flex="1">
+        <xul:hbox xbl:inherits="pinned,selected,visuallyselected,fadein"
+                  class="tab-background">
+          <xul:hbox xbl:inherits="pinned,selected,visuallyselected"
+                    class="tab-background-start"/>
+          <xul:hbox xbl:inherits="pinned,selected,visuallyselected"
+                    class="tab-background-middle"/>
+          <xul:hbox xbl:inherits="pinned,selected,visuallyselected"
+                    class="tab-background-end"/>
+        </xul:hbox>
+        <xul:hbox xbl:inherits="pinned,selected,visuallyselected,titlechanged,attention"
+                  class="tab-content" align="center">
+          <xul:image xbl:inherits="fadein,pinned,busy,progress,selected,visuallyselected"
+                     class="tab-throbber"
+                     role="presentation"
+                     layer="true" />
+          <xul:image xbl:inherits="src=image,fadein,pinned,selected,visuallyselected,busy,crashed,sharing"
+                     anonid="tab-icon-image"
+                     class="tab-icon-image"
+                     validate="never"
+                     role="presentation"/>
+          <xul:image xbl:inherits="sharing,selected"
+                     anonid="sharing-icon"
+                     class="tab-sharing-icon-overlay"
+                     role="presentation"/>
+          <xul:image xbl:inherits="crashed,busy,soundplaying,pinned,muted"
+                     anonid="overlay-icon"
+                     class="tab-icon-overlay"
+                     role="presentation"/>
+          <xul:vbox class="title-wrapper" flex="1">
+            <xul:label
+                       xbl:inherits="value=label,crop,accesskey,fadein,pinned,selected,visuallyselected,attention"
+                       class="tab-text"
+                       role="presentation"/>
+            <xul:label
+                      xbl:inherits="crop,accesskey,fadein,pinned,selected,visuallyselected,attention"
+                      class="tab-text address-label"
+                      anonid="address-label"
+                      role="presentation"/>
+          </xul:vbox>
+          <xul:image xbl:inherits="soundplaying,pinned,muted,visuallyselected"
+                     anonid="soundplaying-icon"
+                     class="tab-icon-sound"
+                     role="presentation"/>
+          <xul:toolbarbutton anonid="close-button"
+                             xbl:inherits="fadein,pinned,selected,visuallyselected"
+                             class="tab-close-button close-icon"/>
+        </xul:hbox>
+      </xul:stack>
+    </content>
+  </binding>
 </bindings>

@@ -348,6 +348,26 @@
   -moz-box-flex: 0;
   -moz-box-pack: start;
   color: #333 !important;
+  transition: min-height 300ms, max-height 300ms !important;
+}
+
+.tabbrowser-tabs.large-tabs .tab-content,
+.tabbrowser-tabs.large-tabs .tabbrowser-tab {
+  max-height: 56px;
+  min-height: 56px;
+}
+
+.title-wrapper .tab-text {
+  margin-top: 7px !important;
+  margin-bottom: 7px !important;
+}
+
+.address-label {
+  display: none;
+}
+
+.tabbrowser-tabs.large-tabs .title-wrapper .address-label {
+  display: -moz-box;
 }
 
 #main-window[tabspinned="true"] .tabbrowser-tab {
@@ -478,10 +498,6 @@
 
 .tab-close-button > .toolbarbutton-icon {
   display: none;
-}
-
-.tab-label {
-  text-align: left !important;
 }
 
 .tab-content {

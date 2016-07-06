@@ -424,6 +424,8 @@ VerticalTabs.prototype = {
       top.palette = palette;
     });
 
+    window.addEventListener('resize', this.resizeTabs, false);
+
     let tab_context_menu = document.getElementById('tabContextMenu');
 
     tab_context_menu.addEventListener('mouseover', function () {
@@ -559,6 +561,7 @@ VerticalTabs.prototype = {
   },
 
   initTab: function (aTab) {
+    let document = this.document;
     if (this.pushToTop) {
       this.window.gBrowser.moveTabTo(aTab, 0);
     }
@@ -566,14 +569,20 @@ VerticalTabs.prototype = {
     find_input.value = '';
     find_input.dispatchEvent(new Event('input'));
 
+    this.resizeTabs();
+
     aTab.classList.add('tab-visible');
     aTab.classList.remove('tab-hidden');
 
-    if (this.document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
+    if (document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
       aTab.removeAttribute('crop');
     } else {
       aTab.setAttribute('crop', 'end');
     }
+
+    aTab.addEventListener('load', function () {
+      document.getAnonymousElementByAttribute(aTab, 'anonid', 'address-label').value = aTab.linkedBrowser.currentURI.spec;
+    });
   },
 
   unload: function () {
@@ -591,6 +600,17 @@ VerticalTabs.prototype = {
       tab.scrollIntoView(true);
     } else if (overBottom) {
       tab.scrollIntoView(false);
+    }
+  },
+
+  resizeTabs: function () {
+    let tabs = this.document.getElementById('tabbrowser-tabs');
+    let tabbrowser_height = tabs.clientHeight;
+    let number_of_tabs = this.document.getElementsByClassName('tabbrowser-tab').length;
+    if (tabbrowser_height / number_of_tabs >= 58) {
+      tabs.classList.add('large-tabs');
+    } else {
+      tabs.classList.remove('large-tabs');
     }
   },
 
@@ -629,6 +649,7 @@ VerticalTabs.prototype = {
   },
 
   onTabClose: function (aEvent) {
+    this.resizeTabs();
     this.stats.tabs_destroyed++;
   },
 
