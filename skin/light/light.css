@@ -96,6 +96,10 @@
   display: -moz-box;
 }
 
+#main-window[inFullscreen][inDOMFullscreen] #verticaltabs-splitter {
+  display: none;
+}
+
 #main-window[tabspinned="true"] #verticaltabs-box {
   width: var(--pinned-width);
   box-shadow: none;
