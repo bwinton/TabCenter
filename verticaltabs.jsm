@@ -42,6 +42,9 @@ Components.utils.import('resource://gre/modules/Services.jsm');
 Components.utils.import('resource://tabcenter/tabdatastore.jsm');
 Components.utils.import('resource://tabcenter/multiselect.jsm');
 
+//use to set preview image as metadata image 1/4
+// Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
+
 const EXPORTED_SYMBOLS = ['VerticalTabs', 'vtInit'];
 
 const NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
@@ -581,8 +584,14 @@ VerticalTabs.prototype = {
     }
 
     aTab.addEventListener('load', function () {
-      document.getAnonymousElementByAttribute(aTab, 'anonid', 'address-label').value = aTab.linkedBrowser.currentURI.spec;
-    });
+      let tab_address = aTab.linkedBrowser.currentURI.spec;
+      //use to set preview image as metadata image 2/4
+      // document.getAnonymousElementByAttribute(aTab, 'anonid', 'tab-meta-image').style.backgroundImage = `url(${this.getPageMetaDataImage(aTab)}`;
+
+      //use to set preview image as screenshot
+      document.getAnonymousElementByAttribute(aTab, 'anonid', 'tab-meta-image').style.backgroundImage = `url(moz-page-thumb://thumbnail/?url=${encodeURIComponent(tab_address)})`;
+      document.getAnonymousElementByAttribute(aTab, 'anonid', 'address-label').value = tab_address;
+    }.bind(this));
   },
 
   unload: function () {
@@ -613,6 +622,12 @@ VerticalTabs.prototype = {
       tabs.classList.remove('large-tabs');
     }
   },
+
+  //use to set preview image as metadata image 3/4
+  // getPageMetaDataImage: function (aTab) {
+  //   var tabMeta = this.PageMetadata.getData(aTab.linkedBrowser.contentDocument);
+  //   return tabMeta['og:image'];
+  // },
 
   /*** Event handlers ***/
 
@@ -681,3 +696,6 @@ VerticalTabs.prototype = {
   }
 
 };
+
+//use to set preview image as metadata image 4/4
+// XPCOMUtils.defineLazyModuleGetter(VerticalTabs.prototype, "PageMetadata", "resource://gre/modules/PageMetadata.jsm");

@@ -507,11 +507,21 @@
   padding: 0 !important;
 }
 
+.tab-meta-image {
+  min-width: 54px;
+  min-height: 54px;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+  background-position: center !important;
+}
+
 .tab-throbber,
 .tab-icon-image {
   display: -moz-box !important;
   min-width: 22px !important;
   min-height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
   border-radius: 2px;
   padding: 3px;
   background-color: transparent !important;
