@@ -65,9 +65,10 @@ function vtInit() {
 
   installStylesheet('resource://tabcenter/override-bindings.css');
   installStylesheet('resource://tabcenter/skin/base.css');
-  installStylesheet('resource://tabcenter/skin/light/light.css');
+  installStylesheet('chrome://tabcenter/skin/platform.css');
+
   return () => {
-    removeStylesheet('resource://tabcenter/skin/light/light.css');
+    removeStylesheet('chrome://tabcenter/skin/platform.css');
     removeStylesheet('resource://tabcenter/override-bindings.css');
     removeStylesheet('resource://tabcenter/skin/base.css');
     let windows = Services.wm.getEnumerator(null);
