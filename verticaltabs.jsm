@@ -340,8 +340,11 @@ VerticalTabs.prototype = {
         } else {
           window.VerticalTabs.stats.tab_center_unpinned++;
         }
+        window.VerticalTabs.resizeFindInput();
+        window.VerticalTabs.resizeTabs();
         `
     });
+
     toolbar.appendChild(pin_button);
     leftbox.insertBefore(toolbar, leftbox.firstChild);
     let find_input = this.createElement('textbox', {
@@ -499,7 +502,7 @@ VerticalTabs.prototype = {
   resizeFindInput: function () {
     let spacer = this.document.getElementById('new-tab-spacer');
     let find_input = this.document.getElementById('find-input');
-    if (this.pinnedWidth > 190) {
+    if (this.pinnedWidth > 190 || this.document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
       spacer.style.visibility = 'collapse';
       find_input.style.visibility = 'visible';
     } else {
