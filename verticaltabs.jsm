@@ -540,6 +540,7 @@ VerticalTabs.prototype = {
     } else {
       hidden_tab.setAttribute('hidden', 'true');
     }
+    this.resizeTabs();
   },
 
   initContextMenu: function () {
@@ -620,7 +621,7 @@ VerticalTabs.prototype = {
   resizeTabs: function () {
     let tabs = this.document.getElementById('tabbrowser-tabs');
     let tabbrowser_height = tabs.clientHeight;
-    let number_of_tabs = this.document.getElementsByClassName('tabbrowser-tab').length;
+    let number_of_tabs = this.document.querySelectorAll('.tabbrowser-tab[hidden=false]').length;
     if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60) {
       tabs.classList.add('large-tabs');
     } else {

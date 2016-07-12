@@ -359,12 +359,12 @@
 }
 
 .title-wrapper .tab-text {
-  margin-bottom: 7px !important;
-  margin-top: 7px !important;
+  margin-bottom: 2px !important;
+  margin-top: 2px !important;
   font-weight: 600;
 }
 
-.address-label {
+.title-wrapper .address-label {
   display: none;
   color: var(--link-color);
   font-weight: 400;
