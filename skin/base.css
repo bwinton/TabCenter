@@ -510,9 +510,9 @@
 .tab-meta-image {
   min-width: 54px;
   min-height: 54px;
+  background-position: center !important;
   background-repeat: no-repeat !important;
   background-size: contain !important;
-  background-position: center !important;
 }
 
 .tab-throbber,

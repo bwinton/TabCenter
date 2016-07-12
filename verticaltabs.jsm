@@ -589,7 +589,8 @@ VerticalTabs.prototype = {
       // document.getAnonymousElementByAttribute(aTab, 'anonid', 'tab-meta-image').style.backgroundImage = `url(${this.getPageMetaDataImage(aTab)}`;
 
       //use to set preview image as screenshot
-      document.getAnonymousElementByAttribute(aTab, 'anonid', 'tab-meta-image').style.backgroundImage = `url(moz-page-thumb://thumbnail/?url=${encodeURIComponent(tab_address)})`;
+      document.getAnonymousElementByAttribute(aTab, 'anonid', 'tab-meta-image').style.backgroundImage = `url(moz-page-thumb://thumbnail/?url=${encodeURIComponent(tab_address)}), url(resource://tabcenter/skin/blank.png)`;
+
       document.getAnonymousElementByAttribute(aTab, 'anonid', 'address-label').value = tab_address;
     }.bind(this));
   },
