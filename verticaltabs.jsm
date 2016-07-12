@@ -299,6 +299,7 @@ VerticalTabs.prototype = {
         document.documentElement.style.setProperty('--pinned-width', `${this.pinnedWidth}px`);
         mainWindow.setAttribute('tabspinnedwidth', `${this.pinnedWidth}px`);
         this.resizeFindInput();
+        this.resizeTabs();
       };
 
       let mouseup = (event) => {
@@ -427,7 +428,7 @@ VerticalTabs.prototype = {
       top.palette = palette;
     });
 
-    window.addEventListener('resize', this.resizeTabs, false);
+    window.addEventListener('resize', this.resizeTabs.bind(this), false);
 
     let tab_context_menu = document.getElementById('tabContextMenu');
 
@@ -617,7 +618,7 @@ VerticalTabs.prototype = {
     let tabs = this.document.getElementById('tabbrowser-tabs');
     let tabbrowser_height = tabs.clientHeight;
     let number_of_tabs = this.document.getElementsByClassName('tabbrowser-tab').length;
-    if (tabbrowser_height / number_of_tabs >= 58) {
+    if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60) {
       tabs.classList.add('large-tabs');
     } else {
       tabs.classList.remove('large-tabs');
