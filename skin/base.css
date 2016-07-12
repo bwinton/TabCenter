@@ -102,6 +102,7 @@
 :root {
   --tab-animation-time:150ms;
   --pinned-width:260px;
+  --link-color:#00aff7;
 }
 
 #main-window[privatebrowsingmode="temporary"] #titlebar-buttonbox-container {
@@ -348,6 +349,35 @@
   -moz-box-flex: 0;
   -moz-box-pack: start;
   color: #333 !important;
+  transition: min-height 300ms, max-height 300ms !important;
+}
+
+.tabbrowser-tabs.large-tabs .tab-content,
+.tabbrowser-tabs.large-tabs .tabbrowser-tab {
+  max-height: 56px;
+  min-height: 56px;
+}
+
+.title-wrapper .tab-text {
+  margin-bottom: 2px !important;
+  margin-top: 2px !important;
+  font-weight: 600;
+}
+
+.title-wrapper .address-label {
+  display: none;
+  color: var(--link-color);
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.title-wrapper .tab-text[visuallyselected="true"],
+.title-wrapper .address-label[visuallyselected="true"] {
+  font-weight: 700;
+}
+
+.tabbrowser-tabs.large-tabs .title-wrapper .address-label {
+  display: -moz-box;
 }
 
 #main-window[tabspinned="true"] .tabbrowser-tab {
@@ -480,10 +510,6 @@
   display: none;
 }
 
-.tab-label {
-  text-align: left !important;
-}
-
 .tab-content {
   min-height: 36px;
   max-height: 36px;
@@ -491,11 +517,25 @@
   padding: 0 !important;
 }
 
+.tabbrowser-tabs.large-tabs .tab-meta-image {
+  min-width: 54px;
+  min-height: 54px;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}
+
+.tabbrowser-tabs:not(.large-tabs) .tab-meta-image {
+  background-image: none !important;
+}
+
 .tab-throbber,
 .tab-icon-image {
   display: -moz-box !important;
   min-width: 22px !important;
   min-height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
   border-radius: 2px;
   padding: 3px;
   background-color: transparent !important;
