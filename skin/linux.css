@@ -1,0 +1,5 @@
+/*Only Linux Styles*/
+
+#TabsToolbar #find-input[focused="true"] {
+  min-width: calc(100% - 100px) !important;
+}

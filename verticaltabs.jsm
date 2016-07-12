@@ -65,9 +65,10 @@ function vtInit() {
 
   installStylesheet('resource://tabcenter/override-bindings.css');
   installStylesheet('resource://tabcenter/skin/base.css');
-  installStylesheet('resource://tabcenter/skin/light/light.css');
+  installStylesheet('chrome://tabcenter/skin/platform.css');
+
   return () => {
-    removeStylesheet('resource://tabcenter/skin/light/light.css');
+    removeStylesheet('chrome://tabcenter/skin/platform.css');
     removeStylesheet('resource://tabcenter/override-bindings.css');
     removeStylesheet('resource://tabcenter/skin/base.css');
     let windows = Services.wm.getEnumerator(null);
@@ -294,6 +295,7 @@ VerticalTabs.prototype = {
         }
         document.documentElement.style.setProperty('--pinned-width', `${this.pinnedWidth}px`);
         mainWindow.setAttribute('tabspinnedwidth', `${this.pinnedWidth}px`);
+        this.resizeFindInput();
       };
 
       let mouseup = (event) => {
@@ -322,8 +324,7 @@ VerticalTabs.prototype = {
     toolbar.setAttribute('collapsed', 'false'); // no more vanishing new tab toolbar
     toolbar._toolbox = null; // reset value set by constructor
     toolbar.setAttribute('toolboxid', 'navigator-toolbox');
-    let spacer = this.createElement('spacer', {'id': 'new-tab-spacer'});
-    toolbar.appendChild(spacer);
+
     let pin_button = this.createElement('toolbarbutton', {
       'id': 'pin-button',
       'tooltiptext': 'Keep sidebar open',
@@ -339,6 +340,27 @@ VerticalTabs.prototype = {
     });
     toolbar.appendChild(pin_button);
     leftbox.insertBefore(toolbar, leftbox.firstChild);
+    let find_input = this.createElement('textbox', {
+      'id': 'find-input',
+      'class': 'searchbar-textbox'
+    });
+    let search_icon = this.createElement('image', {
+      'id': 'tabs-search'
+    });
+    find_input.appendChild(search_icon);
+    find_input.addEventListener('input', this.filtertabs.bind(this));
+    this.window.addEventListener('keyup', (e) => {
+      if(e.keyCode === 27) {
+        this.clearFind();
+      }
+    });
+    document.getElementById('filler-tab').addEventListener('click', this.clearFind.bind(this));
+
+    let spacer = this.createElement('spacer', {'id': 'new-tab-spacer'});
+    toolbar.insertBefore(find_input, pin_button);
+    toolbar.insertBefore(spacer, pin_button);
+
+    this.resizeFindInput();
 
     // change the text in the tab context box
     let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
@@ -361,11 +383,13 @@ VerticalTabs.prototype = {
         }
       }, 300);
     };
+
     leftbox.addEventListener('mouseenter', enter);
     leftbox.addEventListener('mousemove', enter);
     leftbox.addEventListener('mouseleave', () => {
       if (mainWindow.getAttribute('tabspinned') !== 'true') {
         leftbox.removeAttribute('expanded');
+        this.clearFind();
         let tabsPopup = document.getElementById('alltabs-popup');
         if (tabsPopup.state === 'open') {
           tabsPopup.hidePopup();
@@ -418,6 +442,7 @@ VerticalTabs.prototype = {
       toolbar.removeAttribute('toolboxid');
       toolbar.removeAttribute('collapsed');
       toolbar.removeChild(spacer);
+      toolbar.removeChild(find_input);
       toolbar.removeChild(pin_button);
       let toolbox = document.getElementById('navigator-toolbox');
       let navbar = document.getElementById('nav-bar');
@@ -465,6 +490,49 @@ VerticalTabs.prototype = {
     });
   },
 
+  resizeFindInput: function () {
+    let spacer = this.document.getElementById('new-tab-spacer');
+    let find_input = this.document.getElementById('find-input');
+    if (this.pinnedWidth > 190) {
+      spacer.style.visibility = 'collapse';
+      find_input.style.visibility = 'visible';
+    } else {
+      find_input.style.visibility = 'collapse';
+      spacer.style.visibility = 'visible';
+    }
+  },
+
+  clearFind: function () {
+    this.document.getElementById('find-input').value = '';
+    this.filtertabs();
+  },
+
+  filtertabs: function () {
+    let document = this.document;
+    let tabs = document.getElementById('tabbrowser-tabs');
+    let find_input = document.getElementById('find-input');
+    let input_value = find_input.value.toLowerCase();
+    let hidden_counter = 0;
+    let hidden_tab = document.getElementById('filler-tab');
+    let hidden_tab_label = hidden_tab.children[0];
+
+    for (let i = 0; i < tabs.children.length; i++) {
+      let tab = tabs.children[i];
+      if (tab.label.toLowerCase().match(input_value) || tab.linkedBrowser.currentURI.spec.toLowerCase().match(input_value)) {
+        tab.setAttribute('hidden', false);
+      } else {
+        hidden_counter += 1;
+        tab.setAttribute('hidden', true);
+      }
+    }
+    if (hidden_counter > 0) {
+      hidden_tab_label.setAttribute('value', `${hidden_counter} more tab${hidden_counter > 1 ? 's' : ''}...`);
+      hidden_tab.removeAttribute('hidden');
+    } else {
+      hidden_tab.setAttribute('hidden', 'true');
+    }
+  },
+
   initContextMenu: function () {
     const document = this.document;
     const tabs = document.getElementById('tabbrowser-tabs');
@@ -494,6 +562,9 @@ VerticalTabs.prototype = {
     if (this.pushToTop) {
       this.window.gBrowser.moveTabTo(aTab, 0);
     }
+    let find_input = this.document.getElementById('find-input');
+    find_input.value = '';
+    find_input.dispatchEvent(new Event('input'));
 
     aTab.classList.add('tab-visible');
     aTab.classList.remove('tab-hidden');
