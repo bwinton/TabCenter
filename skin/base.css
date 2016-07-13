@@ -1,5 +1,12 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
+:root {
+  --tab-animation-time:150ms;
+  --collapsed-width:45px;
+  --pinned-width:260px;
+  --link-color:#00aff7;
+}
+
 /* Style the scrollbox for vertical arrangements. */
 .tabbrowser-arrowscrollbox > scrollbox {
   overflow-x: hidden !important;
@@ -97,14 +104,6 @@
   list-style-image: url(chrome://browser/skin/tabbrowser/newtab.png);
 }
 
-@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
-
-:root {
-  --tab-animation-time:150ms;
-  --pinned-width:260px;
-  --link-color:#00aff7;
-}
-
 #main-window[privatebrowsingmode="temporary"] #titlebar-buttonbox-container {
   margin-top: 4px;
 }
@@ -158,7 +157,7 @@
   z-index: 3;
   top: 0;
   left: 0;
-  width: 45px;
+  width: var(--collapsed-width);
   height: 100vh;
   border-top: 1px solid rgb(160, 160, 160) !important;
   border-right: 1px solid ThreeDShadow;
@@ -292,7 +291,7 @@
 #sidebar-box,
 #sidebar-box[hidden="true"] ~ #appcontent,
 #sidebar-box[hidden="true"] ~ #PopupAutoCompleteRichResult {
-  margin-left: 45px;
+  margin-left: var(--collapsed-width);
 }
 
 #main-window[tabspinned="true"] #sidebar-box,
@@ -314,7 +313,7 @@
 #navigator-toolbox,
 .browserContainer,
 #PopupAutoCompleteRichResult {
-  width: calc(100vw - 45px);
+  width: calc(100vw - var(--collapsed-width));
 }
 
 #PopupAutoCompleteRichResult {
