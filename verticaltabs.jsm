@@ -128,6 +128,7 @@ VerticalTabs.prototype = {
         tabStack.collapsed = true; //there is a visual jump if we do not collapse the tab before the end of the animation
       } else if (e.animationName === 'slide-out') {
         this._endRemoveTab.bind(this.window.gBrowser)(tab);
+        this.resizeTabs();
       }
     });
 
@@ -670,7 +671,6 @@ VerticalTabs.prototype = {
   },
 
   onTabClose: function (aEvent) {
-    this.resizeTabs();
     this.stats.tabs_destroyed++;
   },
 
