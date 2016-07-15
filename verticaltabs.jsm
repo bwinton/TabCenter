@@ -35,12 +35,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/*global VTTabIDs:false*/
+/*global VTTabIDs:false, BackgroundPageThumbs:false*/
 /* exported EXPORTED_SYMBOLS, TAB_DROP_TYPE, vtInit*/
 
 Components.utils.import('resource://gre/modules/Services.jsm');
 Components.utils.import('resource://tabcenter/tabdatastore.jsm');
 Components.utils.import('resource://tabcenter/multiselect.jsm');
+Components.utils.import('resource://gre/modules/BackgroundPageThumbs.jsm');
 
 //use to set preview image as metadata image 1/4
 // Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
@@ -588,17 +589,24 @@ VerticalTabs.prototype = {
     } else {
       aTab.setAttribute('crop', 'end');
     }
+    let tab_meta_image = document.getAnonymousElementByAttribute(aTab, 'anonid', 'tab-meta-image');
+    tab_meta_image.style.backgroundImage = `url(moz-page-thumb://thumbnail/?url=${encodeURIComponent(aTab.linkedBrowser.currentURI.spec)}), url(resource://tabcenter/skin/blank.png)`;
 
-    aTab.addEventListener('load', function () {
-      let tab_address = aTab.linkedBrowser.currentURI.spec;
-      //use to set preview image as metadata image 2/4
-      // document.getAnonymousElementByAttribute(aTab, 'anonid', 'tab-meta-image').style.backgroundImage = `url(${this.getPageMetaDataImage(aTab)}`;
-
-      //use to set preview image as screenshot
-      document.getAnonymousElementByAttribute(aTab, 'anonid', 'tab-meta-image').style.backgroundImage = `url(moz-page-thumb://thumbnail/?url=${encodeURIComponent(tab_address)}), url(resource://tabcenter/skin/blank.png)`;
-
-      document.getAnonymousElementByAttribute(aTab, 'anonid', 'address-label').value = tab_address;
-    }.bind(this));
+    aTab.addEventListener('load', () => {
+      if (aTab.VTLastUrl !== aTab.linkedBrowser.currentURI.spec) {
+        if (aTab.linkedBrowser.currentURI.spec === 'about:newtab' || aTab.linkedBrowser.currentURI.spec === 'about:blank') {
+          tab_meta_image.style.backgroundImage = 'url("resource://tabcenter/skin/newtab.png")';
+        } else {
+          BackgroundPageThumbs.captureIfMissing(aTab.linkedBrowser.currentURI.spec, {onDone: function (url) {
+            if (aTab.linkedBrowser.currentURI.spec === url) {
+              tab_meta_image.style.backgroundImage = `url('moz-page-thumb://thumbnail/?url=${encodeURIComponent(url)}')`;
+            }
+          }});
+        }
+        aTab.VTLastUrl = aTab.linkedBrowser.currentURI.spec;
+        document.getAnonymousElementByAttribute(aTab, 'anonid', 'address-label').value = aTab.linkedBrowser.currentURI.spec;
+      }
+    });
   },
 
   unload: function () {
