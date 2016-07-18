@@ -3,3 +3,7 @@
 #TabsToolbar #find-input[focused="true"] {
   min-width: calc(100% - 100px) !important;
 }
+
+.title-wrapper {
+  padding-left: 5px;
+}
