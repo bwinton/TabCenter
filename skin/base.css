@@ -490,8 +490,13 @@
   display: -moz-box !important;
 }
 
-/* Keep the close button at a safe distance from the tab label. */
+.tabbrowser-tabs.large-tabs .tab-close-button {
+  width: 24px;
+  height: 24px;
+  margin: 0 0 32px 3px !important;
+}
 
+/* Keep the close button at a safe distance from the tab label. */
 .tab-close-button {
   display: -moz-box !important;
   width: 40px;
