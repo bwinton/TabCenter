@@ -186,7 +186,8 @@
 #verticaltabs-splitter {
   display: none;
   margin-left: var(--pinned-width);
-  min-width: 3px !important;
+  max-width: 3px;
+  min-width: 3px;
   width: 3px;
   cursor: ew-resize;
 }
