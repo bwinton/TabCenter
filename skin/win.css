@@ -9,6 +9,10 @@
   padding-left: 5px;
 }
 
+#TabsToolbar > #new-tab-button {
+  width:auto;
+}
+
 @media (-moz-os-version: windows-xp), (-moz-os-version: windows-vista), (-moz-os-version: windows-win10) {
   .tabbrowser-arrowscrollbox,
   .tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
