@@ -148,7 +148,7 @@ VerticalTabs.prototype = {
         return rgb.map(x => parseInt(x));
       }
 
-      let toolbarSelector = '#verticaltabs-box, #verticaltabs-box > toolbar:not([collapsed=true]):not(#addon-bar)';
+      let toolbarSelector = '#verticaltabs-box, #verticaltabs-box > toolbar:not([collapsed=true]):not(#addon-bar), #navigator-toolbox > toolbar:not([collapsed=true]):not(#addon-bar)';
       if (AppConstants.platform === 'macosx') {
         toolbarSelector += ':not([type=menubar])';
       }
