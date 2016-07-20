@@ -357,6 +357,9 @@ VerticalTabs.prototype = {
       'id': 'tabs-search'
     });
     find_input.appendChild(search_icon);
+    search_icon.addEventListener('click', function (e) {
+      find_input.focus();
+    });
     find_input.addEventListener('input', this.filtertabs.bind(this));
     this.window.addEventListener('keyup', (e) => {
       if(e.keyCode === 27) {
