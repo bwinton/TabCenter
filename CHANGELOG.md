@@ -1,3 +1,20 @@
+# v1.22 - Big Findy Tunes.
+
+### New Features:
+
+* Show larger tab thumbnails when there is extra space.  ‼️ 💯
+* Add a search box to quickly filter your tabs. 🔍
+
+### Fixes:
+
+* Click on find icon to focus the find bar. 🌁
+* Toolbar icons correctly change color in dark themes.  (Fixes #305.)
+* Load thumbnails for all sites. 💅🖼  (Fixes #411, #415, #167, #353.)
+* Make sure the splitter doesn’t grow too large.  🐞  (Fixes #414.)
+* Resize on deleting a tab.
+* Only show light pin if dark theme in linux.
+* Don't show the really wide splitter in fullscreen.  👀  (Fixes #392.)
+
 # v1.21 - Sidebar updates, part 1.
 
 The first batch of sidebar changes…
