@@ -376,6 +376,7 @@ VerticalTabs.prototype = {
 
     // change the text in the tab context box
     let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
+    let previous_close_message = close_next_tabs_message.getAttribute('label');
     close_next_tabs_message.setAttribute('label', 'Close Tabs Below');
 
     let enter = (event) => {
@@ -466,6 +467,8 @@ VerticalTabs.prototype = {
       window.removeEventListener('beforecustomization');
       window.removeEventListener('aftercustomization');
       window.removeEventListener('customizationchange');
+
+      close_next_tabs_message.setAttribute('label', previous_close_message);
 
       // Put the tabs back up top
       tabs.orient = 'horizontal';
