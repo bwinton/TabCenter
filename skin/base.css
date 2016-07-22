@@ -362,6 +362,10 @@
 .title-wrapper .tab-text {
   margin-bottom: 2px !important;
   margin-top: 2px !important;
+  font-weight: 400;
+}
+
+.tabbrowser-tabs.large-tabs .tab-text {
   font-weight: 600;
 }
 
