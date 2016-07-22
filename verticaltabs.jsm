@@ -35,13 +35,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/*global VTTabIDs:false, BackgroundPageThumbs:false*/
+/*global VTTabIDs:false, PageThumbs:false*/
 /* exported EXPORTED_SYMBOLS, TAB_DROP_TYPE, vtInit*/
 
 Components.utils.import('resource://gre/modules/Services.jsm');
 Components.utils.import('resource://tabcenter/tabdatastore.jsm');
 Components.utils.import('resource://tabcenter/multiselect.jsm');
-Components.utils.import('resource://gre/modules/BackgroundPageThumbs.jsm');
+Components.utils.import('resource://gre/modules/PageThumbs.jsm');
 
 //use to set preview image as metadata image 1/4
 // Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
@@ -599,18 +599,19 @@ VerticalTabs.prototype = {
     tab_meta_image.style.backgroundImage = `url(moz-page-thumb://thumbnail/?url=${encodeURIComponent(aTab.linkedBrowser.currentURI.spec)}), url(resource://tabcenter/skin/blank.png)`;
 
     aTab.addEventListener('load', () => {
-      if (aTab.VTLastUrl !== aTab.linkedBrowser.currentURI.spec) {
-        if (aTab.linkedBrowser.currentURI.spec === 'about:newtab' || aTab.linkedBrowser.currentURI.spec === 'about:blank') {
+      let url = aTab.linkedBrowser.currentURI.spec;
+      if (aTab.VTLastUrl !== url) {
+        if (url === 'about:newtab' || url === 'about:blank') {
           tab_meta_image.style.backgroundImage = 'url("resource://tabcenter/skin/newtab.png")';
         } else {
-          BackgroundPageThumbs.captureIfMissing(aTab.linkedBrowser.currentURI.spec, {onDone: function (url) {
+          PageThumbs.captureAndStoreIfStale(aTab.linkedBrowser, function (success) {
             if (aTab.linkedBrowser.currentURI.spec === url) {
               tab_meta_image.style.backgroundImage = `url('moz-page-thumb://thumbnail/?url=${encodeURIComponent(url)}')`;
             }
-          }});
+          });
         }
-        aTab.VTLastUrl = aTab.linkedBrowser.currentURI.spec;
-        document.getAnonymousElementByAttribute(aTab, 'anonid', 'address-label').value = aTab.linkedBrowser.currentURI.spec;
+        aTab.VTLastUrl = url;
+        document.getAnonymousElementByAttribute(aTab, 'anonid', 'address-label').value = url;
       }
     });
   },
