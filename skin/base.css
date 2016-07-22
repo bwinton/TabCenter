@@ -175,7 +175,8 @@
   background-color: #333 !important;
 }
 
-#main-window[inFullscreen][inDOMFullscreen] #verticaltabs-box {
+#main-window[inFullscreen][inDOMFullscreen] #verticaltabs-box,
+#main-window[inFullscreen][inDOMFullscreen] #verticaltabs-splitter {
   visibility: collapse;
 }
 
