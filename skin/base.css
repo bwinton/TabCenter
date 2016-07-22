@@ -248,7 +248,7 @@
 
 #tabs-search {
   -moz-image-region: rect(0, 20px, 20px, 0);
-  list-style-image: url("chrome://browser/skin/search-indicator.png");
+  list-style-image: url("resource://tabcenter/skin/find.svg");
 }
 
 #TabsToolbar #find-input .textbox-input-box {
