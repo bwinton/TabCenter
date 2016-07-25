@@ -160,8 +160,8 @@
   left: 0;
   width: var(--collapsed-width);
   height: 100vh;
+  border-right: 1px solid #424f5a;
   border-top: 1px solid rgb(160, 160, 160) !important;
-  border-right: 1px solid ThreeDShadow;
   display: flex;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -172,6 +172,7 @@
 }
 
 #verticaltabs-box[brighttext] {
+  border-right: 1px solid #a0a0a0;
   background-color: #333 !important;
 }
 
@@ -185,13 +186,22 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(0, 0, 0, 0);
 }
 
+#browser-border-start {
+  display: none !important;
+}
+
 #verticaltabs-splitter {
   display: none;
   margin-left: var(--pinned-width);
   max-width: 3px;
   min-width: 3px;
   width: 3px;
+  background-color: #ebebeb;
   cursor: ew-resize;
+}
+
+#verticaltabs-box[brighttext] #verticaltabs-splitter {
+  background-color: #3c4146;
 }
 
 #main-window[tabspinned="true"] #verticaltabs-splitter {
@@ -438,7 +448,7 @@
   margin: 0 !important;
   border-left: 4px solid #ff9500 !important;
   border-radius: 0 !important;
-  background-color: #dadada !important;
+  background-color: #d8f2ff !important;
   font-weight: normal;
   font-weight: 600 !important;
   text-shadow: none;
@@ -533,11 +543,25 @@
 }
 
 .tabbrowser-tabs.large-tabs .tab-meta-image {
+  max-width: 54px;
+  max-height: 40px;
   min-width: 54px;
-  min-height: 54px;
-  background-position: center !important;
+  min-height: 40px;
+  border: 2px solid white;
+  margin-left: 8px;
+  margin-right: 2px;
+  background-color: #fff;
+  background-position: top center !important;
   background-repeat: no-repeat !important;
-  background-size: contain !important;
+  background-size: cover !important;
+  box-shadow: 1px 1px 2px #333;
+}
+
+.tabbrowser-tabs.large-tabs .tab-throbber,
+.tabbrowser-tabs.large-tabs .tab-icon-image {
+  margin-top: 18px !important;
+  margin-left: -2px;
+  background-color: #fff !important;
 }
 
 .tabbrowser-tabs:not(.large-tabs) .tab-meta-image {
@@ -547,13 +571,11 @@
 .tab-throbber,
 .tab-icon-image {
   display: -moz-box !important;
-  min-width: 22px !important;
-  min-height: 22px !important;
-  max-width: 22px !important;
-  max-height: 22px !important;
-  border-radius: 2px;
-  padding: 3px;
-  background-color: transparent !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
+  padding: 2px;
   opacity: 1 !important;
 }
 

@@ -606,12 +606,16 @@ VerticalTabs.prototype = {
         } else {
           PageThumbs.captureAndStoreIfStale(aTab.linkedBrowser, function (success) {
             if (aTab.linkedBrowser.currentURI.spec === url) {
-              tab_meta_image.style.backgroundImage = `url('moz-page-thumb://thumbnail/?url=${encodeURIComponent(url)}')`;
+              tab_meta_image.style.backgroundImage = `url('moz-page-thumb://thumbnail/?url=${encodeURIComponent(url)}'), url(resource://tabcenter/skin/blank.png)`;
             }
           });
         }
         aTab.VTLastUrl = url;
-        document.getAnonymousElementByAttribute(aTab, 'anonid', 'address-label').value = url;
+        let label = aTab.linkedBrowser.currentURI.spec;
+        if (aTab.linkedBrowser.currentURI.scheme.startsWith('http')) {
+          label = aTab.linkedBrowser.currentURI.host;
+        }
+        document.getAnonymousElementByAttribute(aTab, 'anonid', 'address-label').value = label;
       }
     });
   },
