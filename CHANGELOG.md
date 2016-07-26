@@ -1,3 +1,15 @@
+# v1.23 - More styles.
+
+### Fixes:
+
+* Various style fixes. 💅🏻
+* Ignore all .DS_Store files.
+* Use a non-blurry find icon.
+* Hide splitter when in fullscreen.  (Fixes #441.)
+* Use a better API for thumbnail loading.  (Fixes #427.)
+* Tab title is font-weight normal on small tabs.  (Fixes #425.)
+* Restore the close tabs message on uninstall.  (Fixes #426.)
+
 # v1.22 - Big Findy Tunes.
 
 ### New Features:
