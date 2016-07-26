@@ -35,11 +35,10 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/*global VTTabIDs:false, PageThumbs:false*/
+/*global PageThumbs:false*/
 /* exported EXPORTED_SYMBOLS, TAB_DROP_TYPE, vtInit*/
 
 Components.utils.import('resource://gre/modules/Services.jsm');
-Components.utils.import('resource://tabcenter/tabdatastore.jsm');
 Components.utils.import('resource://gre/modules/PageThumbs.jsm');
 
 //use to set preview image as metadata image 1/4
@@ -188,7 +187,6 @@ VerticalTabs.prototype = {
     if (results) {
       results.removeAttribute('width');
     }
-    this.tabIDs = new VTTabIDs(tabs);
     this.tabObserver = new this.document.defaultView.MutationObserver((mutations) => {
       this.tabObserver.disconnect();
       mutations.forEach((mutation) => {
@@ -222,7 +220,6 @@ VerticalTabs.prototype = {
     }
 
     this.unloaders.push(function () {
-      this.tabIDs.unload();
       this.tabObserver.disconnect();
     });
   },
@@ -483,7 +480,6 @@ VerticalTabs.prototype = {
       for (let i = 0; i < tabs.childNodes.length; i++) {
         let tab = tabs.childNodes[i];
         tab.setAttribute('crop', 'end');
-        tab.removeAttribute('verticaltabs-id');
       }
 
       // Remove all the crap we added.

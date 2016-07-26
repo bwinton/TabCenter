@@ -7,7 +7,6 @@ SOURCES = \
 	options.xul \
 	override-bindings.css \
 	skin/* \
-	tabdatastore.jsm \
 	utils.js \
 	vertical-tabbrowser.xml \
 	verticaltabs.jsm \
