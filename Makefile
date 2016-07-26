@@ -4,11 +4,9 @@ SOURCES = \
 	bootstrap.js \
 	chrome.manifest \
 	install.rdf \
-	multiselect.jsm \
 	options.xul \
 	override-bindings.css \
 	skin/* \
-	tabdatastore.jsm \
 	utils.js \
 	vertical-tabbrowser.xml \
 	verticaltabs.jsm \

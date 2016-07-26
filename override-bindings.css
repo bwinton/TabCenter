@@ -6,6 +6,6 @@
   -moz-binding: url("chrome://tabcenter/content/vertical-tabbrowser.xml#tabbrowser-arrowscrollbox") !important;
 }
 
-.tabbrowser-tab[verticaltabs-id] {
+.tabbrowser-tabs[vertical="true"] .tabbrowser-tab {
   -moz-binding: url("chrome://tabcenter/content/vertical-tabbrowser.xml#tabbrowser-tab") !important;
 }
