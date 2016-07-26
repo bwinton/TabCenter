@@ -40,7 +40,6 @@
 
 Components.utils.import('resource://gre/modules/Services.jsm');
 Components.utils.import('resource://tabcenter/tabdatastore.jsm');
-Components.utils.import('resource://tabcenter/multiselect.jsm');
 Components.utils.import('resource://gre/modules/PageThumbs.jsm');
 
 //use to set preview image as metadata image 1/4
@@ -181,7 +180,6 @@ VerticalTabs.prototype = {
     };
 
     this.rearrangeXUL();
-    this.initContextMenu();
 
     let tabs = this.document.getElementById('tabbrowser-tabs');
     let results = this.document.getElementById('PopupAutoCompleteRichResult');
@@ -551,31 +549,6 @@ VerticalTabs.prototype = {
     this.resizeTabs();
   },
 
-  initContextMenu: function () {
-    const document = this.document;
-    const tabs = document.getElementById('tabbrowser-tabs');
-
-    let closeMultiple = null;
-    if (this.multiSelect) {
-      closeMultiple = this.createElement('menuitem', {
-        'id': 'context_verticalTabsCloseMultiple',
-        'label': 'Close Selected Tabs',
-        'tbattr': 'tabbrowser-multiple',
-        'oncommand': 'gBrowser.tabContainer.VTMultiSelect.closeSelected();'
-      });
-      tabs.contextMenu.appendChild(closeMultiple);
-    }
-
-    tabs.contextMenu.addEventListener('popupshowing', this, false);
-
-    this.unloaders.push(function () {
-      if (closeMultiple) {
-        tabs.contextMenu.removeChild(closeMultiple);
-      }
-      tabs.contextMenu.removeEventListener('popupshowing', this, false);
-    });
-  },
-
   initTab: function (aTab) {
     let document = this.document;
     if (this.pushToTop) {
@@ -677,9 +650,6 @@ VerticalTabs.prototype = {
     case 'mouseup':
       this.onMouseUp(aEvent);
       return;
-    case 'popupshowing':
-      this.onPopupShowing(aEvent);
-      return;
     }
   },
 
@@ -699,20 +669,6 @@ VerticalTabs.prototype = {
 
   onTabUnpinned: function (aEvent) {
     this.stats.tabs_unpinned++;
-  },
-
-  onPopupShowing: function (aEvent) {
-    if (!this.multiSelect) {
-      return;
-    }
-
-    let closeTabs = this.document.getElementById('context_verticalTabsCloseMultiple');
-    let tabs = this.multiSelect.getSelected();
-    if (tabs.length > 1) {
-      closeTabs.disabled = false;
-    } else {
-      closeTabs.disabled = true;
-    }
   },
 
   sendStats: function (payload) {

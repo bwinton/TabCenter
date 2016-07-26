@@ -443,8 +443,7 @@
   100% { max-height: 36px; min-height: 36px; opacity: 1; }
 }
 
-.tabbrowser-tab[selected="true"],
-.tabbrowser-tab[multiselect="true"] {
+.tabbrowser-tab[selected="true"] {
   margin: 0 !important;
   border-left: 4px solid #ff9500 !important;
   border-radius: 0 !important;
@@ -454,8 +453,7 @@
   text-shadow: none;
 }
 
-.tabbrowser-tab[selected="true"]:-moz-window-inactive,
-.tabbrowser-tab[multiselect="true"]:-moz-window-inactive {
+.tabbrowser-tab[selected="true"]:-moz-window-inactive {
   background-color: InactiveCaption !important;
   color: InactiveCaptionText !important;
 
@@ -492,8 +490,7 @@
   color: var(--link-color-brighttext);
 }
 
-#verticaltabs-box[brighttext] .tabbrowser-tab[selected="true"],
-#verticaltabs-box[brighttext] .tabbrowser-tab[multiselect="true"] {
+#verticaltabs-box[brighttext] .tabbrowser-tab[selected="true"] {
   background-color: #3c4146 !important;
   box-shadow: none !important;
 }
