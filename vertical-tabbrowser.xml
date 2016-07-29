@@ -545,7 +545,7 @@
         </xul:hbox>
         <xul:hbox xbl:inherits="pinned,selected,visuallyselected,titlechanged,attention"
                   class="tab-content" align="center">
-          <xul:box xbl:inherits="fadein,pinned,selected,visuallyselected,busy,crashed,sharing"
+          <xul:vbox xbl:inherits="fadein,pinned,selected,visuallyselected,busy,crashed,sharing"
                      anonid="tab-meta-image"
                      class="tab-meta-image">
             <xul:image xbl:inherits="fadein,pinned,busy,progress,selected,visuallyselected"
