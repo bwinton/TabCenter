@@ -85,21 +85,6 @@ function vtInit() {
   };
 }
 
-function getUri(tab) {
-  // Strips out the `wyciwyg://` from internal URIs
-  return Services.uriFixup.createExposableURI(tab.linkedBrowser.currentURI);
-}
-
-function updateUriLabel(tab) {
-  let uri = getUri(tab);
-  let label = uri.spec;
-  if (uri.scheme.startsWith('http')) {
-    label = uri.host;
-  }
-  // URI can be shown immediately
-  document.getAnonymousElementByAttribute(tab, 'anonid', 'address-label').value = label;
-}
-
 /*
  * Vertical Tabs
  *
@@ -544,7 +529,7 @@ VerticalTabs.prototype = {
 
     for (let i = 0; i < tabs.children.length; i++) {
       let tab = tabs.children[i];
-      if (tab.label.toLowerCase().match(input_value) || getUri(tab).spec.toLowerCase().match(input_value)) {
+      if (tab.label.toLowerCase().match(input_value) || this.getUri(tab).spec.toLowerCase().match(input_value)) {
         tab.setAttribute('hidden', false);
       } else {
         hidden_counter += 1;
@@ -558,6 +543,21 @@ VerticalTabs.prototype = {
       hidden_tab.setAttribute('hidden', 'true');
     }
     this.resizeTabs();
+  },
+
+  getUri: function (tab) {
+    // Strips out the `wyciwyg://` from internal URIs
+    return Services.uriFixup.createExposableURI(tab.linkedBrowser.currentURI);
+  },
+
+  updateUriLabel: function (tab) {
+    let uri = this.getUri(tab);
+    let label = uri.spec;
+    if (uri.scheme.startsWith('http')) {
+      label = uri.host;
+    }
+    // URI can be shown immediately
+    this.document.getAnonymousElementByAttribute(tab, 'anonid', 'address-label').value = label;
   },
 
   initTab: function (aTab) {
@@ -580,18 +580,18 @@ VerticalTabs.prototype = {
       aTab.setAttribute('crop', 'end');
     }
     let tab_meta_image = document.getAnonymousElementByAttribute(aTab, 'anonid', 'tab-meta-image');
-    tab_meta_image.style.backgroundImage = `url(moz-page-thumb://thumbnail/?url=${encodeURIComponent(getUri(aTab).spec)}), url(resource://tabcenter/skin/blank.png)`;
+    tab_meta_image.style.backgroundImage = `url(moz-page-thumb://thumbnail/?url=${encodeURIComponent(this.getUri(aTab).spec)}), url(resource://tabcenter/skin/blank.png)`;
 
-    updateUriLabel(aTab);
+    this.updateUriLabel(aTab);
 
     aTab.addEventListener('load', () => {
-      let url = getUri(aTab).spec;
+      let url = this.getUri(aTab).spec;
       if (aTab.VTLastUrl !== url) {
         if (url === 'about:newtab' || url === 'about:blank') {
           tab_meta_image.style.backgroundImage = 'url("resource://tabcenter/skin/newtab.png")';
         } else {
           PageThumbs.captureAndStoreIfStale(aTab.linkedBrowser, function (success) {
-            if (getUri(aTab).spec === url) {
+            if (this.getUri(aTab).spec === url) {
               tab_meta_image.style.backgroundImage = `url('moz-page-thumb://thumbnail/?url=${encodeURIComponent(url)}'), url(resource://tabcenter/skin/blank.png)`;
             }
           });
@@ -599,7 +599,7 @@ VerticalTabs.prototype = {
         aTab.VTLastUrl = url;
 
         // URI might have changed due to redirects
-        updateUriLabel(aTab);
+        this.updateUriLabel(aTab);
       }
     });
   },
