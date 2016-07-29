@@ -85,6 +85,21 @@ function vtInit() {
   };
 }
 
+function getUri(tab) {
+  // Strips out the `wyciwyg://` from internal URIs
+  return Services.uriFixup.createExposableURI(tab.linkedBrowser.currentURI);
+}
+
+function updateUriLabel(tab) {
+  let uri = getUri(tab);
+  let label = uri.spec;
+  if (uri.scheme.startsWith('http')) {
+    label = uri.host;
+  }
+  // URI can be shown immediately
+  document.getAnonymousElementByAttribute(tab, 'anonid', 'address-label').value = label;
+}
+
 /*
  * Vertical Tabs
  *
@@ -529,7 +544,7 @@ VerticalTabs.prototype = {
 
     for (let i = 0; i < tabs.children.length; i++) {
       let tab = tabs.children[i];
-      if (tab.label.toLowerCase().match(input_value) || tab.linkedBrowser.currentURI.spec.toLowerCase().match(input_value)) {
+      if (tab.label.toLowerCase().match(input_value) || getUri(tab).spec.toLowerCase().match(input_value)) {
         tab.setAttribute('hidden', false);
       } else {
         hidden_counter += 1;
@@ -565,26 +580,26 @@ VerticalTabs.prototype = {
       aTab.setAttribute('crop', 'end');
     }
     let tab_meta_image = document.getAnonymousElementByAttribute(aTab, 'anonid', 'tab-meta-image');
-    tab_meta_image.style.backgroundImage = `url(moz-page-thumb://thumbnail/?url=${encodeURIComponent(aTab.linkedBrowser.currentURI.spec)}), url(resource://tabcenter/skin/blank.png)`;
+    tab_meta_image.style.backgroundImage = `url(moz-page-thumb://thumbnail/?url=${encodeURIComponent(getUri(aTab).spec)}), url(resource://tabcenter/skin/blank.png)`;
+
+    updateUriLabel(aTab);
 
     aTab.addEventListener('load', () => {
-      let url = aTab.linkedBrowser.currentURI.spec;
+      let url = getUri(aTab).spec;
       if (aTab.VTLastUrl !== url) {
         if (url === 'about:newtab' || url === 'about:blank') {
           tab_meta_image.style.backgroundImage = 'url("resource://tabcenter/skin/newtab.png")';
         } else {
           PageThumbs.captureAndStoreIfStale(aTab.linkedBrowser, function (success) {
-            if (aTab.linkedBrowser.currentURI.spec === url) {
+            if (getUri(aTab).spec === url) {
               tab_meta_image.style.backgroundImage = `url('moz-page-thumb://thumbnail/?url=${encodeURIComponent(url)}'), url(resource://tabcenter/skin/blank.png)`;
             }
           });
         }
         aTab.VTLastUrl = url;
-        let label = aTab.linkedBrowser.currentURI.spec;
-        if (aTab.linkedBrowser.currentURI.scheme.startsWith('http')) {
-          label = aTab.linkedBrowser.currentURI.host;
-        }
-        document.getAnonymousElementByAttribute(aTab, 'anonid', 'address-label').value = label;
+
+        // URI might have changed due to redirects
+        updateUriLabel(aTab);
       }
     });
   },
