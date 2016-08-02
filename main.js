@@ -73,7 +73,7 @@ function sendPayload() {
   for (let window of browserWindows) {
     let win = viewFor(window);
     if (win.VerticalTabs) {
-      utils.addPingStats(win.VerticalTabs.Stats);
+      utils.addPingStats(win.VerticalTabs.stats);
     }
   }
   utils.setPayload('tab_center_tabs_on_top', prefs.opentabstop);

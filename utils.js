@@ -62,7 +62,7 @@ function Stats() {
 }
 exports.Stats = Stats;
 
-let payload = new Stats();
+let payload = new Stats;
 payload.version = 1;
 
 function addPingStats(stats) {

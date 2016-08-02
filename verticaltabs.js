@@ -39,6 +39,7 @@
 'use strict';
 
 const {Cc, Ci, Cu} = require('chrome');
+const {emit} = require('sdk/dom/events');
 const {platform} = require('sdk/system');
 const {prefs} = require('sdk/simple-prefs');
 const {addPingStats, Stats, setDefaultPrefs} = require('./utils');
@@ -63,7 +64,7 @@ function VerticalTabs(window) {
   this.window = window;
   this.document = window.document;
   this.unloaders = [];
-  this.stats = new Stats();
+  this.stats = new Stats;
   this.init();
 }
 VerticalTabs.prototype = {
@@ -535,7 +536,7 @@ VerticalTabs.prototype = {
     }
     let find_input = this.document.getElementById('find-input');
     find_input.value = '';
-    find_input.dispatchEvent(new Event('input'));
+    emit(find_input, 'input', {category: 'Event'});
 
     this.resizeTabs();
 
