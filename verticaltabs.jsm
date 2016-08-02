@@ -590,7 +590,7 @@ VerticalTabs.prototype = {
         if (url === 'about:newtab' || url === 'about:blank') {
           tab_meta_image.style.backgroundImage = 'url("resource://tabcenter/skin/newtab.png")';
         } else {
-          PageThumbs.captureAndStoreIfStale(aTab.linkedBrowser, function (success) {
+          PageThumbs.captureAndStoreIfStale(aTab.linkedBrowser, (success) => {
             if (this.getUri(aTab).spec === url) {
               tab_meta_image.style.backgroundImage = `url('moz-page-thumb://thumbnail/?url=${encodeURIComponent(url)}'), url(resource://tabcenter/skin/blank.png)`;
             }
