@@ -35,18 +35,12 @@
  * ***** END LICENSE BLOCK ***** */
 
  /* global require, exports:false */
-
+'use strict';
 
 const {Cc, Ci} = require('chrome');
 
-/*
- d8888b.  .d8b.  db    db db       .d88b.   .d8b.  d8888b.
- 88  `8D d8' `8b `8b  d8' 88      .8P  Y8. d8' `8b 88  `8D
- 88oodD' 88ooo88  `8bd8'  88      88    88 88ooo88 88   88
- 88~~~   88~~~88    88    88      88    88 88~~~88 88   88
- 88      88   88    88    88booo. `8b  d8' 88   88 88  .8D
- 88      YP   YP    YP    Y88888P  `Y88P'  YP   YP Y8888D'
-*/
+
+/* Payload */
 
 const {notifyObservers} = Cc['@mozilla.org/observer-service;1'].
                             getService(Ci.nsIObserverService);
@@ -105,14 +99,7 @@ function sendPing() {
 exports.sendPing = sendPing;
 
 
-/*
-d8888b. d8888b. d88888b d88888b d88888b d8888b. d88888b d8b   db  .o88b. d88888b .d8888.
-88  `8D 88  `8D 88'     88'     88'     88  `8D 88'     888o  88 d8P  Y8 88'     88'  YP
-88oodD' 88oobY' 88ooooo 88ooo   88ooooo 88oobY' 88ooooo 88V8o 88 8P      88ooooo `8bo.
-88~~~   88`8b   88~~~~~ 88~~~   88~~~~~ 88`8b   88~~~~~ 88 V8o88 8b      88~~~~~   `Y8b.
-88      88 `88. 88.     88      88.     88 `88. 88.     88  V888 Y8b  d8 88.     db   8D
-88      88   YD Y88888P YP      Y88888P 88   YD Y88888P VP   V8P  `Y88P' Y88888P `8888Y'
-*/
+/* Preferences */
 
 const {set, reset} = require('sdk/preferences/service');
 
@@ -136,14 +123,7 @@ function removeDefaultPrefs() {
 exports.removeDefaultPrefs = removeDefaultPrefs;
 
 
-/*
-.d8888. d888888b db    db db      d88888b .d8888. db   db d88888b d88888b d888888b
-88'  YP `~~88~~' `8b  d8' 88      88'     88'  YP 88   88 88'     88'     `~~88~~'
-`8bo.      88     `8bd8'  88      88ooooo `8bo.   88ooo88 88ooooo 88ooooo    88
-  `Y8b.    88       88    88      88~~~~~   `Y8b. 88~~~88 88~~~~~ 88~~~~~    88
-db   8D    88       88    88booo. 88.     db   8D 88   88 88.     88.        88
-`8888Y'    YP       YP    Y88888P Y88888P `8888Y' YP   YP Y88888P Y88888P    YP
-*/
+/* Stylesheets */
 
 const {newURI} = require('sdk/url/utils');
 const {loadAndRegisterSheet, unregisterSheet, USER_SHEET} = Cc['@mozilla.org/content/style-sheet-service;1'].

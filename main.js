@@ -34,7 +34,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
- /*global require, exports:false */
+/* global require, exports:false */
+'use strict';
+
 
 const {prefixURI} = require('@loader/options');
 const {prefs} = require('sdk/simple-prefs');
