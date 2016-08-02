@@ -11,15 +11,14 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is Home Dash Utility.
+ * The Original Code is Vertical Tabs.
  *
- * The Initial Developer of the Original Code is The Mozilla Foundation.
+ * The Initial Developer of the Original Code is
+ * Philipp von Weitershausen.
  * Portions created by the Initial Developer are Copyright (C) 2011
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *   Edward Lee <edilee@mozilla.com>
- *   Erik Vold <erikvvold@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -35,126 +34,22 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/* global Cc:false, Ci:false */
-/*exported sendPing, addPingStats, watchWindows*/
-'use strict';
+ /* global require, exports:false */
 
-/**
- * Save callbacks to run when unloading. Optionally scope the callback to a
- * container, e.g., window. Provide a way to run all the callbacks.
- *
- * @usage unload(): Run all callbacks and release them.
- *
- * @usage unload(callback): Add a callback to run on unload.
- * @param [function] callback: 0-parameter function to call on unload.
- * @return [function]: A 0-parameter function that undoes adding the callback.
- *
- * @usage unload(callback, container) Add a scoped callback to run on unload.
- * @param [function] callback: 0-parameter function to call on unload.
- * @param [node] container: Remove the callback when this container unloads.
- * @return [function]: A 0-parameter function that undoes adding the callback.
- */
-function unload(callback, container) {
-  // Initialize the array of unloaders on the first usage
-  let unloaders = unload.unloaders;
-  if (unloaders == null) {
-    unloaders = unload.unloaders = [];
-  }
-  // Calling with no arguments runs all the unloader callbacks
-  if (callback == null) {
-    unloaders.slice().forEach(function (unloader) { unloader(); });
-    unloaders.length = 0;
-    return;
-  }
 
-  // The callback is bound to the lifetime of the container if we have one
-  if (container != null) {
-    // Remove the unloader when the container unloads
-    container.addEventListener('unload', removeUnloader, false);
+const {Cc, Ci} = require('chrome');
 
-    // Wrap the callback to additionally remove the unload listener
-    let origCallback = callback;
-    callback = function () {
-      container.removeEventListener('unload', removeUnloader, false);
-      origCallback();
-    };
-  }
+/*
+ d8888b.  .d8b.  db    db db       .d88b.   .d8b.  d8888b.
+ 88  `8D d8' `8b `8b  d8' 88      .8P  Y8. d8' `8b 88  `8D
+ 88oodD' 88ooo88  `8bd8'  88      88    88 88ooo88 88   88
+ 88~~~   88~~~88    88    88      88    88 88~~~88 88   88
+ 88      88   88    88    88booo. `8b  d8' 88   88 88  .8D
+ 88      YP   YP    YP    Y88888P  `Y88P'  YP   YP Y8888D'
+*/
 
-  // Wrap the callback in a function that ignores failures
-  function unloader() {
-    try {
-      callback();
-    }
-    catch(ex) {
-      // console.error(ex);
-    }
-  }
-  unloaders.push(unloader);
-
-  // Provide a way to remove the unloader
-  function removeUnloader() {
-    let index = unloaders.indexOf(unloader);
-    if (index !== -1) {
-      unloaders.splice(index, 1);
-    }
-  }
-  return removeUnloader;
-}
-
-/**
- * Apply a callback to each open and new browser windows.
- *
- * @usage watchWindows(callback): Apply a callback to each browser window.
- * @param [function] callback: 1-parameter function that gets a browser window.
- */
-function watchWindows(callback) {
-  // Wrap the callback in a function that ignores failures
-  function watcher(window) {
-    try {
-      // Now that the window has loaded, only handle browser windows
-      let {documentElement} = window.document;
-      if (documentElement.getAttribute('windowtype') === 'navigator:browser') {
-        callback(window);
-      }
-    }
-    catch(ex) {
-      // console.error(ex);
-    }
-  }
-
-  // Wait for the window to finish loading before running the callback
-  function runOnLoad(window) {
-    // Listen for one load event before checking the window type
-    window.addEventListener('load', function runOnce() {
-      window.removeEventListener('load', runOnce, false);
-      watcher(window);
-    }, false);
-  }
-
-  // Add functionality to existing windows
-  let windows = Services.wm.getEnumerator(null);
-  while (windows.hasMoreElements()) {
-    // Only run the watcher immediately if the window is completely loaded
-    let window = windows.getNext();
-    if (window.document.readyState === 'complete'){
-      watcher(window);
-    // Wait for the window to load before continuing
-    } else {
-      runOnLoad(window);
-    }
-  }
-
-  // Watch for new browser windows opening then wait for it to load
-  function windowWatcher(subject, topic) {
-    if (topic === 'domwindowopened') {
-      runOnLoad(subject);
-    }
-  }
-  Services.ww.registerNotification(windowWatcher);
-
-  // Make sure to stop watching for windows if we're unloading
-  unload(function () { Services.ww.unregisterNotification(windowWatcher); });
-}
+const {notifyObservers} = Cc['@mozilla.org/observer-service;1'].
+                            getService(Ci.nsIObserverService);
 
 const PAYLOAD_KEYS = [
   'tabs_created',
@@ -166,24 +61,29 @@ const PAYLOAD_KEYS = [
   'tab_center_expanded'
 ];
 
-function newPayload() {
-  let rv = {'version': 1};
-  PAYLOAD_KEYS.forEach(key => {
-    rv[key] = 0;
-  });
-  return rv;
+function Stats() {
+  for (let key of PAYLOAD_KEYS) {
+    this[key] = 0;
+  }
 }
+exports.Stats = Stats;
 
-let payload = newPayload();
+let payload = new Stats();
+payload.version = 1;
 
 function addPingStats(stats) {
-  PAYLOAD_KEYS.forEach(key => {
+  for (let key of PAYLOAD_KEYS) {
     payload[key] += stats[key] || 0;
-  });
+  }
 }
+exports.addPingStats = addPingStats;
+
+function setPayload(key, value) {
+  payload[key] = value;
+}
+exports.setPayload = setPayload;
 
 function sendPing() {
-  const observerService = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
   // This looks strange, but it's required to send over the test ID.
   const subject = {
     wrappedJSObject: {
@@ -192,18 +92,79 @@ function sendPing() {
     }
   };
 
-  let windows = Services.wm.getEnumerator(null);
-  while (windows.hasMoreElements()) {
-    let vt = windows.getNext().VerticalTabs;
-    if (vt) {
-      vt.sendStats();
-    }
-  }
-  payload.tab_center_tabs_on_top = Services.prefs.getBoolPref('extensions.verticaltabs.opentabstop');
   let ping = JSON.stringify(payload);
-  payload = newPayload();
+
   // Send metrics to the main Test Pilot add-on.
-  observerService.notifyObservers(subject, 'testpilot::send-metric', ping);
+  notifyObservers(subject, 'testpilot::send-metric', ping);
 
   // Clear out the metrics for next time…
+  for (let key of PAYLOAD_KEYS) {
+    payload[key] = 0;
+  }
 }
+exports.sendPing = sendPing;
+
+
+/*
+d8888b. d8888b. d88888b d88888b d88888b d8888b. d88888b d8b   db  .o88b. d88888b .d8888.
+88  `8D 88  `8D 88'     88'     88'     88  `8D 88'     888o  88 d8P  Y8 88'     88'  YP
+88oodD' 88oobY' 88ooooo 88ooo   88ooooo 88oobY' 88ooooo 88V8o 88 8P      88ooooo `8bo.
+88~~~   88`8b   88~~~~~ 88~~~   88~~~~~ 88`8b   88~~~~~ 88 V8o88 8b      88~~~~~   `Y8b.
+88      88 `88. 88.     88      88.     88 `88. 88.     88  V888 Y8b  d8 88.     db   8D
+88      88   YD Y88888P YP      Y88888P 88   YD Y88888P VP   V8P  `Y88P' Y88888P `8888Y'
+*/
+
+const {set, reset} = require('sdk/preferences/service');
+
+const DEFAULT_PREFS = new Map([
+  ['browser.tabs.animate', false],
+  ['browser.tabs.drawInTitlebar', false]
+]);
+
+function setDefaultPrefs() {
+  for (let [name, value] of DEFAULT_PREFS) {
+    set(name, value);
+  }
+}
+exports.setDefaultPrefs = setDefaultPrefs;
+
+function removeDefaultPrefs() {
+  for (let [name] of DEFAULT_PREFS) {
+    reset(name);
+  }
+}
+exports.removeDefaultPrefs = removeDefaultPrefs;
+
+
+/*
+.d8888. d888888b db    db db      d88888b .d8888. db   db d88888b d88888b d888888b
+88'  YP `~~88~~' `8b  d8' 88      88'     88'  YP 88   88 88'     88'     `~~88~~'
+`8bo.      88     `8bd8'  88      88ooooo `8bo.   88ooo88 88ooooo 88ooooo    88
+  `Y8b.    88       88    88      88~~~~~   `Y8b. 88~~~88 88~~~~~ 88~~~~~    88
+db   8D    88       88    88booo. 88.     db   8D 88   88 88.     88.        88
+`8888Y'    YP       YP    Y88888P Y88888P `8888Y' YP   YP Y88888P Y88888P    YP
+*/
+
+const {newURI} = require('sdk/url/utils');
+const {loadAndRegisterSheet, unregisterSheet, USER_SHEET} = Cc['@mozilla.org/content/style-sheet-service;1'].
+                                                              getService(Ci.nsIStyleSheetService);
+
+const STYLESHEETS = [
+  'resource://tabcenter/override-bindings.css',
+  'resource://tabcenter/skin/base.css',
+  'chrome://tabcenter/skin/platform.css'
+];
+
+function installStylesheets() {
+  for (let uri of STYLESHEETS) {
+    loadAndRegisterSheet(newURI(uri), USER_SHEET);
+  }
+}
+exports.installStylesheets = installStylesheets;
+
+function removeStylesheets() {
+  for (let uri of STYLESHEETS) {
+    unregisterSheet(newURI(uri), USER_SHEET);
+  }
+}
+exports.removeStylesheets = removeStylesheets;
