@@ -656,8 +656,8 @@
   min-height: 20px !important;
   max-width: 20px !important;
   max-height: 20px !important;
-  margin-left: 6px;
-  margin-right: 0;
+  margin-left: 8px !important;
+  margin-right: 0 !important;
   padding: 2px;
   opacity: 1 !important;
 }
