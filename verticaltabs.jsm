@@ -497,6 +497,7 @@ VerticalTabs.prototype = {
       toolbox.insertBefore(toolbar, navbar);
       browserPanel.insertBefore(toolbox, browserPanel.firstChild);
       browserPanel.insertBefore(bottom, document.getElementById('fullscreen-warning').nextSibling);
+      top.palette = palette;
       this.window.TabsInTitlebar.updateAppearance(true);
     });
   },
@@ -557,7 +558,10 @@ VerticalTabs.prototype = {
       label = uri.host;
     }
     // URI can be shown immediately
-    this.document.getAnonymousElementByAttribute(tab, 'anonid', 'address-label').value = label;
+    let address = this.document.getAnonymousElementByAttribute(tab, 'anonid', 'address-label');
+    if (address) {
+      address.value = label;
+    }
   },
 
   initTab: function (aTab) {
