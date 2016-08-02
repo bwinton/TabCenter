@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="54" height="40" viewBox="0 0 54 40">
+  <style>
+    .stroke {
+      stroke: #4d4d4d;
+      stroke-opacity: .5;
+      stroke-width: 1;
+      stroke-dasharray: 3 4;
+      stroke-linejoin: round;
+      stroke-dashoffset: 0;
+      stroke-linecap: round;
+      fill: none;
+    }
+
+    .base {
+      fill: #e6e6e6;
+    }
+
+    .icon { 
+      fill: none;
+      stroke: #4d4d4d;
+      stroke-opacity: .5;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10;
+    }
+  </style>
+
+  <rect class="base" x="0" y="0" width="54" height="39" />
+  <rect class="stroke" x=".5" y=".5" width="53" height="38" />
+<!--   <polygon class="icon" points="32.5,27.5 21.5,27.5 21.5,12.5 29,12.5 32.5,16 "/>
+  <polyline class="icon" points="28.5,12.5 28.5,16.5 32.5,16.5 "/> -->
+</svg>

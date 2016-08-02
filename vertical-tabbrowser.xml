@@ -557,7 +557,7 @@
                        class="tab-icon-image"
                        validate="never"
                        role="presentation"/>
-          </xul:box>
+          </xul:vbox>
           <xul:image xbl:inherits="sharing,selected"
                      anonid="sharing-icon"
                      class="tab-sharing-icon-overlay"
