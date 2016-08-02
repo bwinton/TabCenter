@@ -1,1 +1,94 @@
 /*Only Mac Styles*/
+
+:root {
+  --link-color-brighttext: #2cc1ff;
+}
+
+#appcontent {
+  border-top: 0 !important;
+}
+
+#verticaltabs-box #TabsToolbar {
+  flex: 0 0 40px !important;
+}
+
+#verticaltabs-box {
+  /* -moz-appearance: -moz-mac-vibrancy-light; */
+  border-top: 0 !important;
+}
+
+#TabsToolbar > toolbarbutton {
+  padding: 0 5px !important;
+  border-radius: 2.5px !important;
+}
+
+#TabsToolbar > toolbarbutton:hover {
+  border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
+  background-color: hsla(0, 0%, 0%, 0.1) !important;
+}
+
+#TabsToolbar > toolbarbutton:hover:active {
+  border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
+  background-color: hsla(0, 0%, 0%, 0.16) !important;
+  box-shadow: none !important;
+}
+
+#TabsToolbar #new-tab-button .toolbarbutton-icon {
+  margin-right: 7px !important;
+  width: 16px !important;
+  height: 16px !important;
+  -moz-image-region: rect(0, 16px, 16px, 0) !important;
+}
+
+#main-window[tabspinned="true"] #verticaltabs-box #pin-button {
+  box-shadow: none !important;
+}
+
+@media (min-resolution: 2dppx) {
+  .tabs-newtab-button,
+  #TabsToolbar > #new-tab-button,
+  #TabsToolbar > toolbarpaletteitem > #new-tab-button {
+    list-style-image: url("resource://tabcenter/skin/glyph-new-16.svg") !important;
+  }
+
+  #TabsToolbar[brighttext] .tabs-newtab-button,
+  #TabsToolbar[brighttext] > #new-tab-button,
+  #TabsToolbar[brighttext] > toolbarpaletteitem > #new-tab-button {
+    list-style-image: url("resource://tabcenter/skin/glyph-new-inverted-16.svg") !important;
+  }
+}
+
+.tabbrowser-tabs.large-tabs .tab-text {
+  font-weight: 400;
+}
+
+.tabbrowser-tabs.large-tabs .tab-text[visuallyselected="true"] {
+  font-weight: 500;
+}
+
+.title-wrapper .address-label {
+  color: hsl(210, 77%, 47%);
+  opacity: 0.8;
+}
+
+.tab-close-button {
+  border-radius: 2.5px !important;
+}
+
+#TabsToolbar #find-input {
+  border-radius: 2.5px !important;
+  background-position: 6px center !important;
+  box-shadow: 0 0 0 30px hsla(210, 100%, 60%, 0) !important;
+}
+
+#TabsToolbar #find-input[focused="true"] {
+  border: 1px solid hsla(210, 100%, 60%, 0.6) !important;
+  box-shadow: 0 0 0 3px hsla(210, 100%, 60%, 0.45) !important;
+  transition-duration: 150ms !important;
+}
+
+#navigator-toolbox > toolbar:not(#TabsToolbar):-moz-lwtheme {
+  background-color: transparent !important;
+  background-image: linear-gradient(hsla(0, 0%, 100%, 0), hsla(0, 0%, 100%, 0.65)) !important;
+  box-shadow: none !important;
+}
