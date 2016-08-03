@@ -405,9 +405,13 @@
 }
 
 .title-wrapper .tab-text {
-  margin-bottom: 0 !important;
-  margin-top: 0 !important;
+  margin: 0 !important;
+  margin-right: 8px !important;
   font-weight: 400;
+}
+
+.tabbrowser-tab[pinned] .title-wrapper .tab-text {
+  margin-right: 0 !important;
 }
 
 .tabbrowser-tabs.large-tabs .tab-text {
