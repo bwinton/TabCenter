@@ -255,25 +255,20 @@
 }
 
 #TabsToolbar #find-input {
+  margin: 0 4px !important;
+  padding: 0 !important;
+  height: 26px;
+  min-height: auto !important;
+  border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
+  border-radius: 1px !important;
   display: flex;
   align-items: center;
   flex: 20 0 auto;
-
-  margin: 0 4px !important;
-  padding: 0 !important;
-
-  height: 26px;
-  min-height: auto !important;
-  
-  border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
-  border-radius: 1px !important;
-  
   transition-duration: 0.1s;
   transition-property: border-color, box-shadow;
 }
 
 #TabsToolbar #find-input[focused="true"] {
-/*   margin-left: -10px !important; */
   width: calc(100% - 100px) !important;
   border: 1px solid Highlight !important;
   box-shadow: 0 0 0 1px Highlight inset;
@@ -727,37 +722,25 @@
 
 #TabsToolbar > #new-tab-button {
   display: -moz-box !important;
-  -moz-box-orient: horizontal !important;
-  -moz-box-align: center !important;
-  -moz-box-pack: end !important;
-
-  margin: 0 4px 0 4px !important;
+  margin: 0 4px !important;
   padding: 0 6px !important;
-
   min-width: 40px !important;
-
+  -moz-box-align: center !important;
+  -moz-box-orient: horizontal !important;
+  -moz-box-pack: end !important;
   flex: 0 20 auto !important;
-  
-/*   outline: 1px dashed magenta; */
 }
 
 #TabsToolbar #new-tab-button .toolbarbutton-icon {
   margin: 0 !important;
   margin-right: 6px !important;
   padding: 0 !important;
-/*   flex: 0 0 auto !important; */
-
-/*   outline: 1px dotted teal; */
 }
 
 #TabsToolbar #new-tab-button .toolbarbutton-text {
   display: inline !important;
-/*   flex: 1 1 auto !important; */
-  
   padding: 0 !important;
-  margin: 0 !important;
-
-/*   outline: 1px dotted teal; */
+  /* margin: 0 !important; */
 }
 
 #TabsToolbar #new-tab-spacer {
