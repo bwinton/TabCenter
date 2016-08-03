@@ -77,6 +77,7 @@ function sendPayload() {
     }
   }
   utils.setPayload('tab_center_tabs_on_top', prefs.opentabstop);
+  utils.sendPing();
 }
 
 exports.main = function (options, callbacks) {
