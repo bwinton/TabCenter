@@ -11,14 +11,15 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is Vertical Tabs.
+ * The Original Code is Home Dash Utility.
  *
- * The Initial Developer of the Original Code is
- * Philipp von Weitershausen.
+ * The Initial Developer of the Original Code is The Mozilla Foundation.
  * Portions created by the Initial Developer are Copyright (C) 2011
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ *   Edward Lee <edilee@mozilla.com>
+ *   Erik Vold <erikvvold@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or

@@ -536,7 +536,7 @@ VerticalTabs.prototype = {
     }
     let find_input = this.document.getElementById('find-input');
     find_input.value = '';
-    emit(find_input, 'input', {category: 'Event'});
+    emit(find_input, 'input', {category: 'Event', settings: ['input', false, false]});
 
     this.resizeTabs();
 
