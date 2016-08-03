@@ -255,21 +255,21 @@
 }
 
 #TabsToolbar #find-input {
+  margin: 0 4px !important;
+  padding: 0 !important;
+  height: 26px;
+  min-height: auto !important;
   border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
   border-radius: 1px !important;
   display: flex;
-  height: 26px;
-  margin: 0 4px !important;
-  padding: 0 !important;
-  min-height: auto !important;
   align-items: center;
-  flex: 1 0 auto;
+  flex: 20 0 auto;
   transition-duration: 0.1s;
   transition-property: border-color, box-shadow;
 }
 
 #TabsToolbar #find-input[focused="true"] {
-  width: calc(100% - 95px) !important;
+  width: calc(100% - 100px) !important;
   border: 1px solid Highlight !important;
   box-shadow: 0 0 0 1px Highlight inset;
 }
@@ -400,9 +400,13 @@
 }
 
 .title-wrapper .tab-text {
-  margin-bottom: 0 !important;
-  margin-top: 0 !important;
+  margin: 0 !important;
+  margin-right: 8px !important;
   font-weight: 400;
+}
+
+.tabbrowser-tab[pinned] .title-wrapper .tab-text {
+  margin-right: 0 !important;
 }
 
 .tabbrowser-tabs.large-tabs .tab-text {
@@ -657,7 +661,7 @@
   max-width: 20px !important;
   max-height: 20px !important;
   margin-left: 8px !important;
-  margin-right: 0 !important;
+  margin-right: 6px !important;
   padding: 2px;
   opacity: 1 !important;
 }
@@ -678,7 +682,7 @@
   margin-bottom: 0 !important;
 }
 
-#verticaltabs-box #TabsToolbar {
+#TabsToolbar {
   border: none !important;
   border-bottom: 1px solid hsla(0, 0%, 0%, 0.2) !important;
   display: flex;
@@ -717,26 +721,29 @@
 }
 
 #TabsToolbar > #new-tab-button {
-  display: inline;
-}
-
-#TabsToolbar > #new-tab-button {
+  display: -moz-box !important;
   margin: 0 4px !important;
+  padding: 0 6px !important;
+  min-width: 40px !important;
+  -moz-box-align: center !important;
   -moz-box-orient: horizontal !important;
+  -moz-box-pack: end !important;
+  flex: 0 20 auto !important;
 }
 
 #TabsToolbar #new-tab-button .toolbarbutton-icon {
-  margin-right: 7px !important;
+  margin: 0 !important;
+  margin-right: 6px !important;
+  padding: 0 !important;
 }
 
 #TabsToolbar #new-tab-button .toolbarbutton-text {
-  display: -moz-box;
+  display: inline !important;
   padding: 0 !important;
-  margin: 0 !important;
 }
 
 #TabsToolbar #new-tab-spacer {
-  flex: 1 0 20px;
+  flex: 20 0 auto;
 }
 
 /* Tab toolbar styling */
