@@ -34,7 +34,6 @@
 }
 
 #TabsToolbar #new-tab-button .toolbarbutton-icon {
-  margin-right: 7px !important;
   width: 16px !important;
   height: 16px !important;
   -moz-image-region: rect(0, 16px, 16px, 0) !important;
