@@ -662,7 +662,7 @@
   max-width: 20px !important;
   max-height: 20px !important;
   margin-left: 8px !important;
-  margin-right: 0 !important;
+  margin-right: 6px !important;
   padding: 2px;
   opacity: 1 !important;
 }
@@ -683,7 +683,7 @@
   margin-bottom: 0 !important;
 }
 
-#verticaltabs-box #TabsToolbar {
+#TabsToolbar {
   border: none !important;
   border-bottom: 1px solid hsla(0, 0%, 0%, 0.2) !important;
   display: flex;

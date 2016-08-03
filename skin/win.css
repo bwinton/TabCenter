@@ -1,10 +1,5 @@
 /*Only Windows Styles*/
 
-/*remove clear bottom border in themes*/
-#TabsToolbar {
-  border-bottom: 1px solid ThreeDShadow !important;
-}
-
 .title-wrapper {
   padding-left: 5px;
 }
