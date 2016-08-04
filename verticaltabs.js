@@ -594,12 +594,22 @@ VerticalTabs.prototype = {
 
   resizeTabs: function () {
     let tabs = this.document.getElementById('tabbrowser-tabs');
-    let tabbrowser_height = tabs.clientHeight;
-    let number_of_tabs = this.document.querySelectorAll('.tabbrowser-tab[hidden=false]').length;
-    if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60) {
-      tabs.classList.add('large-tabs');
-    } else {
+    switch (prefs.largetabs) {
+    case 0:
       tabs.classList.remove('large-tabs');
+      return;
+    case 1:
+      let tabbrowser_height = tabs.clientHeight;
+      let number_of_tabs = this.document.querySelectorAll('.tabbrowser-tab[hidden=false]').length;
+      if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60) {
+        tabs.classList.add('large-tabs');
+      } else {
+        tabs.classList.remove('large-tabs');
+      }
+      return;
+    case 2:
+      tabs.classList.add('large-tabs');
+      return;
     }
   },
 

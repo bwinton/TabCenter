@@ -57,6 +57,27 @@
       "description": "New tabs are opened at the top",
       "type": "bool",
       "value": false
+    },
+    {
+      "name": "largetabs",
+      "title": "Large Tabs",
+      "description": "Tabs are displayed large with thumbnail",
+      "type": "menulist",
+      "value": 1,
+      "options": [
+          {
+              "value": "0",
+              "label": "Never"
+          },
+          {
+              "value": "1",
+              "label": "Auto"
+          },
+          {
+              "value": "2",
+              "label": "Always"
+          }
+      ]
     }
   ]
 }
