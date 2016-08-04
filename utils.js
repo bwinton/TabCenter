@@ -35,126 +35,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/* global Cc:false, Ci:false */
-/*exported sendPing, addPingStats, watchWindows*/
+ /* global require, exports:false */
 'use strict';
 
-/**
- * Save callbacks to run when unloading. Optionally scope the callback to a
- * container, e.g., window. Provide a way to run all the callbacks.
- *
- * @usage unload(): Run all callbacks and release them.
- *
- * @usage unload(callback): Add a callback to run on unload.
- * @param [function] callback: 0-parameter function to call on unload.
- * @return [function]: A 0-parameter function that undoes adding the callback.
- *
- * @usage unload(callback, container) Add a scoped callback to run on unload.
- * @param [function] callback: 0-parameter function to call on unload.
- * @param [node] container: Remove the callback when this container unloads.
- * @return [function]: A 0-parameter function that undoes adding the callback.
- */
-function unload(callback, container) {
-  // Initialize the array of unloaders on the first usage
-  let unloaders = unload.unloaders;
-  if (unloaders == null) {
-    unloaders = unload.unloaders = [];
-  }
-  // Calling with no arguments runs all the unloader callbacks
-  if (callback == null) {
-    unloaders.slice().forEach(function (unloader) { unloader(); });
-    unloaders.length = 0;
-    return;
-  }
+const {Cc, Ci} = require('chrome');
 
-  // The callback is bound to the lifetime of the container if we have one
-  if (container != null) {
-    // Remove the unloader when the container unloads
-    container.addEventListener('unload', removeUnloader, false);
 
-    // Wrap the callback to additionally remove the unload listener
-    let origCallback = callback;
-    callback = function () {
-      container.removeEventListener('unload', removeUnloader, false);
-      origCallback();
-    };
-  }
+/* Payload */
 
-  // Wrap the callback in a function that ignores failures
-  function unloader() {
-    try {
-      callback();
-    }
-    catch(ex) {
-      // console.error(ex);
-    }
-  }
-  unloaders.push(unloader);
-
-  // Provide a way to remove the unloader
-  function removeUnloader() {
-    let index = unloaders.indexOf(unloader);
-    if (index !== -1) {
-      unloaders.splice(index, 1);
-    }
-  }
-  return removeUnloader;
-}
-
-/**
- * Apply a callback to each open and new browser windows.
- *
- * @usage watchWindows(callback): Apply a callback to each browser window.
- * @param [function] callback: 1-parameter function that gets a browser window.
- */
-function watchWindows(callback) {
-  // Wrap the callback in a function that ignores failures
-  function watcher(window) {
-    try {
-      // Now that the window has loaded, only handle browser windows
-      let {documentElement} = window.document;
-      if (documentElement.getAttribute('windowtype') === 'navigator:browser') {
-        callback(window);
-      }
-    }
-    catch(ex) {
-      // console.error(ex);
-    }
-  }
-
-  // Wait for the window to finish loading before running the callback
-  function runOnLoad(window) {
-    // Listen for one load event before checking the window type
-    window.addEventListener('load', function runOnce() {
-      window.removeEventListener('load', runOnce, false);
-      watcher(window);
-    }, false);
-  }
-
-  // Add functionality to existing windows
-  let windows = Services.wm.getEnumerator(null);
-  while (windows.hasMoreElements()) {
-    // Only run the watcher immediately if the window is completely loaded
-    let window = windows.getNext();
-    if (window.document.readyState === 'complete'){
-      watcher(window);
-    // Wait for the window to load before continuing
-    } else {
-      runOnLoad(window);
-    }
-  }
-
-  // Watch for new browser windows opening then wait for it to load
-  function windowWatcher(subject, topic) {
-    if (topic === 'domwindowopened') {
-      runOnLoad(subject);
-    }
-  }
-  Services.ww.registerNotification(windowWatcher);
-
-  // Make sure to stop watching for windows if we're unloading
-  unload(function () { Services.ww.unregisterNotification(windowWatcher); });
-}
+const {notifyObservers} = Cc['@mozilla.org/observer-service;1'].
+                            getService(Ci.nsIObserverService);
 
 const PAYLOAD_KEYS = [
   'tabs_created',
@@ -166,24 +56,29 @@ const PAYLOAD_KEYS = [
   'tab_center_expanded'
 ];
 
-function newPayload() {
-  let rv = {'version': 1};
-  PAYLOAD_KEYS.forEach(key => {
-    rv[key] = 0;
-  });
-  return rv;
+function Stats() {
+  for (let key of PAYLOAD_KEYS) {
+    this[key] = 0;
+  }
 }
+exports.Stats = Stats;
 
-let payload = newPayload();
+let payload = new Stats;
+payload.version = 1;
 
 function addPingStats(stats) {
-  PAYLOAD_KEYS.forEach(key => {
+  for (let key of PAYLOAD_KEYS) {
     payload[key] += stats[key] || 0;
-  });
+  }
 }
+exports.addPingStats = addPingStats;
+
+function setPayload(key, value) {
+  payload[key] = value;
+}
+exports.setPayload = setPayload;
 
 function sendPing() {
-  const observerService = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
   // This looks strange, but it's required to send over the test ID.
   const subject = {
     wrappedJSObject: {
@@ -192,18 +87,65 @@ function sendPing() {
     }
   };
 
-  let windows = Services.wm.getEnumerator(null);
-  while (windows.hasMoreElements()) {
-    let vt = windows.getNext().VerticalTabs;
-    if (vt) {
-      vt.sendStats();
-    }
-  }
-  payload.tab_center_tabs_on_top = Services.prefs.getBoolPref('extensions.verticaltabs.opentabstop');
   let ping = JSON.stringify(payload);
-  payload = newPayload();
+
   // Send metrics to the main Test Pilot add-on.
-  observerService.notifyObservers(subject, 'testpilot::send-metric', ping);
+  notifyObservers(subject, 'testpilot::send-metric', ping);
 
   // Clear out the metrics for next time…
+  for (let key of PAYLOAD_KEYS) {
+    payload[key] = 0;
+  }
 }
+exports.sendPing = sendPing;
+
+
+/* Preferences */
+
+const {set, reset} = require('sdk/preferences/service');
+
+const DEFAULT_PREFS = new Map([
+  ['browser.tabs.animate', false],
+  ['browser.tabs.drawInTitlebar', false]
+]);
+
+function setDefaultPrefs() {
+  for (let [name, value] of DEFAULT_PREFS) {
+    set(name, value);
+  }
+}
+exports.setDefaultPrefs = setDefaultPrefs;
+
+function removeDefaultPrefs() {
+  for (let [name] of DEFAULT_PREFS) {
+    reset(name);
+  }
+}
+exports.removeDefaultPrefs = removeDefaultPrefs;
+
+
+/* Stylesheets */
+
+const {newURI} = require('sdk/url/utils');
+const {loadAndRegisterSheet, unregisterSheet, USER_SHEET} = Cc['@mozilla.org/content/style-sheet-service;1'].
+                                                              getService(Ci.nsIStyleSheetService);
+
+const STYLESHEETS = [
+  'resource://tabcenter/override-bindings.css',
+  'resource://tabcenter/skin/base.css',
+  'chrome://tabcenter/skin/platform.css'
+];
+
+function installStylesheets() {
+  for (let uri of STYLESHEETS) {
+    loadAndRegisterSheet(newURI(uri), USER_SHEET);
+  }
+}
+exports.installStylesheets = installStylesheets;
+
+function removeStylesheets() {
+  for (let uri of STYLESHEETS) {
+    unregisterSheet(newURI(uri), USER_SHEET);
+  }
+}
+exports.removeStylesheets = removeStylesheets;

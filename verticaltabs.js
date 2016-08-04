@@ -35,70 +35,36 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/*global PageThumbs:false*/
-/* exported EXPORTED_SYMBOLS, TAB_DROP_TYPE, vtInit*/
+/* global require, exports:false, PageThumbs:false */
+'use strict';
 
-Components.utils.import('resource://gre/modules/Services.jsm');
-Components.utils.import('resource://gre/modules/PageThumbs.jsm');
+const {Cc, Ci, Cu} = require('chrome');
+const {emit} = require('sdk/dom/events');
+const {platform} = require('sdk/system');
+const {prefs} = require('sdk/simple-prefs');
+const {addPingStats, Stats, setDefaultPrefs} = require('./utils');
+const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
+                               createInstance(Ci.nsIURIFixup);
+
+
+Cu.import('resource://gre/modules/PageThumbs.jsm');
 
 //use to set preview image as metadata image 1/4
 // Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
 
-const EXPORTED_SYMBOLS = ['VerticalTabs', 'vtInit'];
-
 const NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
 const TAB_DROP_TYPE = 'application/x-moz-tabbrowser-tab';
-
-function vtInit() {
-  let sss = Components.classes['@mozilla.org/content/style-sheet-service;1']
-              .getService(Components.interfaces.nsIStyleSheetService);
-  let ios = Components.classes['@mozilla.org/network/io-service;1']
-              .getService(Components.interfaces.nsIIOService);
-
-  let installStylesheet = function (uri) {
-    uri = ios.newURI(uri, null, null);
-    sss.loadAndRegisterSheet(uri, sss.USER_SHEET);
-  };
-
-  let removeStylesheet = function (uri) {
-    uri = ios.newURI(uri, null, null);
-    sss.unregisterSheet(uri, sss.USER_SHEET);
-  };
-
-  installStylesheet('resource://tabcenter/override-bindings.css');
-  installStylesheet('resource://tabcenter/skin/base.css');
-  installStylesheet('chrome://tabcenter/skin/platform.css');
-
-  return () => {
-    removeStylesheet('chrome://tabcenter/skin/platform.css');
-    removeStylesheet('resource://tabcenter/override-bindings.css');
-    removeStylesheet('resource://tabcenter/skin/base.css');
-    let windows = Services.wm.getEnumerator(null);
-    while (windows.hasMoreElements()) {
-      let window = windows.getNext();
-      let tabs = window.document.getElementById('tabbrowser-tabs');
-      if (tabs) {
-        tabs.removeAttribute('overflow');
-        tabs._positionPinnedTabs();
-      }
-    }
-  };
-}
 
 /*
  * Vertical Tabs
  *
  * Main entry point of this add-on.
  */
-function VerticalTabs(window, {newPayload, addPingStats, AppConstants, setDefaultPrefs}) {
+function VerticalTabs(window) {
   this.window = window;
   this.document = window.document;
   this.unloaders = [];
-  this.addPingStats = addPingStats;
-  this.newPayload = newPayload;
-  this.setDefaultPrefs = setDefaultPrefs;
-  this.AppConstants = AppConstants;
-  this.stats = this.newPayload();
+  this.stats = new Stats;
   this.init();
 }
 VerticalTabs.prototype = {
@@ -107,13 +73,12 @@ VerticalTabs.prototype = {
     this.window.VerticalTabs = this;
     this._endRemoveTab = this.window.gBrowser._endRemoveTab;
     this.inferFromText = this.window.ToolbarIconColor.inferFromText;
-    let AppConstants = this.AppConstants;
     let window = this.window;
     let document = this.document;
 
     this.BrowserOpenTab = this.window.BrowserOpenTab;
     this.window.BrowserOpenTab = function () {
-      this.pushToTop = Services.prefs.getBoolPref('extensions.verticaltabs.opentabstop');
+      this.pushToTop = prefs.opentabstop;
       this.window.openUILinkIn(this.window.BROWSER_NEW_TAB_URL, 'tab');
       this.pushToTop = false;
     }.bind(this);
@@ -147,7 +112,7 @@ VerticalTabs.prototype = {
       }
 
       let toolbarSelector = '#verticaltabs-box, #verticaltabs-box > toolbar:not([collapsed=true]):not(#addon-bar), #navigator-toolbox > toolbar:not([collapsed=true]):not(#addon-bar)';
-      if (AppConstants.platform === 'macosx') {
+      if (platform === 'macosx') {
         toolbarSelector += ':not([type=menubar])';
       }
       // The getComputedStyle calls and setting the brighttext are separated in
@@ -172,10 +137,9 @@ VerticalTabs.prototype = {
       this.window.ToolbarIconColor.inferFromText = this.inferFromText;
       this.window.gBrowser._endRemoveTab = this._endRemoveTab;
       this.window.BrowserOpenTab = this.BrowserOpenTab;
-      delete this.window.VerticalTabs;
     });
     this.window.onunload = () => {
-      this.sendStats();
+      addPingStats(this.stats);
     };
 
     this.rearrangeXUL();
@@ -361,6 +325,7 @@ VerticalTabs.prototype = {
         this.clearFind();
       }
     });
+
     document.getElementById('filler-tab').addEventListener('click', this.clearFind.bind(this));
 
     let spacer = this.createElement('spacer', {'id': 'new-tab-spacer'});
@@ -424,7 +389,7 @@ VerticalTabs.prototype = {
     });
 
     window.addEventListener('customizationchange', () => {
-      this.setDefaultPrefs();
+      setDefaultPrefs();
     });
 
     window.addEventListener('aftercustomization', function () {
@@ -548,7 +513,7 @@ VerticalTabs.prototype = {
 
   getUri: function (tab) {
     // Strips out the `wyciwyg://` from internal URIs
-    return Services.uriFixup.createExposableURI(tab.linkedBrowser.currentURI);
+    return createExposableURI(tab.linkedBrowser.currentURI);
   },
 
   updateUriLabel: function (tab) {
@@ -571,7 +536,7 @@ VerticalTabs.prototype = {
     }
     let find_input = this.document.getElementById('find-input');
     find_input.value = '';
-    find_input.dispatchEvent(new Event('input'));
+    emit(find_input, 'input', {category: 'Event', settings: ['input', false, false]});
 
     this.resizeTabs();
 
@@ -612,6 +577,7 @@ VerticalTabs.prototype = {
     this.unloaders.forEach(function (func) {
       func.call(this);
     }, this);
+    delete this.window.VerticalTabs;
   },
 
   checkScrollToTab: function (tab) {
@@ -686,12 +652,9 @@ VerticalTabs.prototype = {
     this.stats.tabs_unpinned++;
   },
 
-  sendStats: function (payload) {
-    this.addPingStats(this.stats);
-    this.stats = this.newPayload();
-  }
-
 };
+
+exports.addVerticalTabs = (win) => new VerticalTabs(win);
 
 //use to set preview image as metadata image 4/4
 // XPCOMUtils.defineLazyModuleGetter(VerticalTabs.prototype, "PageMetadata", "resource://gre/modules/PageMetadata.jsm");

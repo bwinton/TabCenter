@@ -2,6 +2,6 @@ build
 *~
 .DS_Store
 TabCenterTest.zip
-TabCenterTest.xpi
+*.xpi
 /node_modules/
 npm-debug.log
