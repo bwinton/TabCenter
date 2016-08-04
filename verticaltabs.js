@@ -294,12 +294,15 @@ VerticalTabs.prototype = {
       'id': 'pin-button',
       'tooltiptext': 'Keep sidebar open',
       'onclick': `let box = document.getElementById('main-window');
+        let button = document.getElementById('pin-button');
         let newstate = box.getAttribute('tabspinned') == 'true' ? 'false' : 'true';
         box.setAttribute('tabspinned', newstate);
         if (newstate == 'true') {
           window.VerticalTabs.stats.tab_center_pinned++;
+          button.setAttribute('tooltiptext', 'Shrink sidebar when not in use');
         } else {
           window.VerticalTabs.stats.tab_center_unpinned++;
+          button.setAttribute('tooltiptext', 'Keep sidebar open');
         }
         window.VerticalTabs.resizeFindInput();
         window.VerticalTabs.resizeTabs();

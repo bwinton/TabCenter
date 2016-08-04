@@ -225,6 +225,7 @@
 }
 
 #TabsToolbar > #pin-button {
+  z-index: 1;
   width: 32px;
   min-width: 32px;
   margin: 0 8px 0 4px !important;
