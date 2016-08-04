@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<vbox xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <setting type="bool"
-           pref="extensions.verticaltabs.opentabstop"
-           title="New tabs are opened at the top"/>
-</vbox>
