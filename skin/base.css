@@ -230,7 +230,7 @@
   margin: 0 8px 0 4px !important;
   display: -moz-box;
   -moz-appearance: none !important;
-  background-image: url("resource://tabcenter/skin/glyph-pin-16.svg") !important;
+  background-image: url("resource://tabcenter/skin/glyph-sidebar-expand-16.svg") !important;
   background-position: center;
   background-repeat: no-repeat;
   background-size: 16px;
@@ -301,18 +301,15 @@
 }
 
 #main-window[tabspinned="true"] #verticaltabs-box #pin-button {
-  border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
-  background-color: hsla(0, 0%, 0%, 0.16) !important;
-  background-image: url("resource://tabcenter/skin/glyph-pin-pinned-16.svg") !important;
-  box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.16) inset !important;
+  background-image: url("resource://tabcenter/skin/glyph-sidebar-collapse-16.svg") !important;
 }
 
 #main-window[lwthemetextcolor="bright"] #TabsToolbar[brighttext] #pin-button {
-  background-image: url("resource://tabcenter/skin/glyph-pin-inverted-16.svg") !important;
+  background-image: url("resource://tabcenter/skin/glyph-sidebar-expand-inverted-16.svg") !important;
 }
 
 #main-window[tabspinned="true"] #TabsToolbar[brighttext] #pin-button {
-  background-image: url("resource://tabcenter/skin/glyph-pin-pinned-16.svg") !important;
+  background-image: url("resource://tabcenter/skin/glyph-sidebar-collapse-inverted-16.svg") !important;
 }
 
 #verticaltabs-box[expanded="true"] #pin-button,
@@ -566,13 +563,20 @@
 .tab-icon-overlay[muted],
 .tab-icon-overlay[soundplaying] {
   display: -moz-box !important;
+  margin-top: -14px !important;
+  margin-inline-start: -30px !important;
+  margin-inline-end: 14px !important;
+  background-color: white !important;  
+  box-shadow: 0 1px 0 hsla(0,0%,0%,0.5) !important;
+  border: 1px solid hsla(0,0%,0%,0.2);
+  background-clip: padding-box;
 }
 
 .tabbrowser-tabs.large-tabs .tab-icon-overlay[muted],
 .tabbrowser-tabs.large-tabs .tab-icon-overlay[soundplaying] {
-  margin-inline-start: -52px !important;
-  margin-inline-end: 36px !important;
-  margin-top: -16px !important;
+  margin-inline-start: -64px !important;
+  margin-inline-end: 48px !important;
+  margin-top: -32px !important;
 }
 
 /* Keep the close button at a safe distance from the tab label. */
@@ -811,7 +815,8 @@
   background-image: none !important;
 }
 
-.tab-content[pinned][titlechanged]:not([visuallyselected="true"]) {
+.tabbrowser-tab:-moz-any([image], [pinned]) > .tab-stack > .tab-content[attention]:not([visuallyselected="true"]),
+.tabbrowser-tab > .tab-stack > .tab-content[pinned][titlechanged]:not([visuallyselected="true"]) {
   background-image: url("resource://tabcenter/skin/glyph-notification-circle-16.svg") !important;
   background-position: -8px center !important;
   background-repeat: no-repeat !important;
