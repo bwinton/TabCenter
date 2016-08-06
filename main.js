@@ -39,7 +39,7 @@
 
 
 const {prefixURI} = require('@loader/options');
-const {prefs} = require('sdk/simple-prefs');
+const prefs = require('sdk/simple-prefs');
 const {setInterval} = require('sdk/timers');
 const {mount, unmount} = require('sdk/uri/resource');
 const {viewFor} = require('sdk/view/core');
@@ -76,11 +76,23 @@ function sendPayload() {
       utils.addPingStats(win.VerticalTabs.stats);
     }
   }
-  utils.setPayload('tab_center_tabs_on_top', prefs.opentabstop);
+  utils.setPayload('tab_center_tabs_on_top', prefs.prefs.opentabstop);
   utils.sendPing();
 }
 
+function largeTabsChange() {
+  for (let window of browserWindows) {
+    let win = viewFor(window);
+    if (win.VerticalTabs) {
+      win.VerticalTabs.resizeTabs();
+    }
+  }
+}
+
 exports.main = function (options, callbacks) {
+  // Listen for preference changes
+  prefs.on('largetabs', largeTabsChange);
+
   // Register the resource:// alias.
   mount(RESOURCE_HOST, prefixURI);
 

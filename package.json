@@ -57,6 +57,28 @@
       "description": "New tabs are opened at the top",
       "type": "bool",
       "value": false
+    },
+    {
+      "name": "largetabs",
+      "hidden": true,
+      "title": "Large Tabs",
+      "description": "Display thumbnails in tabs",
+      "type": "menulist",
+      "value": 1,
+      "options": [
+          {
+              "value": "0",
+              "label": "Never"
+          },
+          {
+              "value": "1",
+              "label": "When there is room"
+          },
+          {
+              "value": "2",
+              "label": "Always"
+          }
+      ]
     }
   ]
 }
