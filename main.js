@@ -106,17 +106,6 @@ function initWindow(window) {
   }
 }
 
-function sendPayload() {
-  for (let window of browserWindows) {
-    let win = viewFor(window);
-    if (win.VerticalTabs) {
-      utils.addPingStats(win.VerticalTabs.stats);
-    }
-  }
-  utils.setPayload('tab_center_tabs_on_top', prefs.prefs.opentabstop);
-  utils.sendPing();
-}
-
 function largeTabsChange() {
   for (let window of browserWindows) {
     let win = viewFor(window);
@@ -190,16 +179,9 @@ exports.main = function (options, callbacks) {
       }
     }
   });
-
-
-  setInterval(sendPayload, 24 * 60 * 60 * 1000);  // Every 24h.
-  //setInterval(sendPayload, 20*1000);  // Every 20s for debugging.
 };
 
 exports.onUnload = function (reason) {
-  // Send out the ping
-  sendPayload();
-
   // If the app is shutting down, skip the rest
   if (reason === 'shutdown') {
     return;
