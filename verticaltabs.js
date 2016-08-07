@@ -54,6 +54,9 @@ Cu.import('resource://gre/modules/PageThumbs.jsm');
 const NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
 const TAB_DROP_TYPE = 'application/x-moz-tabbrowser-tab';
 
+// Wait these many milliseconds before resizing tabs
+// after mousing out
+const WAIT_BEFORE_RESIZE = 1000;
 /*
  * Vertical Tabs
  *
@@ -64,6 +67,8 @@ function VerticalTabs(window, data) {
   this.document = window.document;
   this.unloaders = [];
   this.stats = new Stats;
+  this.resizeTimeout = -1;
+  this.mouseInside = false;
 
   window.createImageBitmap(data).then((response) => {
     this.newTabImage = response;
@@ -375,6 +380,7 @@ VerticalTabs.prototype = {
     close_next_tabs_message.setAttribute('label', 'Close Tabs Below');
 
     let enter = (event) => {
+      this.mouseEntered();
       if (event.type === 'mouseenter' && leftbox.getAttribute('expanded') !== 'true') {
         this.stats.tab_center_expanded++;
         leftbox.setAttribute('expanded', 'true');
@@ -395,6 +401,7 @@ VerticalTabs.prototype = {
     leftbox.addEventListener('mouseenter', enter);
     leftbox.addEventListener('mousemove', enter);
     leftbox.addEventListener('mouseleave', () => {
+      this.mouseExited();
       if (mainWindow.getAttribute('tabspinned') !== 'true') {
         leftbox.removeAttribute('expanded');
         this.clearFind();
@@ -543,7 +550,7 @@ VerticalTabs.prototype = {
     } else {
       hidden_tab.setAttribute('hidden', 'true');
     }
-    this.resizeTabs();
+    this.actuallyResizeTabs();
   },
 
   getUri: function (tab) {
@@ -593,7 +600,11 @@ VerticalTabs.prototype = {
     }
   },
 
-  resizeTabs: function () {
+  actuallyResizeTabs: function () {
+    if (this.resizeTimeout > 0) {
+      this.window.clearTimeout(this.resizeTimeout);
+      this.resizeTimeout = -1;
+    }
     let tabs = this.document.getElementById('tabbrowser-tabs');
     switch (prefs.largetabs) {
     case 0:
@@ -612,6 +623,40 @@ VerticalTabs.prototype = {
     case 2:
       tabs.classList.add('large-tabs');
       return;
+    }
+  },
+
+  resizeTabs: function () {
+    if (this.resizeTimeout > 0) {
+      this.window.clearTimeout(this.resizeTimeout);
+      this.resizeTimeout = -1;
+    }
+    if (!this.mouseInside) {
+      // If the mouse is outside the tab area,
+      // resize immediately
+      this.actuallyResizeTabs();
+    }
+  },
+
+  mouseEntered: function () {
+    if (this.resizeTimeout > 0) {
+      this.window.clearTimeout(this.resizeTimeout);
+      this.resizeTimeout = -1;
+    }
+    this.mouseInside = true;
+  },
+
+  mouseExited: function () {
+    this.mouseInside = false;
+    if (this.resizeTimeout < 0) {
+      // Once the mouse exits the tab area, wait
+      // a bit before resizing
+      this.resizeTimeout = this.window.setTimeout(() => {
+        this.resizeTimeout = -1;
+        if (!this.mouseInside) {
+          this.actuallyResizeTabs();
+        }
+      }, WAIT_BEFORE_RESIZE);
     }
   },
 
@@ -663,7 +708,6 @@ VerticalTabs.prototype = {
   onTabUnpinned: function (aEvent) {
     this.stats.tabs_unpinned++;
   },
-
 };
 
 exports.addVerticalTabs = (win, data) => new VerticalTabs(win, data);
