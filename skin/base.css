@@ -103,8 +103,9 @@
 }*/
 
 /* hide private browsing indicator in the vertical tab box */
-#verticaltabs-box .private-browsing-indicator {
-  display: none;
+#verticaltabs-box .private-browsing-indicator,
+#verticaltabs-box #private-browsing-indicator {
+  display: none !important;
 }
 
 #TabsToolbar[brighttext] .tabs-newtab-button,
