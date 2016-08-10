@@ -272,7 +272,6 @@ VerticalTabs.prototype = {
       document.addEventListener('mouseup', mouseup);
     });
 
-
     // Move the tabs next to the app content, make them vertical,
     // and restore their width from previous session
     tabs.setAttribute('vertical', true);
@@ -526,9 +525,8 @@ VerticalTabs.prototype = {
       label = uri.host;
     }
     // URI can be shown immediately
-    let address = this.document.getAnonymousElementByAttribute(tab, 'anonid', 'address-label');
-    if (address) {
-      address.value = label;
+    if (label) {
+      tab.setAttribute('address', label);
     }
   },
 
