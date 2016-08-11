@@ -5,7 +5,7 @@
   --collapsed-width: 45px;
   --pinned-width: 260px;
   --link-color: graytext;
-  --link-color-brighttext: hsl(0,0%,60%);
+  --link-color-brighttext: hsl(0, 0%, 60%);
 
   --color-blue-light: #1aa1ff;
   --color-blue: #0996f8;
@@ -477,9 +477,7 @@
 .tabbrowser-tab[selected="true"] {
   border-radius: 0 !important;
   background-color: hsla(0, 0%, 0%, 0.12) !important;
-  box-shadow: 1px 0 0 var(--color-blue-dark) inset,
-              3px 0 0 var(--color-blue) inset,
-              6px 0 0 var(--color-blue-light) inset;
+  box-shadow: 1px 0 0 var(--color-blue-dark) inset, 3px 0 0 var(--color-blue) inset, 6px 0 0 var(--color-blue-light) inset;
   text-shadow: none;
 }
 
