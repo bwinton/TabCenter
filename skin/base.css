@@ -109,6 +109,12 @@
   display: none !important;
 }
 
+.tabs-newtab-button,
+#TabsToolbar > #new-tab-button,
+#TabsToolbar > toolbarpaletteitem > #new-tab-button {
+  list-style-image: url("resource://tabcenter/skin/glyph-new-16.svg") !important;
+}
+
 #TabsToolbar[brighttext] .tabs-newtab-button,
 #TabsToolbar[brighttext] > #new-tab-button,
 #TabsToolbar[brighttext] > toolbarpaletteitem > #new-tab-button {
