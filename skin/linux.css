@@ -18,7 +18,7 @@
 
 .title-wrapper .tab-text {
   font-weight: normal !important;
-  opacity: .65
+  opacity: 0.65;
 }
 
 .title-wrapper .address-label {
@@ -26,8 +26,8 @@
 }
 
 #TabsToolbar .toolbarbutton-1 > .toolbarbutton-icon {
-  background: none !important;
   border: none !important;
+  background: none !important;
   box-shadow: none !important;
 }
 
@@ -38,18 +38,18 @@
 }
 
 #TabsToolbar > toolbarbutton:hover {
+  border-color: var(--toolbarbutton-hover-bordercolor) !important;
   background: var(--toolbarbutton-hover-background) !important;
   background-clip: padding-box !important;
-  background-repeat: no-repeat !important;
   background-position: center center !important;
-  border-color: var(--toolbarbutton-hover-bordercolor) !important;
+  background-repeat: no-repeat !important;
   box-shadow: var(--toolbarbutton-hover-boxshadow) !important;
 }
 
 #TabsToolbar > toolbarbutton:hover:active {
-  background: var(--toolbarbutton-active-background) !important;
-  background-repeat: no-repeat !important;
-  background-position: center center !important;
-  box-shadow: var(--toolbarbutton-active-boxshadow) !important;
   border-color: var(--toolbarbutton-active-bordercolor) !important;
+  background: var(--toolbarbutton-active-background) !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  box-shadow: var(--toolbarbutton-active-boxshadow) !important;
 }
