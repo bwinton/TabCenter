@@ -4,9 +4,10 @@
   --tab-animation-time: 150ms;
   --collapsed-width: 45px;
   --pinned-width: 260px;
-  --link-color: -moz-nativehyperlinktext;
-  --link-color-brighttext: #2cc1ff;
+  --link-color: graytext;
+  --link-color-brighttext: hsl(0,0%,60%);
 
+  --color-blue-light: #1aa1ff;
   --color-blue: #0996f8;
   --color-blue-dark: #0675d3;
   --color-teal: #01bdad;
@@ -174,7 +175,7 @@
   display: flex;
   overflow-x: hidden;
   box-sizing: border-box;
-  background-color: hsla(0, 0%, 98%, 0.95) !important;
+  background-color: hsla(0, 0%, 99%) !important;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0), inset 0 0 10px hsla(0, 0%, 0%, 0.2);
   flex-direction: column;
   transition: box-shadow 150ms ease-out 300ms, width 150ms ease-out 300ms;
@@ -384,7 +385,7 @@
   background: transparent !important;
   -moz-box-flex: 0;
   -moz-box-pack: start;
-  color: #333 !important;
+  color: #000 !important;
   transition: min-height 300ms, max-height 300ms !important;
 }
 
@@ -401,15 +402,12 @@
 .title-wrapper .tab-text {
   margin: 0 !important;
   margin-right: 8px !important;
-  font-weight: 400;
+  font-weight: 600;
+  opacity: 0.7;
 }
 
 .tabbrowser-tab[pinned] .title-wrapper .tab-text {
   margin-right: 0 !important;
-}
-
-.tabbrowser-tabs.large-tabs .tab-text {
-  font-weight: 600;
 }
 
 .title-wrapper .address-label {
@@ -421,7 +419,7 @@
 
 .title-wrapper .tab-text[visuallyselected="true"],
 .title-wrapper .address-label[visuallyselected="true"] {
-  font-weight: 700;
+  opacity: 1;
 }
 
 .tabbrowser-tabs.large-tabs .title-wrapper .address-label {
@@ -475,24 +473,18 @@
   100% { max-height: 36px; min-height: 36px; opacity: 1; }
 }
 
+.tabbrowser-tab[pinned][selected="true"],
 .tabbrowser-tab[selected="true"] {
   border-radius: 0 !important;
-  background-color: hsla(0, 0%, 0%, 0.1) !important;
-  box-shadow: 4px 0 0 var(--color-blue) inset;
-  font-weight: normal;
-  font-weight: 600 !important;
+  background-color: hsla(0, 0%, 0%, 0.12) !important;
+  box-shadow: 1px 0 0 var(--color-blue-dark) inset,
+              3px 0 0 var(--color-blue) inset,
+              6px 0 0 var(--color-blue-light) inset;
   text-shadow: none;
 }
 
-.tabbrowser-tab[selected="true"]:-moz-window-inactive {
-  /*   background-color: InactiveCaption !important; */
-  /*   color: InactiveCaptionText !important; */
-
-  /* gnome/gtk/cleartype doesn't seem to have inactive states for selected items, lets try this */
-}
-
 .tabbrowser-tab[pinned] {
-  background-color: hsla(0, 0%, 0%, 0.06) !important;
+  background-color: hsla(0, 0%, 0%, 0.05) !important;
 }
 
 #verticaltabs-box[brighttext] .tabbrowser-tab[pinned] {
@@ -543,7 +535,6 @@
 
 #verticaltabs-box[brighttext] .tabbrowser-tab {
   color: #fff !important;
-  font-weight: 400 !important;
 }
 
 #verticaltabs-box[brighttext] .title-wrapper .address-label {
@@ -594,9 +585,6 @@
   background-repeat: no-repeat !important;
   background-size: 16px;
   opacity: 0 !important;
-  transition-delay: 100ms !important;
-  transition-duration: 250ms !important;
-  transition-property: opacity !important;
 }
 
 #verticaltabs-box[brighttext] .tab-close-button {
