@@ -1,9 +1,55 @@
 /*Only Linux Styles*/
 
-#TabsToolbar #find-input[focused="true"] {
-  min-width: calc(100% - 100px) !important;
+#appcontent {
+  border-top: 0 !important;
 }
 
-.title-wrapper {
-  padding-left: 5px;
+#verticaltabs-box {
+  border-top: 0 !important;
+}
+
+#TabsToolbar {
+  flex: 0 0 41px;
+}
+
+#TabsToolbar:not(:-moz-lwtheme) {
+  color: black !important;
+}
+
+.title-wrapper .tab-text {
+  font-weight: normal !important;
+  opacity: 0.65;
+}
+
+.title-wrapper .address-label {
+  opacity: 1;
+}
+
+#TabsToolbar .toolbarbutton-1 > .toolbarbutton-icon {
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+#TabsToolbar > toolbarbutton {
+  padding: 0 5px !important;
+  border-radius: 2px !important;
+  border: 1px solid transparent !important;
+}
+
+#TabsToolbar > toolbarbutton:hover {
+  border-color: var(--toolbarbutton-hover-bordercolor) !important;
+  background: var(--toolbarbutton-hover-background) !important;
+  background-clip: padding-box !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  box-shadow: var(--toolbarbutton-hover-boxshadow) !important;
+}
+
+#TabsToolbar > toolbarbutton:hover:active {
+  border-color: var(--toolbarbutton-active-bordercolor) !important;
+  background: var(--toolbarbutton-active-background) !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  box-shadow: var(--toolbarbutton-active-boxshadow) !important;
 }
