@@ -1,9 +1,5 @@
 /*Only Mac Styles*/
 
-:root {
-  --link-color-brighttext: #2cc1ff;
-}
-
 #appcontent {
   border-top: 0 !important;
 }
@@ -13,7 +9,6 @@
 }
 
 #verticaltabs-box {
-  /* -moz-appearance: -moz-mac-vibrancy-light; */
   border-top: 0 !important;
 }
 
@@ -57,16 +52,11 @@
   }
 }
 
-.tabbrowser-tabs.large-tabs .tab-text {
-  font-weight: 400;
-}
-
-.tabbrowser-tabs.large-tabs .tab-text[visuallyselected="true"] {
-  font-weight: 500;
+.title-wrapper .tab-text {
+  font-weight: normal;
 }
 
 .title-wrapper .address-label {
-  color: hsl(210, 77%, 47%);
   opacity: 0.8;
 }
 

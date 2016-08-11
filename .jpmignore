@@ -1,0 +1,11 @@
+.*
+*
+!/README.md
+!/package.json
+!/main.js
+!/chrome.manifest
+!/override-bindings.css
+!/skin/**
+!/utils.js
+!/vertical-tabbrowser.xml
+!/verticaltabs.js

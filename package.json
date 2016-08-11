@@ -1,13 +1,20 @@
 {
   "name": "tab-center",
   "version": "1.23.0",
+  "title": "Tab Center",
   "description": "Tab Center is an attempt to solve some of the issues that have emerged from the way people use tabs (most notably the “too many tabs” problem) and provide a more versatile UI basis for future innovation. The first version of this Firefox add-on arranges tabs in a vertical rather than horizontal fashion. It is heavily inspired by and borrows ideas from the excellent VerticalTabs add-on.",
-  "main": "bootstrap.js",
+  "main": "main.js",
   "directories": {
     "doc": "docs"
   },
+  "engines": {
+    "firefox": ">=40.0a1"
+  },
+  "icon": "resource://tabcenter/skin/icon.png",
+  "id": "tabcentertest1@mozilla.com",
   "dependencies": {},
   "devDependencies": {
+    "jpm": "1.1.3",
     "eslint-plugin-mozilla": "0.0.3",
     "eslint": "2.9.0",
     "stylelint": "6.7.1"
@@ -16,6 +23,9 @@
     "changelog": "changelog",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext=js,jsm vertical-tabbrowser.xml && stylelint \"**/*.css\""
+  },
+  "permissions": {
+    "private-browsing": true
   },
   "repository": {
     "type": "git",
@@ -37,5 +47,38 @@
   "bugs": {
     "url": "https://github.com/bwinton/VerticalTabs/issues"
   },
-  "homepage": "https://github.com/bwinton/VerticalTabs#readme"
+  "homepage": "https://github.com/bwinton/VerticalTabs",
+  "updateURL": "https://people.mozilla.com/~bwinton/TabCenter/tab-center.update.rdf",
+  "preferences-branch": "verticaltabs",
+  "preferences": [
+    {
+      "name": "opentabstop",
+      "title": "Tabs on Top",
+      "description": "New tabs are opened at the top",
+      "type": "bool",
+      "value": false
+    },
+    {
+      "name": "largetabs",
+      "hidden": true,
+      "title": "Large Tabs",
+      "description": "Display thumbnails in tabs",
+      "type": "menulist",
+      "value": 1,
+      "options": [
+          {
+              "value": "0",
+              "label": "Never"
+          },
+          {
+              "value": "1",
+              "label": "When there is room"
+          },
+          {
+              "value": "2",
+              "label": "Always"
+          }
+      ]
+    }
+  ]
 }
