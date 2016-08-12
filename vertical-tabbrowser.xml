@@ -549,7 +549,6 @@
           <xul:vbox xbl:inherits="fadein,pinned,selected,visuallyselected,busy,crashed,sharing"
                      class="tab-meta-image">
             <html:canvas anonid="tab-meta-image"
-                         style="width: 54px; height: 40px; position: absolute; top: 7.5px; left: 12px; z-index: -1"
                          width="54" height="40"/>
             <xul:image xbl:inherits="fadein,pinned,busy,progress,selected,visuallyselected"
                        class="tab-throbber"
