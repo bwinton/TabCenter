@@ -551,6 +551,7 @@ VerticalTabs.prototype = {
     }
     let tab_meta_image = document.getAnonymousElementByAttribute(aTab, 'anonid', 'tab-meta-image');
     tab_meta_image.style.backgroundImage = `url(moz-page-thumb://thumbnail/?url=${encodeURIComponent(this.getUri(aTab).spec)}), url(resource://tabcenter/skin/blank.png)`;
+    aTab.setAttribute('currentBackgroundImage', tab_meta_image.style.backgroundImage);
 
     this.updateUriLabel(aTab);
 
@@ -559,10 +560,12 @@ VerticalTabs.prototype = {
       if (aTab.VTLastUrl !== url) {
         if (url === 'about:newtab' || url === 'about:blank') {
           tab_meta_image.style.backgroundImage = 'url("resource://tabcenter/skin/newtab.png")';
+          aTab.setAttribute('currentBackgroundImage', tab_meta_image.style.backgroundImage);
         } else {
           PageThumbs.captureAndStoreIfStale(aTab.linkedBrowser, (success) => {
             if (this.getUri(aTab).spec === url) {
               tab_meta_image.style.backgroundImage = `url('moz-page-thumb://thumbnail/?url=${encodeURIComponent(url)}'), url(resource://tabcenter/skin/blank.png)`;
+              aTab.setAttribute('currentBackgroundImage', tab_meta_image.style.backgroundImage );
             }
           });
         }
