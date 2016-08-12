@@ -71,6 +71,7 @@ VerticalTabs.prototype = {
 
   init: function () {
     this.window.VerticalTabs = this;
+    this.PageThumbs = PageThumbs;
     this._endRemoveTab = this.window.gBrowser._endRemoveTab;
     this.inferFromText = this.window.ToolbarIconColor.inferFromText;
     let window = this.window;
@@ -518,18 +519,6 @@ VerticalTabs.prototype = {
     return createExposableURI(tab.linkedBrowser.currentURI);
   },
 
-  updateUriLabel: function (tab) {
-    let uri = this.getUri(tab);
-    let label = uri.spec;
-    if (uri.scheme.startsWith('http')) {
-      label = uri.host;
-    }
-    // URI can be shown immediately
-    if (label) {
-      tab.setAttribute('address', label);
-    }
-  },
-
   initTab: function (aTab) {
     let document = this.document;
     if (this.pushToTop) {
@@ -553,27 +542,10 @@ VerticalTabs.prototype = {
     tab_meta_image.style.backgroundImage = `url(moz-page-thumb://thumbnail/?url=${encodeURIComponent(this.getUri(aTab).spec)}), url(resource://tabcenter/skin/blank.png)`;
     aTab.setAttribute('currentBackgroundImage', tab_meta_image.style.backgroundImage);
 
-    this.updateUriLabel(aTab);
+    aTab.refreshThumbAndLabel();
 
     aTab.addEventListener('load', () => {
-      let url = this.getUri(aTab).spec;
-      if (aTab.VTLastUrl !== url) {
-        if (url === 'about:newtab' || url === 'about:blank') {
-          tab_meta_image.style.backgroundImage = 'url("resource://tabcenter/skin/newtab.png")';
-          aTab.setAttribute('currentBackgroundImage', tab_meta_image.style.backgroundImage);
-        } else {
-          PageThumbs.captureAndStoreIfStale(aTab.linkedBrowser, (success) => {
-            if (this.getUri(aTab).spec === url) {
-              tab_meta_image.style.backgroundImage = `url('moz-page-thumb://thumbnail/?url=${encodeURIComponent(url)}'), url(resource://tabcenter/skin/blank.png)`;
-              aTab.setAttribute('currentBackgroundImage', tab_meta_image.style.backgroundImage );
-            }
-          });
-        }
-        aTab.VTLastUrl = url;
-
-        // URI might have changed due to redirects
-        this.updateUriLabel(aTab);
-      }
+      aTab.refreshThumbAndLabel();
     });
   },
 

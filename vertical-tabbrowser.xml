@@ -595,6 +595,54 @@
           tab_meta_image.style.backgroundImage = this.getAttribute('currentBackgroundImage');
         }
        ]]></constructor>
+
+      <field name="VTLastUrl"></field>
+
+      <method name="refreshThumbAndLabel">
+        <body><![CDATA[
+          let uri = VerticalTabs.getUri(this);
+          let url = uri.spec;
+          if (this.VTLastUrl !== url) {
+            if (url === 'about:newtab' || url === 'about:blank') {
+              this.setAttribute('thumb', 'resource://tabcenter/skin/newtab.png');
+            } else {
+              try {
+                VerticalTabs.PageThumbs.captureAndStoreIfStale(this.linkedBrowser, (success) => {
+                  try {
+                    if (VerticalTabs.getUri(this).spec === url) {
+                      this.setAttribute('thumb', `moz-page-thumb://thumbnail/?url=${encodeURIComponent(url)}`);
+                    }
+                  } catch (e) {
+                    console.error(e);
+                  }
+                });
+              } catch (e) {
+                console.error(e);
+              }
+            }
+            this.VTLastUrl = url;
+
+            // URI might have changed due to redirects
+            this.updateUriLabel(uri);
+          }
+        ]]></body>
+      </method>
+
+
+      <method name="updateUriLabel">
+        <parameter name="uri"/>
+        <body><![CDATA[
+          let label = uri.spec;
+          if (uri.scheme.startsWith('http')) {
+            label = uri.host;
+          }
+          // URI can be shown immediately
+          if (label) {
+            this.setAttribute('address', label);
+          }
+        ]]></body>
+      </method>
     </implementation>
+
   </binding>
 </bindings>
