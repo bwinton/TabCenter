@@ -626,7 +626,7 @@
   border: 2px solid white;
   margin-left: 12px;
   margin-right: 6px;
-  background-color: #fff;
+  background-color: transparent;
   background-position: top center !important;
   background-repeat: no-repeat !important;
   background-size: cover !important;

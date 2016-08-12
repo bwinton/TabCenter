@@ -4,6 +4,7 @@
 !/package.json
 !/main.js
 !/chrome.manifest
+!/data/**
 !/override-bindings.css
 !/skin/**
 !/utils.js

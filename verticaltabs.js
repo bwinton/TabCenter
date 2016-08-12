@@ -46,7 +46,6 @@ const {addPingStats, Stats, setDefaultPrefs} = require('./utils');
 const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
                                createInstance(Ci.nsIURIFixup);
 
-
 Cu.import('resource://gre/modules/PageThumbs.jsm');
 
 //use to set preview image as metadata image 1/4
@@ -60,11 +59,16 @@ const TAB_DROP_TYPE = 'application/x-moz-tabbrowser-tab';
  *
  * Main entry point of this add-on.
  */
-function VerticalTabs(window) {
+function VerticalTabs(window, data) {
   this.window = window;
   this.document = window.document;
   this.unloaders = [];
   this.stats = new Stats;
+
+  window.createImageBitmap(data).then((response) => {
+    this.newTabImage = response;
+  });
+
   this.init();
 }
 VerticalTabs.prototype = {
@@ -83,6 +87,26 @@ VerticalTabs.prototype = {
       this.window.openUILinkIn(this.window.BROWSER_NEW_TAB_URL, 'tab');
       this.pushToTop = false;
     }.bind(this);
+
+    let tabs = document.getElementById('tabbrowser-tabs');
+    window.gBrowser.addTabsProgressListener({
+      onLocationChange: (aBrowser, aWebProgress, aRequest, aLocation, aFlags) => {
+        for (let tab of tabs.childNodes) {
+          if (tab.linkedBrowser === aBrowser) {
+            tab.refreshThumbAndLabel();
+          }
+        }
+      },
+      onStateChange: (aBrowser, aWebProgress, aRequest, aFlags, aStatus) => {
+        if ((aFlags & Ci.nsIWebProgressListener.STATE_STOP) === Ci.nsIWebProgressListener.STATE_STOP) { // eslint-disable-line no-bitwise
+          for (let tab of tabs.childNodes) {
+            if (tab.linkedBrowser === aBrowser) {
+              tab.refreshThumbAndLabel();
+            }
+          }
+        }
+      }
+    });
 
     window.addEventListener('animationend', (e) => {
       let tab = e.target;
@@ -134,7 +158,16 @@ VerticalTabs.prototype = {
         }
       }
     }.bind(this.window.ToolbarIconColor);
+
+    this.thumbTimer = this.window.setInterval(() => {
+      tabs.selectedItem.refreshThumbAndLabel();
+    }, 1000);
+
     this.unloaders.push(function () {
+      if (this.thumbTimer) {
+        this.window.clearInterval(this.thumbTimer);
+        this.thumbTimer = null;
+      }
       this.window.ToolbarIconColor.inferFromText = this.inferFromText;
       this.window.gBrowser._endRemoveTab = this._endRemoveTab;
       this.window.BrowserOpenTab = this.BrowserOpenTab;
@@ -145,7 +178,6 @@ VerticalTabs.prototype = {
 
     this.rearrangeXUL();
 
-    let tabs = this.document.getElementById('tabbrowser-tabs');
     let results = this.document.getElementById('PopupAutoCompleteRichResult');
     let leftbox = this.document.getElementById('verticaltabs-box');
 
@@ -538,15 +570,8 @@ VerticalTabs.prototype = {
     } else {
       aTab.setAttribute('crop', 'end');
     }
-    let tab_meta_image = document.getAnonymousElementByAttribute(aTab, 'anonid', 'tab-meta-image');
-    tab_meta_image.style.backgroundImage = `url(moz-page-thumb://thumbnail/?url=${encodeURIComponent(this.getUri(aTab).spec)}), url(resource://tabcenter/skin/blank.png)`;
-    aTab.setAttribute('currentBackgroundImage', tab_meta_image.style.backgroundImage);
 
     aTab.refreshThumbAndLabel();
-
-    aTab.addEventListener('load', () => {
-      aTab.refreshThumbAndLabel();
-    });
   },
 
   unload: function () {
@@ -641,7 +666,7 @@ VerticalTabs.prototype = {
 
 };
 
-exports.addVerticalTabs = (win) => new VerticalTabs(win);
+exports.addVerticalTabs = (win, data) => new VerticalTabs(win, data);
 
 //use to set preview image as metadata image 4/4
 // XPCOMUtils.defineLazyModuleGetter(VerticalTabs.prototype, "PageMetadata", "resource://gre/modules/PageMetadata.jsm");
