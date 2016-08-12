@@ -572,7 +572,7 @@
                        class="tab-text"
                        role="presentation"/>
             <xul:label
-                      xbl:inherits="crop,accesskey,fadein,pinned,selected,visuallyselected,attention"
+                      xbl:inherits="value=address,crop,accesskey,fadein,pinned,selected,visuallyselected,attention"
                       class="tab-text address-label"
                       anonid="address-label"
                       role="presentation"/>
@@ -587,5 +587,14 @@
         </xul:hbox>
       </xul:stack>
     </content>
+
+    <implementation>
+      <constructor><![CDATA[
+        let tab_meta_image = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
+        if (this.getAttribute('currentBackgroundImage').length){
+          tab_meta_image.style.backgroundImage = this.getAttribute('currentBackgroundImage');
+        }
+       ]]></constructor>
+    </implementation>
   </binding>
 </bindings>
