@@ -594,27 +594,27 @@
     <implementation>
       <constructor><![CDATA[
         this.refreshThumbAndLabel();
-        let tab_meta_image = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
        ]]></constructor>
 
       <method name="refreshThumbAndLabel">
         <body><![CDATA[
+          /* global VerticalTabs:false, PageThumbs:false */
           let uri = VerticalTabs.getUri(this);
           let url = uri.spec;
-            const canvas = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
+          const canvas = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
 
-            if (VerticalTabs.newTabImage && (url === 'about:newtab' || url === 'about:blank')) {
-              const ctx = canvas.getContext('2d');
-              ctx.save();
-              ctx.scale(
-                canvas.width / VerticalTabs.newTabImage.width,
-                canvas.height / VerticalTabs.newTabImage.height
-                );
-              ctx.drawImage(VerticalTabs.newTabImage, 0, 0);
-              ctx.restore();
-            } else {
-              PageThumbs.captureToCanvas(this.linkedBrowser, canvas);
-            }
+          if (VerticalTabs.newTabImage && (url === 'about:newtab' || url === 'about:blank')) {
+            const ctx = canvas.getContext('2d');
+            ctx.save();
+            ctx.scale(
+              canvas.width / VerticalTabs.newTabImage.width,
+              canvas.height / VerticalTabs.newTabImage.height
+              );
+            ctx.drawImage(VerticalTabs.newTabImage, 0, 0);
+            ctx.restore();
+          } else {
+            PageThumbs.captureToCanvas(this.linkedBrowser, canvas);
+          }
           this.updateUriLabel(uri);
         ]]></body>
       </method>
