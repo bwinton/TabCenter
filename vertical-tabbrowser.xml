@@ -12,7 +12,8 @@
 <bindings id="verticalTabBrowserBindings"
           xmlns="http://www.mozilla.org/xbl"
           xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-          xmlns:xbl="http://www.mozilla.org/xbl">
+          xmlns:xbl="http://www.mozilla.org/xbl"
+          xmlns:html="http://www.w3.org/1999/xhtml">
 
   <binding id="tabbrowser-arrowscrollbox" extends="chrome://browser/content/tabbrowser.xml#tabbrowser-arrowscrollbox">
     <implementation>
@@ -546,8 +547,9 @@
         <xul:hbox xbl:inherits="pinned,selected,visuallyselected,titlechanged,attention"
                   class="tab-content" align="center">
           <xul:vbox xbl:inherits="fadein,pinned,selected,visuallyselected,busy,crashed,sharing"
-                     anonid="tab-meta-image"
                      class="tab-meta-image">
+            <html:canvas anonid="tab-meta-image"
+                         width="54" height="40"/>
             <xul:image xbl:inherits="fadein,pinned,busy,progress,selected,visuallyselected"
                        class="tab-throbber"
                        role="presentation"
@@ -590,11 +592,47 @@
 
     <implementation>
       <constructor><![CDATA[
-        let tab_meta_image = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
-        if (this.getAttribute('currentBackgroundImage').length){
-          tab_meta_image.style.backgroundImage = this.getAttribute('currentBackgroundImage');
-        }
+        this.refreshThumbAndLabel();
        ]]></constructor>
+
+      <method name="refreshThumbAndLabel">
+        <body><![CDATA[
+          /* global VerticalTabs:false, PageThumbs:false */
+          let uri = VerticalTabs.getUri(this);
+          let url = uri.spec;
+          const canvas = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
+
+          if (VerticalTabs.newTabImage && (url === 'about:newtab' || url === 'about:blank')) {
+            const ctx = canvas.getContext('2d');
+            ctx.save();
+            ctx.scale(
+              canvas.width / VerticalTabs.newTabImage.width,
+              canvas.height / VerticalTabs.newTabImage.height
+              );
+            ctx.drawImage(VerticalTabs.newTabImage, 0, 0);
+            ctx.restore();
+          } else {
+            PageThumbs.captureToCanvas(this.linkedBrowser, canvas);
+          }
+          this.updateUriLabel(uri);
+        ]]></body>
+      </method>
+
+
+      <method name="updateUriLabel">
+        <parameter name="uri"/>
+        <body><![CDATA[
+          let label = uri.spec;
+          if (uri.scheme.startsWith('http')) {
+            label = uri.host;
+          }
+          // URI can be shown immediately
+          if (label) {
+            this.setAttribute('address', label);
+          }
+        ]]></body>
+      </method>
     </implementation>
+
   </binding>
 </bindings>

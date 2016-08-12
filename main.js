@@ -49,11 +49,36 @@ const {isBrowser, isDocumentLoaded} = require('sdk/window/utils');
 const utils = require('./utils');
 const {addVerticalTabs} = require('./verticaltabs');
 
+let self = require('sdk/self');
 const RESOURCE_HOST = 'tabcenter';
 
 function initWindow(window) {
   // get the XUL window that corresponds to this high-level window
   let win = viewFor(window);
+  function b64toBlob(b64Data, contentType, sliceSize) {
+    contentType = contentType || '';
+    sliceSize = sliceSize || 512;
+
+    let byteCharacters = win.atob(b64Data);
+    let byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      let slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      let byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      let byteArray = new Uint8Array(byteNumbers);
+
+      byteArrays.push(byteArray);
+    }
+
+    return new win.Blob(byteArrays, {type: contentType});
+  }
+
+  let data = b64toBlob(self.data.load('newtab.b64'), 'image/png');
 
   // check for browser windows with visible toolbars
   if (!win.toolbar.visible || !isBrowser(win)) {
@@ -62,10 +87,12 @@ function initWindow(window) {
 
   // if the dcoument is loaded
   if (isDocumentLoaded(win)) {
-    addVerticalTabs(win);
+    addVerticalTabs(win, data);
   } else {
     // Listen for load event before checking the window type
-    win.addEventListener('load', addVerticalTabs.bind(win), {once: true});
+    win.addEventListener('load', () => {
+      addVerticalTabs(win, data);
+    }, {once: true});
   }
 }
 

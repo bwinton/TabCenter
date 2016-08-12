@@ -1,4 +1,5 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+@namespace html url("http://www.w3.org/1999/xhtml");
 
 :root {
   --tab-animation-time: 150ms;
@@ -626,7 +627,7 @@
   border: 2px solid white;
   margin-left: 12px;
   margin-right: 6px;
-  background-color: #fff;
+  background-color: transparent;
   background-position: top center !important;
   background-repeat: no-repeat !important;
   background-size: cover !important;
@@ -647,8 +648,17 @@
     0 0 0 1px hsla(0, 0%, 0%, 0.08);
 }
 
-.tabbrowser-tabs:not(.large-tabs) .tab-meta-image {
-  background-image: none !important;
+.tabbrowser-tabs.large-tabs html|canvas {
+  position: absolute;
+  top: 7.5px;
+  left: 12px;
+  z-index: -1;
+  width: 54px;
+  height: 40px;
+}
+
+.tabbrowser-tabs:not(.large-tabs) .tab-meta-image html|canvas {
+  display: none;
 }
 
 .tab-throbber,
