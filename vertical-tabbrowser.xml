@@ -598,6 +598,9 @@
       <method name="refreshThumbAndLabel">
         <body><![CDATA[
           /* global VerticalTabs:false, PageThumbs:false */
+          if (!this.linkedBrowser) {
+            return;
+          }
           let uri = VerticalTabs.getUri(this);
           let url = uri.spec;
           const canvas = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
