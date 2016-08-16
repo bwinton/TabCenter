@@ -25,6 +25,7 @@
     "lint": "eslint . --ext=js,jsm vertical-tabbrowser.xml && stylelint \"**/*.css\""
   },
   "permissions": {
+    "multiprocess": true,
     "private-browsing": true
   },
   "repository": {
