@@ -710,7 +710,11 @@ VerticalTabs.prototype = {
   },
 };
 
-exports.addVerticalTabs = (win, data) => new VerticalTabs(win, data);
+exports.addVerticalTabs = (win, data) => {
+  if (!win.VerticalTabs) {
+    new VerticalTabs(win, data);
+  }
+};
 
 //use to set preview image as metadata image 4/4
 // XPCOMUtils.defineLazyModuleGetter(VerticalTabs.prototype, "PageMetadata", "resource://gre/modules/PageMetadata.jsm");

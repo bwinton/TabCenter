@@ -46,39 +46,45 @@ const {viewFor} = require('sdk/view/core');
 const {browserWindows} = require('sdk/windows');
 const {isBrowser, isDocumentLoaded} = require('sdk/window/utils');
 
+const {Cc, Ci, Cu} = require('chrome');
+const windowWatcher = Cc['@mozilla.org/embedcomp/window-watcher;1'].
+                       getService(Ci.nsIWindowWatcher);
+
 const utils = require('./utils');
 const {addVerticalTabs} = require('./verticaltabs');
 
 let self = require('sdk/self');
 const RESOURCE_HOST = 'tabcenter';
 
+
+function b64toBlob(win, b64Data, contentType, sliceSize) {
+  contentType = contentType || '';
+  sliceSize = sliceSize || 512;
+
+  let byteCharacters = win.atob(b64Data);
+  let byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    let slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    let byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    let byteArray = new Uint8Array(byteNumbers);
+
+    byteArrays.push(byteArray);
+  }
+
+  return new win.Blob(byteArrays, {type: contentType});
+}
+
 function initWindow(window) {
   // get the XUL window that corresponds to this high-level window
   let win = viewFor(window);
-  function b64toBlob(b64Data, contentType, sliceSize) {
-    contentType = contentType || '';
-    sliceSize = sliceSize || 512;
 
-    let byteCharacters = win.atob(b64Data);
-    let byteArrays = [];
-
-    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      let slice = byteCharacters.slice(offset, offset + sliceSize);
-
-      let byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-
-      let byteArray = new Uint8Array(byteNumbers);
-
-      byteArrays.push(byteArray);
-    }
-
-    return new win.Blob(byteArrays, {type: contentType});
-  }
-
-  let data = b64toBlob(self.data.load('newtab.b64'), 'image/png');
+  let data = b64toBlob(win, self.data.load('newtab.b64'), 'image/png');
 
   // check for browser windows with visible toolbars
   if (!win.toolbar.visible || !isBrowser(win)) {
@@ -134,6 +140,23 @@ exports.main = function (options, callbacks) {
   for (let window of browserWindows) {
     initWindow(window);
   }
+
+  windowWatcher.registerNotification({
+    observe: function observe(subject, topic, data) {
+      try {
+        let window = subject.QueryInterface(Ci.nsIDOMWindow);
+        if (topic === 'domwindowopened') {
+          window.addEventListener('load', () => {
+            initWindow(window);
+          }, {once: true});
+        }
+      }
+      catch(e) {
+        console.exception(e); // eslint-disable-line no-console
+      }
+    }
+  });
+
   setInterval(sendPayload, 24 * 60 * 60 * 1000);  // Every 24h.
   //setInterval(sendPayload, 20*1000);  // Every 20s for debugging.
 };
