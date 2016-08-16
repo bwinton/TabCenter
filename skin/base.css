@@ -333,14 +333,12 @@
 }
 
 #sidebar-box,
-#sidebar-box[hidden="true"] ~ #appcontent,
-#sidebar-box[hidden="true"] ~ #PopupAutoCompleteRichResult {
+#sidebar-box[hidden="true"] ~ #appcontent {
   margin-left: var(--collapsed-width);
 }
 
 #main-window[tabspinned="true"] #sidebar-box,
-#main-window[tabspinned="true"] #sidebar-box[hidden="true"] ~ #appcontent,
-#main-window[tabspinned="true"] #sidebar-box[hidden="true"] ~ #PopupAutoCompleteRichResult {
+#main-window[tabspinned="true"] #sidebar-box[hidden="true"] ~ #appcontent {
   margin-left: 0;
 }
 
@@ -349,8 +347,7 @@
   margin-left: 0;
 }
 
-#main-window[inFullscreen][inDOMFullscreen] #appcontent,
-#main-window[inFullscreen][inDOMFullscreen] #PopupAutoCompleteRichResult {
+#main-window[inFullscreen][inDOMFullscreen] #appcontent {
   margin-left: 0 !important;
 }
 
@@ -358,10 +355,6 @@
 .browserContainer,
 #PopupAutoCompleteRichResult {
   width: calc(100vw - var(--collapsed-width));
-}
-
-#PopupAutoCompleteRichResult {
-  margin-left: -32px !important;
 }
 
 #main-window[tabspinned="true"] #verticaltabs-box + #appcontent #navigator-toolbox,

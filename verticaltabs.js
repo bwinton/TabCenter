@@ -253,6 +253,30 @@ VerticalTabs.prototype = {
     contentbox.appendChild(bottom);
     let top = document.getElementById('navigator-toolbox');
     let browserPanel = document.getElementById('browser-panel');
+    let autocomplete = document.getElementById('PopupAutoCompleteRichResult');
+    let autocompleteOpen = autocomplete._openAutocompletePopup;
+    autocomplete._openAutocompletePopup = (aInput, aElement) => {
+      autocompleteOpen.bind(autocomplete)(aInput, aElement);
+      let rect = window.document.documentElement.getBoundingClientRect();
+      let popupDirection = autocomplete.style.direction;
+
+      // Make the popup's starting margin negative so that the leading edge
+      // of the popup aligns with the window border.
+      let elementRect = aElement.getBoundingClientRect();
+      if (popupDirection === 'rtl') {
+        let offset = elementRect.right - rect.right;
+        autocomplete.style.marginRight = offset + 'px';
+      } else {
+        let offset = rect.left - elementRect.left;
+        if (mainWindow.getAttribute('tabspinned') !== 'true') {
+          offset += 45;
+        } else {
+          offset += this.pinnedWidth;
+        }
+        autocomplete.style.marginLeft = offset + 'px';
+      }
+    };
+
 
     // save the label of the first tab, and the toolbox palette for later…
     let tabs = document.getElementById('tabbrowser-tabs');
@@ -460,6 +484,8 @@ VerticalTabs.prototype = {
     });
 
     this.unloaders.push(function () {
+      autocomplete._openAutocompletePopup = autocompleteOpen;
+
       // Move the tabs toolbar back to where it was
       toolbar._toolbox = null; // reset value set by constructor
       toolbar.removeAttribute('toolboxid');
