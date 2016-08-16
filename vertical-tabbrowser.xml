@@ -25,8 +25,9 @@
                          onmouseup="if (event.button == 0) _stopScroll();"
                          onmouseover="_continueScroll(-1);"
                          onmouseout="_pauseScroll();"
-                         ondragover="if (event.button == 0) _startScroll(-1);"
-                         ondragleave="if (event.button == 0) _stopScroll();"/>
+                         ondragenter="if (event.button == 0) _startScroll(-1);"
+                         ondragover="_distanceScroll(event);"
+                         ondragleave="_stopScroll();"/>
       <xul:spacer class="arrowscrollbox-overflow-start-indicator"
                   xbl:inherits="collapsed=scrolledtostart"/>
       <xul:scrollbox class="arrowscrollbox-scrollbox"
@@ -45,8 +46,9 @@
                          onmouseup="if (event.button == 0) _stopScroll();"
                          onmouseover="_continueScroll(1);"
                          onmouseout="_pauseScroll();"
-                         ondragover="if (event.button == 0) _startScroll(1);"
-                         ondragleave="if (event.button == 0) _stopScroll();"/>
+                         ondragenter="if (event.button == 0) _startScroll(1);"
+                         ondragover="_distanceScroll(event);"
+                         ondragleave="_stopScroll();"/>
     </content>
     <implementation>
       <property name="_verticalTabs" onget="return this.orient == 'vertical';"/>
