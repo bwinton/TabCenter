@@ -94,7 +94,7 @@ VerticalTabs.prototype = {
     }.bind(this);
 
     let tabs = document.getElementById('tabbrowser-tabs');
-    window.gBrowser.addTabsProgressListener({
+    let tabsProgressListener = {
       onLocationChange: (aBrowser, aWebProgress, aRequest, aLocation, aFlags) => {
         for (let tab of tabs.childNodes) {
           if (tab.linkedBrowser === aBrowser) {
@@ -105,13 +105,14 @@ VerticalTabs.prototype = {
       onStateChange: (aBrowser, aWebProgress, aRequest, aFlags, aStatus) => {
         if ((aFlags & Ci.nsIWebProgressListener.STATE_STOP) === Ci.nsIWebProgressListener.STATE_STOP) { // eslint-disable-line no-bitwise
           for (let tab of tabs.childNodes) {
-            if (tab.linkedBrowser === aBrowser) {
+            if (tab.linkedBrowser === aBrowser && tab.refreshThumbAndLabel) {
               tab.refreshThumbAndLabel();
             }
           }
         }
       }
-    });
+    };
+    window.gBrowser.addTabsProgressListener(tabsProgressListener);
 
     window.addEventListener('animationend', (e) => {
       let tab = e.target;
@@ -173,6 +174,8 @@ VerticalTabs.prototype = {
         this.window.clearInterval(this.thumbTimer);
         this.thumbTimer = null;
       }
+      this.window.gBrowser.removeTabsProgressListener(tabsProgressListener);
+
       this.window.ToolbarIconColor.inferFromText = this.inferFromText;
       this.window.gBrowser._endRemoveTab = this._endRemoveTab;
       this.window.BrowserOpenTab = this.BrowserOpenTab;
@@ -425,19 +428,22 @@ VerticalTabs.prototype = {
       }
     }, 150);
 
-    window.addEventListener('beforecustomization', function () {
+    let beforeListener = function () {
       browserPanel.insertBefore(top, browserPanel.firstChild);
       top.palette = palette;
-    });
+    };
+    window.addEventListener('beforecustomization', beforeListener);
 
-    window.addEventListener('customizationchange', () => {
+    let changeListener = () => {
       setDefaultPrefs();
-    });
+    };
+    window.addEventListener('customizationchange', changeListener);
 
-    window.addEventListener('aftercustomization', function () {
+    let afterListener = function () {
       contentbox.insertBefore(top, contentbox.firstChild);
       top.palette = palette;
-    });
+    };
+    window.addEventListener('aftercustomization', afterListener);
 
     window.addEventListener('resize', this.resizeTabs.bind(this), false);
 
@@ -466,9 +472,9 @@ VerticalTabs.prototype = {
       let browserPanel = document.getElementById('browser-panel');
 
       //remove customization event listeners which move the toolbox
-      window.removeEventListener('beforecustomization');
-      window.removeEventListener('aftercustomization');
-      window.removeEventListener('customizationchange');
+      window.removeEventListener('beforecustomization', beforeListener);
+      window.removeEventListener('customizationchange', changeListener);
+      window.removeEventListener('aftercustomization', afterListener);
 
       close_next_tabs_message.setAttribute('label', previous_close_message);
 
