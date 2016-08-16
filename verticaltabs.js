@@ -94,7 +94,7 @@ VerticalTabs.prototype = {
     }.bind(this);
 
     let tabs = document.getElementById('tabbrowser-tabs');
-    window.gBrowser.addTabsProgressListener({
+    let tabsProgressListener = {
       onLocationChange: (aBrowser, aWebProgress, aRequest, aLocation, aFlags) => {
         for (let tab of tabs.childNodes) {
           if (tab.linkedBrowser === aBrowser) {
@@ -105,13 +105,14 @@ VerticalTabs.prototype = {
       onStateChange: (aBrowser, aWebProgress, aRequest, aFlags, aStatus) => {
         if ((aFlags & Ci.nsIWebProgressListener.STATE_STOP) === Ci.nsIWebProgressListener.STATE_STOP) { // eslint-disable-line no-bitwise
           for (let tab of tabs.childNodes) {
-            if (tab.linkedBrowser === aBrowser) {
+            if (tab.linkedBrowser === aBrowser && tab.refreshThumbAndLabel) {
               tab.refreshThumbAndLabel();
             }
           }
         }
       }
-    });
+    };
+    window.gBrowser.addTabsProgressListener(tabsProgressListener);
 
     window.addEventListener('animationend', (e) => {
       let tab = e.target;
@@ -173,6 +174,8 @@ VerticalTabs.prototype = {
         this.window.clearInterval(this.thumbTimer);
         this.thumbTimer = null;
       }
+      this.window.gBrowser.removeTabsProgressListener(tabsProgressListener);
+
       this.window.ToolbarIconColor.inferFromText = this.inferFromText;
       this.window.gBrowser._endRemoveTab = this._endRemoveTab;
       this.window.BrowserOpenTab = this.BrowserOpenTab;
@@ -250,6 +253,30 @@ VerticalTabs.prototype = {
     contentbox.appendChild(bottom);
     let top = document.getElementById('navigator-toolbox');
     let browserPanel = document.getElementById('browser-panel');
+    let autocomplete = document.getElementById('PopupAutoCompleteRichResult');
+    let autocompleteOpen = autocomplete._openAutocompletePopup;
+    autocomplete._openAutocompletePopup = (aInput, aElement) => {
+      autocompleteOpen.bind(autocomplete)(aInput, aElement);
+      let rect = window.document.documentElement.getBoundingClientRect();
+      let popupDirection = autocomplete.style.direction;
+
+      // Make the popup's starting margin negative so that the leading edge
+      // of the popup aligns with the window border.
+      let elementRect = aElement.getBoundingClientRect();
+      if (popupDirection === 'rtl') {
+        let offset = elementRect.right - rect.right;
+        autocomplete.style.marginRight = offset + 'px';
+      } else {
+        let offset = rect.left - elementRect.left;
+        if (mainWindow.getAttribute('tabspinned') !== 'true') {
+          offset += 45;
+        } else {
+          offset += this.pinnedWidth;
+        }
+        autocomplete.style.marginLeft = offset + 'px';
+      }
+    };
+
 
     // save the label of the first tab, and the toolbox palette for later…
     let tabs = document.getElementById('tabbrowser-tabs');
@@ -425,19 +452,22 @@ VerticalTabs.prototype = {
       }
     }, 150);
 
-    window.addEventListener('beforecustomization', function () {
+    let beforeListener = function () {
       browserPanel.insertBefore(top, browserPanel.firstChild);
       top.palette = palette;
-    });
+    };
+    window.addEventListener('beforecustomization', beforeListener);
 
-    window.addEventListener('customizationchange', () => {
+    let changeListener = () => {
       setDefaultPrefs();
-    });
+    };
+    window.addEventListener('customizationchange', changeListener);
 
-    window.addEventListener('aftercustomization', function () {
+    let afterListener = function () {
       contentbox.insertBefore(top, contentbox.firstChild);
       top.palette = palette;
-    });
+    };
+    window.addEventListener('aftercustomization', afterListener);
 
     window.addEventListener('resize', this.resizeTabs.bind(this), false);
 
@@ -454,6 +484,8 @@ VerticalTabs.prototype = {
     });
 
     this.unloaders.push(function () {
+      autocomplete._openAutocompletePopup = autocompleteOpen;
+
       // Move the tabs toolbar back to where it was
       toolbar._toolbox = null; // reset value set by constructor
       toolbar.removeAttribute('toolboxid');
@@ -466,9 +498,9 @@ VerticalTabs.prototype = {
       let browserPanel = document.getElementById('browser-panel');
 
       //remove customization event listeners which move the toolbox
-      window.removeEventListener('beforecustomization');
-      window.removeEventListener('aftercustomization');
-      window.removeEventListener('customizationchange');
+      window.removeEventListener('beforecustomization', beforeListener);
+      window.removeEventListener('customizationchange', changeListener);
+      window.removeEventListener('aftercustomization', afterListener);
 
       close_next_tabs_message.setAttribute('label', previous_close_message);
 
@@ -710,7 +742,11 @@ VerticalTabs.prototype = {
   },
 };
 
-exports.addVerticalTabs = (win, data) => new VerticalTabs(win, data);
+exports.addVerticalTabs = (win, data) => {
+  if (!win.VerticalTabs) {
+    new VerticalTabs(win, data);
+  }
+};
 
 //use to set preview image as metadata image 4/4
 // XPCOMUtils.defineLazyModuleGetter(VerticalTabs.prototype, "PageMetadata", "resource://gre/modules/PageMetadata.jsm");
