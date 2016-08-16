@@ -259,21 +259,32 @@ VerticalTabs.prototype = {
       autocompleteOpen.bind(autocomplete)(aInput, aElement);
       let rect = window.document.documentElement.getBoundingClientRect();
       let popupDirection = autocomplete.style.direction;
+      let sidebar = document.getElementById('sidebar-box');
 
       // Make the popup's starting margin negative so that the leading edge
       // of the popup aligns with the window border.
       let elementRect = aElement.getBoundingClientRect();
       if (popupDirection === 'rtl') {
         let offset = elementRect.right - rect.right;
+        let width = rect.width;
         autocomplete.style.marginRight = offset + 'px';
+        autocomplete.style.width = width + 'px';
       } else {
         let offset = rect.left - elementRect.left;
+        let width = rect.width;
         if (mainWindow.getAttribute('tabspinned') !== 'true') {
           offset += 45;
+          width -= 45;
         } else {
           offset += this.pinnedWidth;
+          width -= this.pinnedWidth;
+        }
+        if (sidebar.getAttribute('hidden') !== 'true') {
+          offset += sidebar.getBoundingClientRect().width;
+          width -= sidebar.getBoundingClientRect().width;
         }
         autocomplete.style.marginLeft = offset + 'px';
+        autocomplete.style.width = width + 'px';
       }
     };
 
