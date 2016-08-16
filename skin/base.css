@@ -352,19 +352,16 @@
 }
 
 #navigator-toolbox,
-.browserContainer,
-#PopupAutoCompleteRichResult {
+.browserContainer {
   width: calc(100vw - var(--collapsed-width));
 }
 
 #main-window[tabspinned="true"] #verticaltabs-box + #appcontent #navigator-toolbox,
-#main-window[tabspinned="true"] #verticaltabs-box + #appcontent .browserContainer,
-#main-window[tabspinned="true"] #PopupAutoCompleteRichResult {
+#main-window[tabspinned="true"] #verticaltabs-box + #appcontent .browserContainer {
   width: calc(100vw - var(--pinned-width));
 }
 
-#main-window[inFullscreen][inDOMFullscreen] .browserContainer
-#main-window[inFullscreen][inDOMFullscreen] #PopupAutoCompleteRichResult {
+#main-window[inFullscreen][inDOMFullscreen] .browserContainer {
   width: 100vw !important;
 }
 
