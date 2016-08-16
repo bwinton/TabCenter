@@ -16,6 +16,38 @@
           xmlns:html="http://www.w3.org/1999/xhtml">
 
   <binding id="tabbrowser-arrowscrollbox" extends="chrome://browser/content/tabbrowser.xml#tabbrowser-arrowscrollbox">
+    <content>
+      <xul:toolbarbutton class="scrollbutton-up"
+                         xbl:inherits="orient,collapsed=notoverflowing,disabled=scrolledtostart"
+                         anonid="scrollbutton-up"
+                         onclick="_distanceScroll(event);"
+                         onmousedown="if (event.button == 0) _startScroll(-1);"
+                         onmouseup="if (event.button == 0) _stopScroll();"
+                         onmouseover="_continueScroll(-1);"
+                         onmouseout="_pauseScroll();"
+                         ondragover="if (event.button == 0) _startScroll(-1);"
+                         ondragleave="if (event.button == 0) _stopScroll();"/>
+      <xul:spacer class="arrowscrollbox-overflow-start-indicator"
+                  xbl:inherits="collapsed=scrolledtostart"/>
+      <xul:scrollbox class="arrowscrollbox-scrollbox"
+                     anonid="scrollbox"
+                     flex="1"
+                     xbl:inherits="orient,align,pack,dir">
+        <children/>
+      </xul:scrollbox>
+      <xul:spacer class="arrowscrollbox-overflow-end-indicator"
+                  xbl:inherits="collapsed=scrolledtoend"/>
+      <xul:toolbarbutton class="scrollbutton-down"
+                         xbl:inherits="orient,collapsed=notoverflowing,disabled=scrolledtoend"
+                         anonid="scrollbutton-down"
+                         onclick="_distanceScroll(event);"
+                         onmousedown="if (event.button == 0) _startScroll(1);"
+                         onmouseup="if (event.button == 0) _stopScroll();"
+                         onmouseover="_continueScroll(1);"
+                         onmouseout="_pauseScroll();"
+                         ondragover="if (event.button == 0) _startScroll(1);"
+                         ondragleave="if (event.button == 0) _stopScroll();"/>
+    </content>
     <implementation>
       <property name="_verticalTabs" onget="return this.orient == 'vertical';"/>
 
@@ -169,9 +201,7 @@
           // console.log('tabScreenPos', tabScreenPos);
           let translateVal = screenPos - draggedTab._dragData.screenY;
           // console.log('translateVal 1', translateVal);
-          if (!pinned){
-            translateVal += this.mTabstrip.scrollPosition - draggedTab._dragData.scrollX; // XXX verticalTabs always scrollX here, it's actually the scrollPosition
-          }
+          translateVal += this.mTabstrip.scrollPosition - draggedTab._dragData.scrollX; // XXX verticalTabs always scrollX here, it's actually the scrollPosition
           let minBound = leftTab.boxObject.screenY - tabScreenPos;
           let maxBound = (rightTab.boxObject.screenY + rightTab.boxObject.height) -
                            (tabScreenPos + tabSize);

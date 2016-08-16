@@ -20,13 +20,6 @@
   overflow-y: auto !important;
 }
 
-/* Since we get an actual scrollbar in this vertical arrangement, we
-   don't need these extra scroll buttons. */
-.tabbrowser-arrowscrollbox > .scrollbutton-up,
-.tabbrowser-arrowscrollbox > .scrollbutton-down {
-  visibility: collapse !important;
-}
-
 /* Ensure the tab favicon doesn't stretch. */
 .tab-icon-image {
   max-width: 16px;
