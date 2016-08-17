@@ -8,11 +8,10 @@
   width:auto !important;
 }
 
-@media (-moz-os-version: windows-xp), (-moz-os-version: windows-vista), (-moz-os-version: windows-win10) {
-  .tabbrowser-arrowscrollbox,
-  .tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
-    height: calc(100vh - 42px);
-  }
+.tabbrowser-arrowscrollbox,
+.tabbrowser-arrowscrollbox:not(:-moz-lwtheme),
+#main-window[devedition-theme] .tabbrowser-arrowscrollbox {
+  height: calc(100vh - 40px);
 }
 
 @media (-moz-os-version: windows-win7), (-moz-os-version: windows-win8) {
@@ -36,14 +35,16 @@
 
 @media (-moz-os-version: windows-win8) {
   .tabbrowser-arrowscrollbox,
-  .tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
-    height: calc(100vh - 46px);
+  .tabbrowser-arrowscrollbox:not(:-moz-lwtheme),
+  #main-window[devedition-theme] .tabbrowser-arrowscrollbox {
+    height: calc(100vh - 43px);
   }
 }
 
 @media (-moz-os-version: windows-win7) {
   .tabbrowser-arrowscrollbox,
-  .tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
+  .tabbrowser-arrowscrollbox:not(:-moz-lwtheme),
+  #main-window[devedition-theme] .tabbrowser-arrowscrollbox {
     height: calc(100vh - 44px);
   }
 }

@@ -53,3 +53,12 @@
   background-repeat: no-repeat !important;
   box-shadow: var(--toolbarbutton-active-boxshadow) !important;
 }
+
+.tabbrowser-arrowscrollbox,
+.tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
+  height: calc(100vh - 40px);
+}
+
+#main-window[devedition-theme] .tabbrowser-arrowscrollbox {
+  height: calc(100vh - 41px);
+}

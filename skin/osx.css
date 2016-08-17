@@ -81,3 +81,21 @@
   background-image: linear-gradient(hsla(0, 0%, 100%, 0), hsla(0, 0%, 100%, 0.65)) !important;
   box-shadow: none !important;
 }
+
+.tabbrowser-arrowscrollbox {
+  height: calc(100vh - 61px);
+}
+
+#main-window[inFullscreen] .tabbrowser-arrowscrollbox,
+#main-window[inFullscreen] .tabbrowser-arrowscrollbox:not(:-moz-lwtheme),
+.tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
+  height: calc(100vh - 39px);
+}
+
+#main-window[devedition-theme] .tabbrowser-arrowscrollbox {
+  height: calc(100vh - 62px);
+}
+
+#main-window[devedition-theme][inFullscreen] .tabbrowser-arrowscrollbox {
+  height: calc(100vh - 40px);
+}

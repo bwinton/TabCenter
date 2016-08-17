@@ -16,7 +16,8 @@
 
 .arrowscrollbox-overflow-start-indicator,
 .arrowscrollbox-overflow-end-indicator {
-  display:none;
+  display: none;
+  margin: 0 !important;
 }
 
 .tabbrowser-arrowscrollbox  .scrollbutton-up,
@@ -171,12 +172,7 @@
 }
 
 .tabbrowser-arrowscrollbox {
-  height: calc(100vh - 62px);
   flex: 1 0;
-}
-
-.tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
-  height: calc(100vh - 41px);
 }
 
 #verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
@@ -326,7 +322,7 @@
   flex: 1 0 auto !important;
   vertical-align: middle;
 }
-
+/* [inDOMFullscreen] for video */
 #main-window[inFullscreen][inDOMFullscreen] #find-input {
   display: none;
 }
