@@ -16,42 +16,33 @@
           xmlns:html="http://www.w3.org/1999/xhtml">
 
   <binding id="tabbrowser-arrowscrollbox" extends="chrome://browser/content/tabbrowser.xml#tabbrowser-arrowscrollbox">
-    <content>
-      <xul:toolbarbutton class="scrollbutton-up"
-                         xbl:inherits="orient,collapsed=notoverflowing,disabled=scrolledtostart"
-                         anonid="scrollbutton-up"
-                         onclick="_distanceScroll(event);"
-                         onmousedown="if (event.button == 0) _startScroll(-1);"
-                         onmouseup="if (event.button == 0) _stopScroll();"
-                         onmouseover="_continueScroll(-1);"
-                         onmouseout="_pauseScroll();"
-                         ondragenter="if (event.button == 0) _startScroll(-1);"
-                         ondragover="_distanceScroll(event);"
-                         ondragleave="_stopScroll();"/>
-      <xul:spacer class="arrowscrollbox-overflow-start-indicator"
-                  xbl:inherits="collapsed=scrolledtostart"/>
-      <xul:scrollbox class="arrowscrollbox-scrollbox"
-                     anonid="scrollbox"
-                     flex="1"
-                     xbl:inherits="orient,align,pack,dir">
-        <children/>
-      </xul:scrollbox>
-      <xul:spacer class="arrowscrollbox-overflow-end-indicator"
-                  xbl:inherits="collapsed=scrolledtoend"/>
-      <xul:toolbarbutton class="scrollbutton-down"
-                         xbl:inherits="orient,collapsed=notoverflowing,disabled=scrolledtoend"
-                         anonid="scrollbutton-down"
-                         onclick="_distanceScroll(event);"
-                         onmousedown="if (event.button == 0) _startScroll(1);"
-                         onmouseup="if (event.button == 0) _stopScroll();"
-                         onmouseover="_continueScroll(1);"
-                         onmouseout="_pauseScroll();"
-                         ondragenter="if (event.button == 0) _startScroll(1);"
-                         ondragover="_distanceScroll(event);"
-                         ondragleave="_stopScroll();"/>
-    </content>
     <implementation>
       <property name="_verticalTabs" onget="return this.orient == 'vertical';"/>
+
+      <constructor><![CDATA[
+        let scrollbuttonUp = document.getAnonymousElementByAttribute(this, 'anonid', 'scrollbutton-up');
+        let scrollbuttonDown = document.getAnonymousElementByAttribute(this, 'anonid', 'scrollbutton-down');
+
+        scrollbuttonUp.ondragenter = function (event) {
+          if (event.button === 0) {
+            _startScroll(-1);
+          }
+        };
+        scrollbuttonUp.ondragover = function (event) {
+          _distanceScroll(event);
+        };
+        scrollbuttonUp.ondragleave = _stopScroll();
+
+        scrollbuttonDown.ondragenter = function (event) {
+          if (event.button === 0) {
+            _startScroll(1);
+          }
+        };
+        scrollbuttonDown.ondragover = function (event) {
+          _distanceScroll(event);
+        };
+        scrollbuttonDown.ondragleave = _stopScroll();
+      ]]></constructor>
 
       <method name="_canScrollToElement">
         <parameter name="tab"/>
