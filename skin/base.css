@@ -51,12 +51,6 @@
   list-style-image: url("resource://tabcenter/skin/glyph-arrow-page-up-inverted-16.svg") !important;
 }
 
-/* Style the scrollbox for vertical arrangements. */
-.tabbrowser-arrowscrollbox > scrollbox {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-}
-
 /* Ensure the tab favicon doesn't stretch. */
 .tab-icon-image {
   max-width: 16px;
@@ -166,22 +160,8 @@
   flex: 1 0;
 }
 
-#verticaltabs-box[expanded="true"] .tabbrowser-tabs,
-#main-window[tabspinned="true"] #verticaltabs-box .tabbrowser-tabs {
-  overflow-y: auto;
-}
-
 .tabbrowser-arrowscrollbox {
   flex: 1 0;
-}
-
-#verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
-  overflow-y: hidden !important;
-}
-
-#verticaltabs-box[expanded="true"] .tabbrowser-arrowscrollbox > scrollbox,
-#main-window[tabspinned="true"] #verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
-  overflow-y: auto !important;
 }
 
 #tabbrowser-tabs::before,
