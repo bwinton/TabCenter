@@ -45,6 +45,7 @@ const {mount, unmount} = require('sdk/uri/resource');
 const {viewFor} = require('sdk/view/core');
 const {browserWindows} = require('sdk/windows');
 const {isBrowser, isDocumentLoaded} = require('sdk/window/utils');
+const {Hotkey} = require('sdk/hotkeys');
 
 const {Cc, Ci, Cu} = require('chrome');
 const windowWatcher = Cc['@mozilla.org/embedcomp/window-watcher;1'].
@@ -56,6 +57,7 @@ const {addVerticalTabs} = require('./verticaltabs');
 let self = require('sdk/self');
 const RESOURCE_HOST = 'tabcenter';
 
+let hotkey;
 
 function b64toBlob(win, b64Data, contentType, sliceSize) {
   contentType = contentType || '';
@@ -157,6 +159,32 @@ exports.main = function (options, callbacks) {
     }
   });
 
+  hotkey = Hotkey({
+    combo: 'accel-shift-k',
+    onPress: function () {
+      let window = viewFor(browserWindows.activeWindow);
+      let input = window.document.getElementById('find-input');
+      if (input) {
+        let mainWindow = window.document.getElementById('main-window');
+        let sidebar = window.document.getElementById('verticaltabs-box');
+        if (mainWindow.getAttribute('tabspinned') === 'true' &&
+          input.style.visibility === 'collapse') {
+          return;
+        }
+        if (sidebar.getAttribute('search_expanded') === 'true') {
+          sidebar.removeAttribute('search_expanded');
+          input.blur();
+        } else {
+          sidebar.setAttribute('search_expanded', 'true');
+          window.setTimeout(() => {
+            input.focus();
+          }, 500);
+        }
+      }
+    }
+  });
+
+
   setInterval(sendPayload, 24 * 60 * 60 * 1000);  // Every 24h.
   //setInterval(sendPayload, 20*1000);  // Every 20s for debugging.
 };
@@ -169,6 +197,8 @@ exports.onUnload = function (reason) {
   if (reason === 'shutdown') {
     return;
   }
+
+  hotkey.destroy();
 
   // Shutdown the VerticalTabs object for each window.
   for (let window of browserWindows) {
