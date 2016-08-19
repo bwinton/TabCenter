@@ -1,3 +1,29 @@
+# v1.24 - Stuff.
+
+### New Features:
+
+* Scroll tabbrowser when dragging a tab. 📜 📑  (Fixes #500.)
+* More styling updates.  🖼  (Fixes #473.)
+* Add a hidden option to disable thumbnails. 🕵  (Fixes #439.)
+* Styling Change/Refresh.  🍾
+
+### Fixes:
+
+* Handle retina devices in the thumbnails! 🌱 🌷
+* Take the sidebar into account when determining the autocomplete's place.
+* Run the initialization code for _all_ the new windows. 🌠  (Fixes #529.)
+* Introduce delay before resizing tabs.  ⏱  (Fixes #465.)
+* Switch to canvas! 🖼  (Fixes #516.)
+* Disappearing labels. 📛  (Fixes #475, #511.)
+* Forgot to remove an "a".  🅰️
+* Adjust Selected Tab Appearance and Stuff.
+* Hide private browsing icon. 🕵  (Fixes #502.)
+* Alignment and Flex Changes to Try and Prevent Toolbar Shifting. 💪
+* Add Mac Specific Styling. 🍎
+* Re-add the palette on uninstall.  🎨  (Fixes #479.)
+* Double-clicking on thumbnails no longer opens new tabs. ⛵  (Fixes #457.)
+* Hide wyciwyg:// uris. ❓❓❓
+
 # v1.23 - More styles.
 
 ### Fixes:
