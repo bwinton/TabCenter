@@ -163,6 +163,15 @@ VerticalTabs.prototype = {
           toolbar.setAttribute('brighttext', 'true');
         }
       }
+
+      let mainWindow = document.getElementById('main-window');
+
+      if (/devedition/.test(mainWindow.style.backgroundImage)) {
+        mainWindow.setAttribute('devedition-theme', 'true');
+      } else {
+        mainWindow.removeAttribute('devedition-theme');
+      }
+
     }.bind(this.window.ToolbarIconColor);
 
     this.thumbTimer = this.window.setInterval(() => {

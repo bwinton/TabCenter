@@ -13,7 +13,10 @@
         "Cc": false,
         "Ci": false,
         "TAB_DROP_TYPE": false,
-        "TabsInTitlebar": false
+        "TabsInTitlebar": false,
+        "_startScroll": false,
+        "_distanceScroll": false,
+        "_stopScroll": false
     },
     "rules": {
       "mozilla/import-globals-from": 1,

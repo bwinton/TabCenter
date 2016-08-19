@@ -14,17 +14,41 @@
   --color-teal: #01bdad;
 }
 
-/* Style the scrollbox for vertical arrangements. */
-.tabbrowser-arrowscrollbox > scrollbox {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+.arrowscrollbox-overflow-start-indicator,
+.arrowscrollbox-overflow-end-indicator {
+  display: none;
+  margin: 0 !important;
 }
 
-/* Since we get an actual scrollbar in this vertical arrangement, we
-   don't need these extra scroll buttons. */
-.tabbrowser-arrowscrollbox > .scrollbutton-up,
-.tabbrowser-arrowscrollbox > .scrollbutton-down {
-  visibility: collapse !important;
+.tabbrowser-arrowscrollbox  .scrollbutton-up,
+.tabbrowser-arrowscrollbox  .scrollbutton-down {
+  min-height: 25px !important;
+  max-height: 25px !important;
+  margin: 0 !important;
+  -moz-image-region: rect(0, 0, 0, 0) !important;
+}
+
+.tabbrowser-arrowscrollbox > .scrollbutton-down[disabled] > .toolbarbutton-icon,
+.tabbrowser-arrowscrollbox > .scrollbutton-up[disabled] > .toolbarbutton-icon {
+  -moz-image-region: rect(0, 0, 0, 0) !important;
+}
+
+.tabbrowser-arrowscrollbox .scrollbutton-down {
+  border-top: 1px solid hsla(0, 0%, 0%, 0.06) !important;
+  list-style-image: url("resource://tabcenter/skin/glyph-arrow-page-down-16.svg") !important;
+}
+
+.tabbrowser-arrowscrollbox .scrollbutton-up {
+  border-bottom: 1px solid hsla(0, 0%, 0%, 0.06) !important;
+  list-style-image: url("resource://tabcenter/skin/glyph-arrow-page-up-16.svg") !important;
+}
+
+#verticaltabs-box[brighttext] .tabbrowser-arrowscrollbox .scrollbutton-down {
+  list-style-image: url("resource://tabcenter/skin/glyph-arrow-page-down-inverted-16.svg") !important;
+}
+
+#verticaltabs-box[brighttext] .tabbrowser-arrowscrollbox .scrollbutton-up {
+  list-style-image: url("resource://tabcenter/skin/glyph-arrow-page-up-inverted-16.svg") !important;
 }
 
 /* Ensure the tab favicon doesn't stretch. */
@@ -136,27 +160,8 @@
   flex: 1 0;
 }
 
-#verticaltabs-box[expanded="true"] .tabbrowser-tabs,
-#main-window[tabspinned="true"] #verticaltabs-box .tabbrowser-tabs {
-  overflow-y: auto;
-}
-
 .tabbrowser-arrowscrollbox {
-  height: calc(100vh - 63px);
   flex: 1 0;
-}
-
-.tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
-  height: calc(100vh - 41px);
-}
-
-#verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
-  overflow-y: hidden !important;
-}
-
-#verticaltabs-box[expanded="true"] .tabbrowser-arrowscrollbox > scrollbox,
-#main-window[tabspinned="true"] #verticaltabs-box .tabbrowser-arrowscrollbox > scrollbox {
-  overflow-y: auto !important;
 }
 
 #tabbrowser-tabs::before,
@@ -297,7 +302,7 @@
   flex: 1 0 auto !important;
   vertical-align: middle;
 }
-
+/* [inDOMFullscreen] for video */
 #main-window[inFullscreen][inDOMFullscreen] #find-input {
   display: none;
 }
