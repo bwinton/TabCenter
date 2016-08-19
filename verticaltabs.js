@@ -317,9 +317,16 @@ VerticalTabs.prototype = {
 
     //if new tab button is not in toolbar, find it and insert it.
     if (!toolbar.querySelector('#new-tab-button')) {
-      //TODO save position of button for restoring later
+      //save position of button for restoring later
       let NewTabButton = document.getElementById('new-tab-button');
+      let NewTabButtonParent = NewTabButton.parentNode;
+      let NewTabButtonSibling = NewTabButton.nextSibling;
       toolbar.insertBefore(NewTabButton, toolbar.firstChild);
+
+      this.unloaders.push(function () {
+        // put the newTab button back where it belongs
+        NewTabButtonParent.insertBefore(NewTabButton, NewTabButtonSibling);
+      });
     }
 
     contentbox.insertBefore(top, contentbox.firstChild);
