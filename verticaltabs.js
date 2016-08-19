@@ -315,6 +315,12 @@ VerticalTabs.prototype = {
       }
     }
 
+    //if new tab button is not in toolbar, find it and insert it.
+    if (!toolbar.querySelector('#new-tab-button')) {
+      let NewTabButton = document.getElementById('new-tab-button');
+      toolbar.insertBefore(NewTabButton, toolbar.firstChild);
+    }
+
     contentbox.insertBefore(top, contentbox.firstChild);
 
     // Create a box next to the app content. It will hold the tab
