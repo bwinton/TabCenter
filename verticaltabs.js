@@ -317,6 +317,7 @@ VerticalTabs.prototype = {
 
     //if new tab button is not in toolbar, find it and insert it.
     if (!toolbar.querySelector('#new-tab-button')) {
+      //TODO save position of button for restoring later
       let NewTabButton = document.getElementById('new-tab-button');
       toolbar.insertBefore(NewTabButton, toolbar.firstChild);
     }
@@ -436,6 +437,11 @@ VerticalTabs.prototype = {
     let previous_close_message = close_next_tabs_message.getAttribute('label');
     close_next_tabs_message.setAttribute('label', 'Close Tabs Below');
 
+    //remove option to hide new-tab-button
+    let parentMenu = document.getElementById('toolbar-context-menu');
+    let moveToPanelMenuItem = parentMenu.removeChild(document.querySelector('.customize-context-moveToPanel'));
+    let removeFromToolbarMenuItem = parentMenu.removeChild(document.querySelector('.customize-context-removeFromToolbar'));
+
     let enter = (event) => {
       this.mouseEntered();
       if (event.type === 'mouseenter' && leftbox.getAttribute('expanded') !== 'true') {
@@ -532,6 +538,9 @@ VerticalTabs.prototype = {
       window.removeEventListener('customizationchange', changeListener);
       window.removeEventListener('aftercustomization', afterListener);
 
+      //restore the changed menu items
+      parentMenu.insertBefore(removeFromToolbarMenuItem, parentMenu.firstChild);
+      parentMenu.insertBefore(moveToPanelMenuItem, removeFromToolbarMenuItem);
       close_next_tabs_message.setAttribute('label', previous_close_message);
 
       // Put the tabs back up top
