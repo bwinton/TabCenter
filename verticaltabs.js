@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/* global require, exports:false, PageThumbs:false */
+/* global require, exports:false, PageThumbs:false, CustomizableUI:false */
 'use strict';
 
 const {Cc, Ci, Cu} = require('chrome');
@@ -47,6 +47,7 @@ const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
                                createInstance(Ci.nsIURIFixup);
 
 Cu.import('resource://gre/modules/PageThumbs.jsm');
+Cu.import('resource:///modules/CustomizableUI.jsm');
 
 //use to set preview image as metadata image 1/4
 // Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
@@ -318,7 +319,8 @@ VerticalTabs.prototype = {
     //if new tab button is not in toolbar, find it and insert it.
     if (!toolbar.querySelector('#new-tab-button')) {
       //save position of button for restoring later
-      let NewTabButton = document.getElementById('new-tab-button');
+      let NewTabButton = document.getElementById('new-tab-button') || CustomizableUI.getWidget('new-tab-button').forWindow(this.window).node;
+
       let NewTabButtonParent = NewTabButton.parentNode;
       let NewTabButtonSibling = NewTabButton.nextSibling;
       toolbar.insertBefore(NewTabButton, toolbar.firstChild);
