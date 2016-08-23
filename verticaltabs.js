@@ -209,13 +209,15 @@ VerticalTabs.prototype = {
           let tab = mutation.target;
           if (mutation.attributeName === 'crop' && leftbox.getAttribute('expanded') !== 'true') {
             tab.removeAttribute('crop');
-          } else if (mutation.attributeName === 'selected' && tab.getAttribute('visuallyselected') !== 'true'){
-            this.checkScrollToTab(tab);
           }
         } else if (mutation.type === 'attributes' &&
                    mutation.target.id === 'PopupAutoCompleteRichResult' &&
                    mutation.attributeName === 'width') {
           results.removeAttribute('width');
+        } else if (mutation.type === 'attributes' && mutation.attributeName === 'overflow' && mutation.target.id === 'tabbrowser-tabs') {
+          if (mutation.newValue === '') {
+            tabs.setAttribute('overflow', 'true'); //always set overflow back to true
+          }
         } else if (mutation.type === 'childList' &&
             leftbox.getAttribute('expanded') !== 'true') {
           for (let node of mutation.addedNodes) {
@@ -640,18 +642,6 @@ VerticalTabs.prototype = {
       func.call(this);
     }, this);
     delete this.window.VerticalTabs;
-  },
-
-  checkScrollToTab: function (tab) {
-    let elemTop = tab.getBoundingClientRect().top;
-    let elemBottom = tab.getBoundingClientRect().bottom;
-    let overTop = elemTop < 63;
-    let overBottom = elemBottom > this.window.innerHeight;
-    if (overTop) {
-      tab.scrollIntoView(true);
-    } else if (overBottom) {
-      tab.scrollIntoView(false);
-    }
   },
 
   actuallyResizeTabs: function () {
