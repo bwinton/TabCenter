@@ -277,6 +277,7 @@
   min-height: auto !important;
   border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
   border-radius: 1px !important;
+  overflow: hidden;
   display: flex;
   align-items: center;
   flex: 20 0 auto;
