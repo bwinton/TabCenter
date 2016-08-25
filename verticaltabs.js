@@ -319,8 +319,7 @@ VerticalTabs.prototype = {
     //if new tab button is not in toolbar, find it and insert it.
     if (!toolbar.querySelector('#new-tab-button')) {
       //save position of button for restoring later
-      let NewTabButton = document.getElementById('new-tab-button') || CustomizableUI.getWidget('new-tab-button').forWindow(this.window).node;
-
+      let NewTabButton = CustomizableUI.getWidget('new-tab-button').forWindow(this.window).node;
       let NewTabButtonParent = NewTabButton.parentNode;
       let NewTabButtonSibling = NewTabButton.nextSibling;
       toolbar.insertBefore(NewTabButton, toolbar.firstChild);
@@ -446,10 +445,15 @@ VerticalTabs.prototype = {
     let previous_close_message = close_next_tabs_message.getAttribute('label');
     close_next_tabs_message.setAttribute('label', 'Close Tabs Below');
 
-    //remove option to hide new-tab-button
-    let parentMenu = document.getElementById('toolbar-context-menu');
-    let moveToPanelMenuItem = parentMenu.removeChild(document.querySelector('.customize-context-moveToPanel'));
-    let removeFromToolbarMenuItem = parentMenu.removeChild(document.querySelector('.customize-context-removeFromToolbar'));
+    //remove option to movetopanel or removefromtoolbar from the new-tab-button
+    let oldOnViewToolbarsPopupShowing = window.onViewToolbarsPopupShowing;
+    window.onViewToolbarsPopupShowing = function (aEvent, aInsertPoint) {
+      oldOnViewToolbarsPopupShowing(aEvent, aInsertPoint);
+      if (aEvent.explicitOriginalTarget.id === 'new-tab-button') {
+        aEvent.target.querySelector('.customize-context-moveToPanel').setAttribute('disabled', true);
+        aEvent.target.querySelector('.customize-context-removeFromToolbar').setAttribute('disabled', true);
+      }
+    };
 
     let enter = (event) => {
       this.mouseEntered();
@@ -548,8 +552,7 @@ VerticalTabs.prototype = {
       window.removeEventListener('aftercustomization', afterListener);
 
       //restore the changed menu items
-      parentMenu.insertBefore(removeFromToolbarMenuItem, parentMenu.firstChild);
-      parentMenu.insertBefore(moveToPanelMenuItem, removeFromToolbarMenuItem);
+      window.onViewToolbarsPopupShowing = oldOnViewToolbarsPopupShowing;
       close_next_tabs_message.setAttribute('label', previous_close_message);
 
       // Put the tabs back up top
