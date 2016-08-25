@@ -606,9 +606,14 @@
                      anonid="soundplaying-icon"
                      class="tab-icon-sound"
                      role="presentation"/>
-          <xul:toolbarbutton anonid="close-button"
-                             xbl:inherits="fadein,pinned,selected,visuallyselected"
-                             class="tab-close-button close-icon"/>
+          <xul:stack>
+            <xul:toolbarbutton anonid="close-button"
+                               xbl:inherits="fadein,pinned,selected,visuallyselected"
+                               class="tab-close-button close-icon"/>
+            <xul:vbox xbl:inherits="pinned"
+                      class="pinned-icon"
+                      role="presentation"/>
+          </xul:stack>
         </xul:hbox>
       </xul:stack>
     </content>
