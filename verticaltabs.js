@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/* global require, exports:false, PageThumbs:false */
+/* global require, exports:false, PageThumbs:false, CustomizableUI:false */
 'use strict';
 
 const {Cc, Ci, Cu} = require('chrome');
@@ -47,6 +47,7 @@ const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
                                createInstance(Ci.nsIURIFixup);
 
 Cu.import('resource://gre/modules/PageThumbs.jsm');
+Cu.import('resource:///modules/CustomizableUI.jsm');
 
 //use to set preview image as metadata image 1/4
 // Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
@@ -315,6 +316,20 @@ VerticalTabs.prototype = {
       }
     }
 
+    //if new tab button is not in toolbar, find it and insert it.
+    if (!toolbar.querySelector('#new-tab-button')) {
+      //save position of button for restoring later
+      let NewTabButton = CustomizableUI.getWidget('new-tab-button').forWindow(this.window).node;
+      let NewTabButtonParent = NewTabButton.parentNode;
+      let NewTabButtonSibling = NewTabButton.nextSibling;
+      toolbar.insertBefore(NewTabButton, toolbar.firstChild);
+
+      this.unloaders.push(function () {
+        // put the newTab button back where it belongs
+        NewTabButtonParent.insertBefore(NewTabButton, NewTabButtonSibling);
+      });
+    }
+
     contentbox.insertBefore(top, contentbox.firstChild);
 
     // Create a box next to the app content. It will hold the tab
@@ -430,6 +445,16 @@ VerticalTabs.prototype = {
     let previous_close_message = close_next_tabs_message.getAttribute('label');
     close_next_tabs_message.setAttribute('label', 'Close Tabs Below');
 
+    //remove option to movetopanel or removefromtoolbar from the new-tab-button
+    let oldOnViewToolbarsPopupShowing = window.onViewToolbarsPopupShowing;
+    window.onViewToolbarsPopupShowing = function (aEvent, aInsertPoint) {
+      oldOnViewToolbarsPopupShowing(aEvent, aInsertPoint);
+      if (aEvent.explicitOriginalTarget.id === 'new-tab-button') {
+        aEvent.target.querySelector('.customize-context-moveToPanel').setAttribute('disabled', true);
+        aEvent.target.querySelector('.customize-context-removeFromToolbar').setAttribute('disabled', true);
+      }
+    };
+
     let enter = (event) => {
       this.mouseEntered();
       if (event.type === 'mouseenter' && leftbox.getAttribute('expanded') !== 'true') {
@@ -526,6 +551,8 @@ VerticalTabs.prototype = {
       window.removeEventListener('customizationchange', changeListener);
       window.removeEventListener('aftercustomization', afterListener);
 
+      //restore the changed menu items
+      window.onViewToolbarsPopupShowing = oldOnViewToolbarsPopupShowing;
       close_next_tabs_message.setAttribute('label', previous_close_message);
 
       // Put the tabs back up top
