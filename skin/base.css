@@ -503,27 +503,28 @@
   transition-property: background-position !important;
 }
 
-#verticaltabs-box[expanded="true"] .tabbrowser-tab[pinned],
-#verticaltabs-box[search_expanded="true"] .tabbrowser-tab[pinned],
-#main-window[tabspinned="true"] .tabbrowser-tab[pinned] {
-  background-image: url("resource://tabcenter/skin/glyph-pin-pinned-12.svg") !important;
-  background-position: calc(100% - 12px) center !important;
-  background-repeat: no-repeat !important;
-  background-size: 12px !important;
-}
-
-#verticaltabs-box[brighttext][expanded="true"] .tabbrowser-tab[pinned],
-#verticaltabs-box[brighttext][search_expanded="true"] .tabbrowser-tab[pinned],
-#main-window[brighttext][tabspinned="true"] .tabbrowser-tab[pinned] {
-  background-image: url("resource://tabcenter/skin/glyph-pin-pinned-inverted-12.svg") !important;
-}
-
 .tabbrowser-tab:not([selected="true"]):hover {
   background-color: hsla(0, 0%, 0%, 0.08) !important;
 }
 
 .tabbrowser-tab[pinned] .tab-close-button,
 .tabbrowser-tab:not(:hover)[pinned] .tab-close-button {
+  visibility: hidden !important;
+}
+
+.tabbrowser-tab[pinned] .pinned-icon {
+  background-image: url("resource://tabcenter/skin/glyph-pin-pinned-12.svg") !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-size: 12px !important;
+}
+
+#verticaltabs-box[brighttext] .tabbrowser-tab[pinned] .pinned-icon,
+#main-window[brighttext] .tabbrowser-tab[pinned] .pinned-icon {
+  background-image: url("resource://tabcenter/skin/glyph-pin-pinned-inverted-12.svg") !important;
+}
+
+.tabbrowser-tab:not([pinned]) .pinned-icon {
   visibility: hidden !important;
 }
 
