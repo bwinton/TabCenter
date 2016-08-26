@@ -455,17 +455,22 @@ VerticalTabs.prototype = {
       }
     };
 
+    let enterTimeout = -1;
+
     let enter = (event) => {
       this.mouseEntered();
       if (event.type === 'mouseenter' && leftbox.getAttribute('expanded') !== 'true') {
         this.stats.tab_center_expanded++;
-        leftbox.setAttribute('expanded', 'true');
+        enterTimeout = window.setTimeout(() => {
+          leftbox.setAttribute('expanded', 'true');
+        }, 300);
       }
       if (event.pageX <= 4) {
-        leftbox.style.transition = 'box-shadow 150ms ease-out, width 150ms ease-out';
-        window.setTimeout(() => {
-          leftbox.style.transition = '';
-        }, 300);
+        if (enterTimeout > 0) {
+          window.clearTimeout(enterTimeout);
+          enterTimeout = -1;
+        }
+        leftbox.setAttribute('expanded', 'true');
       }
       window.setTimeout(() => {
         for (let i = 0; i < tabs.childNodes.length; i++) {
@@ -478,6 +483,10 @@ VerticalTabs.prototype = {
     leftbox.addEventListener('mousemove', enter);
     leftbox.addEventListener('mouseleave', () => {
       this.mouseExited();
+      if (enterTimeout > 0) {
+        window.clearTimeout(enterTimeout);
+        enterTimeout = -1;
+      }
       if (mainWindow.getAttribute('tabspinned') !== 'true') {
         leftbox.removeAttribute('expanded');
         this.clearFind();
