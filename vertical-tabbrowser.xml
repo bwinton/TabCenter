@@ -20,28 +20,28 @@
       <property name="_verticalTabs" onget="return this.orient == 'vertical';"/>
 
       <constructor><![CDATA[
-        let scrollbuttonUp = document.getAnonymousElementByAttribute(this, 'anonid', 'scrollbutton-up');
-        let scrollbuttonDown = document.getAnonymousElementByAttribute(this, 'anonid', 'scrollbutton-down');
-
-        scrollbuttonUp.ondragenter = function (event) {
+        this._scrollButtonUp.ondragenter = function (event) {
           if (event.button === 0) {
             _startScroll(-1);
           }
         };
-        scrollbuttonUp.ondragover = function (event) {
+        this._scrollButtonUp.ondragover = function (event) {
           _distanceScroll(event);
         };
-        scrollbuttonUp.ondragleave = _stopScroll();
+        this._scrollButtonUp.ondragleave = _stopScroll();
 
-        scrollbuttonDown.ondragenter = function (event) {
+        this._scrollButtonDown.ondragenter = function (event) {
           if (event.button === 0) {
             _startScroll(1);
           }
         };
-        scrollbuttonDown.ondragover = function (event) {
+        this._scrollButtonDown.ondragover = function (event) {
           _distanceScroll(event);
         };
-        scrollbuttonDown.ondragleave = _stopScroll();
+        this._scrollButtonDown.ondragleave = _stopScroll();
+
+        this.setAttribute('notoverflowing', 'true');
+        this._updateScrollButtonsDisabledState();
       ]]></constructor>
 
       <method name="_canScrollToElement">
@@ -60,6 +60,12 @@
 
         let tabs = document.getBindingParent(this);
 
+        if (tabs.tabbrowser.clientHeight >= this.clientHeight) {
+          this.removeAttribute('notoverflowing');
+        } else {
+          this.addAttribute('notoverflowing', true);
+        }
+
         if (tabs._lastTabClosedByMouse) {
           tabs._expandSpacerBy(this._scrollButtonDown.clientWidth);
         }
@@ -72,6 +78,13 @@
           return; // Ignore other-direction events
         }
         let tabs = document.getBindingParent(this);
+
+        if (tabs.tabbrowser.clientHeight >= this.clientHeight) {
+          this.removeAttribute('notoverflowing');
+        } else {
+          this.addAttribute('notoverflowing', true);
+        }
+
         let numberOfTabs = tabs.tabbrowser.visibleTabs.length;
         if (numberOfTabs === 1) {
           return;
