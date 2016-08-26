@@ -190,7 +190,7 @@
   background-color: hsl(0, 0%, 99%) !important;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0), inset 0 0 10px hsla(0, 0%, 0%, 0.2);
   flex-direction: column;
-  transition: box-shadow 150ms ease-out 300ms, width 150ms ease-out 300ms;
+  transition: box-shadow 150ms ease-out, width 150ms ease-out;
 }
 
 #verticaltabs-box[brighttext] {
@@ -232,7 +232,7 @@
 #main-window[tabspinned="true"] #verticaltabs-box {
   width: var(--pinned-width);
   box-shadow: none;
-  transition: box-shadow 0ms ease-in-out 0ms;
+  transition: box-shadow 0ms ease-in-out;
 }
 
 #alltabs-button {
