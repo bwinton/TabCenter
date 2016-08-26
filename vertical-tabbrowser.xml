@@ -60,6 +60,12 @@
 
         let tabs = document.getBindingParent(this);
 
+        if (tabs.tabbrowser.clientHeight >= this.clientHeight) {
+          this.removeAttribute('notoverflowing');
+        } else {
+          this.addAttribute('notoverflowing', true);
+        }
+
         if (tabs._lastTabClosedByMouse) {
           tabs._expandSpacerBy(this._scrollButtonDown.clientWidth);
         }
@@ -72,6 +78,13 @@
           return; // Ignore other-direction events
         }
         let tabs = document.getBindingParent(this);
+
+        if (tabs.tabbrowser.clientHeight >= this.clientHeight) {
+          this.removeAttribute('notoverflowing');
+        } else {
+          this.addAttribute('notoverflowing', true);
+        }
+
         let numberOfTabs = tabs.tabbrowser.visibleTabs.length;
         if (numberOfTabs === 1) {
           return;
