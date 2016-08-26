@@ -497,6 +497,31 @@ VerticalTabs.prototype = {
       }
     });
 
+    let oldUpdateToolbars = window.FullScreen._updateToolbars;
+    window.FullScreen._updateToolbars = (aEnterFS) => {
+      oldUpdateToolbars.bind(window.FullScreen)(aEnterFS);
+      let fullscreenctls = document.getElementById('window-controls');
+      let navbar = document.getElementById('nav-bar');
+      let toggler = document.getElementById('fullscr-toggler');
+      let sibling = document.getElementById('navigator-toolbox').nextSibling;
+
+      if (aEnterFS && fullscreenctls.parentNode.id === 'TabsToolbar') {
+        navbar.appendChild(fullscreenctls);
+        toggler.removeAttribute('hidden');
+        window.gNavToolbox.style.marginTop = (-window.gNavToolbox.getBoundingClientRect().height - 1) + 'px';
+        document.getElementById('appcontent').insertBefore(toggler, sibling);
+      }
+    };
+
+    //hidden nav toolbox needs to be moved 1 pix higher to account for the toggler every time it hides
+    let oldHideNavToolbox = window.FullScreen.hideNavToolbox;
+    window.FullScreen.hideNavToolbox = (aAnimate = false) => {
+      oldHideNavToolbox.bind(window.FullScreen)(aAnimate);
+      let toggler = document.getElementById('fullscr-toggler');
+      toggler.removeAttribute('hidden');
+      window.gNavToolbox.style.marginTop = (-window.gNavToolbox.getBoundingClientRect().height - 1) + 'px';
+    };
+
     tabs.addEventListener('TabOpen', this, false);
     tabs.addEventListener('TabClose', this, false);
     tabs.addEventListener('TabPinned', this, false);
