@@ -568,6 +568,8 @@ VerticalTabs.prototype = {
 
     this.unloaders.push(function () {
       autocomplete._openAutocompletePopup = autocompleteOpen;
+      window.FullScreen._updateToolbars = oldUpdateToolbars;
+      window.FullScreen.hideNavToolbox = oldHideNavToolbox;
 
       // Move the tabs toolbar back to where it was
       toolbar._toolbox = null; // reset value set by constructor
