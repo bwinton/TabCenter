@@ -66,8 +66,6 @@
 
         if (tabs.tabbrowser.clientHeight >= this.clientHeight) {
           this.removeAttribute('notoverflowing');
-        } else {
-          this.addAttribute('notoverflowing', true);
         }
 
         if (tabs._lastTabClosedByMouse) {
@@ -85,8 +83,6 @@
 
         if (tabs.tabbrowser.clientHeight >= this.clientHeight) {
           this.removeAttribute('notoverflowing');
-        } else {
-          this.addAttribute('notoverflowing', true);
         }
 
         let numberOfTabs = tabs.tabbrowser.visibleTabs.length;
