@@ -28,7 +28,9 @@
         this._scrollButtonUp.ondragover = function (event) {
           _distanceScroll(event);
         };
-        this._scrollButtonUp.ondragleave = _stopScroll();
+        this._scrollButtonUp.ondragexit = function (event) {
+          _stopScroll();
+        };
 
         this._scrollButtonDown.ondragenter = function (event) {
           if (event.button === 0) {
@@ -38,7 +40,9 @@
         this._scrollButtonDown.ondragover = function (event) {
           _distanceScroll(event);
         };
-        this._scrollButtonDown.ondragleave = _stopScroll();
+        this._scrollButtonDown.ondragexit = function (event) {
+          _stopScroll();
+        };
 
         this.setAttribute('notoverflowing', 'true');
         this._updateScrollButtonsDisabledState();
@@ -62,8 +66,6 @@
 
         if (tabs.tabbrowser.clientHeight >= this.clientHeight) {
           this.removeAttribute('notoverflowing');
-        } else {
-          this.addAttribute('notoverflowing', true);
         }
 
         if (tabs._lastTabClosedByMouse) {
@@ -81,8 +83,6 @@
 
         if (tabs.tabbrowser.clientHeight >= this.clientHeight) {
           this.removeAttribute('notoverflowing');
-        } else {
-          this.addAttribute('notoverflowing', true);
         }
 
         let numberOfTabs = tabs.tabbrowser.visibleTabs.length;
