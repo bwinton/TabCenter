@@ -40,3 +40,12 @@ Please let us know if you find any problems with extensions not mentioned.
 [93e83452]: https://mozilla.invisionapp.com/share/GT22ZN6QW#/screens "The full multi-phase spec."
 [94aea942]: https://github.com/bwinton/VerticalTabs/issues/new "Make a new GitHub issue."
 [7c43e6dd]: https://github.com/bwinton/VerticalTabs/issues "The big list of issues."
+
+### Development
+
+After cloning this repository, run `npm install` and `npm install jpm` then:
+
+* `jpm run` to spawn a new Firefox profile with the addon installed
+* `jpm xpi` to generate an installable XPI file locally
+
+Read more about [`jpm` on MDN](https://developer.mozilla.org/en-US/Add-ons/SDK/Tools/jpm)
