@@ -432,6 +432,25 @@ VerticalTabs.prototype = {
       }
     });
 
+    leftbox.contextMenuOpen = false;
+    let contextMenuHidden = (event) => {
+      leftbox.contextMenuOpen = false;
+      // give user time to move mouse back in after closing context menu,
+      // also allow for event to finish before checking for this.mouseInside
+      window.setTimeout(() => {
+        if (!this.mouseInside) {
+          exit();
+        }
+      }, 200);
+    };
+
+    document.addEventListener('popuphidden', contextMenuHidden);
+    leftbox.addEventListener('contextmenu', function (event) {
+      if (event.target.tagName === 'tab' || event.target.id === 'new-tab-button' || event.target.id === 'pin-button' || event.target.id === 'find-input') {
+        this.contextMenuOpen = true;
+      }
+    });
+
     document.getElementById('filler-tab').addEventListener('click', this.clearFind.bind(this));
 
     let spacer = this.createElement('spacer', {'id': 'new-tab-spacer'});
@@ -457,6 +476,24 @@ VerticalTabs.prototype = {
 
     let enterTimeout = -1;
 
+    let exit = (event) => {
+      this.mouseExited();
+      if (enterTimeout > 0) {
+        window.clearTimeout(enterTimeout);
+        enterTimeout = -1;
+      }
+      if (mainWindow.getAttribute('tabspinned') !== 'true') {
+        if (!leftbox.contextMenuOpen){
+          leftbox.removeAttribute('expanded');
+          this.clearFind();
+        }
+        let tabsPopup = document.getElementById('alltabs-popup');
+        if (tabsPopup.state === 'open') {
+          tabsPopup.hidePopup();
+        }
+      }
+    };
+
     let enter = (event) => {
       this.mouseEntered();
       if (event.type === 'mouseenter' && leftbox.getAttribute('expanded') !== 'true') {
@@ -481,21 +518,7 @@ VerticalTabs.prototype = {
 
     leftbox.addEventListener('mouseenter', enter);
     leftbox.addEventListener('mousemove', enter);
-    leftbox.addEventListener('mouseleave', () => {
-      this.mouseExited();
-      if (enterTimeout > 0) {
-        window.clearTimeout(enterTimeout);
-        enterTimeout = -1;
-      }
-      if (mainWindow.getAttribute('tabspinned') !== 'true') {
-        leftbox.removeAttribute('expanded');
-        this.clearFind();
-        let tabsPopup = document.getElementById('alltabs-popup');
-        if (tabsPopup.state === 'open') {
-          tabsPopup.hidePopup();
-        }
-      }
-    });
+    leftbox.addEventListener('mouseleave', exit);
 
     let oldUpdateToolbars = window.FullScreen._updateToolbars;
     window.FullScreen._updateToolbars = (aEnterFS) => {
@@ -553,18 +576,6 @@ VerticalTabs.prototype = {
     window.addEventListener('aftercustomization', afterListener);
 
     window.addEventListener('resize', this.resizeTabs.bind(this), false);
-
-    let tab_context_menu = document.getElementById('tabContextMenu');
-
-    tab_context_menu.addEventListener('mouseover', function () {
-      leftbox.setAttribute('expanded', 'true');
-    });
-
-    tab_context_menu.addEventListener('mouseout', function () {
-      if (mainWindow.getAttribute('tabspinned') !== 'true') {
-        leftbox.removeAttribute('expanded');
-      }
-    });
 
     this.unloaders.push(function () {
       autocomplete._openAutocompletePopup = autocompleteOpen;
