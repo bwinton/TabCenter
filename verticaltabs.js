@@ -48,6 +48,7 @@ const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
 
 Cu.import('resource://gre/modules/PageThumbs.jsm');
 Cu.import('resource:///modules/CustomizableUI.jsm');
+Cu.import('resource://gre/modules/Services.jsm');
 
 //use to set preview image as metadata image 1/4
 // Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
@@ -87,12 +88,28 @@ VerticalTabs.prototype = {
     let window = this.window;
     let document = this.document;
 
-    this.BrowserOpenTab = this.window.BrowserOpenTab;
-    this.window.BrowserOpenTab = function () {
-      this.pushToTop = prefs.opentabstop;
-      this.window.openUILinkIn(this.window.BROWSER_NEW_TAB_URL, 'tab');
-      this.pushToTop = false;
-    }.bind(this);
+    let oldAddTab = window.gBrowser.addTab;
+    window.gBrowser.addTab = function (...args) {
+      let t = oldAddTab.bind(window.gBrowser)(...args);
+      if (prefs.opentabstop) {
+        let aRelatedToCurrent;
+        let aReferrerURI;
+        if (arguments.length === 2 && typeof arguments[1] === 'object' && !(arguments[1] instanceof Ci.nsIURI)) {
+          let params = arguments[1];
+          aReferrerURI = params.referrerURI;
+          aRelatedToCurrent = params.relatedToCurrent;
+        }
+        if ((aRelatedToCurrent == null ? aReferrerURI : aRelatedToCurrent) &&
+          Services.prefs.getBoolPref('browser.tabs.insertRelatedAfterCurrent')) {
+          let newTabPos = (this._lastRelatedTab || this.selectedTab)._tPos - 1;
+          this.moveTabTo(t, newTabPos);
+          this._lastRelatedTab = t;
+        } else {
+          this.moveTabTo(t, 0);
+        }
+      }
+      return t;
+    };
 
     let tabs = document.getElementById('tabbrowser-tabs');
     let tabsProgressListener = {
@@ -188,7 +205,7 @@ VerticalTabs.prototype = {
 
       this.window.ToolbarIconColor.inferFromText = this.inferFromText;
       this.window.gBrowser._endRemoveTab = this._endRemoveTab;
-      this.window.BrowserOpenTab = this.BrowserOpenTab;
+      this.window.gBrowser.addTab = oldAddTab;
     });
     this.window.onunload = () => {
       addPingStats(this.stats);
@@ -690,9 +707,6 @@ VerticalTabs.prototype = {
 
   initTab: function (aTab) {
     let document = this.document;
-    if (this.pushToTop) {
-      this.window.gBrowser.moveTabTo(aTab, 0);
-    }
     let find_input = this.document.getElementById('find-input');
     find_input.value = '';
     emit(find_input, 'input', {category: 'Event', settings: ['input', false, false]});
