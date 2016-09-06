@@ -111,6 +111,11 @@ VerticalTabs.prototype = {
       return t;
     };
 
+    //reset _lastRelatedTab on changing preferences
+    require('sdk/simple-prefs').on('opentabstop', function () {
+      window.gBrowser._lastRelatedTab = null;
+    });
+
     let tabs = document.getElementById('tabbrowser-tabs');
     let tabsProgressListener = {
       onLocationChange: (aBrowser, aWebProgress, aRequest, aLocation, aFlags) => {
