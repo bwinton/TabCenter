@@ -292,18 +292,16 @@
 }
 
 #tabs-search {
-  width: 20px;
-  flex: 0 0 auto;
+  min-width: 20px;
+  max-width: 20px;
   -moz-image-region: rect(0, 20px, 20px, 0);
   list-style-image: url("resource://tabcenter/skin/find.svg");
 }
 
-#TabsToolbar #find-input .textbox-input-box {
-  padding: 0 !important;
-  margin: 0 4px 0 0 !important;
-  flex: 1 0 auto !important;
-  vertical-align: middle;
+#find-input html|*.textbox-input {
+  max-width: calc(100% - 20px) !important;
 }
+
 /* [inDOMFullscreen] for video */
 #main-window[inFullscreen][inDOMFullscreen] #find-input {
   display: none;
