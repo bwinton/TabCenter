@@ -435,10 +435,15 @@ VerticalTabs.prototype = {
     leftbox.contextMenuOpen = false;
     let contextMenuHidden = (event) => {
       leftbox.contextMenuOpen = false;
-      if (!this.mouseInside) {
-        exit();
-      }
+      // give user time to move mouse back in after closing context menu,
+      // also allow for event to finish before checking for this.mouseInside
+      window.setTimeout(() => {
+        if (!this.mouseInside) {
+          exit();
+        }
+      }, 200);
     };
+
     document.addEventListener('popuphidden', contextMenuHidden);
     leftbox.addEventListener('contextmenu', function (event) {
       if (event.target.tagName === 'tab' || event.target.id === 'new-tab-button' || event.target.id === 'pin-button' || event.target.id === 'find-input') {
