@@ -64,8 +64,10 @@
 
         let tabs = document.getBindingParent(this);
 
-        if (tabs.tabbrowser.clientHeight >= this.clientHeight) {
+        if (tabs.clientHeight >= this.clientHeight) {
           this.removeAttribute('notoverflowing');
+        } else {
+          this.setAttribute('notoverflowing', 'true');
         }
 
         if (tabs._lastTabClosedByMouse) {
@@ -81,8 +83,10 @@
         }
         let tabs = document.getBindingParent(this);
 
-        if (tabs.tabbrowser.clientHeight >= this.clientHeight) {
+        if (tabs.clientHeight >= this.clientHeight) {
           this.removeAttribute('notoverflowing');
+        } else {
+          this.setAttribute('notoverflowing', 'true');
         }
 
         let numberOfTabs = tabs.tabbrowser.visibleTabs.length;
