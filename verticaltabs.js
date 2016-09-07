@@ -216,7 +216,7 @@ VerticalTabs.prototype = {
                    mutation.attributeName === 'width') {
           results.removeAttribute('width');
         } else if (mutation.type === 'attributes' && mutation.attributeName === 'overflow' && mutation.target.id === 'tabbrowser-tabs') {
-          if (mutation.newValue === '') {
+          if (mutation.target.getAttribute('overflow') !== 'true'){
             tabs.setAttribute('overflow', 'true'); //always set overflow back to true
           }
         } else if (mutation.type === 'childList' &&
