@@ -151,6 +151,7 @@ VerticalTabs.prototype = {
     });
 
     window.gBrowser._endRemoveTab = (aTab) => {
+      window.gBrowser._blurTab(aTab);
       aTab.classList.add('tab-hidden');
     };
 
