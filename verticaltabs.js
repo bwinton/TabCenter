@@ -456,20 +456,14 @@ VerticalTabs.prototype = {
     });
 
     leftbox.contextMenuOpen = false;
-    leftbox.searchMenuClosed = false;
     let contextMenuHidden = (event) => {
       //don't catch close events from tooltips
       if (event.originalTarget.tagName === 'xul:menupopup' || event.originalTarget.tagName === 'menupopup') {
-        if (event.target.id === 'find-input') {
-          leftbox.searchMenuClosed = true;
-        }
         leftbox.contextMenuOpen = false;
         // give user time to move mouse back in after closing context menu,
         // also allow for event to finish before checking for this.mouseInside
         window.setTimeout(() => {
-          if (!this.mouseInside) {
-            exit();
-          }
+          exit();
         }, 200);
       }
     };
@@ -507,25 +501,20 @@ VerticalTabs.prototype = {
     let enterTimeout = -1;
 
     let exit = (event) => {
-      //on the find-input context menu exit gets inexplicably called twice,
-      //first from a mouseleave event skip this first call
-      if (leftbox.searchMenuClosed) {
-        leftbox.searchMenuClosed = false;
-        return;
-      }
-      this.mouseExited();
-      if (enterTimeout > 0) {
-        window.clearTimeout(enterTimeout);
-        enterTimeout = -1;
-      }
-      if (mainWindow.getAttribute('tabspinned') !== 'true') {
-        if (!leftbox.contextMenuOpen){
-          leftbox.removeAttribute('expanded');
-          this.clearFind();
+      if (!this.mouseInside){
+        if (enterTimeout > 0) {
+          window.clearTimeout(enterTimeout);
+          enterTimeout = -1;
         }
-        let tabsPopup = document.getElementById('alltabs-popup');
-        if (tabsPopup.state === 'open') {
-          tabsPopup.hidePopup();
+        if (mainWindow.getAttribute('tabspinned') !== 'true') {
+          if (!leftbox.contextMenuOpen){
+            leftbox.removeAttribute('expanded');
+            this.clearFind();
+          }
+          let tabsPopup = document.getElementById('alltabs-popup');
+          if (tabsPopup.state === 'open') {
+            tabsPopup.hidePopup();
+          }
         }
       }
     };
@@ -552,9 +541,17 @@ VerticalTabs.prototype = {
       }, 300);
     };
 
+
+    let pauseBeforeExit = () => {
+      this.mouseExited();
+      window.setTimeout(() => {
+        exit();
+      }, 200);
+    };
+
     leftbox.addEventListener('mouseenter', enter);
     leftbox.addEventListener('mousemove', enter);
-    leftbox.addEventListener('mouseleave', exit);
+    leftbox.addEventListener('mouseleave', pauseBeforeExit);
 
     let oldUpdateToolbars = window.FullScreen._updateToolbars;
     window.FullScreen._updateToolbars = (aEnterFS) => {
