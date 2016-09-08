@@ -652,19 +652,20 @@
           }
           let uri = VerticalTabs.getUri(this);
           let url = uri.spec;
-          const canvas = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
-
-          if (VerticalTabs.newTabImage && (url === 'about:newtab' || url === 'about:blank')) {
-            const ctx = canvas.getContext('2d');
-            ctx.save();
-            ctx.scale(
-              canvas.width / VerticalTabs.newTabImage.width,
-              canvas.height / VerticalTabs.newTabImage.height
-              );
-            ctx.drawImage(VerticalTabs.newTabImage, 0, 0);
-            ctx.restore();
-          } else {
-            PageThumbs.captureToCanvas(this.linkedBrowser, canvas);
+          if (this.parentNode.classList.contains('large-tabs')) {
+            const canvas = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
+            if (VerticalTabs.newTabImage && (url === 'about:newtab' || url === 'about:blank')) {
+              const ctx = canvas.getContext('2d');
+              ctx.save();
+              ctx.scale(
+                canvas.width / VerticalTabs.newTabImage.width,
+                canvas.height / VerticalTabs.newTabImage.height
+                );
+              ctx.drawImage(VerticalTabs.newTabImage, 0, 0);
+              ctx.restore();
+            } else {
+              PageThumbs.captureToCanvas(this.linkedBrowser, canvas);
+            }
           }
           this.updateUriLabel(uri);
         ]]></body>
