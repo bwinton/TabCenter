@@ -455,15 +455,22 @@ VerticalTabs.prototype = {
     });
 
     leftbox.contextMenuOpen = false;
+    leftbox.searchMenuClosed = false;
     let contextMenuHidden = (event) => {
-      leftbox.contextMenuOpen = false;
-      // give user time to move mouse back in after closing context menu,
-      // also allow for event to finish before checking for this.mouseInside
-      window.setTimeout(() => {
-        if (!this.mouseInside) {
-          exit();
+      //don't catch close events from tooltips
+      if (event.originalTarget.tagName === 'xul:menupopup' || event.originalTarget.tagName === 'menupopup') {
+        if (event.target.id === 'find-input') {
+          leftbox.searchMenuClosed = true;
         }
-      }, 200);
+        leftbox.contextMenuOpen = false;
+        // give user time to move mouse back in after closing context menu,
+        // also allow for event to finish before checking for this.mouseInside
+        window.setTimeout(() => {
+          if (!this.mouseInside) {
+            exit();
+          }
+        }, 200);
+      }
     };
 
     document.addEventListener('popuphidden', contextMenuHidden);
@@ -499,6 +506,12 @@ VerticalTabs.prototype = {
     let enterTimeout = -1;
 
     let exit = (event) => {
+      //on the find-input context menu exit gets inexplicably called twice,
+      //first from a mouseleave event skip this first call
+      if (leftbox.searchMenuClosed) {
+        leftbox.searchMenuClosed = false;
+        return;
+      }
       this.mouseExited();
       if (enterTimeout > 0) {
         window.clearTimeout(enterTimeout);
