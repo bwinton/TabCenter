@@ -652,8 +652,13 @@
           }
           let uri = VerticalTabs.getUri(this);
           let url = uri.spec;
-          const canvas = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
+          this.updateUriLabel(uri);
 
+          if (!this.parentNode.classList.contains('large-tabs')) {
+            // no need for images.  Bail.
+            return;
+          }
+          const canvas = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
           if (VerticalTabs.newTabImage && (url === 'about:newtab' || url === 'about:blank')) {
             const ctx = canvas.getContext('2d');
             ctx.save();
@@ -666,10 +671,8 @@
           } else {
             PageThumbs.captureToCanvas(this.linkedBrowser, canvas);
           }
-          this.updateUriLabel(uri);
         ]]></body>
       </method>
-
 
       <method name="updateUriLabel">
         <parameter name="uri"/>

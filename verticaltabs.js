@@ -763,6 +763,7 @@ VerticalTabs.prototype = {
       let number_of_tabs = this.document.querySelectorAll('.tabbrowser-tab:not([hidden=true])').length;
       if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60) {
         tabs.classList.add('large-tabs');
+        this.refreshAllTabs();
       } else {
         tabs.classList.remove('large-tabs');
       }
@@ -771,6 +772,13 @@ VerticalTabs.prototype = {
     case 2:
       tabs.classList.add('large-tabs');
       return;
+    }
+  },
+
+  refreshAllTabs: function () {
+    let tabs = this.document.getElementById('tabbrowser-tabs');
+    for (let tab of tabs.childNodes) {
+      tab.refreshThumbAndLabel();
     }
   },
 
