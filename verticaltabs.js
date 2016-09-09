@@ -39,7 +39,6 @@
 'use strict';
 
 const {Cc, Ci, Cu} = require('chrome');
-const {emit} = require('sdk/dom/events');
 const {platform} = require('sdk/system');
 const {prefs} = require('sdk/simple-prefs');
 const {addPingStats, Stats, setDefaultPrefs} = require('./utils');
@@ -722,10 +721,7 @@ VerticalTabs.prototype = {
 
   initTab: function (aTab) {
     let document = this.document;
-    let find_input = this.document.getElementById('find-input');
-    find_input.value = '';
-    emit(find_input, 'input', {category: 'Event', settings: ['input', false, false]});
-
+    this.clearFind();
     this.resizeTabs();
 
     aTab.classList.add('tab-visible');
