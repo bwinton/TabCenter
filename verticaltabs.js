@@ -428,7 +428,6 @@ VerticalTabs.prototype = {
           window.VerticalTabs.stats.tab_center_unpinned++;
           button.setAttribute('tooltiptext', 'Keep sidebar open');
           document.getElementById('verticaltabs-box').removeAttribute('search_expanded');
-          document.getElementById('find-input').blur();
         }
         window.VerticalTabs.resizeFindInput();
         window.VerticalTabs.resizeTabs();
