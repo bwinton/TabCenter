@@ -292,6 +292,7 @@
 }
 
 #tabs-search {
+  display: block;
   margin: 2px 0;
   min-width: 20px;
   max-width: 20px;
@@ -305,7 +306,6 @@
 
 #find-input .textbox-input-box {
   display: block;
-  margin-top: -21px;
   margin-left: 20px;
   max-width: calc(100% - 20px) !important;
 }
