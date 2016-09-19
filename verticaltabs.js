@@ -810,15 +810,19 @@ VerticalTabs.prototype = {
   },
 
   mouseEntered: function () {
+    let tabs = this.document.getElementById('tabbrowser-tabs');
     if (this.resizeTimeout > 0) {
       this.window.clearTimeout(this.resizeTimeout);
       this.resizeTimeout = -1;
     }
     this.mouseInside = true;
+    tabs.setAttribute('mouseInside', 'true');
   },
 
   mouseExited: function () {
+    let tabs = this.document.getElementById('tabbrowser-tabs');
     this.mouseInside = false;
+    tabs.removeAttribute('mouseInside');
     if (this.resizeTimeout < 0) {
       // Once the mouse exits the tab area, wait
       // a bit before resizing
