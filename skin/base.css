@@ -277,10 +277,10 @@
   min-height: auto !important;
   border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
   border-radius: 1px !important;
-  overflow: hidden;
-  display: flex;
+  overflow: -moz-hidden-unscrollable;
   align-items: center;
   flex: 20 0 auto;
+  line-height: 26px;
   transition-duration: 0.1s;
   transition-property: border-color, box-shadow;
 }
@@ -292,6 +292,8 @@
 }
 
 #tabs-search {
+  display: block;
+  margin: 2px 0;
   min-width: 20px;
   max-width: 20px;
   -moz-image-region: rect(0, 20px, 20px, 0);
@@ -299,6 +301,12 @@
 }
 
 #find-input html|*.textbox-input {
+  max-width: 100% !important;
+}
+
+#find-input .textbox-input-box {
+  display: block;
+  margin-left: 20px;
   max-width: calc(100% - 20px) !important;
 }
 

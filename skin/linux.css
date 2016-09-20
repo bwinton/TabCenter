@@ -62,3 +62,7 @@
 #main-window[devedition-theme] .tabbrowser-arrowscrollbox {
   height: calc(100vh - 41px);
 }
+
+#find-input .textbox-input-box {
+  margin-top: -25px;
+}
