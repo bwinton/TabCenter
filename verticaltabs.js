@@ -84,6 +84,7 @@ VerticalTabs.prototype = {
     this.PageThumbs = PageThumbs;
     this._endRemoveTab = this.window.gBrowser._endRemoveTab;
     this.inferFromText = this.window.ToolbarIconColor.inferFromText;
+    this.receiveMessage = this.window.gBrowser.receiveMessage;
     let window = this.window;
     let document = this.document;
 
@@ -154,6 +155,17 @@ VerticalTabs.prototype = {
       aTab.classList.add('tab-hidden');
     };
 
+    window.gBrowser.receiveMessage = (...args) => {
+      this.receiveMessage.bind(window.gBrowser)(...args);
+      if (args[0].name === 'Browser:WindowCreated') {
+        let tab = window.gBrowser.getTabForBrowser(window.gBrowser.selectedBrowser);
+        while (tab.getAttribute('pinned') === 'true') {
+          tab = tab.nextSibling;
+        }
+        window.gBrowser.selectedTab = tab;
+      }
+    };
+
     window.ToolbarIconColor.inferFromText = function () {
       if (!this._initialized){
         return;
@@ -211,6 +223,7 @@ VerticalTabs.prototype = {
       this.window.ToolbarIconColor.inferFromText = this.inferFromText;
       this.window.gBrowser._endRemoveTab = this._endRemoveTab;
       this.window.gBrowser.addTab = oldAddTab;
+      this.window.gBrowser.receiveMessage = this.receiveMessage;
     });
     this.window.onunload = () => {
       addPingStats(this.stats);
