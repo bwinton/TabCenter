@@ -156,14 +156,14 @@ VerticalTabs.prototype = {
     };
 
     window.gBrowser.receiveMessage = (...args) => {
-      this.receiveMessage.bind(window.gBrowser)(...args);
-      if (args[0].name === 'Browser:WindowCreated') {
+      if (args[0].name === 'Browser:WindowCreated' && Services.prefs.getIntPref('browser.startup.page') !== 3) {
         let tab = window.gBrowser.getTabForBrowser(window.gBrowser.selectedBrowser);
         while (tab.getAttribute('pinned') === 'true') {
           tab = tab.nextSibling;
         }
         window.gBrowser.selectedTab = tab;
       }
+      this.receiveMessage.bind(window.gBrowser)(...args);
     };
 
     window.ToolbarIconColor.inferFromText = function () {
