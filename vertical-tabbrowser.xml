@@ -196,15 +196,16 @@
           let scrollbuttonDown = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-down');
           let scrollbuttonUp = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-up');
           let mouseY = event.clientY;
+          let bottomheight = tabbrowser.boxObject.height + 5;
 
-          if (mouseY > (tabbrowser.boxObject.height + 10)){
+          if (tabbrowser.getAttribute('mouseInside') === 'true' && mouseY > bottomheight && mouseY < bottomheight + 25){
             scrollbuttonDown.onmousedown(event);
-          } else if (mouseY < 65) {
+          } else if (tabbrowser.getAttribute('mouseInside') === 'true' && mouseY < 70 && mouseY > 40) {
             scrollbuttonUp.onmousedown(event);
-          } else {
-            scrollbuttonUp.onmouseout();
-            scrollbuttonDown.onmouseout();
           }
+
+          scrollbuttonUp.onmouseout();
+          scrollbuttonDown.onmouseout();
 
           // Determine what tab we're dragging over.
           // * Point of reference is the center of the dragged tab. If that
