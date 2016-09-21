@@ -196,11 +196,25 @@
           let scrollbuttonDown = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-down');
           let scrollbuttonUp = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-up');
           let mouseY = event.clientY;
-          let bottomheight = tabbrowser.boxObject.height + 5;
+          let mainWindow = document.getElementById('main-window');
 
-          if (tabbrowser.getAttribute('mouseInside') === 'true' && mouseY > bottomheight && mouseY < bottomheight + 25){
+          let bottomMin = tabbrowser.boxObject.height + 5;
+          let topMax;
+          if (navigator.userAgent.indexOf('Mac') !== -1) {
+            if (mainWindow.getAttribute('lwtheme') === 'true') {
+              topMax = 92;
+            } else {
+              topMax = 70;
+            }
+          } else if (navigator.userAgent.indexOf('Win') !== -1 || navigator.userAgent.indexOf('Linux') !== -1) {
+            topMax = 69;
+          } else {
+            topMax = 80; // best guess for average
+          }
+
+          if (tabbrowser.getAttribute('mouseInside') === 'true' && mouseY > bottomMin && mouseY < bottomMin + 30){
             scrollbuttonDown.onmousedown(event);
-          } else if (tabbrowser.getAttribute('mouseInside') === 'true' && mouseY < 70 && mouseY > 40) {
+          } else if (tabbrowser.getAttribute('mouseInside') === 'true' && mouseY < topMax && mouseY > (topMax - 40)) {
             scrollbuttonUp.onmousedown(event);
           }
 
