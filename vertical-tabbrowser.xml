@@ -141,7 +141,6 @@
         <parameter name="event"/>
         <body><![CDATA[
           let draggedTab = event.dataTransfer.mozGetDataAt(TAB_DROP_TYPE, 0);
-
           if (this.getAttribute('movingtab') !== 'true') {
             this.setAttribute('movingtab', 'true');
             this.selectedItem = draggedTab;
@@ -216,10 +215,10 @@
             scrollbuttonDown.onmousedown(event);
           } else if (tabbrowser.getAttribute('mouseInside') === 'true' && mouseY < topMax && mouseY > (topMax - 40)) {
             scrollbuttonUp.onmousedown(event);
+          } else {
+            scrollbuttonUp.onmouseout();
+            scrollbuttonDown.onmouseout();
           }
-
-          scrollbuttonUp.onmouseout();
-          scrollbuttonDown.onmouseout();
 
           // Determine what tab we're dragging over.
           // * Point of reference is the center of the dragged tab. If that
@@ -366,6 +365,15 @@
     </implementation>
 
     <handlers>
+       <handler event="drop"><![CDATA[
+          let tabbrowser = document.getElementById('tabbrowser-tabs');
+          let scrollbox = document.getAnonymousElementByAttribute(tabbrowser, 'anonid', 'arrowscrollbox');
+          let scrollbuttonDown = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-down');
+          let scrollbuttonUp = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-up');
+          scrollbuttonUp.onmouseout();
+          scrollbuttonDown.onmouseout();
+        ]]></handler>
+
       <handler event="dragover"><![CDATA[
         let effects = '';
         if (this._setEffectAllowedForDataTransfer) {

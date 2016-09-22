@@ -560,6 +560,18 @@ VerticalTabs.prototype = {
       }, 200);
     };
 
+    tabs.ondragleave = function (e) {
+      if (!e.relatedTarget || !e.relatedTarget.closest('#tabbrowser-tabs')) {
+        if (tabs.getAttribute('movingtab') === 'true'){
+          let scrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+          let scrollbuttonDown = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-down');
+          let scrollbuttonUp = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-up');
+          scrollbuttonUp.onmouseout();
+          scrollbuttonDown.onmouseout();
+        }
+      }
+    };
+
     leftbox.addEventListener('mouseenter', enter);
     leftbox.addEventListener('mousemove', enter);
     leftbox.addEventListener('mouseleave', pauseBeforeExit);
