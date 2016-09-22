@@ -19,7 +19,8 @@
   overflow-y: hidden !important;
 }
 
-#tabbrowser-tabs[mouseInside] .tabbrowser-arrowscrollbox > scrollbox {
+#main-window[tabspinned="true"] #tabbrowser-tabs[mouseInside] .tabbrowser-arrowscrollbox > scrollbox,
+#main-window:not([tabspinned="true"]) #verticaltabs-box[expanded="true"] .tabbrowser-arrowscrollbox > scrollbox {
   overflow-y: auto !important;
 }
 
