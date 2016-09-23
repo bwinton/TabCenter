@@ -560,6 +560,18 @@ VerticalTabs.prototype = {
       }, 200);
     };
 
+    tabs.ondragleave = function (e) {
+      if (!e.relatedTarget || !e.relatedTarget.closest('#tabbrowser-tabs')) {
+        if (tabs.getAttribute('movingtab') === 'true'){
+          let scrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+          let scrollbuttonDown = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-down');
+          let scrollbuttonUp = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-up');
+          scrollbuttonUp.onmouseout();
+          scrollbuttonDown.onmouseout();
+        }
+      }
+    };
+
     leftbox.addEventListener('mouseenter', enter);
     leftbox.addEventListener('mousemove', enter);
     leftbox.addEventListener('mouseleave', pauseBeforeExit);
@@ -810,15 +822,19 @@ VerticalTabs.prototype = {
   },
 
   mouseEntered: function () {
+    let tabs = this.document.getElementById('tabbrowser-tabs');
     if (this.resizeTimeout > 0) {
       this.window.clearTimeout(this.resizeTimeout);
       this.resizeTimeout = -1;
     }
     this.mouseInside = true;
+    tabs.setAttribute('mouseInside', 'true');
   },
 
   mouseExited: function () {
+    let tabs = this.document.getElementById('tabbrowser-tabs');
     this.mouseInside = false;
+    tabs.removeAttribute('mouseInside');
     if (this.resizeTimeout < 0) {
       // Once the mouse exits the tab area, wait
       // a bit before resizing

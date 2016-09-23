@@ -14,41 +14,19 @@
   --color-teal: #01bdad;
 }
 
-.arrowscrollbox-overflow-start-indicator,
-.arrowscrollbox-overflow-end-indicator {
-  display: none;
-  margin: 0 !important;
+.tabbrowser-arrowscrollbox > scrollbox {
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+}
+
+#main-window[tabspinned="true"] #tabbrowser-tabs[mouseInside] .tabbrowser-arrowscrollbox > scrollbox,
+#main-window:not([tabspinned="true"]) #verticaltabs-box[expanded="true"] .tabbrowser-arrowscrollbox > scrollbox {
+  overflow-y: auto !important;
 }
 
 .tabbrowser-arrowscrollbox  .scrollbutton-up,
 .tabbrowser-arrowscrollbox  .scrollbutton-down {
-  min-height: 25px !important;
-  max-height: 25px !important;
-  margin: 0 !important;
-  -moz-image-region: rect(0, 0, 0, 0) !important;
-}
-
-.tabbrowser-arrowscrollbox > .scrollbutton-down[disabled] > .toolbarbutton-icon,
-.tabbrowser-arrowscrollbox > .scrollbutton-up[disabled] > .toolbarbutton-icon {
-  -moz-image-region: rect(0, 0, 0, 0) !important;
-}
-
-.tabbrowser-arrowscrollbox .scrollbutton-down {
-  border-top: 1px solid hsla(0, 0%, 0%, 0.06) !important;
-  list-style-image: url("resource://tabcenter/skin/glyph-arrow-page-down-16.svg") !important;
-}
-
-.tabbrowser-arrowscrollbox .scrollbutton-up {
-  border-bottom: 1px solid hsla(0, 0%, 0%, 0.06) !important;
-  list-style-image: url("resource://tabcenter/skin/glyph-arrow-page-up-16.svg") !important;
-}
-
-#verticaltabs-box[brighttext] .tabbrowser-arrowscrollbox .scrollbutton-down {
-  list-style-image: url("resource://tabcenter/skin/glyph-arrow-page-down-inverted-16.svg") !important;
-}
-
-#verticaltabs-box[brighttext] .tabbrowser-arrowscrollbox .scrollbutton-up {
-  list-style-image: url("resource://tabcenter/skin/glyph-arrow-page-up-inverted-16.svg") !important;
+  visibility: collapse !important;
 }
 
 /* Ensure the tab favicon doesn't stretch. */

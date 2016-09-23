@@ -19,35 +19,6 @@
     <implementation>
       <property name="_verticalTabs" onget="return this.orient == 'vertical';"/>
 
-      <constructor><![CDATA[
-        this._scrollButtonUp.ondragenter = function (event) {
-          if (event.button === 0) {
-            _startScroll(-1);
-          }
-        };
-        this._scrollButtonUp.ondragover = function (event) {
-          _distanceScroll(event);
-        };
-        this._scrollButtonUp.ondragexit = function (event) {
-          _stopScroll();
-        };
-
-        this._scrollButtonDown.ondragenter = function (event) {
-          if (event.button === 0) {
-            _startScroll(1);
-          }
-        };
-        this._scrollButtonDown.ondragover = function (event) {
-          _distanceScroll(event);
-        };
-        this._scrollButtonDown.ondragexit = function (event) {
-          _stopScroll();
-        };
-
-        this.setAttribute('notoverflowing', 'true');
-        this._updateScrollButtonsDisabledState();
-      ]]></constructor>
-
       <method name="_canScrollToElement">
         <parameter name="tab"/>
         <body><![CDATA[
@@ -170,7 +141,6 @@
         <parameter name="event"/>
         <body><![CDATA[
           let draggedTab = event.dataTransfer.mozGetDataAt(TAB_DROP_TYPE, 0);
-
           if (this.getAttribute('movingtab') !== 'true') {
             this.setAttribute('movingtab', 'true');
             this.selectedItem = draggedTab;
@@ -219,6 +189,36 @@
           translateVal = Math.min(translateVal, maxBound);
           draggedTab.style.transform = 'translateY(' + translateVal + 'px)';
           // console.log('draggedTab transform: ' + draggedTab.style.transform + ' should be ' + 'translateY(' + translateVal + 'px)');
+
+          let tabbrowser = document.getElementById('tabbrowser-tabs');
+          let scrollbox = document.getAnonymousElementByAttribute(tabbrowser, 'anonid', 'arrowscrollbox');
+          let scrollbuttonDown = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-down');
+          let scrollbuttonUp = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-up');
+          let mouseY = event.clientY;
+          let mainWindow = document.getElementById('main-window');
+
+          let bottomMin = tabbrowser.boxObject.height + 5;
+          let topMax;
+          if (navigator.userAgent.indexOf('Mac') !== -1) {
+            if (mainWindow.getAttribute('lwtheme') === 'true') {
+              topMax = 92;
+            } else {
+              topMax = 70;
+            }
+          } else if (navigator.userAgent.indexOf('Win') !== -1 || navigator.userAgent.indexOf('Linux') !== -1) {
+            topMax = 69;
+          } else {
+            topMax = 80; // best guess for average
+          }
+
+          if (tabbrowser.getAttribute('mouseInside') === 'true' && mouseY > bottomMin && mouseY < bottomMin + 30){
+            scrollbuttonDown.onmousedown(event);
+          } else if (tabbrowser.getAttribute('mouseInside') === 'true' && mouseY < topMax && mouseY > (topMax - 40)) {
+            scrollbuttonUp.onmousedown(event);
+          } else {
+            scrollbuttonUp.onmouseout();
+            scrollbuttonDown.onmouseout();
+          }
 
           // Determine what tab we're dragging over.
           // * Point of reference is the center of the dragged tab. If that
@@ -365,6 +365,15 @@
     </implementation>
 
     <handlers>
+       <handler event="drop"><![CDATA[
+          let tabbrowser = document.getElementById('tabbrowser-tabs');
+          let scrollbox = document.getAnonymousElementByAttribute(tabbrowser, 'anonid', 'arrowscrollbox');
+          let scrollbuttonDown = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-down');
+          let scrollbuttonUp = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-up');
+          scrollbuttonUp.onmouseout();
+          scrollbuttonDown.onmouseout();
+        ]]></handler>
+
       <handler event="dragover"><![CDATA[
         let effects = '';
         if (this._setEffectAllowedForDataTransfer) {
