@@ -812,3 +812,8 @@
   background-repeat: no-repeat !important;
   background-size: 16px !important;
 }
+
+/*stop the gradient from dev edition theme*/
+#navigator-toolbox > toolbar:not(#TabsToolbar):not(#toolbar-menubar) {
+  background: transparent none repeat scroll 0% 0% !important;
+}
