@@ -167,6 +167,7 @@ exports.main = function (options, callbacks) {
       if (input) {
         let mainWindow = window.document.getElementById('main-window');
         let sidebar = window.document.getElementById('verticaltabs-box');
+        let tabs = window.document.getElementById('tabbrowser-tabs');
         if (mainWindow.getAttribute('tabspinned') === 'true' &&
           input.style.visibility === 'collapse') {
           return;
@@ -174,11 +175,21 @@ exports.main = function (options, callbacks) {
         if (sidebar.getAttribute('search_expanded') === 'true') {
           sidebar.removeAttribute('search_expanded');
           input.blur();
+          if (mainWindow.getAttribute('tabspinned') !== 'true') {
+            sidebar.removeAttribute('expanded');
+          }
         } else {
           sidebar.setAttribute('search_expanded', 'true');
+          sidebar.setAttribute('expanded', 'true');
           window.setTimeout(() => {
             input.focus();
-          }, 500);
+            for (let i = 0; i < tabs.childNodes.length; i++) {
+              tabs.childNodes[i].setAttribute('crop', 'end');
+            }
+          }, 300);
+          if (mainWindow.getAttribute('tabspinned') !== 'true') {
+            this.stats.tab_center_expanded++;
+          }
         }
       }
     }
