@@ -1,4 +1,4 @@
-# TabCenter <a href="http://testpilot.dev.mozaws.net/experiments/tabcenter"><img align="right" src="https://img.shields.io/badge/available_on-Test_Pilot-0996F8.svg"></a>
+# TabCenter <a href="https://testpilot.firefox.com/experiments/tab-center"><img align="right" src="https://img.shields.io/badge/available_on-Test_Pilot-0996F8.svg"></a>
 
 
 Tabbed browsing is a concept that has existed for a long time without
