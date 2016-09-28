@@ -532,24 +532,22 @@ VerticalTabs.prototype = {
 
     let enter = (event) => {
       this.mouseEntered();
-      if (event.type === 'mouseenter' && leftbox.getAttribute('expanded') !== 'true') {
-        this.stats.tab_center_expanded++;
-        enterTimeout = window.setTimeout(() => {
+      if (leftbox.getAttribute('expanded') !== 'true') {
+        this.recordExpansion();
+        if (event.type === 'mouseenter') {
+          enterTimeout = window.setTimeout(() => {
+            leftbox.setAttribute('expanded', 'true');
+            this.adjustCrop();
+          }, 300);
+        } else if (event.pageX <= 4) {
+          if (enterTimeout > 0) {
+            window.clearTimeout(enterTimeout);
+            enterTimeout = -1;
+          }
           leftbox.setAttribute('expanded', 'true');
-        }, 300);
-      }
-      if (event.pageX <= 4) {
-        if (enterTimeout > 0) {
-          window.clearTimeout(enterTimeout);
-          enterTimeout = -1;
+          this.adjustCrop();
         }
-        leftbox.setAttribute('expanded', 'true');
       }
-      window.setTimeout(() => {
-        for (let i = 0; i < tabs.childNodes.length; i++) {
-          tabs.childNodes[i].setAttribute('crop', 'end');
-        }
-      }, 300);
     };
 
 
@@ -702,6 +700,23 @@ VerticalTabs.prototype = {
     });
   },
 
+  recordExpansion: function () {
+    this.stats.tab_center_expanded++;
+  },
+
+  adjustCrop: function () {
+    let tabs = this.document.getElementById('tabbrowser-tabs');
+    if (this.window.document.getElementById('verticaltabs-box').getAttribute('expanded') === 'true'){
+      for (let i = 0; i < tabs.childNodes.length; i++) {
+        tabs.childNodes[i].setAttribute('crop', 'end');
+      }
+    } else {
+      for (let i = 0; i < tabs.childNodes.length; i++) {
+        tabs.childNodes[i].removeAttribute('crop');
+      }
+    }
+  },
+
   resizeFindInput: function () {
     let spacer = this.document.getElementById('new-tab-spacer');
     let find_input = this.document.getElementById('find-input');
@@ -759,7 +774,7 @@ VerticalTabs.prototype = {
     aTab.classList.add('tab-visible');
     aTab.classList.remove('tab-hidden');
 
-    if (document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
+    if (document.getElementById('tabbrowser-tabs').getAttribute('expanded') !== 'true') {
       aTab.removeAttribute('crop');
     } else {
       aTab.setAttribute('crop', 'end');

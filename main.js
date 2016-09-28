@@ -167,7 +167,6 @@ exports.main = function (options, callbacks) {
       if (input) {
         let mainWindow = window.document.getElementById('main-window');
         let sidebar = window.document.getElementById('verticaltabs-box');
-        let tabs = window.document.getElementById('tabbrowser-tabs');
         if (mainWindow.getAttribute('tabspinned') === 'true' &&
           input.style.visibility === 'collapse') {
           return;
@@ -183,12 +182,10 @@ exports.main = function (options, callbacks) {
           sidebar.setAttribute('expanded', 'true');
           window.setTimeout(() => {
             input.focus();
-            for (let i = 0; i < tabs.childNodes.length; i++) {
-              tabs.childNodes[i].setAttribute('crop', 'end');
-            }
-          }, 300);
+          }, 150);
           if (mainWindow.getAttribute('tabspinned') !== 'true') {
-            this.stats.tab_center_expanded++;
+            window.VerticalTabs.recordExpansion();
+            window.VerticalTabs.adjustCrop();
           }
         }
       }
