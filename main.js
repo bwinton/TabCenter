@@ -174,11 +174,19 @@ exports.main = function (options, callbacks) {
         if (sidebar.getAttribute('search_expanded') === 'true') {
           sidebar.removeAttribute('search_expanded');
           input.blur();
+          if (mainWindow.getAttribute('tabspinned') !== 'true') {
+            sidebar.removeAttribute('expanded');
+          }
         } else {
           sidebar.setAttribute('search_expanded', 'true');
+          sidebar.setAttribute('expanded', 'true');
           window.setTimeout(() => {
             input.focus();
-          }, 500);
+          }, 150);
+          if (mainWindow.getAttribute('tabspinned') !== 'true') {
+            window.VerticalTabs.recordExpansion();
+            window.VerticalTabs.adjustCrop();
+          }
         }
       }
     }
