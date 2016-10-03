@@ -335,6 +335,9 @@ VerticalTabs.prototype = {
       }
     };
 
+    if (mainWindow.getAttribute('tabspinned') !== 'true' && mainWindow.getAttribute('tabspinned') !== 'false') {
+      mainWindow.setAttribute('tabspinned', 'true');
+    }
 
     // save the label of the first tab, and the toolbox palette for later…
     let tabs = document.getElementById('tabbrowser-tabs');
