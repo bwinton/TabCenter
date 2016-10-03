@@ -1,3 +1,32 @@
+# v.1.25 - Shield-ready
+
+### New Features:
+
+* Change defaults.
+
+### Fixes:
+
+* Add crop when opening with hotkey.  (Fixes #637, #633.)
+* Update href of Test Pilot badge link.
+* Return of the Scroll Bar…  (Fixes #551.)
+* Handle touch support in a nicer way.
+* Start page loses focus with pinned tabs.  (Fixes #605.)
+* Keep search context menu open in windows.  (Fixes #612.)
+* Clear search filter on new tab.  (Fixes #620.)
+* Only load thumbnails when tabs are large.
+* Don't shrink the panel immediately on exitting.
+* Delete tabs without waiting for animation to finish. 🐎 🏁  (Fixes #306.)
+* Allow pasting into find-input when unpinned.  (Fixes #572.)
+* Scroll to the correct tab when Tab Center is expanded.
+* Find icon stays in place even when searching with long strings.  (Fixes #599.)
+* Keep expanded on hover for context menus.  (Fixes #470, #572.)
+* Uh, actually fix the arrows on overflow. 🙄
+* Put window controls in a better position during fullscreen.  (Fixes #509.)
+* Rebuild newtab button.  (Fixes #471.)
+* Smooth out scrolling in expanded sidebar.  (Fixes #273, #492.)
+* Search box should not overflow.  (Fixes #573.)
+* Remove left border from Windows 7 and 8.  𝌉  (Fixes #150.)
+
 # v1.24 - Stuff.
 
 ### New Features:
