@@ -57,7 +57,7 @@
       "title": "Tabs on Top",
       "description": "New tabs are opened at the top",
       "type": "bool",
-      "value": false
+      "value": true
     },
     {
       "name": "largetabs",
