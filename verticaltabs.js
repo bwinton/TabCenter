@@ -598,6 +598,11 @@ VerticalTabs.prototype = {
         window.gNavToolbox.style.marginTop = (-window.gNavToolbox.getBoundingClientRect().height - 1) + 'px';
         document.getElementById('appcontent').insertBefore(toggler, sibling);
       }
+      if (aEnterFS) {
+        mainWindow.setAttribute('F11-fullscreen', 'true');
+      } else {
+        mainWindow.removeAttribute('F11-fullscreen');
+      }
     };
 
     //hidden nav toolbox needs to be moved 1 pix higher to account for the toggler every time it hides

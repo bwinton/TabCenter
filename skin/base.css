@@ -171,6 +171,27 @@
   transition: box-shadow 150ms ease-out, width 150ms ease-out;
 }
 
+#main-window[F11-fullscreen] #verticaltabs-box {
+  width: 0 !important;
+  transition: width 1s linear;
+}
+
+#main-window[F11-fullscreen] #appcontent
+#main-window[tabspinned="true"][F11-fullscreen] #appcontent,
+#main-window[F11-fullscreen] #sidebar-box[hidden="true"] ~ #appcontent {
+  width: 100vw !important;
+  margin-left: 0 !important;
+  transition: margin-left 1s linear, width 1s linear;
+}
+
+#main-window[tabspinned="true"][F11-fullscreen] #verticaltabs-splitter {
+  width: 0 !important;
+  margin-left: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  transition: margin-left 1s linear;
+}
+
 #verticaltabs-box[brighttext] {
   background-color: hsla(0, 0%, 20%, 0.98) !important;
 }
