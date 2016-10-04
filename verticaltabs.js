@@ -522,11 +522,9 @@ VerticalTabs.prototype = {
           window.clearTimeout(enterTimeout);
           enterTimeout = -1;
         }
-        if (mainWindow.getAttribute('tabspinned') !== 'true') {
-          if (!leftbox.contextMenuOpen){
-            leftbox.removeAttribute('expanded');
-            this.clearFind();
-          }
+        if (mainWindow.getAttribute('tabspinned') !== 'true' && leftbox.getAttribute('search_expanded') !== 'true' && !leftbox.contextMenuOpen) {
+          leftbox.removeAttribute('expanded');
+          this.clearFind();
           let tabsPopup = document.getElementById('alltabs-popup');
           if (tabsPopup.state === 'open') {
             tabsPopup.hidePopup();
