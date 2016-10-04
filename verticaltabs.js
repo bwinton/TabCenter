@@ -335,10 +335,6 @@ VerticalTabs.prototype = {
       }
     };
 
-    if (mainWindow.getAttribute('tabspinned') !== 'true' && mainWindow.getAttribute('tabspinned') !== 'false') {
-      mainWindow.setAttribute('tabspinned', 'true');
-    }
-
     // save the label of the first tab, and the toolbox palette for later…
     let tabs = document.getElementById('tabbrowser-tabs');
     let label = tabs.firstChild.label;
@@ -375,6 +371,12 @@ VerticalTabs.prototype = {
     let browserbox = document.getElementById('browser');
     let leftbox = this.createElement('vbox', {'id': 'verticaltabs-box'});
     let splitter = this.createElement('vbox', {'id': 'verticaltabs-splitter'});
+
+    if (mainWindow.getAttribute('tabspinned') !== 'true' && mainWindow.getAttribute('tabspinned') !== 'false') {
+      mainWindow.setAttribute('tabspinned', 'true');
+      leftbox.setAttribute('expanded', 'true');
+    }
+
     browserbox.insertBefore(leftbox, contentbox);
     browserbox.insertBefore(splitter, browserbox.firstChild);
     mainWindow.setAttribute('persist',
