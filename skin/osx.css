@@ -80,6 +80,15 @@
   margin-top: -19px;
 }
 
+#main-window:not([devedition-theme]) #navigator-toolbox > toolbar:not(#TabsToolbar):-moz-lwtheme {
+  background-color: transparent !important;
+  background-image: linear-gradient(hsla(0, 0%, 100%, 0), hsla(0, 0%, 100%, 0.65)) !important;
+}
+
+#navigator-toolbox > toolbar:not(#TabsToolbar):-moz-lwtheme {
+  box-shadow: none !important;
+}
+
 .tabbrowser-arrowscrollbox {
   height: calc(100vh - 61px);
 }
