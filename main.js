@@ -176,6 +176,7 @@ exports.main = function (options, callbacks) {
           input.blur();
           if (mainWindow.getAttribute('tabspinned') !== 'true') {
             sidebar.removeAttribute('expanded');
+            window.VerticalTabs.clearFind();
           }
         } else {
           sidebar.setAttribute('search_expanded', 'true');
