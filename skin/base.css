@@ -172,16 +172,20 @@
 }
 
 #main-window[F11-fullscreen] #verticaltabs-box {
-  width: 0 !important;
-  transition: width 1s linear;
+  width: 1px !important;
+  transition: none;
+}
+
+#main-window[F11-fullscreen] #verticaltabs-box:hover {
+  width: var(--pinned-width) !important;
 }
 
 #main-window[F11-fullscreen] #appcontent
 #main-window[tabspinned="true"][F11-fullscreen] #appcontent,
 #main-window[F11-fullscreen] #sidebar-box[hidden="true"] ~ #appcontent {
-  width: 100vw !important;
-  margin-left: 0 !important;
-  transition: margin-left 1s linear, width 1s linear;
+  width: (100vw - 1px) !important;
+  margin-left: 1px !important;
+  transition: margin-left 500ms linear;
 }
 
 #main-window[tabspinned="true"][F11-fullscreen] #verticaltabs-splitter {
@@ -189,7 +193,7 @@
   margin-left: 0 !important;
   min-width: 0 !important;
   max-width: 0 !important;
-  transition: margin-left 1s linear;
+  transition: margin-left 500ms linear;
 }
 
 #verticaltabs-box[brighttext] {

@@ -597,8 +597,6 @@ VerticalTabs.prototype = {
         toggler.removeAttribute('hidden');
         window.gNavToolbox.style.marginTop = (-window.gNavToolbox.getBoundingClientRect().height - 1) + 'px';
         document.getElementById('appcontent').insertBefore(toggler, sibling);
-      }
-      if (aEnterFS) {
         mainWindow.setAttribute('F11-fullscreen', 'true');
       } else {
         mainWindow.removeAttribute('F11-fullscreen');
