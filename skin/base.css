@@ -171,6 +171,31 @@
   transition: box-shadow 150ms ease-out, width 150ms ease-out;
 }
 
+#main-window[F11-fullscreen] #verticaltabs-box {
+  width: 1px !important;
+  transition: none;
+}
+
+#main-window[F11-fullscreen] #verticaltabs-box:hover {
+  width: var(--pinned-width) !important;
+}
+
+#main-window[F11-fullscreen] #appcontent
+#main-window[tabspinned="true"][F11-fullscreen] #appcontent,
+#main-window[F11-fullscreen] #sidebar-box[hidden="true"] ~ #appcontent {
+  width: (100vw - 1px) !important;
+  margin-left: 1px !important;
+  transition: margin-left 500ms linear;
+}
+
+#main-window[tabspinned="true"][F11-fullscreen] #verticaltabs-splitter {
+  width: 0 !important;
+  margin-left: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  transition: margin-left 500ms linear;
+}
+
 #verticaltabs-box[brighttext] {
   background-color: hsla(0, 0%, 20%, 0.98) !important;
 }
