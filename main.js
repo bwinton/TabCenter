@@ -88,6 +88,9 @@ function initWindow(window) {
 
   let data = b64toBlob(win, self.data.load('newtab.b64'), 'image/png');
 
+  // Add the stylesheets
+  utils.installStylesheets(win);
+
   // check for browser windows with visible toolbars
   if (!win.toolbar.visible || !isBrowser(win)) {
     return;
@@ -133,9 +136,6 @@ exports.main = function (options, callbacks) {
 
   // Override default preferences
   utils.setDefaultPrefs();
-
-  // Install the stylesheets
-  utils.installStylesheets();
 
   // Startup VerticalTabs object for each window.
   browserWindows.on('open', initWindow);
@@ -221,10 +221,9 @@ exports.onUnload = function (reason) {
       tabs.removeAttribute('overflow');
       tabs._positionPinnedTabs();
     }
+    // Remove the stylesheets
+    utils.removeStylesheets(win);
   }
-
-  // Remove the stylesheets
-  utils.removeStylesheets();
 
   // Restore default preferences
   utils.removeDefaultPrefs();

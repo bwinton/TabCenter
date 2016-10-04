@@ -720,20 +720,20 @@
   display: none;
 }
 
-#TabsToolbar > toolbarbutton {
+#verticaltabs-box #TabsToolbar > toolbarbutton {
   border: 1px solid transparent !important;
-  box-sizing: border-box !important;
+  box-sizing: border-box;
   height: 26px !important;
   min-height: 26px !important;
   background-image: none !important;
 }
 
-#TabsToolbar > toolbarbutton:hover {
+#verticaltabs-box #TabsToolbar > toolbarbutton:hover {
   border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
   background-color: hsla(0, 0%, 0%, 0.1) !important;
 }
 
-#TabsToolbar > toolbarbutton:hover:active {
+#verticaltabs-box #TabsToolbar > toolbarbutton:hover:active {
   border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
   background-color: hsla(0, 0%, 0%, 0.16) !important;
   box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1) inset !important;
@@ -836,9 +836,4 @@
   background-position: -8px center !important;
   background-repeat: no-repeat !important;
   background-size: 16px !important;
-}
-
-/*stop the gradient from dev edition theme*/
-#navigator-toolbox > toolbar:not(#TabsToolbar):not(#toolbar-menubar) {
-  background: transparent none repeat scroll 0% 0% !important;
 }
