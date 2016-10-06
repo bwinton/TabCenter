@@ -157,7 +157,7 @@ VerticalTabs.prototype = {
     };
 
     window.gBrowser.receiveMessage = (...args) => {
-      if (args[0].name === 'Browser:WindowCreated' && Services.prefs.getIntPref('browser.startup.page') !== 3) {
+      if (args[0].target.getAttribute('anonid') === 'initialBrowser' && args[0].name === 'Browser:WindowCreated' && Services.prefs.getIntPref('browser.startup.page') !== 3) {
         let tab = window.gBrowser.getTabForBrowser(window.gBrowser.selectedBrowser);
         while (tab.getAttribute('pinned') === 'true') {
           tab = tab.nextSibling;
