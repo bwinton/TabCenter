@@ -127,6 +127,7 @@ VerticalTabs.prototype = {
       },
       onStateChange: (aBrowser, aWebProgress, aRequest, aFlags, aStatus) => {
         if ((aFlags & Ci.nsIWebProgressListener.STATE_STOP) === Ci.nsIWebProgressListener.STATE_STOP) { // eslint-disable-line no-bitwise
+          this.adjustCrop();
           for (let tab of tabs.childNodes) {
             if (tab.linkedBrowser === aBrowser && tab.refreshThumbAndLabel) {
               tab.refreshThumbAndLabel();
@@ -232,7 +233,6 @@ VerticalTabs.prototype = {
     this.rearrangeXUL();
 
     let results = this.document.getElementById('PopupAutoCompleteRichResult');
-    let leftbox = this.document.getElementById('verticaltabs-box');
 
     if (results) {
       results.removeAttribute('width');
@@ -241,23 +241,12 @@ VerticalTabs.prototype = {
       this.tabObserver.disconnect();
       mutations.forEach((mutation) => {
         if (mutation.type === 'attributes' &&
-            mutation.target.localName === 'tab') {
-          let tab = mutation.target;
-          if (mutation.attributeName === 'crop' && leftbox.getAttribute('expanded') !== 'true') {
-            tab.removeAttribute('crop');
-          }
-        } else if (mutation.type === 'attributes' &&
                    mutation.target.id === 'PopupAutoCompleteRichResult' &&
                    mutation.attributeName === 'width') {
           results.removeAttribute('width');
         } else if (mutation.type === 'attributes' && mutation.attributeName === 'overflow' && mutation.target.id === 'tabbrowser-tabs') {
           if (mutation.target.getAttribute('overflow') !== 'true'){
             tabs.setAttribute('overflow', 'true'); //always set overflow back to true
-          }
-        } else if (mutation.type === 'childList' &&
-            leftbox.getAttribute('expanded') !== 'true') {
-          for (let node of mutation.addedNodes) {
-            node.removeAttribute('crop');
           }
         }
       });
@@ -525,6 +514,7 @@ VerticalTabs.prototype = {
         if (mainWindow.getAttribute('tabspinned') !== 'true' && leftbox.getAttribute('search_expanded') !== 'true' && !leftbox.contextMenuOpen) {
           leftbox.removeAttribute('expanded');
           this.clearFind();
+          this.adjustCrop();
           let tabsPopup = document.getElementById('alltabs-popup');
           if (tabsPopup.state === 'open') {
             tabsPopup.hidePopup();
@@ -635,6 +625,7 @@ VerticalTabs.prototype = {
     window.addEventListener('aftercustomization', afterListener);
 
     window.addEventListener('resize', this.resizeTabs.bind(this), false);
+    this.adjustCrop();
 
     this.unloaders.push(function () {
       autocomplete._openAutocompletePopup = autocompleteOpen;
@@ -703,7 +694,7 @@ VerticalTabs.prototype = {
 
   adjustCrop: function () {
     let tabs = this.document.getElementById('tabbrowser-tabs');
-    if (this.window.document.getElementById('verticaltabs-box').getAttribute('expanded') === 'true'){
+    if (this.window.document.getElementById('verticaltabs-box').getAttribute('expanded') === 'true' || this.document.getElementById('main-window').getAttribute('tabspinned') === ''){
       for (let i = 0; i < tabs.childNodes.length; i++) {
         tabs.childNodes[i].setAttribute('crop', 'end');
       }
