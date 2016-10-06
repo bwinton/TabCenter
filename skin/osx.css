@@ -5,6 +5,7 @@
 }
 
 #verticaltabs-box #TabsToolbar {
+  margin-bottom: 0 !important;
   flex: 0 0 40px !important;
 }
 
