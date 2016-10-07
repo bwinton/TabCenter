@@ -1,4 +1,17 @@
-# v.1.25 - Shield-ready
+# v1.26 - Tweaks and other crop.
+
+### Fixes:
+
+* Allow light colored expand icon in dev theme.  (Fixes #679.)
+* Link from pinned tab does not change focus.  (Fixes #672.)
+* Clean up crop, remove crop mutation listener.
+* Default tabs to opening below.
+* Don't clear search on mouse out when open.  (Fixes #663.)
+* Crop the too-longtitles of tabs.  (Fixes #656.)
+* Hide sidebar and awesomebar in fullscreen.  (Fixes #660, #307, #642.)
+
+
+# v1.25 - Shield-ready.
 
 ### New Features:
 
