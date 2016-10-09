@@ -8,10 +8,6 @@
   width:auto !important;
 }
 
-#find-input .textbox-input-box {
-  margin-top: -25px;
-}
-
 .tabbrowser-arrowscrollbox,
 .tabbrowser-arrowscrollbox:not(:-moz-lwtheme),
 #main-window[devedition-theme] .tabbrowser-arrowscrollbox {

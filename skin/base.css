@@ -269,6 +269,7 @@
 }
 
 #TabsToolbar #find-input {
+  display: flex;
   margin: 0 4px !important;
   padding: 0 !important;
   height: 26px;
@@ -291,7 +292,6 @@
 
 #tabs-search {
   display: block;
-  margin: 2px 0;
   min-width: 20px;
   max-width: 20px;
   -moz-image-region: rect(0, 20px, 20px, 0);
@@ -304,8 +304,6 @@
 
 #find-input .textbox-input-box {
   display: block;
-  margin-left: 20px;
-  max-width: calc(100% - 20px) !important;
 }
 
 /* [inDOMFullscreen] for video */
@@ -715,11 +713,11 @@
 }
 
 #verticaltabs-box #TabsToolbar > toolbarbutton {
-  -moz-appearance: none;
   border: 1px solid transparent !important;
   box-sizing: border-box;
   height: 26px !important;
   min-height: 26px !important;
+  -moz-appearance: none;
   background-image: none !important;
 }
 
