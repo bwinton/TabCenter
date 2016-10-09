@@ -1,6 +1,6 @@
 {
   "name": "tab-center",
-  "version": "1.25.0",
+  "version": "1.26.0",
   "title": "Tab Center",
   "description": "Tab Center is an attempt to solve some of the issues that have emerged from the way people use tabs (most notably the “too many tabs” problem) and provide a more versatile UI basis for future innovation. The first version of this Firefox add-on arranges tabs in a vertical rather than horizontal fashion. It is heavily inspired by and borrows ideas from the excellent VerticalTabs add-on.",
   "main": "main.js",
@@ -54,10 +54,10 @@
   "preferences": [
     {
       "name": "opentabstop",
-      "title": "Tabs on Top",
-      "description": "New tabs are opened at the top",
+      "title": "Open Tabs Above",
+      "description": "Newer tabs are opened above older tabs",
       "type": "bool",
-      "value": true
+      "value": false
     },
     {
       "name": "largetabs",

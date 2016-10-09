@@ -323,7 +323,7 @@
   background-image: url("resource://tabcenter/skin/glyph-sidebar-collapse-16.svg") !important;
 }
 
-#main-window[lwthemetextcolor="bright"] #TabsToolbar[brighttext] #pin-button {
+#main-window #TabsToolbar[brighttext] #pin-button {
   background-image: url("resource://tabcenter/skin/glyph-sidebar-expand-inverted-16.svg") !important;
 }
 
