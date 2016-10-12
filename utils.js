@@ -127,8 +127,7 @@ exports.removeDefaultPrefs = removeDefaultPrefs;
 /* Stylesheets */
 
 const {newURI} = require('sdk/url/utils');
-const {loadAndRegisterSheet, unregisterSheet, USER_SHEET} = Cc['@mozilla.org/content/style-sheet-service;1'].
-                                                              getService(Ci.nsIStyleSheetService);
+const {loadSheet, removeSheet} = require('sdk/stylesheet/utils');
 
 const STYLESHEETS = [
   'resource://tabcenter/override-bindings.css',
@@ -136,16 +135,16 @@ const STYLESHEETS = [
   'chrome://tabcenter/skin/platform.css'
 ];
 
-function installStylesheets() {
+function installStylesheets(win) {
   for (let uri of STYLESHEETS) {
-    loadAndRegisterSheet(newURI(uri), USER_SHEET);
+    loadSheet(win, uri, 'author');
   }
 }
 exports.installStylesheets = installStylesheets;
 
-function removeStylesheets() {
+function removeStylesheets(win) {
   for (let uri of STYLESHEETS) {
-    unregisterSheet(newURI(uri), USER_SHEET);
+    removeSheet(win, uri, 'author');
   }
 }
 exports.removeStylesheets = removeStylesheets;

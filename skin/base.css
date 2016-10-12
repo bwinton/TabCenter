@@ -24,8 +24,8 @@
   overflow-y: auto !important;
 }
 
-.tabbrowser-arrowscrollbox  .scrollbutton-up,
-.tabbrowser-arrowscrollbox  .scrollbutton-down {
+.tabbrowser-arrowscrollbox .scrollbutton-up,
+.tabbrowser-arrowscrollbox .scrollbutton-down {
   visibility: collapse !important;
 }
 
@@ -180,8 +180,6 @@
   width: var(--pinned-width) !important;
 }
 
-#main-window[F11-fullscreen] #appcontent
-#main-window[tabspinned="true"][F11-fullscreen] #appcontent,
 #main-window[F11-fullscreen] #sidebar-box[hidden="true"] ~ #appcontent {
   width: (100vw - 1px) !important;
   margin-left: 1px !important;
@@ -242,19 +240,16 @@
   visibility: hidden;
 }
 
-#TabsToolbar > #pin-button {
+#verticaltabs-box #TabsToolbar > #pin-button {
   z-index: 1;
   width: 32px;
   min-width: 32px;
   margin: 0 8px 0 4px !important;
-  display: -moz-box;
-  -moz-appearance: none !important;
   background-image: url("resource://tabcenter/skin/glyph-sidebar-expand-16.svg") !important;
   background-position: center;
   background-repeat: no-repeat;
   background-size: 16px;
   -moz-box-flex: 0;
-  opacity: 0;
   transition: opacity 125ms ease-in-out 300ms;
 }
 
@@ -274,6 +269,7 @@
 }
 
 #TabsToolbar #find-input {
+  display: flex;
   margin: 0 4px !important;
   padding: 0 !important;
   height: 26px;
@@ -296,7 +292,6 @@
 
 #tabs-search {
   display: block;
-  margin: 2px 0;
   min-width: 20px;
   max-width: 20px;
   -moz-image-region: rect(0, 20px, 20px, 0);
@@ -309,8 +304,6 @@
 
 #find-input .textbox-input-box {
   display: block;
-  margin-left: 20px;
-  max-width: calc(100% - 20px) !important;
 }
 
 /* [inDOMFullscreen] for video */
@@ -338,10 +331,9 @@
   background-image: url("resource://tabcenter/skin/glyph-sidebar-collapse-inverted-16.svg") !important;
 }
 
-#verticaltabs-box[expanded="true"] #pin-button,
-#verticaltabs-box[search_expanded="true"] #pin-button,
-#main-window[tabspinned="true"] #pin-button {
-  opacity: 1;
+#main-window:not([tabspinned="true"])
+#verticaltabs-box:not([expanded="true"]):not([search_expanded="true"]) #pin-button {
+  opacity: 0;
 }
 
 #appcontent {
@@ -715,32 +707,32 @@
   border-bottom: 1px solid hsla(0, 0%, 0%, 0.5) !important;
 }
 
-#TabsToolbar > toolbarbutton,
+#TabsToolbar > toolbarbutton:not(#pin-button):not(#new-tab-button),
 #TabsToolbar > toolbaritem {
   display: none;
 }
 
-#TabsToolbar > toolbarbutton {
+#verticaltabs-box #TabsToolbar > toolbarbutton {
   border: 1px solid transparent !important;
-  box-sizing: border-box !important;
+  box-sizing: border-box;
   height: 26px !important;
   min-height: 26px !important;
+  -moz-appearance: none;
   background-image: none !important;
 }
 
-#TabsToolbar > toolbarbutton:hover {
+#verticaltabs-box #TabsToolbar > toolbarbutton:hover {
   border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
   background-color: hsla(0, 0%, 0%, 0.1) !important;
 }
 
-#TabsToolbar > toolbarbutton:hover:active {
+#verticaltabs-box #TabsToolbar > toolbarbutton:hover:active {
   border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
   background-color: hsla(0, 0%, 0%, 0.16) !important;
   box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1) inset !important;
 }
 
 #TabsToolbar > #new-tab-button {
-  display: -moz-box !important;
   margin: 0 4px !important;
   padding: 0 6px !important;
   min-width: 40px !important;
@@ -836,9 +828,4 @@
   background-position: -8px center !important;
   background-repeat: no-repeat !important;
   background-size: 16px !important;
-}
-
-/*stop the gradient from dev edition theme*/
-#navigator-toolbox > toolbar:not(#TabsToolbar):not(#toolbar-menubar) {
-  background: transparent none repeat scroll 0% 0% !important;
 }
