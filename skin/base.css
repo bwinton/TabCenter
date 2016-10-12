@@ -180,6 +180,7 @@
   width: var(--pinned-width) !important;
 }
 
+#main-window[F11-fullscreen] #sidebar-box,
 #main-window[F11-fullscreen] #sidebar-box[hidden="true"] ~ #appcontent {
   width: (100vw - 1px) !important;
   margin-left: 1px !important;
