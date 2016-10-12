@@ -831,13 +831,23 @@ VerticalTabs.prototype = {
       this.resizeTimeout = -1;
     }
     this.mouseInside = true;
+    let arrowscrollbox = this.document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+    let scrollbox = this.document.getAnonymousElementByAttribute(arrowscrollbox, 'anonid', 'scrollbox');
+    let scrolltop = scrollbox.scrollTop;
+
     tabs.setAttribute('mouseInside', 'true');
+    scrollbox.scrollTop = scrolltop;
   },
 
   mouseExited: function () {
     let tabs = this.document.getElementById('tabbrowser-tabs');
+    let arrowscrollbox = this.document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+    let scrollbox = this.document.getAnonymousElementByAttribute(arrowscrollbox, 'anonid', 'scrollbox');
+    let scrolltop = scrollbox.scrollTop;
     this.mouseInside = false;
     tabs.removeAttribute('mouseInside');
+    scrollbox.scrollTop = scrolltop;
+
     if (this.resizeTimeout < 0) {
       // Once the mouse exits the tab area, wait
       // a bit before resizing
