@@ -49,9 +49,6 @@ Cu.import('resource://gre/modules/PageThumbs.jsm');
 Cu.import('resource:///modules/CustomizableUI.jsm');
 Cu.import('resource://gre/modules/Services.jsm');
 
-//use to set preview image as metadata image 1/4
-// Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
-
 const NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
 const TAB_DROP_TYPE = 'application/x-moz-tabbrowser-tab';
 
@@ -860,12 +857,6 @@ VerticalTabs.prototype = {
     }
   },
 
-  //use to set preview image as metadata image 3/4
-  // getPageMetaDataImage: function (aTab) {
-  //   var tabMeta = this.PageMetadata.getData(aTab.linkedBrowser.contentDocument);
-  //   return tabMeta['og:image'];
-  // },
-
   /*** Event handlers ***/
 
   handleEvent: function (aEvent) {
@@ -915,6 +906,3 @@ exports.addVerticalTabs = (win, data) => {
     new VerticalTabs(win, data);
   }
 };
-
-//use to set preview image as metadata image 4/4
-// XPCOMUtils.defineLazyModuleGetter(VerticalTabs.prototype, "PageMetadata", "resource://gre/modules/PageMetadata.jsm");
