@@ -63,10 +63,6 @@ const WAIT_BEFORE_RESIZE = 1000;
 function VerticalTabs(window, data) {
   this.window = window;
   this.document = window.document;
-  this.unloaders = [];
-  this.stats = new Stats;
-  this.resizeTimeout = -1;
-  this.mouseInside = false;
 
   window.createImageBitmap(data).then((response) => {
     this.newTabImage = response;
@@ -76,12 +72,37 @@ function VerticalTabs(window, data) {
 }
 VerticalTabs.prototype = {
 
-  init: function () {
+  init: function (toggleoff = false) {
+    if (toggleoff === true) {
+
+      let toolbar = this.document.getElementById('TabsToolbar');
+      toolbar.removeChild(this.document.getElementById('top-tabs-button'));
+
+      let sidetabsbutton = this.createElement('toolbarbutton', {
+        'id': 'side-tabs-button',
+        'label': 'side',
+        'tooltiptext': 'Move tabs to the side',
+      });
+      sidetabsbutton.style.background = 'url("resource://tabcenter/skin/tc-side.svg") no-repeat center';
+      sidetabsbutton.style.width = '26px';
+      sidetabsbutton.style.backgroundSize = '16px';
+      sidetabsbutton.onclick = this.init.bind(this);
+      toolbar.insertBefore(sidetabsbutton, null);
+      this.unload();
+
+      return;
+    }
+
     this.window.VerticalTabs = this;
     let window = this.window;
     let document = this.document;
+    this.unloaders = [];
+    this.stats = new Stats;
+    this.resizeTimeout = -1;
+    this.mouseInside = false;
+
     installStylesheets(window);
-    window.TabsInTitlebar.allowedBy("pref", false);
+    window.TabsInTitlebar.allowedBy('pref', false);
 
     this.PageThumbs = PageThumbs;
     this._endRemoveTab = window.gBrowser._endRemoveTab;
@@ -236,6 +257,21 @@ VerticalTabs.prototype = {
     };
 
     this.rearrangeXUL();
+    //should be in rearrange XUL
+    let toolbar = this.document.getElementById('TabsToolbar');
+    let sidetabsbutton = this.document.getElementById('side-tabs-button');
+    if (sidetabsbutton){
+      toolbar.removeChild(sidetabsbutton);
+    }
+
+    let toptabsbutton = this.createElement('toolbarbutton', {
+      'id': 'top-tabs-button',
+      'label': 'top',
+      'tooltiptext': 'Move tabs to the top'
+    });
+
+    toptabsbutton.onclick = this.init.bind(this, true);
+    toolbar.insertBefore(toptabsbutton, toolbar.firstChild);
 
     let results = this.document.getElementById('PopupAutoCompleteRichResult');
 
@@ -720,7 +756,7 @@ VerticalTabs.prototype = {
   resizeFindInput: function () {
     let spacer = this.document.getElementById('new-tab-spacer');
     let find_input = this.document.getElementById('find-input');
-    if (this.pinnedWidth > 190 || this.document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
+    if (this.pinnedWidth > 220 || this.document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
       spacer.style.visibility = 'collapse';
       find_input.style.visibility = 'visible';
     } else {
@@ -801,7 +837,7 @@ VerticalTabs.prototype = {
       tabs._positionPinnedTabs(); //Does not do anything?
     }
     removeStylesheets(this.window);
-    this.window.TabsInTitlebar.allowedBy("pref", true);
+    this.window.TabsInTitlebar.allowedBy('pref', true);
   },
 
   actuallyResizeTabs: function () {

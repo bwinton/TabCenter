@@ -240,6 +240,17 @@
   visibility: hidden;
 }
 
+#verticaltabs-box #TabsToolbar > #top-tabs-button {
+  width: 32px;
+  min-width: 32px;
+  margin-right: 0;
+  background-image: url("resource://tabcenter/skin/tc-top.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  -moz-box-flex: 0;
+}
+
 #verticaltabs-box #TabsToolbar > #pin-button {
   z-index: 1;
   width: 32px;
@@ -285,7 +296,7 @@
 }
 
 #TabsToolbar #find-input[focused="true"] {
-  width: calc(100% - 100px) !important;
+  width: calc(100% - 136px) !important;
   border: 1px solid Highlight !important;
   box-shadow: 0 0 0 1px Highlight inset;
 }
@@ -707,7 +718,7 @@
   border-bottom: 1px solid hsla(0, 0%, 0%, 0.5) !important;
 }
 
-#TabsToolbar > toolbarbutton:not(#pin-button):not(#new-tab-button),
+#TabsToolbar > toolbarbutton:not(#pin-button):not(#new-tab-button):not(#top-tabs-button),
 #TabsToolbar > toolbaritem {
   display: none;
 }
@@ -717,8 +728,6 @@
   box-sizing: border-box;
   height: 26px !important;
   min-height: 26px !important;
-  -moz-appearance: none;
-  background-image: none !important;
 }
 
 #verticaltabs-box #TabsToolbar > toolbarbutton:hover {
