@@ -116,7 +116,7 @@ VerticalTabs.prototype = {
     let tabs = document.getElementById('tabbrowser-tabs');
     let tabsProgressListener = {
       onLocationChange: (aBrowser, aWebProgress, aRequest, aLocation, aFlags) => {
-        for (let tab of tabs.childNodes) {
+        for (let tab of this.window.gBrowser.visibleTabs) {
           if (tab.linkedBrowser === aBrowser) {
             tab.refreshThumbAndLabel();
           }
@@ -125,7 +125,7 @@ VerticalTabs.prototype = {
       onStateChange: (aBrowser, aWebProgress, aRequest, aFlags, aStatus) => {
         if ((aFlags & Ci.nsIWebProgressListener.STATE_STOP) === Ci.nsIWebProgressListener.STATE_STOP) { // eslint-disable-line no-bitwise
           this.adjustCrop();
-          for (let tab of tabs.childNodes) {
+          for (let tab of this.window.gBrowser.visibleTabs) {
             if (tab.linkedBrowser === aBrowser && tab.refreshThumbAndLabel) {
               tab.refreshThumbAndLabel();
             }
@@ -794,7 +794,7 @@ VerticalTabs.prototype = {
       return;
     case 1: {
       let tabbrowser_height = tabs.clientHeight;
-      let number_of_tabs = this.document.querySelectorAll('.tabbrowser-tab:not([hidden=true])').length;
+      let number_of_tabs = this.window.gBrowser.visibleTabs.length;
       if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60) {
         tabs.classList.add('large-tabs');
         this.refreshAllTabs();
@@ -810,8 +810,7 @@ VerticalTabs.prototype = {
   },
 
   refreshAllTabs: function () {
-    let tabs = this.document.getElementById('tabbrowser-tabs');
-    for (let tab of tabs.childNodes) {
+    for (let tab of this.window.gBrowser.visibleTabs) {
       tab.refreshThumbAndLabel();
     }
   },
