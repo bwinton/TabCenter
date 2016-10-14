@@ -728,15 +728,15 @@ VerticalTabs.prototype = {
 
   filtertabs: function () {
     let document = this.document;
-    let tabs = document.getElementById('tabbrowser-tabs');
+    let tabs = this.window.gBrowser.visibleTabs;
     let find_input = document.getElementById('find-input');
     let input_value = find_input.value.toLowerCase();
     let hidden_counter = 0;
     let hidden_tab = document.getElementById('filler-tab');
-    let hidden_tab_label = hidden_tab.children[0];
+    let hidden_tab_label = hidden_tab.firstChild;
 
-    for (let i = 0; i < tabs.children.length; i++) {
-      let tab = tabs.children[i];
+    for (let i = 0; i < tabs.length; i++) {
+      let tab = tabs[i];
       if (tab.label.toLowerCase().match(input_value) || this.getUri(tab).spec.toLowerCase().match(input_value)) {
         tab.setAttribute('hidden', false);
       } else {
