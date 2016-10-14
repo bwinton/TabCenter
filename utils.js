@@ -123,7 +123,6 @@ function removeDefaultPrefs() {
 }
 exports.removeDefaultPrefs = removeDefaultPrefs;
 
-
 /* Stylesheets */
 
 const {newURI} = require('sdk/url/utils');

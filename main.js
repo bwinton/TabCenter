@@ -88,9 +88,6 @@ function initWindow(window) {
 
   let data = b64toBlob(win, self.data.load('newtab.b64'), 'image/png');
 
-  // Add the stylesheets
-  utils.installStylesheets(win);
-
   // check for browser windows with visible toolbars
   if (!win.toolbar.visible || !isBrowser(win)) {
     return;
@@ -214,15 +211,8 @@ exports.onUnload = function (reason) {
     let win = viewFor(window);
     if (win.VerticalTabs) {
       win.VerticalTabs.unload();
+      delete win.VerticalTabs;
     }
-
-    let tabs = win.document.getElementById('tabbrowser-tabs');
-    if (tabs) {
-      tabs.removeAttribute('overflow');
-      tabs._positionPinnedTabs();
-    }
-    // Remove the stylesheets
-    utils.removeStylesheets(win);
   }
 
   // Restore default preferences

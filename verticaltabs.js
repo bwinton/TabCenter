@@ -41,7 +41,7 @@
 const {Cc, Ci, Cu} = require('chrome');
 const {platform} = require('sdk/system');
 const {prefs} = require('sdk/simple-prefs');
-const {addPingStats, Stats, setDefaultPrefs} = require('./utils');
+const {addPingStats, Stats, setDefaultPrefs, removeStylesheets, installStylesheets} = require('./utils');
 const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
                                createInstance(Ci.nsIURIFixup);
 
@@ -78,12 +78,16 @@ VerticalTabs.prototype = {
 
   init: function () {
     this.window.VerticalTabs = this;
-    this.PageThumbs = PageThumbs;
-    this._endRemoveTab = this.window.gBrowser._endRemoveTab;
-    this.inferFromText = this.window.ToolbarIconColor.inferFromText;
-    this.receiveMessage = this.window.gBrowser.receiveMessage;
     let window = this.window;
     let document = this.document;
+    installStylesheets(window);
+    window.TabsInTitlebar.allowedBy("pref", false);
+
+    this.PageThumbs = PageThumbs;
+    this._endRemoveTab = window.gBrowser._endRemoveTab;
+    this.inferFromText = window.ToolbarIconColor.inferFromText;
+    this.receiveMessage = window.gBrowser.receiveMessage;
+
 
     let oldAddTab = window.gBrowser.addTab;
     window.gBrowser.addTab = function (...args) {
@@ -790,7 +794,14 @@ VerticalTabs.prototype = {
     this.unloaders.forEach(function (func) {
       func.call(this);
     }, this);
-    delete this.window.VerticalTabs;
+
+    let tabs = this.document.getElementById('tabbrowser-tabs');
+    if (tabs) {
+      tabs.removeAttribute('overflow'); //not needed? it sets its own overflow as necessary
+      tabs._positionPinnedTabs(); //Does not do anything?
+    }
+    removeStylesheets(this.window);
+    this.window.TabsInTitlebar.allowedBy("pref", true);
   },
 
   actuallyResizeTabs: function () {
