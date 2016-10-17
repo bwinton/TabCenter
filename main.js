@@ -211,6 +211,11 @@ exports.onUnload = function (reason) {
     let win = viewFor(window);
     if (win.VerticalTabs) {
       win.VerticalTabs.unload();
+      let mainWindow = win.document.getElementById('main-window');
+      mainWindow.removeAttribute('tabspinned');
+      mainWindow.removeAttribute('tabspinnedwidth');
+      mainWindow.setAttribute('persist',
+        mainWindow.getAttribute('persist').replace(' tabspinnned', '').replace(' tabspinnedwidth', ''));
       delete win.VerticalTabs;
     }
   }

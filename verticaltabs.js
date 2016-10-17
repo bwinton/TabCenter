@@ -74,11 +74,7 @@ VerticalTabs.prototype = {
 
   init: function (toggleoff = false) {
     if (toggleoff === true) {
-
-      let toolbar = this.document.getElementById('TabsToolbar');
-      toolbar.removeChild(this.document.getElementById('top-tabs-button'));
       this.clearFind();
-
       let sidetabsbutton = this.createElement('toolbarbutton', {
         'id': 'side-tabs-button',
         'label': 'side',
@@ -102,7 +98,7 @@ VerticalTabs.prototype = {
         sidetabsbutton.style.backgroundColor = 'hsla(0, 0%, 0%, 0.1)';
         sidetabsbutton.boxShadow = '0 0 0 1px hsla(0, 0%, 0%, 0.08) inset';
       };
-      toolbar.insertBefore(sidetabsbutton, null);
+      this.document.getElementById('TabsToolbar').insertBefore(sidetabsbutton, null);
       this.unload();
 
       return;
@@ -734,10 +730,6 @@ VerticalTabs.prototype = {
       browserbox.removeChild(leftbox);
       browserbox.removeChild(splitter);
       browserbox.removeAttribute('dir');
-      mainWindow.removeAttribute('tabspinned');
-      mainWindow.removeAttribute('tabspinnedwidth');
-      mainWindow.setAttribute('persist',
-        mainWindow.getAttribute('persist').replace(' tabspinnned', ''));
       leftbox = null;
 
       // Restore the tab strip.
@@ -852,6 +844,7 @@ VerticalTabs.prototype = {
       tabs._positionPinnedTabs(); //Does not do anything?
     }
     removeStylesheets(this.window);
+    this.document.getElementById('TabsToolbar').removeChild(this.document.getElementById('top-tabs-button'));
     this.window.TabsInTitlebar.allowedBy('pref', true);
   },
 
