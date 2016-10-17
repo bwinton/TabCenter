@@ -736,7 +736,6 @@
 }
 
 #verticaltabs-box #TabsToolbar > toolbarbutton:hover:active {
-  border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
   background-color: hsla(0, 0%, 0%, 0.16) !important;
   box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1) inset !important;
 }

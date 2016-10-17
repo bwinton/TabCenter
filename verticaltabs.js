@@ -81,12 +81,26 @@ VerticalTabs.prototype = {
       let sidetabsbutton = this.createElement('toolbarbutton', {
         'id': 'side-tabs-button',
         'label': 'side',
-        'tooltiptext': 'Move tabs to the side',
+        'tooltiptext': 'Move tabs to the side'
       });
       sidetabsbutton.style.background = 'url("resource://tabcenter/skin/tc-side.svg") no-repeat center';
       sidetabsbutton.style.width = '26px';
       sidetabsbutton.style.backgroundSize = '16px';
+      sidetabsbutton.style.borderRadius = '3px';
+      sidetabsbutton.style.marginBottom = '4px';
+      sidetabsbutton.onmouseover = function () {
+        sidetabsbutton.style.border = '1px solid rgba(0,0,0,.20)';
+        sidetabsbutton.style.backgroundColor = 'hsla(0, 0%, 0%, 0.05)';
+      };
+      sidetabsbutton.onmouseout = function () {
+        sidetabsbutton.style.border = '';
+        sidetabsbutton.style.backgroundColor = '';
+      };
       sidetabsbutton.onclick = this.init.bind(this);
+      sidetabsbutton.onmousedown = function () {
+        sidetabsbutton.style.backgroundColor = 'hsla(0, 0%, 0%, 0.1)';
+        sidetabsbutton.boxShadow = '0 0 0 1px hsla(0, 0%, 0%, 0.08) inset';
+      };
       toolbar.insertBefore(sidetabsbutton, null);
       this.unload();
 
