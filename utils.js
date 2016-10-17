@@ -105,8 +105,7 @@ exports.sendPing = sendPing;
 const {set, reset} = require('sdk/preferences/service');
 
 const DEFAULT_PREFS = new Map([
-  ['browser.tabs.animate', false],
-  ['browser.tabs.drawInTitlebar', false]
+  ['browser.tabs.animate', false]
 ]);
 
 function setDefaultPrefs() {

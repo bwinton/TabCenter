@@ -95,10 +95,12 @@ function initWindow(window) {
 
   // if the dcoument is loaded
   if (isDocumentLoaded(win)) {
+    win.document.getElementById('main-window').setAttribute('persist', win.document.getElementById('main-window').getAttribute('persist') + ' tabspinned tabspinnedwidth toggledon');
     addVerticalTabs(win, data);
   } else {
     // Listen for load event before checking the window type
     win.addEventListener('load', () => {
+      win.document.getElementById('main-window').setAttribute('persist', win.document.getElementById('main-window').getAttribute('persist') + ' tabspinned tabspinnedwidth toggledon');
       addVerticalTabs(win, data);
     }, {once: true});
   }
@@ -135,7 +137,6 @@ exports.main = function (options, callbacks) {
   utils.setDefaultPrefs();
 
   // Startup VerticalTabs object for each window.
-  browserWindows.on('open', initWindow);
   for (let window of browserWindows) {
     initWindow(window);
   }
@@ -215,7 +216,7 @@ exports.onUnload = function (reason) {
       mainWindow.removeAttribute('tabspinned');
       mainWindow.removeAttribute('tabspinnedwidth');
       mainWindow.setAttribute('persist',
-        mainWindow.getAttribute('persist').replace(' tabspinnned', '').replace(' tabspinnedwidth', ''));
+        mainWindow.getAttribute('persist').replace(' tabspinnned', '').replace(' tabspinnedwidth', '').replace(' toggledon', ''));
       delete win.VerticalTabs;
     }
   }

@@ -72,8 +72,10 @@ function VerticalTabs(window, data) {
 }
 VerticalTabs.prototype = {
 
-  init: function (toggleoff = false) {
-    if (toggleoff === true) {
+  init: function () {
+    let mainWindow = this.document.getElementById('main-window');
+
+    if (mainWindow.getAttribute('toggledon') === 'false') {
       this.clearFind();
       let sidetabsbutton = this.createElement('toolbarbutton', {
         'id': 'side-tabs-button',
@@ -93,12 +95,18 @@ VerticalTabs.prototype = {
         sidetabsbutton.style.border = '';
         sidetabsbutton.style.backgroundColor = '';
       };
-      sidetabsbutton.onclick = this.init.bind(this);
+      sidetabsbutton.onclick = () => {
+        mainWindow.setAttribute('toggledon', 'true');
+        this.init();
+      };
       sidetabsbutton.onmousedown = function () {
         sidetabsbutton.style.backgroundColor = 'hsla(0, 0%, 0%, 0.1)';
         sidetabsbutton.boxShadow = '0 0 0 1px hsla(0, 0%, 0%, 0.08) inset';
       };
       this.document.getElementById('TabsToolbar').insertBefore(sidetabsbutton, null);
+      if (!this.unloaders) {
+        this.unloaders = [];
+      }
       this.unload();
 
       return;
@@ -113,7 +121,7 @@ VerticalTabs.prototype = {
     this.mouseInside = false;
 
     installStylesheets(window);
-    window.TabsInTitlebar.allowedBy('pref', false);
+    window.TabsInTitlebar.allowedBy('tabcenter', false);
 
     this.PageThumbs = PageThumbs;
     this._endRemoveTab = window.gBrowser._endRemoveTab;
@@ -237,8 +245,6 @@ VerticalTabs.prototype = {
         }
       }
 
-      let mainWindow = document.getElementById('main-window');
-
       if (/devedition/.test(mainWindow.style.backgroundImage)) {
         mainWindow.setAttribute('devedition-theme', 'true');
       } else {
@@ -262,6 +268,9 @@ VerticalTabs.prototype = {
       this.window.gBrowser._endRemoveTab = this._endRemoveTab;
       this.window.gBrowser.addTab = oldAddTab;
       this.window.gBrowser.receiveMessage = this.receiveMessage;
+      if (this.document.getElementById('top-tabs-button')){
+        this.document.getElementById('TabsToolbar').removeChild(this.document.getElementById('top-tabs-button'));
+      }
     });
     this.window.onunload = () => {
       addPingStats(this.stats);
@@ -281,7 +290,10 @@ VerticalTabs.prototype = {
       'tooltiptext': 'Move tabs to the top'
     });
 
-    toptabsbutton.onclick = this.init.bind(this, true);
+    toptabsbutton.onclick = () => {
+      mainWindow.setAttribute('toggledon', 'false');
+      this.init();
+    };
     toolbar.insertBefore(toptabsbutton, toolbar.firstChild);
 
     let results = this.document.getElementById('PopupAutoCompleteRichResult');
@@ -415,15 +427,17 @@ VerticalTabs.prototype = {
     let leftbox = this.createElement('vbox', {'id': 'verticaltabs-box'});
     let splitter = this.createElement('vbox', {'id': 'verticaltabs-splitter'});
 
-    if (mainWindow.getAttribute('tabspinned') !== 'true' && mainWindow.getAttribute('tabspinned') !== 'false') {
+    if (mainWindow.getAttribute('tabspinned') === '') {
       mainWindow.setAttribute('tabspinned', 'true');
       leftbox.setAttribute('expanded', 'true');
     }
 
+    if (mainWindow.getAttribute('toggledon') === '') {
+      mainWindow.setAttribute('toggledon', 'true');
+    }
+
     browserbox.insertBefore(leftbox, contentbox);
     browserbox.insertBefore(splitter, browserbox.firstChild);
-    mainWindow.setAttribute('persist',
-      mainWindow.getAttribute('persist') + ' tabspinned tabspinnedwidth');
 
     this.pinnedWidth = +mainWindow.getAttribute('tabspinnedwidth').replace('px', '') ||
                        +window.getComputedStyle(document.documentElement)
@@ -773,15 +787,17 @@ VerticalTabs.prototype = {
   },
 
   clearFind: function () {
-    this.document.getElementById('find-input').value = '';
+    if (this.document.getElementById('find-input')){
+      this.document.getElementById('find-input').value = '';
 
-    //manually show pinned tabs after changing groups for the tab groups add-on, as it does not re-show them
-    if (this.visibleTabs) {
-      this.visibleTabs.filter(tab => tab.getAttribute('pinned') === 'true')
-                      .forEach(tab => {tab.setAttribute('hidden', false);});
+      //manually show pinned tabs after changing groups for the tab groups add-on, as it does not re-show them
+      if (this.visibleTabs) {
+        this.visibleTabs.filter(tab => tab.getAttribute('pinned') === 'true')
+                        .forEach(tab => {tab.setAttribute('hidden', false);});
+      }
+      this.visibleTabs = null;
+      this.filtertabs();
     }
-    this.visibleTabs = null;
-    this.filtertabs();
   },
 
   filtertabs: function () {
@@ -844,8 +860,7 @@ VerticalTabs.prototype = {
       tabs._positionPinnedTabs(); //Does not do anything?
     }
     removeStylesheets(this.window);
-    this.document.getElementById('TabsToolbar').removeChild(this.document.getElementById('top-tabs-button'));
-    this.window.TabsInTitlebar.allowedBy('pref', true);
+    this.window.TabsInTitlebar.allowedBy('tabcenter', true);
   },
 
   actuallyResizeTabs: function () {
