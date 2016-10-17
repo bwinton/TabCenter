@@ -832,7 +832,7 @@ VerticalTabs.prototype = {
     aTab.classList.add('tab-visible');
     aTab.classList.remove('tab-hidden');
 
-    if (document.getElementById('tabbrowser-tabs').getAttribute('expanded') !== 'true') {
+    if (document.getElementById('tabbrowser-tabs').getAttribute('expanded') !== 'true' && document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
       aTab.removeAttribute('crop');
     } else {
       aTab.setAttribute('crop', 'end');
