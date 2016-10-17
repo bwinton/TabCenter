@@ -77,6 +77,7 @@ VerticalTabs.prototype = {
 
       let toolbar = this.document.getElementById('TabsToolbar');
       toolbar.removeChild(this.document.getElementById('top-tabs-button'));
+      this.clearFind();
 
       let sidetabsbutton = this.createElement('toolbarbutton', {
         'id': 'side-tabs-button',
