@@ -244,6 +244,7 @@
   width: 32px;
   min-width: 32px;
   margin-right: 0;
+  margin-left: 8px;
   background-image: url("resource://tabcenter/skin/tc-top.svg") !important;
   background-position: center;
   background-repeat: no-repeat;
