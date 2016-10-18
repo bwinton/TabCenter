@@ -252,6 +252,10 @@
   -moz-box-flex: 0;
 }
 
+#verticaltabs-box #TabsToolbar[brighttext] > #top-tabs-button {
+  background-image: url("resource://tabcenter/skin/tc-top-white.svg") !important;
+}
+
 #verticaltabs-box #TabsToolbar > #pin-button {
   z-index: 1;
   width: 32px;

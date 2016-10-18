@@ -73,9 +73,12 @@ function VerticalTabs(window, data) {
 VerticalTabs.prototype = {
 
   init: function () {
-    let mainWindow = this.document.getElementById('main-window');
+    let window = this.window;
+    let document = this.document;
+    let mainWindow = document.getElementById('main-window');
 
     if (mainWindow.getAttribute('toggledon') === 'false') {
+      let toolbar = document.getElementById('TabsToolbar');
       this.clearFind();
       let sidetabsbutton = this.createElement('toolbarbutton', {
         'id': 'side-tabs-button',
@@ -84,13 +87,24 @@ VerticalTabs.prototype = {
         'class': 'toolbarbutton-1'
       });
       sidetabsbutton.style.MozAppearance = 'none';
-      sidetabsbutton.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side.svg")', 'important');
       sidetabsbutton.style.setProperty('-moz-image-region', 'rect(0, 16px, 16px, 0)', 'important');
       sidetabsbutton.onclick = () => {
         mainWindow.setAttribute('toggledon', 'true');
         this.init();
       };
-      this.document.getElementById('TabsToolbar').insertBefore(sidetabsbutton, null);
+
+      toolbar.insertBefore(sidetabsbutton, null);
+
+      (function checkbrighttext() {
+        if (toolbar.getAttribute('brighttext') === 'true') {
+          sidetabsbutton.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side-white.svg")', 'important');
+        } else {
+          sidetabsbutton.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side.svg")', 'important');
+        }
+        window.addEventListener('customizationchange', checkbrighttext);
+      }());
+
+
       if (!this.unloaders) {
         this.unloaders = [];
       }
@@ -100,8 +114,6 @@ VerticalTabs.prototype = {
     }
 
     this.window.VerticalTabs = this;
-    let window = this.window;
-    let document = this.document;
     this.unloaders = [];
     this.stats = new Stats;
     this.resizeTimeout = -1;
