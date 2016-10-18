@@ -82,6 +82,7 @@ VerticalTabs.prototype = {
         'label': 'side',
         'tooltiptext': 'Move tabs to the side'
       });
+      sidetabsbutton.style.MozAppearance = 'none';
       sidetabsbutton.style.background = 'url("resource://tabcenter/skin/tc-side.svg") no-repeat center';
       sidetabsbutton.style.width = '26px';
       sidetabsbutton.style.backgroundSize = '16px';

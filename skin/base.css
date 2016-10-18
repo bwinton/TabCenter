@@ -244,7 +244,7 @@
   width: 32px;
   min-width: 32px;
   margin-right: 0;
-  background-image: url("resource://tabcenter/skin/tc-top.svg");
+  background-image: url("resource://tabcenter/skin/tc-top.svg") !important;
   background-position: center;
   background-repeat: no-repeat;
   background-size: 16px;
@@ -728,6 +728,8 @@
   box-sizing: border-box;
   height: 26px !important;
   min-height: 26px !important;
+  -moz-appearance: none;
+  background-image: none !important;
 }
 
 #verticaltabs-box #TabsToolbar > toolbarbutton:hover {
