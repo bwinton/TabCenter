@@ -164,6 +164,10 @@ VerticalTabs.prototype = {
       this.receiveMessage.bind(window.gBrowser)(...args);
     };
 
+    window.gBrowser.tabContainer.addEventListener('TabBarUpdated', () => {
+      this.clearFind();
+    });
+
     window.ToolbarIconColor.inferFromText = function () {
       if (!this._initialized){
         return;
@@ -723,20 +727,21 @@ VerticalTabs.prototype = {
 
   clearFind: function () {
     this.document.getElementById('find-input').value = '';
+    this.visibleTabs = null;
     this.filtertabs();
   },
 
   filtertabs: function () {
     let document = this.document;
-    let tabs = this.window.gBrowser.visibleTabs;
+    this.visibleTabs = this.visibleTabs || this.window.gBrowser.visibleTabs;
     let find_input = document.getElementById('find-input');
     let input_value = find_input.value.toLowerCase();
     let hidden_counter = 0;
     let hidden_tab = document.getElementById('filler-tab');
     let hidden_tab_label = hidden_tab.firstChild;
 
-    for (let i = 0; i < tabs.length; i++) {
-      let tab = tabs[i];
+    for (let i = 0; i < this.visibleTabs.length; i++) {
+      let tab = this.visibleTabs[i];
       if (tab.label.toLowerCase().match(input_value) || this.getUri(tab).spec.toLowerCase().match(input_value)) {
         tab.setAttribute('hidden', false);
       } else {
