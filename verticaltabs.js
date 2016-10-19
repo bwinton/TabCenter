@@ -305,12 +305,14 @@ VerticalTabs.prototype = {
       } else {
         let offset = rect.left - elementRect.left;
         let width = rect.width;
-        if (mainWindow.getAttribute('tabspinned') !== 'true') {
-          offset += 45;
-          width -= 45;
-        } else {
-          offset += this.pinnedWidth;
-          width -= this.pinnedWidth;
+        if (mainWindow.getAttribute('F11-fullscreen') !== 'true'){
+          if (mainWindow.getAttribute('tabspinned') !== 'true') {
+            offset += 45;
+            width -= 45;
+          } else {
+            offset += this.pinnedWidth;
+            width -= this.pinnedWidth;
+          }
         }
         if (sidebar.getAttribute('hidden') !== 'true') {
           offset += sidebar.getBoundingClientRect().width;
