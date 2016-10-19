@@ -405,6 +405,7 @@ VerticalTabs.prototype = {
     // Move the tabs next to the app content, make them vertical,
     // and restore their width from previous session
     tabs.setAttribute('vertical', true);
+    tabs.setAttribute('overflow', 'true');
     leftbox.insertBefore(tabs, leftbox.firstChild);
     tabs.orient = 'vertical';
     tabs.mTabstrip.orient = 'vertical';
