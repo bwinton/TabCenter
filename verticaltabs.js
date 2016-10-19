@@ -660,6 +660,9 @@ VerticalTabs.prototype = {
       tabs.removeEventListener('TabClose', this, false);
       tabs.removeEventListener('TabPinned', this, false);
       tabs.removeEventListener('TabUnpinned', this, false);
+
+      //save the first tab's label to restore after unbinding/binding
+      label = tabs.firstChild.label;
       tabs.removeAttribute('vertical');
 
       // Restore all individual tabs.
@@ -684,6 +687,7 @@ VerticalTabs.prototype = {
       browserPanel.insertBefore(toolbox, browserPanel.firstChild);
       browserPanel.insertBefore(bottom, document.getElementById('fullscreen-warning').nextSibling);
       top.palette = palette;
+      tabs.firstChild.label = label;
       this.window.TabsInTitlebar.updateAppearance(true);
     });
   },
