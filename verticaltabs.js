@@ -900,6 +900,7 @@ VerticalTabs.prototype = {
   },
 
   onTabClose: function (aEvent) {
+    this.clearFind();
     this.stats.tabs_destroyed++;
   },
 
