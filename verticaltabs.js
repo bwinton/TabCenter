@@ -116,7 +116,7 @@ VerticalTabs.prototype = {
     let tabs = document.getElementById('tabbrowser-tabs');
     let tabsProgressListener = {
       onLocationChange: (aBrowser, aWebProgress, aRequest, aLocation, aFlags) => {
-        for (let tab of tabs.childNodes) {
+        for (let tab of this.window.gBrowser.visibleTabs) {
           if (tab.linkedBrowser === aBrowser) {
             tab.refreshThumbAndLabel();
           }
@@ -125,7 +125,7 @@ VerticalTabs.prototype = {
       onStateChange: (aBrowser, aWebProgress, aRequest, aFlags, aStatus) => {
         if ((aFlags & Ci.nsIWebProgressListener.STATE_STOP) === Ci.nsIWebProgressListener.STATE_STOP) { // eslint-disable-line no-bitwise
           this.adjustCrop();
-          for (let tab of tabs.childNodes) {
+          for (let tab of this.window.gBrowser.visibleTabs) {
             if (tab.linkedBrowser === aBrowser && tab.refreshThumbAndLabel) {
               tab.refreshThumbAndLabel();
             }
@@ -163,6 +163,10 @@ VerticalTabs.prototype = {
       }
       this.receiveMessage.bind(window.gBrowser)(...args);
     };
+
+    window.gBrowser.tabContainer.addEventListener('TabBarUpdated', () => {
+      this.clearFind();
+    });
 
     window.ToolbarIconColor.inferFromText = function () {
       if (!this._initialized){
@@ -723,20 +727,27 @@ VerticalTabs.prototype = {
 
   clearFind: function () {
     this.document.getElementById('find-input').value = '';
+
+    //manually show pinned tabs after changing groups for the tab groups add-on, as it does not re-show them
+    if (this.visibleTabs) {
+      this.visibleTabs.filter(tab => tab.getAttribute('pinned') === 'true')
+                      .forEach(tab => {tab.setAttribute('hidden', false);});
+    }
+    this.visibleTabs = null;
     this.filtertabs();
   },
 
   filtertabs: function () {
     let document = this.document;
-    let tabs = document.getElementById('tabbrowser-tabs');
+    this.visibleTabs = this.visibleTabs || Array.filter(this.window.gBrowser.tabs, tab => !tab.hidden && !tab.closing);
     let find_input = document.getElementById('find-input');
     let input_value = find_input.value.toLowerCase();
     let hidden_counter = 0;
     let hidden_tab = document.getElementById('filler-tab');
-    let hidden_tab_label = hidden_tab.children[0];
+    let hidden_tab_label = hidden_tab.firstChild;
 
-    for (let i = 0; i < tabs.children.length; i++) {
-      let tab = tabs.children[i];
+    for (let i = 0; i < this.visibleTabs.length; i++) {
+      let tab = this.visibleTabs[i];
       if (tab.label.toLowerCase().match(input_value) || this.getUri(tab).spec.toLowerCase().match(input_value)) {
         tab.setAttribute('hidden', false);
       } else {
@@ -794,7 +805,7 @@ VerticalTabs.prototype = {
       return;
     case 1: {
       let tabbrowser_height = tabs.clientHeight;
-      let number_of_tabs = this.document.querySelectorAll('.tabbrowser-tab:not([hidden=true])').length;
+      let number_of_tabs = this.window.gBrowser.visibleTabs.length;
       if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60) {
         tabs.classList.add('large-tabs');
         this.refreshAllTabs();
@@ -810,8 +821,7 @@ VerticalTabs.prototype = {
   },
 
   refreshAllTabs: function () {
-    let tabs = this.document.getElementById('tabbrowser-tabs');
-    for (let tab of tabs.childNodes) {
+    for (let tab of this.window.gBrowser.visibleTabs) {
       tab.refreshThumbAndLabel();
     }
   },
@@ -896,6 +906,7 @@ VerticalTabs.prototype = {
   },
 
   onTabClose: function (aEvent) {
+    this.clearFind();
     this.stats.tabs_destroyed++;
   },
 
