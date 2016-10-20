@@ -293,7 +293,7 @@ VerticalTabs.prototype = {
       mainWindow.setAttribute('toggledon', 'false');
       this.init();
     };
-    toolbar.insertBefore(toptabsbutton, toolbar.firstChild);
+    toolbar.insertBefore(toptabsbutton, toolbar.lastChild);
 
     let results = this.document.getElementById('PopupAutoCompleteRichResult');
 
@@ -776,7 +776,7 @@ VerticalTabs.prototype = {
   resizeFindInput: function () {
     let spacer = this.document.getElementById('new-tab-spacer');
     let find_input = this.document.getElementById('find-input');
-    if (this.pinnedWidth > 220 || this.document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
+    if (this.pinnedWidth > 170 || this.document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
       spacer.style.visibility = 'collapse';
       find_input.style.visibility = 'visible';
     } else {
