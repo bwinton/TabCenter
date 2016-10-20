@@ -727,13 +727,21 @@ VerticalTabs.prototype = {
 
   clearFind: function () {
     this.document.getElementById('find-input').value = '';
+    if (this.visibleTabs) {
+      for (let i = 0; i < this.visibleTabs.length; i++) {
+        let tab = this.visibleTabs[i];
+        if (tab.getAttribute('pinned') === 'true') {
+          tab.setAttribute('hidden', false);
+        }
+      }
+    }
     this.visibleTabs = null;
     this.filtertabs();
   },
 
   filtertabs: function () {
     let document = this.document;
-    this.visibleTabs = this.visibleTabs || this.window.gBrowser.visibleTabs;
+    this.visibleTabs = this.visibleTabs || Array.filter(this.window.gBrowser.tabs, tab => !tab.hidden && !tab.closing);
     let find_input = document.getElementById('find-input');
     let input_value = find_input.value.toLowerCase();
     let hidden_counter = 0;
