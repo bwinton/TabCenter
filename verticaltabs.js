@@ -727,13 +727,11 @@ VerticalTabs.prototype = {
 
   clearFind: function () {
     this.document.getElementById('find-input').value = '';
+
+    //manually show pinned tabs after changing groups for the tab groups add-on, as it does not re-show them
     if (this.visibleTabs) {
-      for (let i = 0; i < this.visibleTabs.length; i++) {
-        let tab = this.visibleTabs[i];
-        if (tab.getAttribute('pinned') === 'true') {
-          tab.setAttribute('hidden', false);
-        }
-      }
+      this.visibleTabs.filter(tab => tab.getAttribute('pinned') === 'true')
+                      .forEach(tab => {tab.setAttribute('hidden', false);});
     }
     this.visibleTabs = null;
     this.filtertabs();
