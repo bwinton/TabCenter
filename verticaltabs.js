@@ -120,7 +120,6 @@ VerticalTabs.prototype = {
     this.mouseInside = false;
 
     installStylesheets(window);
-    window.TabsInTitlebar.allowedBy('tabcenter', false);
 
     this.PageThumbs = PageThumbs;
     this._endRemoveTab = window.gBrowser._endRemoveTab;
@@ -322,6 +321,8 @@ VerticalTabs.prototype = {
     if (results) {
       this.tabObserver.observe(results, {attributes: true});
     }
+
+    window.TabsInTitlebar.allowedBy('tabcenter', false);
 
     this.unloaders.push(function () {
       this.tabObserver.disconnect();
