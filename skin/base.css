@@ -240,6 +240,22 @@
   visibility: hidden;
 }
 
+#verticaltabs-box #TabsToolbar > #top-tabs-button {
+  width: 32px;
+  min-width: 32px;
+  margin-right: 0;
+  margin-left: 4px;
+  background-image: url("resource://tabcenter/skin/tc-top.svg") !important;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  -moz-box-flex: 0;
+}
+
+#verticaltabs-box #TabsToolbar[brighttext] > #top-tabs-button {
+  background-image: url("resource://tabcenter/skin/tc-top-white.svg") !important;
+}
+
 #verticaltabs-box #TabsToolbar > #pin-button {
   z-index: 1;
   width: 32px;
@@ -274,6 +290,7 @@
   padding: 0 !important;
   height: 26px;
   min-height: auto !important;
+  min-width: 45px !important;
   border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
   border-radius: 1px !important;
   overflow: -moz-hidden-unscrollable;
@@ -285,7 +302,7 @@
 }
 
 #TabsToolbar #find-input[focused="true"] {
-  width: calc(100% - 100px) !important;
+  width: calc(100% - 126px) !important;
   border: 1px solid Highlight !important;
   box-shadow: 0 0 0 1px Highlight inset;
 }
@@ -707,7 +724,7 @@
   border-bottom: 1px solid hsla(0, 0%, 0%, 0.5) !important;
 }
 
-#TabsToolbar > toolbarbutton:not(#pin-button):not(#new-tab-button),
+#TabsToolbar > toolbarbutton:not(#pin-button):not(#new-tab-button):not(#top-tabs-button),
 #TabsToolbar > toolbaritem {
   display: none;
 }
@@ -727,15 +744,13 @@
 }
 
 #verticaltabs-box #TabsToolbar > toolbarbutton:hover:active {
-  border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
   background-color: hsla(0, 0%, 0%, 0.16) !important;
   box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1) inset !important;
 }
 
 #TabsToolbar > #new-tab-button {
   margin: 0 4px !important;
-  padding: 0 6px !important;
-  min-width: 40px !important;
+  min-width: 30px !important;
   -moz-box-align: center !important;
   -moz-box-orient: horizontal !important;
   -moz-box-pack: end !important;
@@ -743,8 +758,7 @@
 }
 
 #TabsToolbar #new-tab-button .toolbarbutton-icon {
-  margin: 0 !important;
-  margin-right: 6px !important;
+  margin: 0 2px !important;
   padding: 0 !important;
 }
 

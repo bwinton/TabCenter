@@ -88,9 +88,6 @@ function initWindow(window) {
 
   let data = b64toBlob(win, self.data.load('newtab.b64'), 'image/png');
 
-  // Add the stylesheets
-  utils.installStylesheets(win);
-
   // check for browser windows with visible toolbars
   if (!win.toolbar.visible || !isBrowser(win)) {
     return;
@@ -98,10 +95,12 @@ function initWindow(window) {
 
   // if the dcoument is loaded
   if (isDocumentLoaded(win)) {
+    win.document.getElementById('main-window').setAttribute('persist', win.document.getElementById('main-window').getAttribute('persist') + ' tabspinned tabspinnedwidth toggledon');
     addVerticalTabs(win, data);
   } else {
     // Listen for load event before checking the window type
     win.addEventListener('load', () => {
+      win.document.getElementById('main-window').setAttribute('persist', win.document.getElementById('main-window').getAttribute('persist') + ' tabspinned tabspinnedwidth toggledon');
       addVerticalTabs(win, data);
     }, {once: true});
   }
@@ -138,7 +137,6 @@ exports.main = function (options, callbacks) {
   utils.setDefaultPrefs();
 
   // Startup VerticalTabs object for each window.
-  browserWindows.on('open', initWindow);
   for (let window of browserWindows) {
     initWindow(window);
   }
@@ -214,15 +212,13 @@ exports.onUnload = function (reason) {
     let win = viewFor(window);
     if (win.VerticalTabs) {
       win.VerticalTabs.unload();
+      let mainWindow = win.document.getElementById('main-window');
+      mainWindow.removeAttribute('tabspinned');
+      mainWindow.removeAttribute('tabspinnedwidth');
+      mainWindow.setAttribute('persist',
+        mainWindow.getAttribute('persist').replace(' tabspinnned', '').replace(' tabspinnedwidth', '').replace(' toggledon', ''));
+      delete win.VerticalTabs;
     }
-
-    let tabs = win.document.getElementById('tabbrowser-tabs');
-    if (tabs) {
-      tabs.removeAttribute('overflow');
-      tabs._positionPinnedTabs();
-    }
-    // Remove the stylesheets
-    utils.removeStylesheets(win);
   }
 
   // Restore default preferences
