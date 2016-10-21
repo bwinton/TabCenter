@@ -120,7 +120,6 @@ VerticalTabs.prototype = {
     this.mouseInside = false;
 
     installStylesheets(window);
-    window.TabsInTitlebar.allowedBy('tabcenter', false);
 
     this.PageThumbs = PageThumbs;
     this._endRemoveTab = window.gBrowser._endRemoveTab;
@@ -276,24 +275,6 @@ VerticalTabs.prototype = {
     };
 
     this.rearrangeXUL();
-    //should be in rearrange XUL
-    let toolbar = this.document.getElementById('TabsToolbar');
-    let sidetabsbutton = this.document.getElementById('side-tabs-button');
-    if (sidetabsbutton){
-      toolbar.removeChild(sidetabsbutton);
-    }
-
-    let toptabsbutton = this.createElement('toolbarbutton', {
-      'id': 'top-tabs-button',
-      'label': 'top',
-      'tooltiptext': 'Move tabs to the top'
-    });
-
-    toptabsbutton.onclick = () => {
-      mainWindow.setAttribute('toggledon', 'false');
-      this.init();
-    };
-    toolbar.insertBefore(toptabsbutton, toolbar.lastChild);
 
     let results = this.document.getElementById('PopupAutoCompleteRichResult');
 
@@ -322,6 +303,8 @@ VerticalTabs.prototype = {
     if (results) {
       this.tabObserver.observe(results, {attributes: true});
     }
+
+    window.TabsInTitlebar.allowedBy('tabcenter', false);
 
     this.unloaders.push(function () {
       this.tabObserver.disconnect();
@@ -528,6 +511,21 @@ VerticalTabs.prototype = {
       }
     });
 
+    //build button to toggle Tab Center on/off
+    let toptabsbutton = this.createElement('toolbarbutton', {
+      'id': 'top-tabs-button',
+      'label': 'top',
+      'tooltiptext': 'Move tabs to the top'
+    });
+    toptabsbutton.onclick = () => {
+      mainWindow.setAttribute('toggledon', 'false');
+      this.init();
+    };
+    let sidetabsbutton = this.document.getElementById('side-tabs-button');
+    if (sidetabsbutton){
+      toolbar.removeChild(sidetabsbutton);
+    }
+
     leftbox.contextMenuOpen = false;
     let contextMenuHidden = (event) => {
       //don't catch close events from tooltips
@@ -553,6 +551,7 @@ VerticalTabs.prototype = {
     let spacer = this.createElement('spacer', {'id': 'new-tab-spacer'});
     toolbar.insertBefore(find_input, pin_button);
     toolbar.insertBefore(spacer, pin_button);
+    toolbar.insertBefore(toptabsbutton, toolbar.lastChild);
 
     this.resizeFindInput();
 
