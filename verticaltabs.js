@@ -41,7 +41,7 @@
 const {Cc, Ci, Cu} = require('chrome');
 const {platform} = require('sdk/system');
 const {prefs} = require('sdk/simple-prefs');
-const {addPingStats, Stats, setDefaultPrefs, removeStylesheets, installStylesheets} = require('./utils');
+const {sendPing, setDefaultPrefs, removeStylesheets, installStylesheets} = require('./utils');
 const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
                                createInstance(Ci.nsIURIFixup);
 
@@ -63,6 +63,7 @@ const WAIT_BEFORE_RESIZE = 1000;
 function VerticalTabs(window, data) {
   this.window = window;
   this.document = window.document;
+  this.sendPing = sendPing;
 
   window.createImageBitmap(data).then((response) => {
     this.newTabImage = response;
@@ -115,7 +116,6 @@ VerticalTabs.prototype = {
 
     this.window.VerticalTabs = this;
     this.unloaders = [];
-    this.stats = new Stats;
     this.resizeTimeout = -1;
     this.mouseInside = false;
 
@@ -286,9 +286,6 @@ VerticalTabs.prototype = {
         this.document.getElementById('TabsToolbar').removeChild(this.document.getElementById('top-tabs-button'));
       }
     });
-    this.window.onunload = () => {
-      addPingStats(this.stats);
-    };
 
     this.rearrangeXUL();
 
@@ -495,10 +492,10 @@ VerticalTabs.prototype = {
         let newstate = box.getAttribute('tabspinned') == 'true' ? 'false' : 'true';
         box.setAttribute('tabspinned', newstate);
         if (newstate == 'true') {
-          window.VerticalTabs.stats.tab_center_pinned++;
+          window.VerticalTabs.sendPing('tab_center_pinned');
           button.setAttribute('tooltiptext', 'Shrink sidebar when not in use');
         } else {
-          window.VerticalTabs.stats.tab_center_unpinned++;
+          window.VerticalTabs.sendPing('tab_center_unpinned');
           button.setAttribute('tooltiptext', 'Keep sidebar open');
           document.getElementById('verticaltabs-box').removeAttribute('search_expanded');
         }
@@ -607,8 +604,10 @@ VerticalTabs.prototype = {
     };
 
     let enter = (event) => {
+      let shouldExpand = tabs.getAttribute('mouseInside') !== 'true' &&
+        leftbox.getAttribute('expanded') !== 'true';
       this.mouseEntered();
-      if (leftbox.getAttribute('expanded') !== 'true') {
+      if (shouldExpand) {
         this.recordExpansion();
         if (event.type === 'mouseenter') {
           enterTimeout = window.setTimeout(() => {
@@ -772,7 +771,7 @@ VerticalTabs.prototype = {
   },
 
   recordExpansion: function () {
-    this.stats.tab_center_expanded++;
+    this.sendPing('tab_center_expanded');
   },
 
   adjustCrop: function () {
@@ -985,21 +984,21 @@ VerticalTabs.prototype = {
 
   onTabOpen: function (aEvent) {
     let tab = aEvent.target;
-    this.stats.tabs_created++;
+    this.sendPing('tabs_created');
     this.initTab(tab);
   },
 
   onTabClose: function (aEvent) {
     this.clearFind();
-    this.stats.tabs_destroyed++;
+    this.sendPing('tabs_destroyed');
   },
 
   onTabPinned: function (aEvent) {
-    this.stats.tabs_pinned++;
+    this.sendPing('tabs_pinned');
   },
 
   onTabUnpinned: function (aEvent) {
-    this.stats.tabs_unpinned++;
+    this.sendPing('tabs_unpinned');
   },
 };
 

@@ -39,6 +39,7 @@
 'use strict';
 
 const {Cc, Ci} = require('chrome');
+const prefs = require('sdk/simple-prefs');
 
 
 /* Payload */
@@ -56,29 +57,11 @@ const PAYLOAD_KEYS = [
   'tab_center_expanded'
 ];
 
-function Stats() {
-  for (let key of PAYLOAD_KEYS) {
-    this[key] = 0;
+function sendPing(key) {
+  if (!PAYLOAD_KEYS.includes(key)) {
+    // console.log(`Could not find ${key} in payload keys.`);
+    return false;
   }
-}
-exports.Stats = Stats;
-
-let payload = new Stats;
-payload.version = 1;
-
-function addPingStats(stats) {
-  for (let key of PAYLOAD_KEYS) {
-    payload[key] += stats[key] || 0;
-  }
-}
-exports.addPingStats = addPingStats;
-
-function setPayload(key, value) {
-  payload[key] = value;
-}
-exports.setPayload = setPayload;
-
-function sendPing() {
   // This looks strange, but it's required to send over the test ID.
   const subject = {
     wrappedJSObject: {
@@ -87,15 +70,18 @@ function sendPing() {
     }
   };
 
+  let payload = {
+    version: 1,
+    tab_center_tabs_on_top: prefs.prefs.opentabstop,
+    tab_center_show_thumbnails: prefs.prefs.largetabs,
+  };
+  payload[key] = 1;
+
   let ping = JSON.stringify(payload);
 
   // Send metrics to the main Test Pilot add-on.
   notifyObservers(subject, 'testpilot::send-metric', ping);
-
-  // Clear out the metrics for next time…
-  for (let key of PAYLOAD_KEYS) {
-    payload[key] = 0;
-  }
+  return true;
 }
 exports.sendPing = sendPing;
 
