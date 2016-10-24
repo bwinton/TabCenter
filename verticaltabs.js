@@ -150,6 +150,20 @@ VerticalTabs.prototype = {
       return t;
     };
 
+    let OldPrintPreviewListenerEnter = window.PrintPreviewListener.onEnter;
+    let OldPrintPreviewListenerExit = window.PrintPreviewListener.onExit;
+
+    window.PrintPreviewListener.onEnter = () => {
+      let mainWindow = document.getElementById('main-window');
+      mainWindow.setAttribute('printPreview', 'true');
+      OldPrintPreviewListenerEnter();
+    };
+
+    window.PrintPreviewListener.onExit = () => {
+      mainWindow.removeAttribute('printPreview');
+      OldPrintPreviewListenerExit();
+    };
+
     //reset _lastRelatedTab on changing preferences
     require('sdk/simple-prefs').on('opentabstop', function () {
       window.gBrowser._lastRelatedTab = null;
@@ -266,6 +280,8 @@ VerticalTabs.prototype = {
       this.window.gBrowser._endRemoveTab = this._endRemoveTab;
       this.window.gBrowser.addTab = oldAddTab;
       this.window.gBrowser.receiveMessage = this.receiveMessage;
+      this.window.PrintPreviewListener.onEnter = OldPrintPreviewListenerEnter;
+      this.window.PrintPreviewListener.onExit = OldPrintPreviewListenerExit;
       if (this.document.getElementById('top-tabs-button')){
         this.document.getElementById('TabsToolbar').removeChild(this.document.getElementById('top-tabs-button'));
       }
