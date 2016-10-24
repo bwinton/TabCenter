@@ -221,7 +221,7 @@ VerticalTabs.prototype = {
     };
 
     window.gBrowser.tabContainer.addEventListener('TabBarUpdated', () => {
-      this.clearFind();
+      this.clearFind(true);
     });
 
     window.ToolbarIconColor.inferFromText = function () {
@@ -799,16 +799,16 @@ VerticalTabs.prototype = {
     }
   },
 
-  clearFind: function () {
+  clearFind: function (tabGroupChange = false) {
     if (this.document.getElementById('find-input')){
       this.document.getElementById('find-input').value = '';
 
       //manually show pinned tabs after changing groups for the tab groups add-on, as it does not re-show them
-      if (this.visibleTabs) {
+      if (tabGroupChange && this.visibleTabs) {
         this.visibleTabs.filter(tab => tab.getAttribute('pinned') === 'true')
                         .forEach(tab => {tab.setAttribute('hidden', false);});
+        this.visibleTabs = null;
       }
-      this.visibleTabs = null;
       this.filtertabs();
     }
   },
