@@ -170,6 +170,21 @@
   transition: box-shadow 150ms ease-out, width 150ms ease-out;
 }
 
+#main-window[printPreview] #appcontent {
+  width: 100vw !important;
+}
+
+#main-window[printPreview] #verticaltabs-box {
+  width: 0 !important;
+}
+
+#main-window[printPreview] #verticaltabs-splitter {
+  width: 0 !important;
+  margin-left: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+}
+
 #main-window[F11-fullscreen] #verticaltabs-box {
   width: 1px !important;
   transition: none;
