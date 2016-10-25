@@ -724,7 +724,12 @@ VerticalTabs.prototype = {
     };
     window.addEventListener('aftercustomization', afterListener);
 
-    window.addEventListener('resize', this.resizeTabs.bind(this), false);
+    window.addEventListener('resize', () => {
+      this.resizeTabs();
+      if (this.pinnedWidth > document.width / 2) {
+        document.documentElement.style.setProperty('--pinned-width', `${Math.min(this.pinnedWidth, document.width / 2)}px`);
+      }
+    }, false);
     this.adjustCrop();
 
     this.unloaders.push(function () {
