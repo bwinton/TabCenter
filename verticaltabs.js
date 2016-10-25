@@ -445,16 +445,12 @@ VerticalTabs.prototype = {
     splitter.addEventListener('mousedown', (event) => {
       let initialX = event.screenX - this.pinnedWidth;
       let mousemove = (event) => {
-        // event.preventDefault();
         let xDelta = event.screenX - initialX;
         this.pinnedWidth = xDelta;
         if (this.pinnedWidth < 30) {
           this.pinnedWidth = 30;
         }
-        if (this.pinnedWidth > document.width / 2) {
-          this.pinnedWidth = document.width / 2;
-        }
-        document.documentElement.style.setProperty('--pinned-width', `${this.pinnedWidth}px`);
+        document.documentElement.style.setProperty('--pinned-width', `${Math.min(this.pinnedWidth, document.width / 2)}px`);
         mainWindow.setAttribute('tabspinnedwidth', `${this.pinnedWidth}px`);
         this.resizeFindInput();
         this.resizeTabs();
@@ -726,9 +722,7 @@ VerticalTabs.prototype = {
 
     window.addEventListener('resize', () => {
       this.resizeTabs();
-      if (this.pinnedWidth > document.width / 2) {
-        document.documentElement.style.setProperty('--pinned-width', `${Math.min(this.pinnedWidth, document.width / 2)}px`);
-      }
+      document.documentElement.style.setProperty('--pinned-width', `${Math.min(this.pinnedWidth, document.width / 2)}px`);
     }, false);
     this.adjustCrop();
 
