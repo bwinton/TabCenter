@@ -443,6 +443,9 @@ VerticalTabs.prototype = {
     document.documentElement.style.setProperty('--pinned-width', `${this.pinnedWidth}px`);
 
     splitter.addEventListener('mousedown', (event) => {
+      if (this.pinnedWidth > document.width / 2) {
+        this.pinnedWidth = document.width / 2;
+      }
       let initialX = event.screenX - this.pinnedWidth;
       let mousemove = (event) => {
         let xDelta = event.screenX - initialX;
