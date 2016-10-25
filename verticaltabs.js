@@ -487,7 +487,10 @@ VerticalTabs.prototype = {
     let pin_button = this.createElement('toolbarbutton', {
       'id': 'pin-button',
       'tooltiptext': 'Keep sidebar open',
-      'onclick': `let box = document.getElementById('main-window');
+      'onclick': `if (event.which === 3) {
+          return;
+        }
+        let box = document.getElementById('main-window');
         let button = document.getElementById('pin-button');
         let newstate = box.getAttribute('tabspinned') == 'true' ? 'false' : 'true';
         box.setAttribute('tabspinned', newstate);
