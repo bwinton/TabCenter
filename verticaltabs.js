@@ -89,7 +89,10 @@ VerticalTabs.prototype = {
       });
       sidetabsbutton.style.MozAppearance = 'none';
       sidetabsbutton.style.setProperty('-moz-image-region', 'rect(0, 16px, 16px, 0)', 'important');
-      sidetabsbutton.onclick = () => {
+      sidetabsbutton.onclick = (e) => {
+        if (e.which === 3) {
+          return;
+        }
         mainWindow.setAttribute('toggledon', 'true');
         this.init();
       };
@@ -487,7 +490,10 @@ VerticalTabs.prototype = {
     let pin_button = this.createElement('toolbarbutton', {
       'id': 'pin-button',
       'tooltiptext': 'Keep sidebar open',
-      'onclick': `let box = document.getElementById('main-window');
+      'onclick': `if (event.which === 3) {
+          return;
+        }
+        let box = document.getElementById('main-window');
         let button = document.getElementById('pin-button');
         let newstate = box.getAttribute('tabspinned') == 'true' ? 'false' : 'true';
         box.setAttribute('tabspinned', newstate);
@@ -530,7 +536,10 @@ VerticalTabs.prototype = {
       'label': 'top',
       'tooltiptext': 'Move tabs to the top'
     });
-    toptabsbutton.onclick = () => {
+    toptabsbutton.onclick = (e) => {
+      if (e.which === 3) {
+        return;
+      }
       mainWindow.setAttribute('toggledon', 'false');
       this.init();
     };
