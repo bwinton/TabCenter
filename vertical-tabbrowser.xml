@@ -22,7 +22,9 @@
       <method name="_canScrollToElement">
         <parameter name="tab"/>
         <body><![CDATA[
-          return !tab.hidden;
+          let canScroll = !tab.hidden && !this.skipNextScroll;
+          this.skipNextScroll = false;
+          return canScroll;
         ]]></body>
       </method>
     </implementation>
@@ -64,7 +66,6 @@
         if (numberOfTabs === 1) {
           return;
         }
-        tabs._handleTabSelect(false);
       ]]></handler>
     </handlers>
   </binding>
