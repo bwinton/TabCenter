@@ -596,6 +596,13 @@ VerticalTabs.prototype = {
 
     let exit = (event) => {
       if (!this.mouseInside){
+        let arrowscrollbox = this.document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+        let scrollbox = this.document.getAnonymousElementByAttribute(arrowscrollbox, 'anonid', 'scrollbox');
+        let scrolltop = scrollbox.scrollTop;
+        arrowscrollbox.skipNextScroll = true;
+        tabs.removeAttribute('mouseInside');
+        scrollbox.scrollTop = scrolltop;
+
         if (enterTimeout > 0) {
           window.clearTimeout(enterTimeout);
           enterTimeout = -1;
@@ -615,6 +622,8 @@ VerticalTabs.prototype = {
     let enter = (event) => {
       let shouldExpand = tabs.getAttribute('mouseInside') !== 'true' &&
         leftbox.getAttribute('expanded') !== 'true';
+      let arrowscrollbox = this.document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+      arrowscrollbox.skipNextScroll = true;
       this.mouseEntered();
       if (shouldExpand) {
         this.recordExpansion();
@@ -946,13 +955,7 @@ VerticalTabs.prototype = {
   },
 
   mouseExited: function () {
-    let tabs = this.document.getElementById('tabbrowser-tabs');
-    let arrowscrollbox = this.document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
-    let scrollbox = this.document.getAnonymousElementByAttribute(arrowscrollbox, 'anonid', 'scrollbox');
-    let scrolltop = scrollbox.scrollTop;
     this.mouseInside = false;
-    tabs.removeAttribute('mouseInside');
-    scrollbox.scrollTop = scrolltop;
 
     if (this.resizeTimeout < 0) {
       // Once the mouse exits the tab area, wait

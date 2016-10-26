@@ -22,7 +22,9 @@
       <method name="_canScrollToElement">
         <parameter name="tab"/>
         <body><![CDATA[
-          return !tab.hidden;
+          let canScroll = !tab.hidden && !this.skipNextScroll;
+          this.skipNextScroll = false;
+          return canScroll;
         ]]></body>
       </method>
     </implementation>
@@ -64,7 +66,6 @@
         if (numberOfTabs === 1) {
           return;
         }
-        tabs._handleTabSelect(false);
       ]]></handler>
     </handlers>
   </binding>
@@ -360,6 +361,54 @@
             }
           }
           return tabs.length;
+        ]]></body>
+      </method>
+
+      <method name="_notifyBackgroundTab">
+        <parameter name="aTab"/>
+        <body><![CDATA[
+          if (aTab.pinned || aTab.hidden) {
+            return;
+          }
+
+          let scrollRect = this.mTabstrip.scrollClientRect;
+          let tab = aTab.getBoundingClientRect();
+          this.mTabstrip._calcTabMargins(aTab);
+
+          // DOMRect top/bottom properties are immutable.
+          tab = {top: tab.top, bottom: tab.bottom};
+
+          // Is the new tab already completely visible?
+          if (scrollRect.top <= tab.top && tab.bottom <= scrollRect.bottom){
+            return;
+          }
+
+          if (this.mTabstrip.smoothScroll) {
+            let selected = !this.selectedItem.pinned &&
+                           this.selectedItem.getBoundingClientRect();
+            if (selected) {
+              selected = {top: selected.top, bottom: selected.bottom};
+            }
+
+            // Can we make both the new tab and the selected tab completely visible?
+            if (!selected ||
+                Math.max(tab.bottom - selected.top, selected.bottom - tab.top) <=
+                  scrollRect.height) {
+              this.mTabstrip.ensureElementIsVisible(aTab);
+              return;
+            }
+
+            this.mTabstrip._smoothScrollByPixels(this.mTabstrip._isRTLScrollbox ?
+                                                 selected.bottom - scrollRect.bottom :
+                                                 selected.top - scrollRect.top);
+          }
+
+          if (!this._animateElement.hasAttribute('notifybgtab')) {
+            this._animateElement.setAttribute('notifybgtab', 'true');
+            setTimeout(function (ele) {
+              ele.removeAttribute('notifybgtab');
+            }, 150, this._animateElement);
+          }
         ]]></body>
       </method>
     </implementation>
