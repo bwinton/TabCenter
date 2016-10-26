@@ -89,7 +89,10 @@ VerticalTabs.prototype = {
       });
       sidetabsbutton.style.MozAppearance = 'none';
       sidetabsbutton.style.setProperty('-moz-image-region', 'rect(0, 16px, 16px, 0)', 'important');
-      sidetabsbutton.onclick = () => {
+      sidetabsbutton.onclick = (e) => {
+        if (e.which === 3) {
+          return;
+        }
         mainWindow.setAttribute('toggledon', 'true');
         this.init();
       };
@@ -533,7 +536,10 @@ VerticalTabs.prototype = {
       'label': 'top',
       'tooltiptext': 'Move tabs to the top'
     });
-    toptabsbutton.onclick = () => {
+    toptabsbutton.onclick = (e) => {
+      if (e.which === 3) {
+        return;
+      }
       mainWindow.setAttribute('toggledon', 'false');
       this.init();
     };
