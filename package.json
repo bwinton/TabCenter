@@ -1,0 +1,67 @@
+{
+  "name": "examplewebextension",
+  "version": "0.0.1",
+  "description": "Example WebExtension Repo",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mozilla/example-webextension-repo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mozilla/example-webextension-repo/issues"
+  },
+  "engines": {
+    "firefox": ">=48.0a1"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "3.8.1",
+    "eslint-plugin-json": "1.2.0",
+    "eslint-plugin-mocha": "4.7.0",
+    "eslint-plugin-promise": "3.3.0",
+    "fs-promise": "0.5.0",
+    "fx-runner": "1.0.6",
+    "geckodriver": "1.1.3",
+    "karma": "1.3.0",
+    "karma-coverage": "1.1.1",
+    "karma-coveralls": "1.1.2",
+    "karma-firefox-launcher": "1.0.0",
+    "karma-mocha": "1.2.0",
+    "karma-mocha-reporter": "2.2.0",
+    "mocha": "3.1.2",
+    "sinon": "1.17.6",
+    "sinon-chrome": "2.1.2",
+    "npm-run-all": "3.1.1",
+    "selenium-webdriver": "3.0.0-beta-3",
+    "virtualenv": "0.3.1",
+    "web-ext": "1.6.0"
+  },
+  "permissions": {
+    "multiprocess": true
+  },
+  "preferences": [
+    {
+      "name": "buttonUrl",
+      "title": "Web page url",
+      "description": "The web page url to open when button is clicked",
+      "type": "string",
+      "value": "https://www.mozilla.org/"
+    }
+  ],
+  "scripts": {
+    "bundle": "web-ext -s add-on -a dist build",
+    "download": "node scripts/get_ff.js",
+    "firefox": "web-ext -s add-on run --firefox-binary ${FIREFOX_BINARY:-beta}",
+    "lint": "npm-run-all lint:*",
+    "lint:eslint": "eslint --ext=.js,.json .",
+    "lint:webext": "web-ext -s add-on lint",
+    "test": "npm-run-all test:*",
+    "test:lint": "npm run lint",
+    "test:karma": "NODE_ENV=test karma start",
+    "test:func": "export FIREFOX_BINARY=${FIREFOX_BINARY:-beta} && npm run bundle && XPI_NAME=dist/example_webextension-0.0.1.zip mocha test/functional/",
+    "virtualenv-postinstall": "virtualenv-postinstall"
+  },
+  "license": "MPL-2.0",
+  "keywords": [
+    "webextensions"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "applications": {
+    "gecko": {
+      "id": "examplewebextension@mozilla.org",
+        "strict_min_version": "48.0",
+        "strict_max_version": "52.*"
+    }
+  },
+  "background": {
+    "scripts": ["main.js"]
+  },
+  "browser_action": {
+    "browser_style": true,
+    "default_icon": "img/firefox-logo.svg",
+    "default_title": "__MSG_buttonTitle__"
+  },
+
+  "default_locale": "en-US",
+
+  "description": "__MSG_extensionDescription__",
+
+  "manifest_version": 2,
+
+  "name": "Example WebExtension",
+
+  "permissions": [],
+
+  "version": "0.0.1"
+}

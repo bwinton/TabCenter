@@ -1,0 +1,8 @@
+{
+  "globals": {
+    "sinon": false
+  },
+  "rules": {
+    "prefer-arrow-callback": 0
+  }
+}
