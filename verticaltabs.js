@@ -987,9 +987,6 @@ VerticalTabs.prototype = {
     case 'TabClose':
       this.onTabClose(aEvent);
       return;
-    case 'mouseup':
-      this.onMouseUp(aEvent);
-      return;
     }
   },
 
