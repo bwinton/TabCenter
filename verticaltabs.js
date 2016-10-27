@@ -41,7 +41,7 @@
 const {Cc, Ci, Cu} = require('chrome');
 const {platform} = require('sdk/system');
 const {prefs} = require('sdk/simple-prefs');
-const {sendPing, setDefaultPrefs, removeStylesheets, installStylesheets} = require('./utils');
+const {sendPing, setDefaultPrefs, removeStylesheets, installStylesheets, topStylesheets} = require('./utils');
 const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
                                createInstance(Ci.nsIURIFixup);
 
@@ -130,30 +130,6 @@ VerticalTabs.prototype = {
     this.inferFromText = window.ToolbarIconColor.inferFromText;
     this.receiveMessage = window.gBrowser.receiveMessage;
 
-
-    let oldAddTab = window.gBrowser.addTab;
-    window.gBrowser.addTab = function (...args) {
-      let t = oldAddTab.bind(window.gBrowser)(...args);
-      if (prefs.opentabstop) {
-        let aRelatedToCurrent;
-        let aReferrerURI;
-        if (arguments.length === 2 && typeof arguments[1] === 'object' && !(arguments[1] instanceof Ci.nsIURI)) {
-          let params = arguments[1];
-          aReferrerURI = params.referrerURI;
-          aRelatedToCurrent = params.relatedToCurrent;
-        }
-        if ((aRelatedToCurrent == null ? aReferrerURI : aRelatedToCurrent) &&
-          Services.prefs.getBoolPref('browser.tabs.insertRelatedAfterCurrent')) {
-          let newTabPos = (this._lastRelatedTab || this.selectedTab)._tPos - 1;
-          this.moveTabTo(t, newTabPos);
-          this._lastRelatedTab = t;
-        } else {
-          this.moveTabTo(t, 0);
-        }
-      }
-      return t;
-    };
-
     let OldPrintPreviewListenerEnter = window.PrintPreviewListener.onEnter;
     let OldPrintPreviewListenerExit = window.PrintPreviewListener.onExit;
 
@@ -168,12 +144,27 @@ VerticalTabs.prototype = {
       OldPrintPreviewListenerExit();
     };
 
-    //reset _lastRelatedTab on changing preferences
+    let tabs = document.getElementById('tabbrowser-tabs');
+    let openTabsTop = !prefs.opentabstop;
+
+    function toggleTabsTop() {
+      if (prefs.opentabstop && !openTabsTop) {
+        installStylesheets(window, topStylesheets);
+      } else if (!prefs.opentabstop && openTabsTop) {
+        removeStylesheets(window, topStylesheets);
+      }
+      tabs.setAttribute('openTabsTop', prefs.opentabstop.toString());
+      openTabsTop = prefs.opentabstop;
+    }
+
+    toggleTabsTop();
+
+    // update on changing preferences
     require('sdk/simple-prefs').on('opentabstop', function () {
-      window.gBrowser._lastRelatedTab = null;
+      toggleTabsTop();
     });
 
-    let tabs = document.getElementById('tabbrowser-tabs');
+
     let tabsProgressListener = {
       onLocationChange: (aBrowser, aWebProgress, aRequest, aLocation, aFlags) => {
         for (let tab of this.window.gBrowser.visibleTabs) {
@@ -282,7 +273,6 @@ VerticalTabs.prototype = {
 
       this.window.ToolbarIconColor.inferFromText = this.inferFromText;
       this.window.gBrowser._endRemoveTab = this._endRemoveTab;
-      this.window.gBrowser.addTab = oldAddTab;
       this.window.gBrowser.receiveMessage = this.receiveMessage;
       this.window.PrintPreviewListener.onEnter = OldPrintPreviewListenerEnter;
       this.window.PrintPreviewListener.onExit = OldPrintPreviewListenerExit;

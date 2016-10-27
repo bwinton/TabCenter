@@ -1,0 +1,5 @@
+
+.tabbrowser-arrowscrollbox > .arrowscrollbox-scrollbox .scrollbox-innerbox {
+  -moz-box-direction: reverse;
+  -moz-box-pack: end;
+}

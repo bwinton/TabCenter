@@ -123,16 +123,20 @@ const STYLESHEETS = [
   'chrome://tabcenter/skin/platform.css'
 ];
 
-function installStylesheets(win) {
-  for (let uri of STYLESHEETS) {
+function installStylesheets(win, sheets) {
+  for (let uri of sheets || STYLESHEETS) {
     loadSheet(win, uri, 'author');
   }
 }
 exports.installStylesheets = installStylesheets;
 
-function removeStylesheets(win) {
-  for (let uri of STYLESHEETS) {
+function removeStylesheets(win, sheets) {
+  for (let uri of sheets || STYLESHEETS) {
     removeSheet(win, uri, 'author');
   }
 }
 exports.removeStylesheets = removeStylesheets;
+
+exports.topStylesheets = [
+  'resource://tabcenter/skin/top.css',
+];
