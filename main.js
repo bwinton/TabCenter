@@ -58,6 +58,7 @@ let self = require('sdk/self');
 const RESOURCE_HOST = 'tabcenter';
 
 let hotkey;
+let VerticalTabsWindowId = 1;
 
 function b64toBlob(win, b64Data, contentType, sliceSize) {
   contentType = contentType || '';
@@ -85,6 +86,8 @@ function b64toBlob(win, b64Data, contentType, sliceSize) {
 function initWindow(window) {
   // get the XUL window that corresponds to this high-level window
   let win = viewFor(window);
+  win.VerticalTabsWindowId = VerticalTabsWindowId;
+  VerticalTabsWindowId++;
 
   let data = b64toBlob(win, self.data.load('newtab.b64'), 'image/png');
 

@@ -54,7 +54,9 @@ const PAYLOAD_KEYS = [
   'tabs_unpinned',
   'tab_center_pinned',
   'tab_center_unpinned',
-  'tab_center_expanded'
+  'tab_center_expanded',
+  'tab_center_toggled_off',
+  'tab_center_toggled_on'
 ];
 
 function sendPing(key) {
@@ -74,6 +76,7 @@ function sendPing(key) {
     version: 1,
     tab_center_tabs_on_top: prefs.prefs.opentabstop,
     tab_center_show_thumbnails: prefs.prefs.largetabs,
+    tab_center_window_id: this.window.VerticalTabsWindowId,
   };
   payload[key] = 1;
 

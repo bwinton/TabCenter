@@ -95,6 +95,7 @@ VerticalTabs.prototype = {
         }
         mainWindow.setAttribute('toggledon', 'true');
         this.init();
+        window.VerticalTabs.sendPing('tab_center_toggled_on');
       };
 
       toolbar.insertBefore(sidetabsbutton, null);
@@ -541,6 +542,7 @@ VerticalTabs.prototype = {
       }
       mainWindow.setAttribute('toggledon', 'false');
       this.init();
+      window.VerticalTabs.sendPing('tab_center_toggled_off');
     };
     let sidetabsbutton = this.document.getElementById('side-tabs-button');
     if (sidetabsbutton){
