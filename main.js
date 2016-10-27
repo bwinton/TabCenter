@@ -223,6 +223,7 @@ exports.onUnload = function (reason) {
       let mainWindow = win.document.getElementById('main-window');
       mainWindow.removeAttribute('tabspinned');
       mainWindow.removeAttribute('tabspinnedwidth');
+      mainWindow.removeAttribute('toggledon');
       mainWindow.setAttribute('persist',
         mainWindow.getAttribute('persist').replace(' tabspinnned', '').replace(' tabspinnedwidth', '').replace(' toggledon', ''));
 
