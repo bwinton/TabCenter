@@ -697,8 +697,6 @@ VerticalTabs.prototype = {
 
     tabs.addEventListener('TabOpen', this, false);
     tabs.addEventListener('TabClose', this, false);
-    tabs.addEventListener('TabPinned', this, false);
-    tabs.addEventListener('TabUnpinned', this, false);
     window.setTimeout(() => {
       if (mainWindow.getAttribute('tabspinned') === 'true') {
         leftbox.setAttribute('expanded', 'true');
@@ -762,8 +760,6 @@ VerticalTabs.prototype = {
       tabs.removeAttribute('width');
       tabs.removeEventListener('TabOpen', this, false);
       tabs.removeEventListener('TabClose', this, false);
-      tabs.removeEventListener('TabPinned', this, false);
-      tabs.removeEventListener('TabUnpinned', this, false);
 
       //save the first tab's label to restore after unbinding/binding
       label = tabs.firstChild.label;
@@ -991,12 +987,6 @@ VerticalTabs.prototype = {
     case 'TabClose':
       this.onTabClose(aEvent);
       return;
-    case 'TabPinned':
-      this.onTabPinned(aEvent);
-      return;
-    case 'TabUnpinned':
-      this.onTabUnpinned(aEvent);
-      return;
     case 'mouseup':
       this.onMouseUp(aEvent);
       return;
@@ -1005,21 +995,11 @@ VerticalTabs.prototype = {
 
   onTabOpen: function (aEvent) {
     let tab = aEvent.target;
-    this.sendPing('tabs_created');
     this.initTab(tab);
   },
 
   onTabClose: function (aEvent) {
     this.clearFind('tabAction');
-    this.sendPing('tabs_destroyed');
-  },
-
-  onTabPinned: function (aEvent) {
-    this.sendPing('tabs_pinned');
-  },
-
-  onTabUnpinned: function (aEvent) {
-    this.sendPing('tabs_unpinned');
   },
 };
 

@@ -86,6 +86,29 @@ function b64toBlob(win, b64Data, contentType, sliceSize) {
 function initWindow(window) {
   // get the XUL window that corresponds to this high-level window
   let win = viewFor(window);
+
+  win.addEventListener('TabOpen', win, false);
+  win.addEventListener('TabClose', win, false);
+  win.addEventListener('TabPinned', win, false);
+  win.addEventListener('TabUnpinned', win, false);
+
+  win.handleEvent = function (aEvent) {
+    switch (aEvent.type) {
+    case 'TabOpen':
+      utils.sendPing('tabs_created');
+      return;
+    case 'TabClose':
+      utils.sendPing('tabs_destroyed');
+      return;
+    case 'TabPinned':
+      utils.sendPing('tabs_pinned');
+      return;
+    case 'TabUnpinned':
+      utils.sendPing('tabs_unpinned');
+      return;
+    }
+  };
+
   win.VerticalTabsWindowId = VerticalTabsWindowId;
   VerticalTabsWindowId++;
 
@@ -202,6 +225,11 @@ exports.onUnload = function (reason) {
       mainWindow.removeAttribute('tabspinnedwidth');
       mainWindow.setAttribute('persist',
         mainWindow.getAttribute('persist').replace(' tabspinnned', '').replace(' tabspinnedwidth', '').replace(' toggledon', ''));
+
+      win.removeEventListener('TabOpen', win, false);
+      win.removeEventListener('TabClose', win, false);
+      win.removeEventListener('TabPinned', win, false);
+      win.removeEventListener('TabUnpinned', win, false);
       delete win.VerticalTabs;
     }
   }
