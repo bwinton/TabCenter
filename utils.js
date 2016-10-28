@@ -59,7 +59,7 @@ const PAYLOAD_KEYS = [
   'tab_center_toggled_on'
 ];
 
-function sendPing(key) {
+function sendPing(key, window) {
   if (!PAYLOAD_KEYS.includes(key)) {
     // console.log(`Could not find ${key} in payload keys.`);
     return false;
@@ -76,7 +76,8 @@ function sendPing(key) {
     version: 1,
     tab_center_tabs_on_top: prefs.prefs.opentabstop,
     tab_center_show_thumbnails: prefs.prefs.largetabs,
-    tab_center_window_id: this.window.VerticalTabsWindowId,
+    tab_center_window_id: window.VerticalTabsWindowId,
+    tab_center_currently_toggled_on: window.document.getElementById('main-window').getAttribute('toggledon') === 'true'
   };
   payload[key] = 1;
 

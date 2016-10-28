@@ -95,16 +95,16 @@ function initWindow(window) {
   win.handleEvent = function (aEvent) {
     switch (aEvent.type) {
     case 'TabOpen':
-      utils.sendPing('tabs_created');
+      utils.sendPing('tabs_created', win);
       return;
     case 'TabClose':
-      utils.sendPing('tabs_destroyed');
+      utils.sendPing('tabs_destroyed', win);
       return;
     case 'TabPinned':
-      utils.sendPing('tabs_pinned');
+      utils.sendPing('tabs_pinned', win);
       return;
     case 'TabUnpinned':
-      utils.sendPing('tabs_unpinned');
+      utils.sendPing('tabs_unpinned', win);
       return;
     }
   };

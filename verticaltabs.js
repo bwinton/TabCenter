@@ -95,7 +95,7 @@ VerticalTabs.prototype = {
         }
         mainWindow.setAttribute('toggledon', 'true');
         this.init();
-        window.VerticalTabs.sendPing('tab_center_toggled_on');
+        window.VerticalTabs.sendPing('tab_center_toggled_on', window);
       };
 
       toolbar.insertBefore(sidetabsbutton, null);
@@ -498,10 +498,10 @@ VerticalTabs.prototype = {
         let newstate = box.getAttribute('tabspinned') == 'true' ? 'false' : 'true';
         box.setAttribute('tabspinned', newstate);
         if (newstate == 'true') {
-          window.VerticalTabs.sendPing('tab_center_pinned');
+          window.VerticalTabs.sendPing('tab_center_pinned', window);
           button.setAttribute('tooltiptext', 'Shrink sidebar when not in use');
         } else {
-          window.VerticalTabs.sendPing('tab_center_unpinned');
+          window.VerticalTabs.sendPing('tab_center_unpinned', window);
           button.setAttribute('tooltiptext', 'Keep sidebar open');
           document.getElementById('verticaltabs-box').removeAttribute('search_expanded');
         }
@@ -542,7 +542,7 @@ VerticalTabs.prototype = {
       }
       mainWindow.setAttribute('toggledon', 'false');
       this.init();
-      window.VerticalTabs.sendPing('tab_center_toggled_off');
+      window.VerticalTabs.sendPing('tab_center_toggled_off', window);
     };
     let sidetabsbutton = this.document.getElementById('side-tabs-button');
     if (sidetabsbutton){
@@ -789,7 +789,7 @@ VerticalTabs.prototype = {
   },
 
   recordExpansion: function () {
-    this.sendPing('tab_center_expanded');
+    this.sendPing('tab_center_expanded', this.window);
   },
 
   adjustCrop: function () {
