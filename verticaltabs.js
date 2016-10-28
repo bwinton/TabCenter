@@ -895,6 +895,10 @@ VerticalTabs.prototype = {
       tabs._positionPinnedTabs(); //Does not do anything?
     }
     removeStylesheets(this.window);
+    if (tabs.getAttribute('openTabsTop') === 'true') {
+      removeStylesheets(this.window, topStylesheets);
+    }
+    tabs.removeAttribute('openTabsTop');
     this.window.TabsInTitlebar.allowedBy('tabcenter', true);
   },
 
