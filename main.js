@@ -58,6 +58,7 @@ let self = require('sdk/self');
 const RESOURCE_HOST = 'tabcenter';
 
 let hotkey;
+let VerticalTabsWindowId = 1;
 
 function b64toBlob(win, b64Data, contentType, sliceSize) {
   contentType = contentType || '';
@@ -85,6 +86,33 @@ function b64toBlob(win, b64Data, contentType, sliceSize) {
 function initWindow(window) {
   // get the XUL window that corresponds to this high-level window
   let win = viewFor(window);
+
+  win.tabCenterEventListener = {};
+
+  win.addEventListener('TabOpen', win.tabCenterEventListener, false);
+  win.addEventListener('TabClose', win.tabCenterEventListener, false);
+  win.addEventListener('TabPinned', win.tabCenterEventListener, false);
+  win.addEventListener('TabUnpinned', win.tabCenterEventListener, false);
+
+  win.tabCenterEventListener.handleEvent = function (aEvent) {
+    switch (aEvent.type) {
+    case 'TabOpen':
+      utils.sendPing('tabs_created', win);
+      return;
+    case 'TabClose':
+      utils.sendPing('tabs_destroyed', win);
+      return;
+    case 'TabPinned':
+      utils.sendPing('tabs_pinned', win);
+      return;
+    case 'TabUnpinned':
+      utils.sendPing('tabs_unpinned', win);
+      return;
+    }
+  };
+
+  win.VerticalTabsWindowId = VerticalTabsWindowId;
+  VerticalTabsWindowId++;
 
   let data = b64toBlob(win, self.data.load('newtab.b64'), 'image/png');
 
@@ -197,8 +225,14 @@ exports.onUnload = function (reason) {
       let mainWindow = win.document.getElementById('main-window');
       mainWindow.removeAttribute('tabspinned');
       mainWindow.removeAttribute('tabspinnedwidth');
+      mainWindow.removeAttribute('toggledon');
       mainWindow.setAttribute('persist',
         mainWindow.getAttribute('persist').replace(' tabspinnned', '').replace(' tabspinnedwidth', '').replace(' toggledon', ''));
+
+      win.removeEventListener('TabOpen', win.tabCenterEventListener, false);
+      win.removeEventListener('TabClose', win.tabCenterEventListener, false);
+      win.removeEventListener('TabPinned', win.tabCenterEventListener, false);
+      win.removeEventListener('TabUnpinned', win.tabCenterEventListener, false);
       delete win.VerticalTabs;
     }
   }
