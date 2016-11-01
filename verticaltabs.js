@@ -488,7 +488,7 @@ VerticalTabs.prototype = {
 
     let pin_button = this.createElement('toolbarbutton', {
       'id': 'pin-button',
-      'tooltiptext': 'Keep sidebar open',
+      'tooltiptext': 'Shrink sidebar when not in use',
       'onclick': `if (event.which === 3) {
           return;
         }
