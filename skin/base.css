@@ -336,6 +336,7 @@
 
 #find-input .textbox-input-box {
   display: block;
+  max-width: calc(100% - 20px);
 }
 
 /* [inDOMFullscreen] for video */
