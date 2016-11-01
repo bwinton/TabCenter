@@ -224,7 +224,7 @@ VerticalTabs.prototype = {
     };
 
     window.gBrowser.tabContainer.addEventListener('TabBarUpdated', () => {
-      this.clearFind(true);
+      this.clearFind('tabGroupChange');
     });
 
     window.ToolbarIconColor.inferFromText = function () {
@@ -819,17 +819,22 @@ VerticalTabs.prototype = {
     }
   },
 
-  clearFind: function (tabGroupChange = false) {
+  clearFind: function (purpose) {
     if (this.document.getElementById('find-input')){
       this.document.getElementById('find-input').value = '';
 
       //manually show pinned tabs after changing groups for the tab groups add-on, as it does not re-show them
-      if (tabGroupChange && this.visibleTabs) {
+      if (purpose === 'tabGroupChange') {
         this.visibleTabs.filter(tab => tab.getAttribute('pinned') === 'true')
                         .forEach(tab => {tab.setAttribute('hidden', false);});
+        this.visibleTabs = Array.filter(this.window.gBrowser.tabs, tab => !tab.hidden && !tab.closing);
+        this.filtertabs();
+      } else if (purpose === 'tabAction') {
+        this.filtertabs();
         this.visibleTabs = null;
+      } else {
+        this.filtertabs();
       }
-      this.filtertabs();
     }
   },
 
@@ -867,7 +872,7 @@ VerticalTabs.prototype = {
 
   initTab: function (aTab) {
     let document = this.document;
-    this.clearFind();
+    this.clearFind('tabAction');
     this.resizeTabs();
 
     aTab.classList.add('tab-visible');
@@ -1003,7 +1008,7 @@ VerticalTabs.prototype = {
   },
 
   onTabClose: function (aEvent) {
-    this.clearFind();
+    this.clearFind('tabAction');
     this.sendPing('tabs_destroyed');
   },
 
