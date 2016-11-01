@@ -87,12 +87,14 @@ function initWindow(window) {
   // get the XUL window that corresponds to this high-level window
   let win = viewFor(window);
 
-  win.addEventListener('TabOpen', win, false);
-  win.addEventListener('TabClose', win, false);
-  win.addEventListener('TabPinned', win, false);
-  win.addEventListener('TabUnpinned', win, false);
+  win.tabCenterEventListener = {};
 
-  win.handleEvent = function (aEvent) {
+  win.addEventListener('TabOpen', win.tabCenterEventListener, false);
+  win.addEventListener('TabClose', win.tabCenterEventListener, false);
+  win.addEventListener('TabPinned', win.tabCenterEventListener, false);
+  win.addEventListener('TabUnpinned', win.tabCenterEventListener, false);
+
+  win.tabCenterEventListener.handleEvent = function (aEvent) {
     switch (aEvent.type) {
     case 'TabOpen':
       utils.sendPing('tabs_created', win);
@@ -227,10 +229,10 @@ exports.onUnload = function (reason) {
       mainWindow.setAttribute('persist',
         mainWindow.getAttribute('persist').replace(' tabspinnned', '').replace(' tabspinnedwidth', '').replace(' toggledon', ''));
 
-      win.removeEventListener('TabOpen', win, false);
-      win.removeEventListener('TabClose', win, false);
-      win.removeEventListener('TabPinned', win, false);
-      win.removeEventListener('TabUnpinned', win, false);
+      win.removeEventListener('TabOpen', win.tabCenterEventListener, false);
+      win.removeEventListener('TabClose', win.tabCenterEventListener, false);
+      win.removeEventListener('TabPinned', win.tabCenterEventListener, false);
+      win.removeEventListener('TabUnpinned', win.tabCenterEventListener, false);
       delete win.VerticalTabs;
     }
   }
