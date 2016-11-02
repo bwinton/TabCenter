@@ -723,6 +723,8 @@ VerticalTabs.prototype = {
     let afterListener = function () {
       contentbox.insertBefore(top, contentbox.firstChild);
       top.palette = palette;
+      //query for and restore the urlbar value after customize mode does things....
+      urlbar.value = window.gBrowser.mCurrentTab.linkedBrowser.currentURI.spec;
     };
     window.addEventListener('aftercustomization', afterListener);
 
