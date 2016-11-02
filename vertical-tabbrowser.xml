@@ -162,13 +162,15 @@
 
           draggedTab._dragData.animLastScreenPos = screenPos;
 
-          let rtl = false; //(window.getComputedStyle(this).direction === 'rtl');
+          let reverse = this.getAttribute('opentabstop') === 'true';
+          //if (window.getComputedStyle(this).direction === 'rtl') reverse=!reverse;
+
           let pinned = draggedTab.pinned;
           let numPinned = this.tabbrowser._numPinnedTabs;
           let tabs = this.tabbrowser.visibleTabs
                                     .slice(pinned ? 0 : numPinned,
                                            pinned ? numPinned : undefined);
-          if (rtl) {
+          if (reverse) {
             tabs.reverse();
           }
 
@@ -271,10 +273,10 @@
 
           function getTabShift(tab, dropIndex) {
             if (tab._tPos < draggedTab._tPos && tab._tPos >= dropIndex) {
-              return rtl ? -tabSize : tabSize;
+              return reverse ? -tabSize : tabSize;
             }
             if (tab._tPos > draggedTab._tPos && tab._tPos < dropIndex) {
-              return rtl ? tabSize : -tabSize;
+              return reverse ? tabSize : -tabSize;
             }
             return 0;
           }

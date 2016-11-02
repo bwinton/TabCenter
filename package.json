@@ -54,8 +54,8 @@
   "preferences": [
     {
       "name": "opentabstop",
-      "title": "Open Tabs Above",
-      "description": "Newer tabs are opened above older tabs",
+      "title": "Reverse Tab Order",
+      "description": "Newest tabs are on top and Cmd-Tab and Ctrl-Tab will move through tabs in reverse direction",
       "type": "bool",
       "value": false
     },
