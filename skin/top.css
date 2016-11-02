@@ -1,9 +1,0 @@
-
-.tabbrowser-arrowscrollbox > .arrowscrollbox-scrollbox .scrollbox-innerbox {
-  -moz-box-direction: reverse;
-  -moz-box-pack: end;
-}
-
-.tabbrowser-tab[pinned] {
-  -moz-box-ordinal-group: 99;
-}

@@ -162,7 +162,7 @@
 
           draggedTab._dragData.animLastScreenPos = screenPos;
 
-          let reverse = this.getAttribute('openTabsTop') === 'true';
+          let reverse = this.getAttribute('opentabstop') === 'true';
           //if (window.getComputedStyle(this).direction === 'rtl') reverse=!reverse;
 
           let pinned = draggedTab.pinned;

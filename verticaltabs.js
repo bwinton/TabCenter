@@ -41,7 +41,7 @@
 const {Cc, Ci, Cu} = require('chrome');
 const {platform} = require('sdk/system');
 const {prefs} = require('sdk/simple-prefs');
-const {sendPing, setDefaultPrefs, removeStylesheets, installStylesheets, topStylesheets} = require('./utils');
+const {sendPing, setDefaultPrefs, removeStylesheets, installStylesheets} = require('./utils');
 const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
                                createInstance(Ci.nsIURIFixup);
 
@@ -145,16 +145,13 @@ VerticalTabs.prototype = {
     };
 
     let tabs = document.getElementById('tabbrowser-tabs');
-    let openTabsTop = !prefs.opentabstop;
 
     function toggleTabsTop() {
-      if (prefs.opentabstop && !openTabsTop) {
-        installStylesheets(window, topStylesheets);
-      } else if (!prefs.opentabstop && openTabsTop) {
-        removeStylesheets(window, topStylesheets);
+      if (prefs.opentabstop) {
+        tabs.setAttribute('opentabstop', 'true');
+      } else {
+        tabs.removeAttribute('opentabstop');
       }
-      tabs.setAttribute('openTabsTop', prefs.opentabstop.toString());
-      openTabsTop = prefs.opentabstop;
     }
 
     toggleTabsTop();
@@ -163,7 +160,6 @@ VerticalTabs.prototype = {
     require('sdk/simple-prefs').on('opentabstop', function () {
       toggleTabsTop();
     });
-
 
     let tabsProgressListener = {
       onLocationChange: (aBrowser, aWebProgress, aRequest, aLocation, aFlags) => {
@@ -895,10 +891,7 @@ VerticalTabs.prototype = {
       tabs._positionPinnedTabs(); //Does not do anything?
     }
     removeStylesheets(this.window);
-    if (tabs.getAttribute('openTabsTop') === 'true') {
-      removeStylesheets(this.window, topStylesheets);
-    }
-    tabs.removeAttribute('openTabsTop');
+    tabs.removeAttribute('opentabstop');
     this.window.TabsInTitlebar.allowedBy('tabcenter', true);
   },
 
