@@ -847,7 +847,7 @@ VerticalTabs.prototype = {
 
     for (let i = 0; i < this.visibleTabs.length; i++) {
       let tab = this.visibleTabs[i];
-      if (tab.label && (tab.label.toLowerCase().match(input_value) || this.getUri(tab).spec.toLowerCase().match(input_value))) {
+      if ((tab.label || '').toLowerCase().match(input_value) || this.getUri(tab).spec.toLowerCase().match(input_value)) {
         tab.setAttribute('hidden', false);
       } else {
         hidden_counter += 1;
