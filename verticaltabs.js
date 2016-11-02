@@ -389,10 +389,12 @@ VerticalTabs.prototype = {
       }
     };
 
-    // save the label of the first tab, and the toolbox palette for later…
+    // save the label of the first tab, the toolbox palette, and the url for later…
     let tabs = document.getElementById('tabbrowser-tabs');
     let label = tabs.firstChild.label;
     let palette = top.palette;
+    let urlbar = document.getElementById('urlbar');
+    let url = urlbar.value;
 
     // Save the position of the tabs in the toolbar, for later restoring.
     let toolbar = document.getElementById('TabsToolbar');
@@ -478,9 +480,10 @@ VerticalTabs.prototype = {
     tabs.mTabstrip.orient = 'vertical';
     tabs.tabbox.orient = 'horizontal'; // probably not necessary
 
-    // And restore the label and palette here.
+    // And restore the label, palette and url here.
     tabs.firstChild.label = label;
     top.palette = palette;
+    urlbar.value = url;
 
     // Move the tabs toolbar into the tab strip
     toolbar.setAttribute('collapsed', 'false'); // no more vanishing new tab toolbar
@@ -720,6 +723,8 @@ VerticalTabs.prototype = {
     let afterListener = function () {
       contentbox.insertBefore(top, contentbox.firstChild);
       top.palette = palette;
+      //query for and restore the urlbar value after customize mode does things....
+      urlbar.value = window.gBrowser.mCurrentTab.linkedBrowser.currentURI.spec;
     };
     window.addEventListener('aftercustomization', afterListener);
 
@@ -886,10 +891,13 @@ VerticalTabs.prototype = {
   },
 
   unload: function () {
+    let urlbar = this.document.getElementById('urlbar');
+    let url = urlbar.value;
     this.unloaders.forEach(function (func) {
       func.call(this);
     }, this);
 
+    urlbar.value = url;
     let tabs = this.document.getElementById('tabbrowser-tabs');
     if (tabs) {
       tabs.removeAttribute('overflow'); //not needed? it sets its own overflow as necessary
