@@ -492,15 +492,14 @@ VerticalTabs.prototype = {
 
     let pin_button = this.createElement('toolbarbutton', {
       'id': 'pin-button',
-      'tooltiptext': 'Shrink sidebar when not in use',
       'onclick': `if (event.which === 3) {
           return;
         }
         let box = document.getElementById('main-window');
         let button = document.getElementById('pin-button');
-        let newstate = box.getAttribute('tabspinned') == 'true' ? 'false' : 'true';
+        let newstate = box.getAttribute('tabspinned') === 'true' ? 'false' : 'true';
         box.setAttribute('tabspinned', newstate);
-        if (newstate == 'true') {
+        if (newstate === 'true') {
           window.VerticalTabs.sendPing('tab_center_pinned', window);
           button.setAttribute('tooltiptext', 'Shrink sidebar when not in use');
         } else {
@@ -512,6 +511,9 @@ VerticalTabs.prototype = {
         window.VerticalTabs.resizeTabs();
         `
     });
+
+    let tooltiptext = mainWindow.getAttribute('tabspinned') === 'true' ? 'Shrink sidebar when not in use' : 'Keep sidebar open';
+    pin_button.setAttribute('tooltiptext', tooltiptext);
 
     toolbar.appendChild(pin_button);
     leftbox.insertBefore(toolbar, leftbox.firstChild);
