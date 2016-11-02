@@ -828,8 +828,7 @@ VerticalTabs.prototype = {
 
       if (purpose === 'tabGroupChange') {
         //manually show pinned tabs after changing groups for the tab groups add-on, as it does not re-show them
-        this.window.gBroswer.tabs.filter(tab => tab.getAttribute('pinned') === 'true')
-                        .forEach(tab => {tab.setAttribute('hidden', false);});
+        Array.filter(this.window.gBrowser.tabs, tab => tab.getAttribute('pinned') === 'true').forEach(tab => {tab.setAttribute('hidden', false);});
         this.visibleTabs = Array.filter(this.window.gBrowser.tabs, tab => !tab.hidden && !tab.closing);
         this.filtertabs();
       } else if (purpose === 'tabAction') {
