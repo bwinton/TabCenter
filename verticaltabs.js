@@ -77,10 +77,12 @@ VerticalTabs.prototype = {
     let window = this.window;
     let document = this.document;
     let mainWindow = document.getElementById('main-window');
+    let tabs = document.getElementById('tabbrowser-tabs');
 
     if (mainWindow.getAttribute('toggledon') === 'false') {
       let toolbar = document.getElementById('TabsToolbar');
       this.clearFind();
+      tabs.removeAttribute('mouseInside');
       let sidetabsbutton = this.createElement('toolbarbutton', {
         'id': 'side-tabs-button',
         'label': 'side',
@@ -143,8 +145,6 @@ VerticalTabs.prototype = {
       mainWindow.removeAttribute('printPreview');
       OldPrintPreviewListenerExit();
     };
-
-    let tabs = document.getElementById('tabbrowser-tabs');
 
     function toggleTabsTop() {
       if (prefs.opentabstop) {
