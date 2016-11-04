@@ -215,39 +215,15 @@ VerticalTabs.prototype = {
       this.clearFind('tabGroupChange');
     });
 
-    window.ToolbarIconColor.inferFromText = function () {
-      if (!this._initialized){
-        return;
+    window.ToolbarIconColor.inferFromText = () => {
+      this.inferFromText.bind(window.ToolbarIconColor)();
+      //use default inferFromText, then set main-window[brighttext] according to the results
+      if (document.getElementById('nav-bar').getAttribute('brighttext') === 'true') {
+        mainWindow.setAttribute('brighttext', 'true');
+      } else {
+        mainWindow.removeAttribute('brighttext');
       }
-
-      function parseRGB(aColorString) {
-        let rgb = aColorString.match(/^rgba?\((\d+), (\d+), (\d+)/);
-        rgb.shift();
-        return rgb.map(x => parseInt(x));
-      }
-
-      let toolbarSelector = '#verticaltabs-box, #verticaltabs-box > toolbar:not([collapsed=true]):not(#addon-bar), #navigator-toolbox > toolbar:not([collapsed=true]):not(#addon-bar)';
-      if (platform === 'macosx') {
-        toolbarSelector += ':not([type=menubar])';
-      }
-      // The getComputedStyle calls and setting the brighttext are separated in
-      // two loops to avoid flushing layout and making it dirty repeatedly.
-
-      let luminances = new Map;
-      for (let toolbar of document.querySelectorAll(toolbarSelector)) {
-        let [r, g, b] = parseRGB(window.getComputedStyle(toolbar).color);
-        let luminance = 0.2125 * r + 0.7154 * g + 0.0721 * b;
-        luminances.set(toolbar, luminance);
-      }
-
-      for (let [toolbar, luminance] of luminances) {
-        if (luminance <= 110) {
-          mainWindow.removeAttribute('brighttext');
-        } else {
-          mainWindow.setAttribute('brighttext', 'true');
-        }
-      }
-    }.bind(this.window.ToolbarIconColor);
+    };
 
     this.thumbTimer = this.window.setInterval(() => {
       tabs.selectedItem.refreshThumbAndLabel();
