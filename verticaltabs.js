@@ -103,7 +103,7 @@ VerticalTabs.prototype = {
       toolbar.insertBefore(sidetabsbutton, null);
 
       (function checkbrighttext() {
-        if (toolbar.getAttribute('brighttext') === 'true') {
+        if (document.getElementById('nav-bar').getAttribute('brighttext') === 'true') {
           sidetabsbutton.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side-white.svg")', 'important');
         } else {
           sidetabsbutton.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side.svg")', 'important');
@@ -215,46 +215,15 @@ VerticalTabs.prototype = {
       this.clearFind('tabGroupChange');
     });
 
-    window.ToolbarIconColor.inferFromText = function () {
-      if (!this._initialized){
-        return;
-      }
-
-      function parseRGB(aColorString) {
-        let rgb = aColorString.match(/^rgba?\((\d+), (\d+), (\d+)/);
-        rgb.shift();
-        return rgb.map(x => parseInt(x));
-      }
-
-      let toolbarSelector = '#verticaltabs-box, #verticaltabs-box > toolbar:not([collapsed=true]):not(#addon-bar), #navigator-toolbox > toolbar:not([collapsed=true]):not(#addon-bar)';
-      if (platform === 'macosx') {
-        toolbarSelector += ':not([type=menubar])';
-      }
-      // The getComputedStyle calls and setting the brighttext are separated in
-      // two loops to avoid flushing layout and making it dirty repeatedly.
-
-      let luminances = new Map;
-      for (let toolbar of document.querySelectorAll(toolbarSelector)) {
-        let [r, g, b] = parseRGB(window.getComputedStyle(toolbar).color);
-        let luminance = 0.2125 * r + 0.7154 * g + 0.0721 * b;
-        luminances.set(toolbar, luminance);
-      }
-
-      for (let [toolbar, luminance] of luminances) {
-        if (luminance <= 110) {
-          toolbar.removeAttribute('brighttext');
-        } else {
-          toolbar.setAttribute('brighttext', 'true');
-        }
-      }
-
-      if (/devedition/.test(mainWindow.style.backgroundImage)) {
-        mainWindow.setAttribute('devedition-theme', 'true');
+    window.ToolbarIconColor.inferFromText = () => {
+      this.inferFromText.bind(window.ToolbarIconColor)();
+      //use default inferFromText, then set main-window[brighttext] according to the results
+      if (document.getElementById('nav-bar').getAttribute('brighttext') === 'true') {
+        mainWindow.setAttribute('brighttext', 'true');
       } else {
-        mainWindow.removeAttribute('devedition-theme');
+        mainWindow.removeAttribute('brighttext');
       }
-
-    }.bind(this.window.ToolbarIconColor);
+    };
 
     this.thumbTimer = this.window.setInterval(() => {
       tabs.selectedItem.refreshThumbAndLabel();
@@ -697,6 +666,15 @@ VerticalTabs.prototype = {
       }
     }, 150);
 
+    function checkDevTheme() {
+      if (/devedition/.test(mainWindow.style.backgroundImage)) {
+        mainWindow.setAttribute('devedition-theme', 'true');
+      } else {
+        mainWindow.removeAttribute('devedition-theme');
+      }
+    }
+    checkDevTheme();
+
     let beforeListener = function () {
       browserPanel.insertBefore(top, browserPanel.firstChild);
       top.palette = palette;
@@ -711,6 +689,7 @@ VerticalTabs.prototype = {
     let afterListener = function () {
       contentbox.insertBefore(top, contentbox.firstChild);
       top.palette = palette;
+      checkDevTheme();
       //query for and restore the urlbar value after customize mode does things....
       urlbar.value = window.gBrowser.mCurrentTab.linkedBrowser.currentURI.spec;
     };

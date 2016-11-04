@@ -46,9 +46,9 @@
     list-style-image: url("resource://tabcenter/skin/glyph-new-16.svg") !important;
   }
 
-  #TabsToolbar[brighttext] .tabs-newtab-button,
-  #TabsToolbar[brighttext] > #new-tab-button,
-  #TabsToolbar[brighttext] > toolbarpaletteitem > #new-tab-button {
+  #main-window[brighttext] #TabsToolbar .tabs-newtab-button,
+  #main-window[brighttext] #TabsToolbar > #new-tab-button,
+  #main-window[brighttext] #TabsToolbar > toolbarpaletteitem > #new-tab-button {
     list-style-image: url("resource://tabcenter/skin/glyph-new-inverted-16.svg") !important;
   }
 }
@@ -75,11 +75,6 @@
   border: 1px solid hsla(210, 100%, 60%, 0.6) !important;
   box-shadow: 0 0 0 3px hsla(210, 100%, 60%, 0.45) !important;
   transition-duration: 150ms !important;
-}
-
-#main-window:not([devedition-theme]) #navigator-toolbox > toolbar:not(#TabsToolbar):-moz-lwtheme {
-  background-color: transparent !important;
-  background-image: linear-gradient(hsla(0, 0%, 100%, 0), hsla(0, 0%, 100%, 0.65)) !important;
 }
 
 #navigator-toolbox > toolbar:not(#TabsToolbar):-moz-lwtheme {
