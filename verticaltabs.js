@@ -103,7 +103,7 @@ VerticalTabs.prototype = {
       toolbar.insertBefore(sidetabsbutton, null);
 
       (function checkbrighttext() {
-        if (toolbar.getAttribute('brighttext') === 'true') {
+        if (document.getElementById('nav-bar').getAttribute('brighttext') === 'true') {
           sidetabsbutton.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side-white.svg")', 'important');
         } else {
           sidetabsbutton.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side.svg")', 'important');
@@ -242,12 +242,11 @@ VerticalTabs.prototype = {
 
       for (let [toolbar, luminance] of luminances) {
         if (luminance <= 110) {
-          toolbar.removeAttribute('brighttext');
+          mainWindow.removeAttribute('brighttext');
         } else {
-          toolbar.setAttribute('brighttext', 'true');
+          mainWindow.setAttribute('brighttext', 'true');
         }
       }
-
     }.bind(this.window.ToolbarIconColor);
 
     this.thumbTimer = this.window.setInterval(() => {

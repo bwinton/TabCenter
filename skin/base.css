@@ -117,9 +117,9 @@
   list-style-image: url("resource://tabcenter/skin/glyph-new-16.svg") !important;
 }
 
-#TabsToolbar[brighttext] .tabs-newtab-button,
-#TabsToolbar[brighttext] > #new-tab-button,
-#TabsToolbar[brighttext] > toolbarpaletteitem > #new-tab-button {
+#main-window[brighttext] #TabsToolbar .tabs-newtab-button,
+#main-window[brighttext] #TabsToolbar > #new-tab-button,
+#main-window[brighttext] #TabsToolbar > toolbarpaletteitem > #new-tab-button {
   list-style-image: url("resource://tabcenter/skin/glyph-new-inverted-16.svg") !important;
 }
 
@@ -209,7 +209,7 @@
   transition: margin-left 500ms linear;
 }
 
-#verticaltabs-box[brighttext] {
+#main-window[brighttext] #verticaltabs-box {
   background-color: hsla(0, 0%, 20%, 0.98) !important;
 }
 
@@ -267,7 +267,7 @@
   -moz-box-flex: 0;
 }
 
-#verticaltabs-box #TabsToolbar[brighttext] > #top-tabs-button {
+#main-window[brighttext] #verticaltabs-box #TabsToolbar > #top-tabs-button {
   background-image: url("resource://tabcenter/skin/tc-top-white.svg") !important;
 }
 
@@ -356,11 +356,11 @@
   background-image: url("resource://tabcenter/skin/glyph-sidebar-collapse-16.svg") !important;
 }
 
-#main-window #TabsToolbar[brighttext] #pin-button {
+#main-window[brighttext] #TabsToolbar #pin-button {
   background-image: url("resource://tabcenter/skin/glyph-sidebar-expand-inverted-16.svg") !important;
 }
 
-#main-window[tabspinned="true"] #TabsToolbar[brighttext] #pin-button {
+#main-window[tabspinned="true"][brighttext] #TabsToolbar #pin-button {
   background-image: url("resource://tabcenter/skin/glyph-sidebar-collapse-inverted-16.svg") !important;
 }
 
@@ -486,7 +486,7 @@
   background-color: #ebebeb;
 }
 
-#verticaltabs-box[brighttext] #filler-tab:hover {
+#main-window[brighttext] #verticaltabs-box #filler-tab:hover {
   background-color: #3c4146 !important;
 }
 
@@ -524,7 +524,7 @@
   background-color: hsla(0, 0%, 0%, 0.05) !important;
 }
 
-#verticaltabs-box[brighttext] .tabbrowser-tab[pinned] {
+#main-window[brighttext] #verticaltabs-box .tabbrowser-tab[pinned] {
   background-color: hsla(0, 0%, 0%, 0.2) !important;
 }
 
@@ -553,7 +553,6 @@
   background-size: 12px !important;
 }
 
-#verticaltabs-box[brighttext] .tabbrowser-tab[pinned] .pinned-icon,
 #main-window[brighttext] .tabbrowser-tab[pinned] .pinned-icon {
   background-image: url("resource://tabcenter/skin/glyph-pin-pinned-inverted-12.svg") !important;
 }
@@ -574,19 +573,19 @@
 
 /* dark theme colour overrides */
 
-#verticaltabs-box[brighttext] .tabbrowser-tab {
+#main-window[brighttext] #verticaltabs-box .tabbrowser-tab {
   color: #fff !important;
 }
 
-#verticaltabs-box[brighttext] .title-wrapper .address-label {
+#main-window[brighttext] #verticaltabs-box .title-wrapper .address-label {
   color: var(--link-color-brighttext);
 }
 
-#verticaltabs-box[brighttext] .tabbrowser-tab[selected="true"] {
+#main-window[brighttext] #verticaltabs-box .tabbrowser-tab[selected="true"] {
   background-color: hsla(0, 0%, 100%, 0.1) !important;
 }
 
-#verticaltabs-box[brighttext] .tabbrowser-tab:not([selected="true"]):hover {
+#main-window[brighttext] #verticaltabs-box .tabbrowser-tab:not([selected="true"]):hover {
   background-color: hsla(0, 0%, 100%, 0.06) !important;
 }
 
@@ -628,7 +627,7 @@
   opacity: 0 !important;
 }
 
-#verticaltabs-box[brighttext] .tab-close-button {
+#main-window[brighttext] #verticaltabs-box .tab-close-button {
   background-image: url("resource://tabcenter/skin/glyph-close-inverted-16.svg") !important;
 }
 
@@ -736,7 +735,7 @@
   flex: 0 0 39px;
 }
 
-#verticaltabs-box[brighttext] #TabsToolbar {
+#main-window[brighttext] #verticaltabs-box #TabsToolbar {
   border-bottom: 1px solid hsla(0, 0%, 0%, 0.5) !important;
 }
 
