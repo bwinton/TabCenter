@@ -15,6 +15,8 @@ function createElement(label, attrs) {
 }
 
 function addTabs(cachedTabs, tabs) {
+  let pinnedTabs = tabs.querySelector('.pinned-tabs')
+
   for (var tab of cachedTabs) {
     console.log("tab", tab);
     let tabElem = createElement('div', {
@@ -31,8 +33,12 @@ function addTabs(cachedTabs, tabs) {
       'class': 'title'
     });
     title.textContent = tab.label;
-    tabElem.appendChild(title);
-    tabs.appendChild(tabElem);
+    if (tab.pinned) {
+      pinnedTabs.appendChild(tabElem);
+    } else {
+      tabElem.appendChild(title);
+      tabs.appendChild(tabElem);
+    }
   }
   console.log(tabs.outerHTML);
 }
@@ -44,6 +50,7 @@ port.onMessage.addListener(function(cachedTabs) {
   while (tabs.firstChild) {
     tabs.removeChild(tabs.firstChild);
   }
+  tabs.appendChild(createElement('div', {'class': 'pinned-tabs'}));
   tabs.addEventListener('click', e => {
     console.log(e);
     let tab = e.target;

@@ -11,8 +11,17 @@ html, body {
   overflow: hidden;
 }
 
-.tab[pinned=true] {
+.pinned-tabs {
   border-left: 3px solid #2284e6;
+  /*width: 100%;*/
+  position: sticky;
+  top: 0;
+  background: #fcfcfc;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.pinned-tabs .tab {
+  display: inline-block;
 }
 
 .tab:hover {
