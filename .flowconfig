@@ -1,0 +1,15 @@
+[ignore]
+.*/node_modules/atom-linter
+.*/node_modules/web-ext
+.*/spec/fixtures
+
+# This ignores .json files in a bunch of places. It can go away when the
+# bug is fixed: https://github.com/facebook/flow/issues/1420
+.*/node_modules.*/\(binary\-extensions\|builtin\-modules\|iconv\-lite\|lib\|test\|url\-regex\|spdx\-exceptions\|spdx\-license\-ids\)/.*\.json$
+
+[include]
+add-on
+test
+
+[libs]
+flow-typed

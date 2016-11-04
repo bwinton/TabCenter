@@ -12,7 +12,8 @@
   "browser_action": {
     "browser_style": true,
     "default_icon": "img/firefox-logo.svg",
-    "default_title": "__MSG_buttonTitle__"
+    "default_title": "__MSG_buttonTitle__",
+    "default_popup": "tabs.html"
   },
 
   "default_locale": "en-US",
@@ -23,7 +24,7 @@
 
   "name": "Example WebExtension",
 
-  "permissions": [],
+  "permissions": ["tabs"],
 
   "version": "0.0.1"
 }

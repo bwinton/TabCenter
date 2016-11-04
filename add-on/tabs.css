@@ -1,0 +1,30 @@
+html, body {
+  box-sizing: border-box;
+  width: 300px;
+  --light-gray: rgba(0, 0, 0, 0.15);
+}
+
+.tab {
+  height: 48px;
+  border-top: 1px solid var(--light-gray);
+  border-left: 3px solid transparent;
+  overflow: hidden;
+}
+
+.tab[pinned=true] {
+  border-left: 3px solid #2284e6;
+}
+
+.tab:hover {
+  background: var(--light-gray);
+}
+
+.tab .favicon {
+  width: 32px;
+  height: 32px;
+  float: left;
+}
+
+.tab .title {
+  text-overflow: ellipsis;
+}
