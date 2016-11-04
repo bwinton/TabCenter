@@ -248,12 +248,6 @@ VerticalTabs.prototype = {
         }
       }
 
-      if (/devedition/.test(mainWindow.style.backgroundImage)) {
-        mainWindow.setAttribute('devedition-theme', 'true');
-      } else {
-        mainWindow.removeAttribute('devedition-theme');
-      }
-
     }.bind(this.window.ToolbarIconColor);
 
     this.thumbTimer = this.window.setInterval(() => {
@@ -697,6 +691,15 @@ VerticalTabs.prototype = {
       }
     }, 150);
 
+    function checkDevTheme() {
+      if (/devedition/.test(mainWindow.style.backgroundImage)) {
+        mainWindow.setAttribute('devedition-theme', 'true');
+      } else {
+        mainWindow.removeAttribute('devedition-theme');
+      }
+    }
+    checkDevTheme();
+
     let beforeListener = function () {
       browserPanel.insertBefore(top, browserPanel.firstChild);
       top.palette = palette;
@@ -711,6 +714,7 @@ VerticalTabs.prototype = {
     let afterListener = function () {
       contentbox.insertBefore(top, contentbox.firstChild);
       top.palette = palette;
+      checkDevTheme();
       //query for and restore the urlbar value after customize mode does things....
       urlbar.value = window.gBrowser.mCurrentTab.linkedBrowser.currentURI.spec;
     };
