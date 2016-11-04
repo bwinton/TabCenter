@@ -845,7 +845,6 @@ VerticalTabs.prototype = {
     this.clearFind('tabAction');
     this.resizeTabs();
 
-    aTab.classList.add('tab-visible');
     aTab.classList.remove('tab-hidden');
 
     if (document.getElementById('tabbrowser-tabs').getAttribute('expanded') !== 'true' && document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
@@ -968,6 +967,7 @@ VerticalTabs.prototype = {
 
   onTabOpen: function (aEvent) {
     let tab = aEvent.target;
+    tab.classList.add('tab-visible');
     this.initTab(tab);
   },
 
