@@ -722,6 +722,7 @@ VerticalTabs.prototype = {
       window.removeEventListener('beforecustomization', beforeListener);
       window.removeEventListener('customizationchange', changeListener);
       window.removeEventListener('aftercustomization', afterListener);
+      document.removeEventListener('popuphidden', contextMenuHidden);
 
       //restore the changed menu items
       window.onViewToolbarsPopupShowing = oldOnViewToolbarsPopupShowing;
