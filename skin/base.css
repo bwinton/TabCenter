@@ -425,7 +425,6 @@
   -moz-box-flex: 0;
   -moz-box-pack: start;
   color: #000 !important;
-  transition: min-height 300ms, max-height 300ms !important;
 }
 
 .tabbrowser-tabs.large-tabs .tab-content,
