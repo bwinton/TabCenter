@@ -146,10 +146,16 @@ VerticalTabs.prototype = {
       OldPrintPreviewListenerExit();
     };
 
+    // change the text in the tab context box
+    let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
+    let previous_close_message = close_next_tabs_message.getAttribute('label');
+
     function toggleTabsTop() {
       if (prefs.opentabstop) {
+        close_next_tabs_message.setAttribute('label', 'Close Tabs Above');
         tabs.setAttribute('opentabstop', 'true');
       } else {
+        close_next_tabs_message.setAttribute('label', 'Close Tabs Below');
         tabs.removeAttribute('opentabstop');
       }
     }
@@ -244,6 +250,7 @@ VerticalTabs.prototype = {
       if (this.document.getElementById('top-tabs-button')){
         this.document.getElementById('TabsToolbar').removeChild(this.document.getElementById('top-tabs-button'));
       }
+      close_next_tabs_message.setAttribute('label', previous_close_message);
     });
 
     this.rearrangeXUL();
@@ -538,11 +545,6 @@ VerticalTabs.prototype = {
 
     this.resizeFindInput();
 
-    // change the text in the tab context box
-    let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
-    let previous_close_message = close_next_tabs_message.getAttribute('label');
-    close_next_tabs_message.setAttribute('label', 'Close Tabs Below');
-
     //remove option to movetopanel or removefromtoolbar from the new-tab-button
     let oldOnViewToolbarsPopupShowing = window.onViewToolbarsPopupShowing;
     window.onViewToolbarsPopupShowing = function (aEvent, aInsertPoint) {
@@ -723,7 +725,6 @@ VerticalTabs.prototype = {
 
       //restore the changed menu items
       window.onViewToolbarsPopupShowing = oldOnViewToolbarsPopupShowing;
-      close_next_tabs_message.setAttribute('label', previous_close_message);
 
       // Put the tabs back up top
       tabs.orient = 'horizontal';
