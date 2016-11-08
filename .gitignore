@@ -5,3 +5,5 @@ TabCenterTest.zip
 *.xpi
 /node_modules/
 npm-debug.log
+/locale/**
+!/locale/README.md
