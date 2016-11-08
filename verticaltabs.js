@@ -464,10 +464,10 @@ VerticalTabs.prototype = {
         box.setAttribute('tabspinned', newstate);
         if (newstate === 'true') {
           window.VerticalTabs.sendPing('tab_center_pinned', window);
-          button.setAttribute('tooltiptext', 'Shrink sidebar when not in use');
+          button.setAttribute('tooltiptext', '${strings.sidebarShrink}');
         } else {
           window.VerticalTabs.sendPing('tab_center_unpinned', window);
-          button.setAttribute('tooltiptext', 'Keep sidebar open');
+          button.setAttribute('tooltiptext', '${strings.sidebarOpen}');
           document.getElementById('verticaltabs-box').removeAttribute('search_expanded');
         }
         window.VerticalTabs.resizeFindInput();
