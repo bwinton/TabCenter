@@ -21,8 +21,9 @@
   },
   "scripts": {
     "changelog": "changelog",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint . --ext=js,jsm vertical-tabbrowser.xml && stylelint \"**/*.css\""
+    "test": "npm run locales && jpm run -b nightly -p Testing",
+    "lint": "eslint . --ext=js,jsm vertical-tabbrowser.xml && stylelint \"**/*.css\"",
+    "locales": "./genlocales"
   },
   "permissions": {
     "multiprocess": true,

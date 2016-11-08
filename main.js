@@ -51,6 +51,7 @@ const {Cc, Ci, Cu} = require('chrome');
 const windowWatcher = Cc['@mozilla.org/embedcomp/window-watcher;1'].
                        getService(Ci.nsIWindowWatcher);
 
+const strings = require('./get-locale-strings').getLocaleStrings();
 const utils = require('./utils');
 const {addVerticalTabs} = require('./verticaltabs');
 
@@ -175,7 +176,7 @@ exports.main = function (options, callbacks) {
   });
 
   hotkey = Hotkey({
-    combo: 'accel-shift-l',
+    combo: strings.toggleHotkey,
     onPress: function () {
       let window = viewFor(browserWindows.activeWindow);
       let input = window.document.getElementById('find-input');

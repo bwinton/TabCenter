@@ -44,6 +44,7 @@ const {prefs} = require('sdk/simple-prefs');
 const {sendPing, setDefaultPrefs, removeStylesheets, installStylesheets} = require('./utils');
 const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
                                createInstance(Ci.nsIURIFixup);
+const strings = require('./get-locale-strings').getLocaleStrings();
 
 Cu.import('resource://gre/modules/PageThumbs.jsm');
 Cu.import('resource:///modules/CustomizableUI.jsm');
@@ -85,8 +86,8 @@ VerticalTabs.prototype = {
       tabs.removeAttribute('mouseInside');
       let sidetabsbutton = this.createElement('toolbarbutton', {
         'id': 'side-tabs-button',
-        'label': 'side',
-        'tooltiptext': 'Move tabs to the side',
+        'label': strings.sideLabel,
+        'tooltiptext': strings.sideTooltip,
         'class': 'toolbarbutton-1'
       });
       sidetabsbutton.style.MozAppearance = 'none';
@@ -152,10 +153,10 @@ VerticalTabs.prototype = {
 
     function toggleTabsTop() {
       if (prefs.opentabstop) {
-        close_next_tabs_message.setAttribute('label', 'Close Tabs Above');
+        close_next_tabs_message.setAttribute('label', strings.closeTabsAbove);
         tabs.setAttribute('opentabstop', 'true');
       } else {
-        close_next_tabs_message.setAttribute('label', 'Close Tabs Below');
+        close_next_tabs_message.setAttribute('label', strings.closeTabsBelow);
         tabs.removeAttribute('opentabstop');
       }
     }
@@ -474,7 +475,7 @@ VerticalTabs.prototype = {
         `
     });
 
-    let tooltiptext = mainWindow.getAttribute('tabspinned') === 'true' ? 'Shrink sidebar when not in use' : 'Keep sidebar open';
+    let tooltiptext = mainWindow.getAttribute('tabspinned') === 'true' ? strings.sidebarShrink : strings.sidebarOpen;
     pin_button.setAttribute('tooltiptext', tooltiptext);
 
     toolbar.appendChild(pin_button);
@@ -500,8 +501,8 @@ VerticalTabs.prototype = {
     //build button to toggle Tab Center on/off
     let toptabsbutton = this.createElement('toolbarbutton', {
       'id': 'top-tabs-button',
-      'label': 'top',
-      'tooltiptext': 'Move tabs to the top'
+      'label': strings.topLabel,
+      'tooltiptext': strings.topTooltip
     });
     toptabsbutton.onclick = (e) => {
       if (e.which === 3) {
@@ -828,7 +829,7 @@ VerticalTabs.prototype = {
       }
     }
     if (hidden_counter > 0) {
-      hidden_tab_label.setAttribute('value', `${hidden_counter} more tab${hidden_counter > 1 ? 's' : ''}...`);
+      hidden_tab_label.setAttribute('value', strings.moreTabs(hidden_counter));
       hidden_tab.removeAttribute('hidden');
     } else {
       hidden_tab.setAttribute('hidden', 'true');

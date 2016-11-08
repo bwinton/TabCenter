@@ -5,6 +5,8 @@
 !/main.js
 !/chrome.manifest
 !/data/**
+!/get-locale-strings.js
+!/locale/**
 !/override-bindings.css
 !/skin/**
 !/utils.js

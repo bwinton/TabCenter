@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+/*
+ * This Source Code is subject to the terms of the Mozilla Public License
+ * version 2.0 (the 'License'). You can obtain a copy of the License at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
+/* eslint-disable no-console */
+
+const fs = require('fs');
+const glob = require('glob');
+
+glob('locales/*/*.properties', function (err, files) {
+  if (err) return console.error('Error finding files', err);
+  files.forEach(function(path) {
+    fs.createReadStream(path).pipe(fs.createWriteStream(`locale/${parseLang(path)}.properties`));
+  });
+});
+
+function parseLang(path) {
+  const segments = path.split('/');
+  return segments[segments.length - 2];
+}
