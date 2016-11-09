@@ -78,7 +78,6 @@
 
 .tabbrowser-tab {
   position: relative;
-  min-width: 30px !important;
   max-width: 100% !important;
   box-shadow: 0 0 0 var(--color-blue) inset;
   pointer-events: auto !important;
