@@ -799,6 +799,9 @@ VerticalTabs.prototype = {
 
   clearFind: function (purpose) {
     if (this.document.getElementById('find-input')){
+      if (this.document.getElementById('find-input').value === ''){
+        return;
+      }
       this.document.getElementById('find-input').value = '';
 
       if (purpose === 'tabGroupChange') {
@@ -850,8 +853,6 @@ VerticalTabs.prototype = {
   initTab: function (aTab) {
     let document = this.document;
     this.clearFind('tabAction');
-    this.resizeTabs();
-
     aTab.classList.remove('tab-hidden');
 
     if (document.getElementById('tabbrowser-tabs').getAttribute('expanded') !== 'true' && document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
@@ -859,8 +860,6 @@ VerticalTabs.prototype = {
     } else {
       aTab.setAttribute('crop', 'end');
     }
-
-    aTab.refreshThumbAndLabel();
   },
 
   unload: function () {

@@ -700,7 +700,6 @@
         const canvas = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
         canvas.width *= window.devicePixelRatio;
         canvas.height *= window.devicePixelRatio;
-        this.refreshThumbAndLabel();
        ]]></constructor>
 
       <method name="refreshThumbAndLabel">
