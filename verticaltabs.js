@@ -893,10 +893,12 @@ VerticalTabs.prototype = {
     case 1: {
       let tabbrowser_height = tabs.clientHeight;
       let number_of_tabs = this.window.gBrowser.visibleTabs.length;
-      if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60) {
+      if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60 && tabs.classList.contains('large-tabs')) {
+        return;
+      } else if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60 ){
         tabs.classList.add('large-tabs');
         this.refreshAllTabs();
-      } else {
+      } else if (tabs.classList.contains('large-tabs')){
         tabs.classList.remove('large-tabs');
       }
       return;
