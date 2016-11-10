@@ -914,10 +914,6 @@ VerticalTabs.prototype = {
   },
 
   resizeTabs: function () {
-    if (this.resizeTimeout > 0) {
-      this.window.clearTimeout(this.resizeTimeout);
-      this.resizeTimeout = -1;
-    }
     if (!this.mouseInside) {
       // If the mouse is outside the tab area,
       // resize immediately
