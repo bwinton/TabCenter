@@ -12,7 +12,6 @@ exports.getLocaleStrings = function () {
     sideTooltip: _('side_tooltip'),
     sidebarShrink: _('sidebar_shrink'),
     sidebarOpen: _('sidebar_open'),
-    toggleHotkey: _('toggle_hotkey'),
     topLabel: _('top_label'),
     topTooltip: _('top_tooltip')
   };
