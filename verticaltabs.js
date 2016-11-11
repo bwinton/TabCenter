@@ -65,6 +65,7 @@ function VerticalTabs(window, data) {
   this.window = window;
   this.document = window.document;
   this.sendPing = sendPing;
+  this.unloaders = [];
 
   window.createImageBitmap(data).then((response) => {
     this.newTabImage = response;
@@ -107,24 +108,23 @@ VerticalTabs.prototype = {
         if (e.which === 3) {
           return;
         }
-        window.removeEventListener('customizationchange', boundCheckbrighttext);
+        this.unload();
         mainWindow.setAttribute('toggledon', 'true');
         this.init();
         window.VerticalTabs.sendPing('tab_center_toggled_on', window);
       };
 
       toolbar.insertBefore(sidetabsbutton, null);
-
-      if (!this.unloaders) {
-        this.unloaders = [];
-      }
       this.unload();
+      this.unloaders.push(function () {
+        toolbar.removeChild(sidetabsbutton);
+        window.removeEventListener('customizationchange', boundCheckbrighttext);
+      });
 
       return;
     }
 
     this.window.VerticalTabs = this;
-    this.unloaders = [];
     this.resizeTimeout = -1;
     this.mouseInside = false;
 
@@ -514,10 +514,6 @@ VerticalTabs.prototype = {
       this.init();
       window.VerticalTabs.sendPing('tab_center_toggled_off', window);
     };
-    let sidetabsbutton = this.document.getElementById('side-tabs-button');
-    if (sidetabsbutton){
-      toolbar.removeChild(sidetabsbutton);
-    }
 
     leftbox.contextMenuOpen = false;
     let contextMenuHidden = (event) => {
@@ -868,6 +864,7 @@ VerticalTabs.prototype = {
     this.unloaders.forEach(function (func) {
       func.call(this);
     }, this);
+    this.unloaders = [];
 
     urlbar.value = url;
     let tabs = this.document.getElementById('tabbrowser-tabs');
