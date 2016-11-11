@@ -728,7 +728,18 @@
             ctx.drawImage(VerticalTabs.newTabImage, 0, 0);
             ctx.restore();
           } else {
-            PageThumbs.captureToCanvas(this.linkedBrowser, canvas);
+            if (this.linkedBrowser.contentWindow) {
+              let x = {};
+              try {
+                //sometimes captureToCanvas throws errors, stop them here instead
+                this.linkedBrowser.contentWindow.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIDOMWindowUtils).getPresShellId(x);
+                PageThumbs.captureToCanvas(this.linkedBrowser, canvas);
+              } catch (e) {
+                //sometimes we can't get the background thumb yet, ignore it.
+              }
+            } else {
+              PageThumbs.captureToCanvas(this.linkedBrowser, canvas);
+            }
           }
         ]]></body>
       </method>
