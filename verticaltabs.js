@@ -795,11 +795,12 @@ VerticalTabs.prototype = {
   },
 
   clearFind: function (purpose) {
-    if (this.document.getElementById('find-input')){
-      if (this.document.getElementById('find-input').value === ''){
+    let find_input = this.document.getElementById('find-input');
+    if (find_input){
+      if (find_input.value === ''){
         return;
       }
-      this.document.getElementById('find-input').value = '';
+      find_input.value = '';
 
       if (purpose === 'tabGroupChange') {
         //manually show pinned tabs after changing groups for the tab groups add-on, as it does not re-show them
