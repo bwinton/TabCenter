@@ -24,7 +24,7 @@ glob('locales/*/*.properties', function (err, files) {
     let match = descRe.exec(contents);
 
     if (match && lang !== 'en-US') {
-      descriptions[lang] = match[1];
+      descriptions[lang] = {'description': match[1]};
     }
   });
   package.locales = descriptions;

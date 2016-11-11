@@ -4,8 +4,21 @@
   "title": "Tab Center",
   "description": "Tab Center is an attempt to solve some of the issues that have emerged from the way people use tabs (most notably the “too many tabs” problem) and provide a more versatile UI basis for future innovation. The first version of this Firefox add-on arranges tabs in a vertical rather than horizontal fashion. It is heavily inspired by and borrows ideas from the excellent VerticalTabs add-on.",
   "locales": {
-    "fr": "Tab Center tente de résoudre certains problèmes apparus avec la façon dont les gens utilisent les onglets (en particulier, le problème « j’ai trop d’onglets »). Il pose les fondations d’une interface plus dépouillée qui servira de base pour de futures innovations. La première version de ce module Firefox classe les onglets à la verticale et non plus à l’horizontale. Il est fortement inspiré de l’excellent module VerticalTabs et en emprunte certains concepts.",
-    "it": "Tab Center cerca di risolvere alcuni dei problemi riscontrati dagli utenti nell’utilizzo delle schede, in particolare in presenza di molte schede aperte, e fornisce un’interfaccia più versatile per facilitare future innovazioni. La prima versione di questo componente aggiuntivo organizza le schede in verticale, sostituendo la tradizionale disposizione orizzontale. Si tratta di un esperimento pesantemente influenzato dall’ottima estensione VerticalTabs, da cui prende diversi spunti."
+    "ast": {
+      "description": "El centru de llingüetes ye un intentu d'iguar dellos d'estos problemes qu'emerxeron del mou nel que la xente usa les llingüetes, (especialmente'l problema «milenta llingüetes»), y fornir una UI más versatil pa la innovación futura. La primer versión d'esti add-on ordena llingüetes en vertical, non n'horizontal. Inspírase poles idees emprestaes del escelente add-on VerticalTabs."
+    },
+    "de": {
+      "description": "Tab Center ist ein Versuch, Probleme einiger Personen im Umgang mit Tabs (vor allem „zu vielen Tabs“) zu lösen und der Benutzeroberfläche eine vielseitigere Basis für zukünftige Innovationen zu geben. Die erste Version dieses Firefox-Add-ons zeigt Tabs horizontal, und nicht vertikal an. Die Idee stammt von dem hervorragenden Add-on „VerticalTabs“."
+    },
+    "fr": {
+      "description": "Tab Center tente de résoudre certains problèmes apparus avec la façon dont les gens utilisent les onglets (en particulier, le problème « j’ai trop d’onglets »). Il pose les fondations d’une interface plus dépouillée qui servira de base pour de futures innovations. La première version de ce module Firefox classe les onglets à la verticale et non plus à l’horizontale. Il est fortement inspiré de l’excellent module VerticalTabs et en emprunte certains concepts."
+    },
+    "it": {
+      "description": "Tab Center cerca di risolvere alcuni dei problemi riscontrati dagli utenti nell’utilizzo delle schede, in particolare in presenza di molte schede aperte, e fornisce un’interfaccia più versatile per facilitare future innovazioni. La prima versione di questo componente aggiuntivo organizza le schede in verticale, sostituendo la tradizionale disposizione orizzontale. Si tratta di un esperimento pesantemente influenzato dall’ottima estensione VerticalTabs, da cui prende diversi spunti."
+    },
+    "zh-TW": {
+      "description": "Tab Center 嘗試解決某些人用分頁時會遇到的問題（通常稱為「太多分頁」問題），並提供一套靈活的介面，在未來進行創新。此 Firefox 附加元件的第一版會將分頁清單改以垂直方式排列。此附加元件借鑒了 VerticalTabs 附加元件的設計，並從中得到大量啟發。"
+    }
   },
   "main": "main.js",
   "directories": {
