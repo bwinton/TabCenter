@@ -81,13 +81,6 @@ VerticalTabs.prototype = {
     let mainWindow = document.getElementById('main-window');
     let tabs = document.getElementById('tabbrowser-tabs');
 
-    function checkbrighttext() {
-      if (document.getElementById('nav-bar').getAttribute('brighttext') === 'true') {
-        this.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side-white.svg")', 'important');
-      } else {
-        this.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side.svg")', 'important');
-      }
-    }
     if (mainWindow.getAttribute('toggledon') === 'false') {
       let toolbar = document.getElementById('TabsToolbar');
       this.clearFind();
@@ -100,9 +93,17 @@ VerticalTabs.prototype = {
       });
       sidetabsbutton.style.MozAppearance = 'none';
       sidetabsbutton.style.setProperty('-moz-image-region', 'rect(0, 16px, 16px, 0)', 'important');
-      let boundCheckbrighttext = checkbrighttext.bind(sidetabsbutton);
-      boundCheckbrighttext();
-      window.addEventListener('customizationchange', boundCheckbrighttext);
+
+      let checkBrighttext = function () {
+        if (document.getElementById('nav-bar').getAttribute('brighttext') === 'true') {
+          sidetabsbutton.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side-white.svg")', 'important');
+        } else {
+          sidetabsbutton.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side.svg")', 'important');
+        }
+      };
+      checkBrighttext();
+
+      window.addEventListener('customizationchange', checkBrighttext);
 
       sidetabsbutton.onclick = (e) => {
         if (e.which === 3) {
@@ -118,7 +119,7 @@ VerticalTabs.prototype = {
       this.unload();
       this.unloaders.push(function () {
         toolbar.removeChild(sidetabsbutton);
-        window.removeEventListener('customizationchange', boundCheckbrighttext);
+        window.removeEventListener('customizationchange', checkBrighttext);
       });
 
       return;
