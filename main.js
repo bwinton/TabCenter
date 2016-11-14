@@ -228,7 +228,7 @@ exports.onUnload = function (reason) {
       mainWindow.removeAttribute('tabspinnedwidth');
       mainWindow.removeAttribute('toggledon');
       mainWindow.setAttribute('persist',
-        mainWindow.getAttribute('persist').replace(' tabspinnned', '').replace(' tabspinnedwidth', '').replace(' toggledon', ''));
+        mainWindow.getAttribute('persist').replace(' tabspinned', '').replace(' tabspinnedwidth', '').replace(' toggledon', ''));
 
       win.removeEventListener('TabOpen', win.tabCenterEventListener, false);
       win.removeEventListener('TabClose', win.tabCenterEventListener, false);

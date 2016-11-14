@@ -65,6 +65,7 @@ function VerticalTabs(window, data) {
   this.window = window;
   this.document = window.document;
   this.sendPing = sendPing;
+  this.unloaders = [];
 
   window.createImageBitmap(data).then((response) => {
     this.newTabImage = response;
@@ -92,37 +93,39 @@ VerticalTabs.prototype = {
       });
       sidetabsbutton.style.MozAppearance = 'none';
       sidetabsbutton.style.setProperty('-moz-image-region', 'rect(0, 16px, 16px, 0)', 'important');
+
+      let checkBrighttext = function () {
+        if (document.getElementById('nav-bar').getAttribute('brighttext') === 'true') {
+          sidetabsbutton.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side-white.svg")', 'important');
+        } else {
+          sidetabsbutton.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side.svg")', 'important');
+        }
+      };
+      checkBrighttext();
+
+      window.addEventListener('customizationchange', checkBrighttext);
+
       sidetabsbutton.onclick = (e) => {
-        if (e.which === 3) {
+        if (e.which !== 1) {
           return;
         }
+        this.unload();
         mainWindow.setAttribute('toggledon', 'true');
         this.init();
         window.VerticalTabs.sendPing('tab_center_toggled_on', window);
       };
 
       toolbar.insertBefore(sidetabsbutton, null);
-
-      (function checkbrighttext() {
-        if (document.getElementById('nav-bar').getAttribute('brighttext') === 'true') {
-          sidetabsbutton.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side-white.svg")', 'important');
-        } else {
-          sidetabsbutton.style.setProperty('list-style-image', 'url("resource://tabcenter/skin/tc-side.svg")', 'important');
-        }
-        window.addEventListener('customizationchange', checkbrighttext);
-      }());
-
-
-      if (!this.unloaders) {
-        this.unloaders = [];
-      }
       this.unload();
+      this.unloaders.push(function () {
+        toolbar.removeChild(sidetabsbutton);
+        window.removeEventListener('customizationchange', checkBrighttext);
+      });
 
       return;
     }
 
     this.window.VerticalTabs = this;
-    this.unloaders = [];
     this.resizeTimeout = -1;
     this.mouseInside = false;
 
@@ -455,7 +458,7 @@ VerticalTabs.prototype = {
 
     let pin_button = this.createElement('toolbarbutton', {
       'id': 'pin-button',
-      'onclick': `if (event.which === 3) {
+      'onclick': `if (event.which !== 1) {
           return;
         }
         let box = document.getElementById('main-window');
@@ -505,17 +508,13 @@ VerticalTabs.prototype = {
       'tooltiptext': strings.topTooltip
     });
     toptabsbutton.onclick = (e) => {
-      if (e.which === 3) {
+      if (e.which !== 1) {
         return;
       }
       mainWindow.setAttribute('toggledon', 'false');
       this.init();
       window.VerticalTabs.sendPing('tab_center_toggled_off', window);
     };
-    let sidetabsbutton = this.document.getElementById('side-tabs-button');
-    if (sidetabsbutton){
-      toolbar.removeChild(sidetabsbutton);
-    }
 
     leftbox.contextMenuOpen = false;
     let contextMenuHidden = (event) => {
@@ -698,10 +697,11 @@ VerticalTabs.prototype = {
     };
     window.addEventListener('aftercustomization', afterListener);
 
-    window.addEventListener('resize', () => {
+    let resizeListener = () => {
       this.resizeTabs();
       document.documentElement.style.setProperty('--pinned-width', `${Math.min(this.pinnedWidth, document.width / 2)}px`);
-    }, false);
+    };
+    window.addEventListener('resize', resizeListener);
     this.adjustCrop();
 
     this.unloaders.push(function () {
@@ -723,6 +723,7 @@ VerticalTabs.prototype = {
       window.removeEventListener('beforecustomization', beforeListener);
       window.removeEventListener('customizationchange', changeListener);
       window.removeEventListener('aftercustomization', afterListener);
+      window.removeEventListener('resize', resizeListener);
       document.removeEventListener('popuphidden', contextMenuHidden);
 
       //restore the changed menu items
@@ -793,8 +794,12 @@ VerticalTabs.prototype = {
   },
 
   clearFind: function (purpose) {
-    if (this.document.getElementById('find-input')){
-      this.document.getElementById('find-input').value = '';
+    let find_input = this.document.getElementById('find-input');
+    if (find_input){
+      if (find_input.value === ''){
+        return;
+      }
+      find_input.value = '';
 
       if (purpose === 'tabGroupChange') {
         //manually show pinned tabs after changing groups for the tab groups add-on, as it does not re-show them
@@ -845,8 +850,6 @@ VerticalTabs.prototype = {
   initTab: function (aTab) {
     let document = this.document;
     this.clearFind('tabAction');
-    this.resizeTabs();
-
     aTab.classList.remove('tab-hidden');
 
     if (document.getElementById('tabbrowser-tabs').getAttribute('expanded') !== 'true' && document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
@@ -854,8 +857,6 @@ VerticalTabs.prototype = {
     } else {
       aTab.setAttribute('crop', 'end');
     }
-
-    aTab.refreshThumbAndLabel();
   },
 
   unload: function () {
@@ -864,6 +865,7 @@ VerticalTabs.prototype = {
     this.unloaders.forEach(function (func) {
       func.call(this);
     }, this);
+    this.unloaders = [];
 
     urlbar.value = url;
     let tabs = this.document.getElementById('tabbrowser-tabs');
@@ -889,10 +891,12 @@ VerticalTabs.prototype = {
     case 1: {
       let tabbrowser_height = tabs.clientHeight;
       let number_of_tabs = this.window.gBrowser.visibleTabs.length;
-      if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60) {
+      if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60 && tabs.classList.contains('large-tabs')) {
+        return;
+      } else if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60 ){
         tabs.classList.add('large-tabs');
         this.refreshAllTabs();
-      } else {
+      } else if (tabs.classList.contains('large-tabs')){
         tabs.classList.remove('large-tabs');
       }
       return;
@@ -910,10 +914,6 @@ VerticalTabs.prototype = {
   },
 
   resizeTabs: function () {
-    if (this.resizeTimeout > 0) {
-      this.window.clearTimeout(this.resizeTimeout);
-      this.resizeTimeout = -1;
-    }
     if (!this.mouseInside) {
       // If the mouse is outside the tab area,
       // resize immediately
