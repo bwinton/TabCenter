@@ -697,12 +697,11 @@ VerticalTabs.prototype = {
     };
     window.addEventListener('aftercustomization', afterListener);
 
-    function resizeListener() {
+    let resizeListener = () => {
       this.resizeTabs();
       document.documentElement.style.setProperty('--pinned-width', `${Math.min(this.pinnedWidth, document.width / 2)}px`);
-    }
-    let boundResizeListener = resizeListener.bind(this);
-    window.addEventListener('resize', boundResizeListener);
+    };
+    window.addEventListener('resize', resizeListener);
     this.adjustCrop();
 
     this.unloaders.push(function () {
@@ -724,7 +723,7 @@ VerticalTabs.prototype = {
       window.removeEventListener('beforecustomization', beforeListener);
       window.removeEventListener('customizationchange', changeListener);
       window.removeEventListener('aftercustomization', afterListener);
-      window.removeEventListener('resize', boundResizeListener);
+      window.removeEventListener('resize', resizeListener);
       document.removeEventListener('popuphidden', contextMenuHidden);
 
       //restore the changed menu items
