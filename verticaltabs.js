@@ -106,7 +106,7 @@ VerticalTabs.prototype = {
       window.addEventListener('customizationchange', checkBrighttext);
 
       sidetabsbutton.onclick = (e) => {
-        if (e.which === 3) {
+        if (e.which !== 1) {
           return;
         }
         this.unload();
@@ -458,7 +458,7 @@ VerticalTabs.prototype = {
 
     let pin_button = this.createElement('toolbarbutton', {
       'id': 'pin-button',
-      'onclick': `if (event.which === 3) {
+      'onclick': `if (event.which !== 1) {
           return;
         }
         let box = document.getElementById('main-window');
@@ -508,7 +508,7 @@ VerticalTabs.prototype = {
       'tooltiptext': strings.topTooltip
     });
     toptabsbutton.onclick = (e) => {
-      if (e.which === 3) {
+      if (e.which !== 1) {
         return;
       }
       mainWindow.setAttribute('toggledon', 'false');
