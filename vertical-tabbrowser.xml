@@ -17,6 +17,10 @@
 
   <binding id="tabbrowser-arrowscrollbox" extends="chrome://browser/content/tabbrowser.xml#tabbrowser-arrowscrollbox">
     <implementation>
+      <field name="_isRTLScrollbox"><![CDATA[
+        document.getElementById('tabbrowser-tabs').getAttribute('opentabstop') === 'true';
+      ]]></field>
+
       <property name="_verticalTabs" onget="return this.orient == 'vertical';"/>
 
       <method name="_canScrollToElement">
