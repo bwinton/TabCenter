@@ -800,20 +800,22 @@ VerticalTabs.prototype = {
   clearFind: function (purpose) {
     let find_input = this.document.getElementById('find-input');
     if (find_input){
-      if (find_input.value === ''){
-        return;
-      }
-      find_input.value = '';
-
       if (purpose === 'tabGroupChange') {
         //manually show pinned tabs after changing groups for the tab groups add-on, as it does not re-show them
         Array.filter(this.window.gBrowser.tabs, tab => tab.getAttribute('pinned') === 'true').forEach(tab => {tab.setAttribute('hidden', false);});
         this.visibleTabs = Array.filter(this.window.gBrowser.tabs, tab => !tab.hidden && !tab.closing);
+        find_input.value = '';
         this.filtertabs();
       } else if (purpose === 'tabAction') {
+        if (find_input.value === ''){
+          this.resizeTabs();
+          return;
+        }
+        find_input.value = '';
         this.filtertabs();
         this.visibleTabs = null;
       } else {
+        find_input.value = '';
         this.filtertabs();
       }
     }
