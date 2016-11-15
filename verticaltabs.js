@@ -706,6 +706,7 @@ VerticalTabs.prototype = {
     };
     window.addEventListener('resize', resizeListener);
     this.adjustCrop();
+    window.gBrowser.selectedTab.scrollIntoView();
 
     this.unloaders.push(function () {
       autocomplete._openAutocompletePopup = autocompleteOpen;
