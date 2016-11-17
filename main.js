@@ -50,6 +50,7 @@ const {Hotkey} = require('sdk/hotkeys');
 const {Cc, Ci, Cu} = require('chrome');
 const windowWatcher = Cc['@mozilla.org/embedcomp/window-watcher;1'].
                        getService(Ci.nsIWindowWatcher);
+const ss = Cc['@mozilla.org/browser/sessionstore;1'].getService(Ci.nsISessionStore);
 
 const strings = require('./get-locale-strings').getLocaleStrings();
 const utils = require('./utils');
@@ -82,6 +83,21 @@ function b64toBlob(win, b64Data, contentType, sliceSize) {
   }
 
   return new win.Blob(byteArrays, {type: contentType});
+}
+
+function setPersistantAttrs(win){
+  let mainWindow = win.document.getElementById('main-window');
+  mainWindow.setAttribute('persist', mainWindow.getAttribute('persist') + ' tabspinned tabspinnedwidth toggledon');
+  try {
+    mainWindow.setAttribute('toggledon', ss.getWindowValue(win, 'TCtoggledon'));
+    mainWindow.setAttribute('tabspinnedwidth', ss.getWindowValue(win, 'TCtabspinnedwidth'));
+    mainWindow.setAttribute('tabspinned', ss.getWindowValue(win, 'TCtabspinned'));
+  } catch (e) {
+    if (e.name !== 'NS_ERROR_ILLEGAL_VALUE') {
+      throw e;
+    }
+    // on fresh windows getWindowValue throws an exception. Ignore this.
+  }
 }
 
 function initWindow(window) {
@@ -124,12 +140,12 @@ function initWindow(window) {
 
   // if the dcoument is loaded
   if (isDocumentLoaded(win)) {
-    win.document.getElementById('main-window').setAttribute('persist', win.document.getElementById('main-window').getAttribute('persist') + ' tabspinned tabspinnedwidth toggledon');
+    setPersistantAttrs(win);
     addVerticalTabs(win, data);
   } else {
     // Listen for load event before checking the window type
     win.addEventListener('load', () => {
-      win.document.getElementById('main-window').setAttribute('persist', win.document.getElementById('main-window').getAttribute('persist') + ' tabspinned tabspinnedwidth toggledon');
+      setPersistantAttrs(win);
       addVerticalTabs(win, data);
     }, {once: true});
   }
@@ -156,6 +172,17 @@ exports.main = function (options, callbacks) {
 
   // Startup VerticalTabs object for each window.
   for (let window of browserWindows) {
+    //cause no disruption to users when changing the way we handle
+    //the tabsontop pref between v1.26 and v1.27
+    let win = viewFor(window);
+    let mainWindow = win.document.getElementById('main-window');
+    let tabbrowser = win.document.getElementById('tabbrowser-tabs');
+    if (mainWindow.getAttribute('doNotReverse') !== 'true' && options.loadReason === 'upgrade' && prefs.prefs.opentabstop === true) {
+      let reversedTabs = Array.prototype.slice.call(tabbrowser.children).reverse();
+      for (let tab of reversedTabs) {
+        tabbrowser.appendChild(tab, tabbrowser.firstChild);
+      }
+    }
     initWindow(window);
   }
 
@@ -213,6 +240,13 @@ exports.main = function (options, callbacks) {
 exports.onUnload = function (reason) {
   // If the app is shutting down, skip the rest
   if (reason === 'shutdown') {
+    for (let window of browserWindows) {
+      let win = viewFor(window);
+      let mainWindow = win.document.getElementById('main-window');
+      ss.setWindowValue(win, 'TCtabspinnedwidth', mainWindow.getAttribute('tabspinnedwidth'));
+      ss.setWindowValue(win, 'TCtabspinned', mainWindow.getAttribute('tabspinned'));
+      ss.setWindowValue(win, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
+    }
     return;
   }
 
@@ -224,6 +258,7 @@ exports.onUnload = function (reason) {
     if (win.VerticalTabs) {
       win.VerticalTabs.unload();
       let mainWindow = win.document.getElementById('main-window');
+      mainWindow.setAttribute('doNotReverse', 'true');
       mainWindow.removeAttribute('tabspinned');
       mainWindow.removeAttribute('tabspinnedwidth');
       mainWindow.removeAttribute('toggledon');
