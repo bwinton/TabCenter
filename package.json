@@ -3,6 +3,53 @@
   "version": "1.26.0",
   "title": "Tab Center",
   "description": "Tab Center is an attempt to solve some of the issues that have emerged from the way people use tabs (most notably the “too many tabs” problem) and provide a more versatile UI basis for future innovation. The first version of this Firefox add-on arranges tabs in a vertical rather than horizontal fashion. It is heavily inspired by and borrows ideas from the excellent VerticalTabs add-on.",
+  "locales": {
+    "ast": {
+      "description": "El centru de llingüetes ye un intentu d'iguar dellos d'estos problemes qu'emerxeron del mou nel que la xente usa les llingüetes, (especialmente'l problema «milenta llingüetes»), y fornir una UI más versatil pa la innovación futura. La primer versión d'esti add-on ordena llingüetes en vertical, non n'horizontal. Inspírase poles idees emprestaes del escelente add-on VerticalTabs."
+    },
+    "bn-BD": {
+      "description": "Tab Center এমন কিছু সমস্যার (বেশিভাগ সময়ে \"অনেক বেশি ট্যাব\" সমস্যা) সমাধান যা লোকজন ট্যাব ব্যবহারে সম্মুখিন হয়ে থাকেন এবং যা ভবিষ্যত উদ্ভাবনী উপর ভিত্তি করে একটি বহুমুখী UI প্রদান করে। এই অ্যাড-অনের প্রথম সংস্করণটি Firefox এর ট্যাবগুলোকে আনুভূমিক ভাবে সাজানোর বদলে উল্লম্বভাবে সাজিয়ে দেয়। VerticalTabs এর মত চমৎকার অ্যাড-অনের ধারণা থেকে এই অ্যাড-অনটি তৈরি করা হয়েছে।"
+    },
+    "de": {
+      "description": "Tab Center ist ein Versuch, Probleme einiger Personen im Umgang mit Tabs (vor allem „zu vielen Tabs“) zu lösen und der Benutzeroberfläche eine vielseitigere Basis für zukünftige Innovationen zu geben. Die erste Version dieses Firefox-Add-ons zeigt Tabs horizontal, und nicht vertikal an. Die Idee stammt von dem hervorragenden Add-on „VerticalTabs“."
+    },
+    "es-ES": {
+      "description": "Tab Center es un intento de resolver algunos de los problemas derivados de la forma en que la gente usa las pestañas (en particular el problema de tener “demasiadas pestañas abiertas”) y proporciona una interfaz de usuario más versátil que sirva de base a futuras innovaciones. La primera versión de este complemento de Firefox organiza las pestañas en vertical en vez de en horizontal. Toma prestadas ideas del excelente complemento VerticalTabs en el que está inspirado."
+    },
+    "fr": {
+      "description": "Tab Center tente de résoudre certains problèmes apparus avec la façon dont les gens utilisent les onglets (en particulier, le problème « j’ai trop d’onglets »). Il pose les fondations d’une interface plus dépouillée qui servira de base pour de futures innovations. La première version de ce module Firefox classe les onglets à la verticale et non plus à l’horizontale. Il est fortement inspiré de l’excellent module VerticalTabs et en emprunte certains concepts."
+    },
+    "fy-NL": {
+      "description": "Tab Center is in besykjen om útdagingen op te lossen ûntstien troch it gebrûk fan ljepblêden (meast ferneamd it probleem ‘te folle ljepblêden’) en in mear fleksibele skermopbou foar takomstige ynnovaasje te bieden. De earste ferzje fan dizze Firefox-add-on sortearret ljepblêden yn in fertikale yn stee fan in horizontale manier. It is swier ynspirearre troch en oernommen fan de fantastyske add-on VerticalTabs."
+    },
+    "hsb": {
+      "description": "Tab Center je pospyt, někotre problemy rozrisać, kotrež su z toho wušli, kak ludźo rajtarki wužiwaja (předewšěm problem \"přewjele rajtarkow\") a skići bóle wjelestronsku bazu wužiwarskeho powjercha za přichodnu inowaciju. Prěnja wersija tutoho přidatka Firefox rjaduje rajtarki we wertikalnym porjedźe, nic w horicontalnym. Je so přez wulkotny přidatk VerticalTabs inspirował, z kotrehož ideje přewza."
+    },
+    "hu": {
+      "description": "A Lapközpont egy próbálkozás arra, hogy megoldjunk néhány problémát, amely az emberek laphasználati szokásaiból erednek (leginkább a „túl sok lap” problémát), és egy sokoldalúbb felületet biztosítsunk a jövőbeli innovációknak. Ezen Firefox kiegészítő első verziója függőlegesen helyezi el a lapokat a vízszintes helyett. Erősen a VerticalTabs kiegészítő inspirálta, és sok ötletet vesz át ebből a nagyszerű kiegészítőből."
+    },
+    "it": {
+      "description": "Tab Center cerca di risolvere alcuni dei problemi riscontrati dagli utenti nell’utilizzo delle schede, in particolare in presenza di molte schede aperte, e fornisce un’interfaccia più versatile per facilitare future innovazioni. La prima versione di questo componente aggiuntivo organizza le schede in verticale, sostituendo la tradizionale disposizione orizzontale. Si tratta di un esperimento pesantemente influenzato dall’ottima estensione VerticalTabs, da cui prende diversi spunti."
+    },
+    "ja": {
+      "description": "Tab Center は、ユーザーのタブの使い方から生じるいくつかの問題 (特に「タブを開きすぎてしまう」状況) を解決し、将来の革新に向けてより自在な UI の基礎を提供しようとする試みです。この Firefox アドオンの初回版では、タブを水平ではなく垂直に配置してみました。これは素晴らしい VerticalTabs アドオンに強く触発され、そのアイデアを借用したものです。"
+    },
+    "ru": {
+      "description": "Tab Center - попытка решить некоторые проблемы, которые возникают у людей, использующих вкладки (в первую очередь проблема открытия большого количества вкладок) , предлагающая основу для более универсального интерфейса для дальнейших инноваций. Первая версия этого дополнения Firefox располагает вкладки в вертикальном, а не горизонтальном порядке. Оно вдохновлено и взяло идеи из классного дополнения VerticalTabs."
+    },
+    "sv-SE": {
+      "description": "Tab Center är ett försök att lösa några av de frågor som har uppstått från hur personer använder flikar (framförallt problemet med “alltför många flikar”) och ger en mer mångsidigt gränssnitt som grund för framtida innovationer. Den första versionen av detta tillägg ordnar flikar i ett vertikalt snarare än horisontellt läge. Det är starkt inspirerat av och lånar idéer från de utmärkta tillägget VerticalTabs."
+    },
+    "te": {
+      "description": "ట్యాబుసెంటర్ చాలామంది ట్యాబ్లను (మరీ ముఖ్యంగా \"చాలా టాబ్లు\" సమస్య) ఉపయోగించడానికి మార్గం నుండి ఉద్భవించిన సమస్యలు కొన్ని పరిష్కరించడానికి మరియు భవిష్యత్తు ఆవిష్కరణకు మరింత బహుముఖ UI ఆధారాన్ని అందిస్తూనే ఒక ప్రయత్నం. ఈ ఫైర్ఫాక్స్ మొదటి వెర్షన్ సమాంతర ఫ్యాషన్ కాకుండా ఒక నిలువు ఏర్పాటు టాబ్లను జోడించండి. ఇది భారీగా ప్రేరణ మరియు అద్భుతమైన VerticalTabs నుండి ఆలోచనలను యాడ్ ఆన్ కలగలసిన ఉంది."
+    },
+    "zh-CN": {
+      "description": "“标签页中心”尝试解决一些人们使用标签页时不方便的问题（尤其是“标签页太多”的问题），并为未来的创新提供更通用的用户界面设计基础。本 Firefox 扩展的首个版本以垂直而非水平方式摆放标签页。这个想法很大程度上是受 VerticalTabs 扩展启发并从中借鉴的。"
+    },
+    "zh-TW": {
+      "description": "Tab Center 嘗試解決某些人使用分頁時會遇到的問題（通常稱為「太多分頁」問題），並提供一套靈活的介面，可於未來進行創新。此 Firefox 附加元件的第一版會將分頁清單改以垂直方式排列。此附加元件借鑒了 VerticalTabs 附加元件的設計，並從中得到大量啟發。"
+    }
+  },
   "main": "main.js",
   "directories": {
     "doc": "docs"
@@ -14,9 +61,10 @@
   "id": "tabcentertest1@mozilla.com",
   "dependencies": {},
   "devDependencies": {
-    "jpm": "1.1.3",
-    "eslint-plugin-mozilla": "0.0.3",
     "eslint": "2.9.0",
+    "eslint-plugin-mozilla": "0.0.3",
+    "glob": "^7.1.1",
+    "jpm": "1.1.3",
     "stylelint": "6.7.1"
   },
   "scripts": {
@@ -35,15 +83,33 @@
   },
   "author": "Mozilla",
   "contributors": [
-    {"name": "Blake Winton"},
-    {"name": "Vlad Vukicevic"},
-    {"name": "Darrin Henein"},
-    {"name": "Philipp von Weitershausen"},
-    {"name": "SHIMODA Hiroshi"},
-    {"name": "bb10"},
-    {"name": "Frank Yan"},
-    {"name": "Rob Campbel"},
-    {"name": "Erica Wright"}
+    {
+      "name": "Blake Winton"
+    },
+    {
+      "name": "Vlad Vukicevic"
+    },
+    {
+      "name": "Darrin Henein"
+    },
+    {
+      "name": "Philipp von Weitershausen"
+    },
+    {
+      "name": "SHIMODA Hiroshi"
+    },
+    {
+      "name": "bb10"
+    },
+    {
+      "name": "Frank Yan"
+    },
+    {
+      "name": "Rob Campbel"
+    },
+    {
+      "name": "Erica Wright"
+    }
   ],
   "license": "MPL-2.0",
   "bugs": {
@@ -68,18 +134,18 @@
       "type": "menulist",
       "value": 1,
       "options": [
-          {
-              "value": "0",
-              "label": "Never"
-          },
-          {
-              "value": "1",
-              "label": "When there is room"
-          },
-          {
-              "value": "2",
-              "label": "Always"
-          }
+        {
+          "value": "0",
+          "label": "Never"
+        },
+        {
+          "value": "1",
+          "label": "When there is room"
+        },
+        {
+          "value": "2",
+          "label": "Always"
+        }
       ]
     }
   ]

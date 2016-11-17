@@ -5,17 +5,39 @@
  * http://mozilla.org/MPL/2.0/.
  */
 
+/* eslint-env node */
 /* eslint-disable no-console */
 
 const fs = require('fs');
 const glob = require('glob');
 
+const descRe = /^addon_description= (.*)$/m;
+const package = require('./package.json');
+
+let descriptions = {};
+
 glob('locales/*/*.properties', function (err, files) {
-  if (err) return console.error('Error finding files', err);
-  files.forEach(function(path) {
-    fs.createReadStream(path).pipe(fs.createWriteStream(`locale/${parseLang(path)}.properties`));
+  if (err) {
+    return console.error('Error finding files', err);
+  }
+  files.forEach(function (path) {
+    let lang = parseLang(path);
+    fs.createReadStream(path).pipe(fs.createWriteStream(`locale/${lang}.properties`));
+    let contents = fs.readFileSync(path, 'utf8');
+    let match = descRe.exec(contents);
+
+    if (match && lang !== 'en-US') {
+      descriptions[lang] = {'description': match[1]};
+    }
+  });
+  package.locales = descriptions;
+  fs.writeFile('./package.json', JSON.stringify(package, null, 2), function (err) {
+    if (err) {
+      console.log(err);
+    }
   });
 });
+
 
 function parseLang(path) {
   const segments = path.split('/');

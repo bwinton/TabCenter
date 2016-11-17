@@ -203,7 +203,7 @@ exports.main = function (options, callbacks) {
   });
 
   hotkey = Hotkey({
-    combo: strings.toggleHotkey,
+    combo: 'accel-shift-l',
     onPress: function () {
       let window = viewFor(browserWindows.activeWindow);
       let input = window.document.getElementById('find-input');

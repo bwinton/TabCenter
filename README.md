@@ -45,7 +45,7 @@ Please let us know if you find any problems with extensions not mentioned.
 
 After cloning this repository, run `npm install` and `npm install jpm` then:
 
-* `jpm run` to spawn a new Firefox profile with the addon installed
-* `jpm xpi` to generate an installable XPI file locally
+* `npm run locales && jpm run` to spawn a new Firefox profile with the addon installed
+* `npm run locales && jpm xpi` to generate an installable XPI file locally
 
 Read more about [`jpm` on MDN](https://developer.mozilla.org/en-US/Add-ons/SDK/Tools/jpm)
