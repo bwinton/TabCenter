@@ -156,6 +156,17 @@ exports.main = function (options, callbacks) {
 
   // Startup VerticalTabs object for each window.
   for (let window of browserWindows) {
+    //cause no disruption to users when changing the way we handle
+    //the tabsontop pref between v1.26 and v1.27
+    let win = viewFor(window);
+    let mainWindow = win.document.getElementById('main-window');
+    let tabbrowser = win.document.getElementById('tabbrowser-tabs');
+    if (mainWindow.getAttribute('doNotReverse') !== 'true' && options.loadReason === 'upgrade' && prefs.prefs.opentabstop === true) {
+      let reversedTabs = Array.prototype.slice.call(tabbrowser.children).reverse();
+      for (let tab of reversedTabs) {
+        tabbrowser.appendChild(tab, tabbrowser.firstChild);
+      }
+    }
     initWindow(window);
   }
 
@@ -224,6 +235,7 @@ exports.onUnload = function (reason) {
     if (win.VerticalTabs) {
       win.VerticalTabs.unload();
       let mainWindow = win.document.getElementById('main-window');
+      mainWindow.setAttribute('doNotReverse', 'true');
       mainWindow.removeAttribute('tabspinned');
       mainWindow.removeAttribute('tabspinnedwidth');
       mainWindow.removeAttribute('toggledon');
