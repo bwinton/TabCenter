@@ -17,6 +17,10 @@
 
   <binding id="tabbrowser-arrowscrollbox" extends="chrome://browser/content/tabbrowser.xml#tabbrowser-arrowscrollbox">
     <implementation>
+      <field name="_isRTLScrollbox"><![CDATA[
+        document.getElementById('tabbrowser-tabs').getAttribute('opentabstop') === 'true';
+      ]]></field>
+
       <property name="_verticalTabs" onget="return this.orient == 'vertical';"/>
 
       <method name="_canScrollToElement">
@@ -700,7 +704,6 @@
         const canvas = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
         canvas.width *= window.devicePixelRatio;
         canvas.height *= window.devicePixelRatio;
-        this.refreshThumbAndLabel();
        ]]></constructor>
 
       <method name="refreshThumbAndLabel">
@@ -729,7 +732,18 @@
             ctx.drawImage(VerticalTabs.newTabImage, 0, 0);
             ctx.restore();
           } else {
-            PageThumbs.captureToCanvas(this.linkedBrowser, canvas);
+            if (this.linkedBrowser.contentWindow) {
+              let x = {};
+              try {
+                //sometimes captureToCanvas throws errors, stop them here instead
+                this.linkedBrowser.contentWindow.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIDOMWindowUtils).getPresShellId(x);
+                PageThumbs.captureToCanvas(this.linkedBrowser, canvas);
+              } catch (e) {
+                //sometimes we can't get the background thumb yet, ignore it.
+              }
+            } else {
+              PageThumbs.captureToCanvas(this.linkedBrowser, canvas);
+            }
           }
         ]]></body>
       </method>
