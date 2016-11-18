@@ -445,6 +445,13 @@ VerticalTabs.prototype = {
     tabs.setAttribute('vertical', true);
     tabs.setAttribute('overflow', 'true');
     leftbox.insertBefore(tabs, leftbox.firstChild);
+    //remove extra #newtab-popup before they get added again in the tabs constructor
+    let newTabButton = document.getElementById('new-tab-button');
+    if(newTabButton){
+      while(newTabButton.children.length > 1) {
+        newTabButton.firstChild.remove();
+      }
+    }
     tabs.orient = 'vertical';
     tabs.mTabstrip.orient = 'vertical';
     tabs.tabbox.orient = 'horizontal'; // probably not necessary
@@ -761,6 +768,13 @@ VerticalTabs.prototype = {
       toolbar.insertBefore(tabs, toolbar.children[tabsIndex]);
       toolbox.insertBefore(toolbar, navbar);
       browserPanel.insertBefore(toolbox, browserPanel.firstChild);
+      //remove extra #newtab-popup before they get added again in the tabs constructor
+      let newTabButton = document.getElementById('new-tab-button');
+      if(newTabButton){
+        while(newTabButton.children.length > 1) {
+          newTabButton.firstChild.remove();
+        }
+      }
       browserPanel.insertBefore(bottom, document.getElementById('fullscreen-warning').nextSibling);
       top.palette = palette;
       tabs.firstChild.label = label;
