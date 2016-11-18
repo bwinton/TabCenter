@@ -375,10 +375,10 @@ VerticalTabs.prototype = {
       }
     }
 
+    let NewTabButton = toolbar.querySelector('#new-tab-button') || CustomizableUI.getWidget('new-tab-button').forWindow(this.window).node;
     //if new tab button is not in toolbar, find it and insert it.
     if (!toolbar.querySelector('#new-tab-button')) {
       //save position of button for restoring later
-      let NewTabButton = CustomizableUI.getWidget('new-tab-button').forWindow(this.window).node;
       let NewTabButtonParent = NewTabButton.parentNode;
       let NewTabButtonSibling = NewTabButton.nextSibling;
       toolbar.insertBefore(NewTabButton, toolbar.firstChild);
@@ -446,10 +446,9 @@ VerticalTabs.prototype = {
     tabs.setAttribute('overflow', 'true');
     leftbox.insertBefore(tabs, leftbox.firstChild);
     //remove extra #newtab-popup before they get added again in the tabs constructor
-    let newTabButton = document.getElementById('new-tab-button');
-    if(newTabButton){
-      while(newTabButton.children.length > 1) {
-        newTabButton.firstChild.remove();
+    if (NewTabButton) {
+      while (NewTabButton.children.length > 1) {
+        NewTabButton.firstChild.remove();
       }
     }
     tabs.orient = 'vertical';
@@ -769,10 +768,9 @@ VerticalTabs.prototype = {
       toolbox.insertBefore(toolbar, navbar);
       browserPanel.insertBefore(toolbox, browserPanel.firstChild);
       //remove extra #newtab-popup before they get added again in the tabs constructor
-      let newTabButton = document.getElementById('new-tab-button');
-      if(newTabButton){
-        while(newTabButton.children.length > 1) {
-          newTabButton.firstChild.remove();
+      if (NewTabButton) {
+        while (NewTabButton.children.length > 1) {
+          NewTabButton.firstChild.remove();
         }
       }
       browserPanel.insertBefore(bottom, document.getElementById('fullscreen-warning').nextSibling);
