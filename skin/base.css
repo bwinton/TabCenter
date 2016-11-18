@@ -171,6 +171,7 @@
 
 #main-window[printPreview] #appcontent {
   width: 100vw !important;
+  margin-left: 0 !important;
 }
 
 #main-window[printPreview] #verticaltabs-box {

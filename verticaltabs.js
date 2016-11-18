@@ -142,12 +142,12 @@ VerticalTabs.prototype = {
     window.PrintPreviewListener.onEnter = () => {
       let mainWindow = document.getElementById('main-window');
       mainWindow.setAttribute('printPreview', 'true');
-      OldPrintPreviewListenerEnter();
+      OldPrintPreviewListenerEnter.call(window.PrintPreviewListener);
     };
 
     window.PrintPreviewListener.onExit = () => {
       mainWindow.removeAttribute('printPreview');
-      OldPrintPreviewListenerExit();
+      OldPrintPreviewListenerExit.call(window.PrintPreviewListener);
     };
 
     // change the text in the tab context box
