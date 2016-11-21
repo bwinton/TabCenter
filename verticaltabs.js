@@ -154,24 +154,25 @@ VerticalTabs.prototype = {
     let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
     let previous_close_message = close_next_tabs_message.getAttribute('label');
 
-    function reverseTabs() {
-      let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+    let reverseTabs = (arrowscrollbox) => {
       if (prefs.opentabstop) {
         close_next_tabs_message.setAttribute('label', strings.closeTabsAbove);
-        tabs.setAttribute('opentabstop', 'true');
         arrowscrollbox._isRTLScrollbox = true;
+        tabs.setAttribute('opentabstop', 'true');
       } else {
         close_next_tabs_message.setAttribute('label', strings.closeTabsBelow);
-        tabs.removeAttribute('opentabstop');
         arrowscrollbox._isRTLScrollbox = false;
+        tabs.removeAttribute('opentabstop');
       }
-    }
+    };
 
-    reverseTabs();
+    let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+    reverseTabs(arrowscrollbox);
 
     // update on changing preferences
     require('sdk/simple-prefs').on('opentabstop', function () {
-      reverseTabs();
+      let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+      reverseTabs(arrowscrollbox);
     });
 
     let tabsProgressListener = {
