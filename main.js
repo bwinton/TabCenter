@@ -68,25 +68,41 @@ let VerticalTabsWindowId = 1;
 function firstInstallTour(win) {
   if (win.activeInstall) {
     win.activeInstall = false;
-    let button = win.document.getElementById('side-tabs-button');
-    let panel = win.document.createElement('panel');
-    let outerbox = win.document.createElement('vbox', 'onboard-panel-box');
-    let instructions = win.document.createElement('description');
-    let progressButton = win.document.createElement('button', 'progress-button');
-    win.document.getElementById('mainPopupSet').appendChild(panel);
+    let document = win.document;
+    let button = document.getElementById('side-tabs-button');
+    let panel = document.createElement('panel');
+    let outerbox = document.createElement('vbox', 'onboard-panel-box');
+    let instructions = document.createElement('description');
+    let progressButton = document.createElement('button', 'step-one-button');
+    document.getElementById('mainPopupSet').appendChild(panel);
     panel.setAttribute('id', 'tour-panel');
     panel.setAttribute('type', 'arrow');
     panel.style.width = '200px';
     panel.style.height = '400px';
     instructions.textContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum';
     instructions.style.width = '200px';
-    progressButton.setAttribute('label', 'test');
-    progressButton.classList.add('default');
+    progressButton.setAttribute('label', 'Show me how');
     progressButton.style.display = 'block';
     progressButton.style.width = '200px';
     progressButton.style.height = '50px';
-    progressButton.onclick = function () {
-      panel.hidePopup();
+
+    progressButton.onclick = (e) => {
+      document.getElementById('side-tabs-button').onclick(e); //will only accept left click...
+      document.getElementById('mainPopupSet').appendChild(panel);
+      progressButton.setAttribute('label', 'Next');
+      panel.openPopup(document.getElementById('pin-button'), 'bottomcenter topleft', 0, 0, false, false);
+      progressButton.onclick = (e) => {
+        panel.hidePopup();
+        panel.openPopup(document.getElementById('find-input'), 'bottomcenter topleft', 0, 0, false, false);
+        progressButton.onclick = (e) => {
+          panel.hidePopup();
+          progressButton.setAttribute('label', 'Finish');
+          panel.openPopup(document.getElementById('top-tabs-button'), 'bottomcenter topleft', 0, 0, false, false);
+          progressButton.onclick = (e) => {
+            panel.hidePopup();
+          };
+        };
+      };
     };
 
     panel.appendChild(outerbox);
