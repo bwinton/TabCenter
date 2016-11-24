@@ -885,6 +885,11 @@ VerticalTabs.prototype = {
   },
 
   unload: function () {
+    let tourPanel = this.document.getElementById('tour-panel');
+    if (tourPanel){
+      this.document.getElementById('mainPopupSet').removeChild(tourPanel);
+    }
+
     let urlbar = this.document.getElementById('urlbar');
     let url = urlbar.value;
     this.unloaders.forEach(function (func) {
