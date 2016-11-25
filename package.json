@@ -7,14 +7,26 @@
     "ast": {
       "description": "El centru de llingüetes ye un intentu d'iguar dellos d'estos problemes qu'emerxeron del mou nel que la xente usa les llingüetes, (especialmente'l problema «milenta llingüetes»), y fornir una UI más versatil pa la innovación futura. La primer versión d'esti add-on ordena llingüetes en vertical, non n'horizontal. Inspírase poles idees emprestaes del escelente add-on VerticalTabs."
     },
+    "az": {
+      "description": "Tab Center - vərəqləri işlədən istifadəçilərin üzləşdikləri problemləri (ən çox da həddindən artıq açıq vərəq problemi) həll etmə və gələcək innovasiyalar üçün universal interfeys təklif etmə təşəbbüsüdür. Bu Firefox əlavəsinin ilk versiyası vərəqləri üfüqi yerinə şaquli (dik) sıralayır. Daha çox mükəmməl VerticalTabs əlavəsindən ilhamlanır."
+    },
     "bn-BD": {
       "description": "Tab Center এমন কিছু সমস্যার (বেশিভাগ সময়ে \"অনেক বেশি ট্যাব\" সমস্যা) সমাধান যা লোকজন ট্যাব ব্যবহারে সম্মুখিন হয়ে থাকেন এবং যা ভবিষ্যত উদ্ভাবনী উপর ভিত্তি করে একটি বহুমুখী UI প্রদান করে। এই অ্যাড-অনের প্রথম সংস্করণটি Firefox এর ট্যাবগুলোকে আনুভূমিক ভাবে সাজানোর বদলে উল্লম্বভাবে সাজিয়ে দেয়। VerticalTabs এর মত চমৎকার অ্যাড-অনের ধারণা থেকে এই অ্যাড-অনটি তৈরি করা হয়েছে।"
     },
+    "cs": {
+      "description": "Panelové centrum je pokus vyřešit některé problémy, které vznikly kvůli tomu, jak lidé panely používají (především problém s příliš velkým počtem otevřených panelů) a snaží se poskytnout univerzální základ uživatelského rozhraní pro další inovace. První verze tohoto doplňku řadí panely vertikálně a ne horizontálně. Byla inspirována skvělým doplňkem VerticalTabs, odkud přejímá některé nápady."
+    },
     "de": {
-      "description": "Tab Center ist ein Versuch, Probleme einiger Personen im Umgang mit Tabs (vor allem „zu vielen Tabs“) zu lösen und der Benutzeroberfläche eine vielseitigere Basis für zukünftige Innovationen zu geben. Die erste Version dieses Firefox-Add-ons zeigt Tabs horizontal, und nicht vertikal an. Die Idee stammt von dem hervorragenden Add-on „VerticalTabs“."
+      "description": "Tab Center ist ein Versuch, Probleme einiger Personen im Umgang mit Tabs (vor allem „zu vielen Tabs“) zu lösen und der Benutzeroberfläche eine vielseitigere Basis für zukünftige Innovationen zu geben. Die erste Version dieses Firefox-Add-ons zeigt Tabs vertikal und nicht horizontal an. Die Idee stammt von dem hervorragenden Add-on „VerticalTabs“."
+    },
+    "dsb": {
+      "description": "Tab Center jo wopyt, někotare problemy rozwězaś, kótarež su z tofo wujšli, kak luźe wužywaju rejtarki (pśedewšym problem \"pśewjele rejtarkow\") a bitujo wěcej wjelebocnu bazu wužywarskego pówjercha za pśichodnu inowaciju. Prědna wersija toś togo dodanka Firefox zastoj rejtarki we wertikalnrm pórěźe, nic w horicontalnem. Jo se pśez wjelicny dodank VerticalTabs inspirěrował, z kótaregož jo ideje pśewzeł."
     },
     "es-ES": {
       "description": "Tab Center es un intento de resolver algunos de los problemas derivados de la forma en que la gente usa las pestañas (en particular el problema de tener “demasiadas pestañas abiertas”) y proporciona una interfaz de usuario más versátil que sirva de base a futuras innovaciones. La primera versión de este complemento de Firefox organiza las pestañas en vertical en vez de en horizontal. Toma prestadas ideas del excelente complemento VerticalTabs en el que está inspirado."
+    },
+    "fa": {
+      "description": "«مرکز زبانه‌ها» سعی می‌کند تا تعدادی از مشکلاتی که مردم در استفاده از زبانه‌ها دارند را حل کند (به طور مشخص‌تر مشکل «تعداد زبانه‌های زیاد») و یک رابط کاربری تطبیق‌پذیرتر برای نوآوری‌های آتی را فراهم کند. اولین نسخه از این افزودنی زبانه‌ها را به جای افقی به شکل عمودی نمایش می‌دهد. این رفتار به شکل مشخصی از افزودنی VerticalTabs ایده و قرض گرفته شده است."
     },
     "fr": {
       "description": "Tab Center tente de résoudre certains problèmes apparus avec la façon dont les gens utilisent les onglets (en particulier, le problème « j’ai trop d’onglets »). Il pose les fondations d’une interface plus dépouillée qui servira de base pour de futures innovations. La première version de ce module Firefox classe les onglets à la verticale et non plus à l’horizontale. Il est fortement inspiré de l’excellent module VerticalTabs et en emprunte certains concepts."
@@ -34,6 +46,9 @@
     "ja": {
       "description": "Tab Center は、ユーザーのタブの使い方から生じるいくつかの問題 (特に「タブを開きすぎてしまう」状況) を解決し、将来の革新に向けてより自在な UI の基礎を提供しようとする試みです。この Firefox アドオンの初回版では、タブを水平ではなく垂直に配置してみました。これは素晴らしい VerticalTabs アドオンに強く触発され、そのアイデアを借用したものです。"
     },
+    "kab": {
+      "description": "Tab Center yettaɛrad ad yefru kra n wuguren i d-ibanen s wamek iseqdacen semrasen  iccaren (la baɛda, ugur n \"ɣur-i deqs n yiccaren\"). yessers lsas n ugrudem yettwafersen akken iwatai yesnulfuyen n uzekka. Lqem amezwaru n uzegrir agin n Firefox yesrus iccaren s wudem ubdid mačči s wudem aglawan. D tikti i d-yekkan seg uzegrir VerticalTabs ifazen, syen id-yebbi deqs n tmuɣliwin."
+    },
     "ru": {
       "description": "Tab Center - попытка решить некоторые проблемы, которые возникают у людей, использующих вкладки (в первую очередь проблема открытия большого количества вкладок) , предлагающая основу для более универсального интерфейса для дальнейших инноваций. Первая версия этого дополнения Firefox располагает вкладки в вертикальном, а не горизонтальном порядке. Оно вдохновлено и взяло идеи из классного дополнения VerticalTabs."
     },
@@ -42,6 +57,9 @@
     },
     "te": {
       "description": "ట్యాబుసెంటర్ చాలామంది ట్యాబ్లను (మరీ ముఖ్యంగా \"చాలా టాబ్లు\" సమస్య) ఉపయోగించడానికి మార్గం నుండి ఉద్భవించిన సమస్యలు కొన్ని పరిష్కరించడానికి మరియు భవిష్యత్తు ఆవిష్కరణకు మరింత బహుముఖ UI ఆధారాన్ని అందిస్తూనే ఒక ప్రయత్నం. ఈ ఫైర్ఫాక్స్ మొదటి వెర్షన్ సమాంతర ఫ్యాషన్ కాకుండా ఒక నిలువు ఏర్పాటు టాబ్లను జోడించండి. ఇది భారీగా ప్రేరణ మరియు అద్భుతమైన VerticalTabs నుండి ఆలోచనలను యాడ్ ఆన్ కలగలసిన ఉంది."
+    },
+    "uk": {
+      "description": "Tab Center - спроба вирішити деякі проблеми, які виникають у людей, що використовують вкладки (в першу чергу проблема відкриття великої кількості вкладок), що пропонує основу для більш універсального інтерфейсу для подальших інновацій. Перша версія цього додатку Firefox має вкладки у вертикальному, а не горизонтальному порядку. На створення надихнув і підкинув ідею чудовий додаток VerticalTabs."
     },
     "zh-CN": {
       "description": "“标签页中心”尝试解决一些人们使用标签页时不方便的问题（尤其是“标签页太多”的问题），并为未来的创新提供更通用的用户界面设计基础。本 Firefox 扩展的首个版本以垂直而非水平方式摆放标签页。这个想法很大程度上是受 VerticalTabs 扩展启发并从中借鉴的。"
@@ -69,6 +87,7 @@
   },
   "scripts": {
     "changelog": "changelog",
+    "build": "npm run locales && npm run lint && jpm xpi",
     "test": "npm run locales && jpm run -b nightly -p Testing",
     "lint": "eslint . --ext=js,jsm vertical-tabbrowser.xml && stylelint \"**/*.css\"",
     "locales": "./genlocales"
