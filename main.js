@@ -74,9 +74,10 @@ function firstInstallTour(win) {
     let outerbox = document.createElement('vbox', 'onboard-panel-box');
     let instructions = document.createElement('description');
     let progressButton = document.createElement('button', 'step-one-button');
-    document.getElementById('mainPopupSet').appendChild(panel);
+    document.getElementById('mainPopupSet').appendChild(panel); //attach to DOM anywhere
     panel.setAttribute('id', 'tour-panel');
     panel.setAttribute('type', 'arrow');
+    panel.setAttribute('flip', 'slide');
     panel.style.width = '200px';
     panel.style.height = '400px';
     instructions.textContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum';
@@ -85,19 +86,43 @@ function firstInstallTour(win) {
     progressButton.style.display = 'block';
     progressButton.style.width = '200px';
     progressButton.style.height = '50px';
+    let xpos;
+    let outerRect = {};
+
+
+    let movePanelToFind = () => {
+      xpos -= 2;
+      panel.moveTo(xpos, outerRect.y);
+      //move amount of pixels center of find-input is away from center of pin-button
+      if (xpos > outerRect.x - 104) {
+        win.requestAnimationFrame(movePanelToFind);
+      }
+    };
+
+    let movePanelToTop = () => {
+      xpos += 2;
+      panel.moveTo(xpos, outerRect.y);
+      //move amount of pixels center of top-tabs-button is away from center of find-input
+      if (xpos < outerRect.x + 69) {
+        win.requestAnimationFrame(movePanelToTop);
+      }
+    };
 
     progressButton.onclick = (e) => {
+      panel.hidePopup();
       document.getElementById('side-tabs-button').onclick(e); //will only accept left click...
-      document.getElementById('mainPopupSet').appendChild(panel);
+      document.getElementById('mainPopupSet').appendChild(panel); //reattach to DOM after running unload
       progressButton.setAttribute('label', 'Next');
       panel.openPopup(document.getElementById('pin-button'), 'bottomcenter topleft', 0, 0, false, false);
       progressButton.onclick = (e) => {
-        panel.hidePopup();
-        panel.openPopup(document.getElementById('find-input'), 'bottomcenter topleft', 0, 0, false, false);
+        outerRect = panel.getOuterScreenRect();
+        xpos = outerRect.x;
+        win.requestAnimationFrame(movePanelToFind);
         progressButton.onclick = (e) => {
-          panel.hidePopup();
+          outerRect = panel.getOuterScreenRect();
+          xpos = outerRect.x;
+          win.requestAnimationFrame(movePanelToTop);
           progressButton.setAttribute('label', 'Finish');
-          panel.openPopup(document.getElementById('top-tabs-button'), 'bottomcenter topleft', 0, 0, false, false);
           progressButton.onclick = (e) => {
             panel.hidePopup();
           };
@@ -108,8 +133,7 @@ function firstInstallTour(win) {
     panel.appendChild(outerbox);
     outerbox.appendChild(instructions);
     outerbox.appendChild(progressButton);
-
-    panel.openPopup(button, 'bottomcenter topright', 0, 0, false, false);
+    panel.openPopup(button, 'bottomcenter topright', 0, 0, false, true);
   }
 }
 
