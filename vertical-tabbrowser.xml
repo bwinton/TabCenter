@@ -31,6 +31,79 @@
           return canScroll;
         ]]></body>
       </method>
+
+      <method name="_elementFromPoint">
+        <parameter name="aX"/>
+        <parameter name="aPhysicalScrollDir"/>
+        <body><![CDATA[
+
+          let elements = this._getScrollableElements();
+          if (!elements.length){
+            return null;
+          }
+
+          let [start, end] = this._startEndProps;
+          let low = 0;
+          let high = elements.length - 1;
+
+
+          //TC: pinned tabs stay at the top when reversed but the index does not change
+          //this is a work-around for that
+          if (this._isRTLScrollbox){
+            elements.reverse();
+            elements.every(function (tab, index){
+              if (tab.pinned === true){
+                low = index;
+              }
+              return !tab.pinned;
+            });
+
+            if (elements[high].pinned){
+              elements.every(function (tab, index){
+                if (tab.pinned === true){
+                  return false;
+                }
+                high = index;
+                return true;
+              });
+            }
+          }
+
+          if (aX < elements[low].getBoundingClientRect()[start] ||
+          aX > elements[high].getBoundingClientRect()[end]) {
+            return null;
+          }
+
+          let mid, rect;
+          while (low <= high) {
+            mid = Math.floor((low + high) / 2);
+            rect = elements[mid].getBoundingClientRect();
+            if (rect[start] > aX) {
+              high = mid - 1;
+            } else if (rect[end] < aX) {
+              low = mid + 1;
+            } else {
+              return elements[mid];
+            }
+          }
+
+          // There's no element at the requested coordinate, but the algorithm
+          // from above yields an element next to it, in a random direction.
+          // The desired scrolling direction leads to the correct element.
+
+          if (!aPhysicalScrollDir){
+            return null;
+          }
+
+          if (aPhysicalScrollDir < 0 && rect[start] > aX){
+            mid = Math.max(mid - 1, 0);
+          } else if (aPhysicalScrollDir > 0 && rect[end] < aX){
+            mid = Math.min(mid + 1, elements.length - 1);
+          }
+
+          return elements[mid];
+        ]]></body>
+      </method>
     </implementation>
 
     <handlers>
