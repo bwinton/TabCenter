@@ -1,3 +1,10 @@
+# v1.28 - Go somewhere else…
+
+### Fixes:
+
+* Fix update links.  (Fixes #727.)
+
+
 # v1.27 - Waffling…
 
 ### New Features:
