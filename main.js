@@ -89,9 +89,11 @@ function setPersistantAttrs(win){
   let mainWindow = win.document.getElementById('main-window');
   mainWindow.setAttribute('persist', mainWindow.getAttribute('persist') + ' tabspinned tabspinnedwidth toggledon');
   try {
-    mainWindow.setAttribute('toggledon', ss.getWindowValue(win, 'TCtoggledon'));
-    mainWindow.setAttribute('tabspinnedwidth', ss.getWindowValue(win, 'TCtabspinnedwidth'));
-    mainWindow.setAttribute('tabspinned', ss.getWindowValue(win, 'TCtabspinned'));
+    if(ss.getWindowValue(win, 'TCtoggledon') !== ''){ // on win/linux this does not throw an error, so check for value
+      mainWindow.setAttribute('toggledon', ss.getWindowValue(win, 'TCtoggledon'));
+      mainWindow.setAttribute('tabspinnedwidth', ss.getWindowValue(win, 'TCtabspinnedwidth'));
+      mainWindow.setAttribute('tabspinned', ss.getWindowValue(win, 'TCtabspinned'));
+    }
   } catch (e) {
     if (e.name !== 'NS_ERROR_ILLEGAL_VALUE') {
       throw e;
