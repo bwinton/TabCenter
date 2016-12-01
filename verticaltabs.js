@@ -45,6 +45,7 @@ const {sendPing, setDefaultPrefs, removeStylesheets, installStylesheets} = requi
 const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
                                createInstance(Ci.nsIURIFixup);
 const strings = require('./get-locale-strings').getLocaleStrings();
+const ss = Cc['@mozilla.org/browser/sessionstore;1'].getService(Ci.nsISessionStore);
 
 Cu.import('resource://gre/modules/PageThumbs.jsm');
 Cu.import('resource:///modules/CustomizableUI.jsm');
@@ -78,6 +79,9 @@ VerticalTabs.prototype = {
   init: function () {
     let window = this.window;
     let document = this.document;
+    this.window.VerticalTabs = this;
+    this.resizeTimeout = -1;
+    this.mouseInside = false;
     let mainWindow = document.getElementById('main-window');
     let tabs = document.getElementById('tabbrowser-tabs');
 
@@ -111,6 +115,7 @@ VerticalTabs.prototype = {
         }
         this.unload();
         mainWindow.setAttribute('toggledon', 'true');
+        ss.setWindowValue(window, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
         this.init();
         window.VerticalTabs.sendPing('tab_center_toggled_on', window);
       };
@@ -124,10 +129,6 @@ VerticalTabs.prototype = {
 
       return;
     }
-
-    this.window.VerticalTabs = this;
-    this.resizeTimeout = -1;
-    this.mouseInside = false;
 
     installStylesheets(window);
 
@@ -428,6 +429,7 @@ VerticalTabs.prototype = {
         }
         document.documentElement.style.setProperty('--pinned-width', `${this.pinnedWidth}px`);
         mainWindow.setAttribute('tabspinnedwidth', `${this.pinnedWidth}px`);
+        ss.setWindowValue(window, 'TCtabspinnedwidth', mainWindow.getAttribute('tabspinnedwidth'));
         this.resizeFindInput();
         this.resizeTabs();
       };
@@ -488,6 +490,11 @@ VerticalTabs.prototype = {
         `
     });
 
+    pin_button.addEventListener('click', function () {
+      //ss is undefined within the other click handler
+      ss.setWindowValue(window, 'TCtabspinned', mainWindow.getAttribute('tabspinned'));
+    });
+
     let tooltiptext = mainWindow.getAttribute('tabspinned') === 'true' ? strings.sidebarShrink : strings.sidebarOpen;
     pin_button.setAttribute('tooltiptext', tooltiptext);
 
@@ -522,8 +529,9 @@ VerticalTabs.prototype = {
         return;
       }
       mainWindow.setAttribute('toggledon', 'false');
-      this.init();
+      ss.setWindowValue(window, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
       window.VerticalTabs.sendPing('tab_center_toggled_off', window);
+      this.init();
     };
 
     leftbox.contextMenuOpen = false;
@@ -710,6 +718,7 @@ VerticalTabs.prototype = {
     let resizeListener = () => {
       this.resizeTabs();
       document.documentElement.style.setProperty('--pinned-width', `${Math.min(this.pinnedWidth, document.width / 2)}px`);
+      ss.setWindowValue(window, 'TCtabspinnedwidth', mainWindow.getAttribute('tabspinnedwidth'));
     };
     window.addEventListener('resize', resizeListener);
     this.adjustCrop();
