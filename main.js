@@ -60,6 +60,7 @@ let self = require('sdk/self');
 const RESOURCE_HOST = 'tabcenter';
 
 let observerService = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
+let startupFinishedObserver = null;
 
 let hotkey;
 let VerticalTabsWindowId = 1;
@@ -113,15 +114,14 @@ function initWindow(window) {
   let win = viewFor(window);
 
   if (!('__SSi' in win)) {
-    let testObserver = {
+    startupFinishedObserver = {
       observe : function (aSubject, aTopic, aData) {
-        if (aTopic === 'browser-delayed-startup-finished') {
-          setPersistantAttrs(win);
-          observerService.removeObserver(testObserver, 'browser-delayed-startup-finished');
-        }
+        observerService.removeObserver(this, 'browser-delayed-startup-finished');
+        setPersistantAttrs(win);
+        startupFinishedObserver = null;
       }
     };
-    observerService.addObserver(testObserver, 'browser-delayed-startup-finished', false);
+    observerService.addObserver(startupFinishedObserver, 'browser-delayed-startup-finished', false);
   } else {
     setPersistantAttrs(win);
   }
@@ -262,7 +262,10 @@ exports.onUnload = function (reason) {
   if (reason === 'shutdown') {
     return;
   }
-
+  if (startupFinishedObserver) {
+    observerService.removeObserver(startupFinishedObserver, 'browser-delayed-startup-finished');
+    startupFinishedObserver = null;
+  }
   hotkey.destroy();
 
   // Shutdown the VerticalTabs object for each window.
