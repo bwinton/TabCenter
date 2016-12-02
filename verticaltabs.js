@@ -469,30 +469,26 @@ VerticalTabs.prototype = {
     toolbar.setAttribute('toolboxid', 'navigator-toolbox');
 
     let pin_button = this.createElement('toolbarbutton', {
-      'id': 'pin-button',
-      'onclick': `if (event.which !== 1) {
-          return;
-        }
-        let box = document.getElementById('main-window');
-        let button = document.getElementById('pin-button');
-        let newstate = box.getAttribute('tabspinned') === 'true' ? 'false' : 'true';
-        box.setAttribute('tabspinned', newstate);
-        if (newstate === 'true') {
-          window.VerticalTabs.sendPing('tab_center_pinned', window);
-          button.setAttribute('tooltiptext', '${strings.sidebarShrink}');
-        } else {
-          window.VerticalTabs.sendPing('tab_center_unpinned', window);
-          button.setAttribute('tooltiptext', '${strings.sidebarOpen}');
-          document.getElementById('verticaltabs-box').removeAttribute('search_expanded');
-        }
-        window.VerticalTabs.resizeFindInput();
-        window.VerticalTabs.resizeTabs();
-        `
+      'id': 'pin-button'
     });
 
-    pin_button.addEventListener('click', function () {
-      //ss is undefined within the other click handler
-      ss.setWindowValue(window, 'TCtabspinned', mainWindow.getAttribute('tabspinned'));
+    pin_button.addEventListener('click', function (event) {
+      if (event.which !== 1) {
+        return;
+      }
+      let newstate = mainWindow.getAttribute('tabspinned') === 'true' ? 'false' : 'true';
+      mainWindow.setAttribute('tabspinned', newstate);
+      ss.setWindowValue(window, 'TCtabspinned', newstate);
+      if (newstate === 'true') {
+        window.VerticalTabs.sendPing('tab_center_pinned', window);
+        pin_button.setAttribute('tooltiptext', '${strings.sidebarShrink}');
+      } else {
+        window.VerticalTabs.sendPing('tab_center_unpinned', window);
+        pin_button.setAttribute('tooltiptext', '${strings.sidebarOpen}');
+        document.getElementById('verticaltabs-box').removeAttribute('search_expanded');
+      }
+      window.VerticalTabs.resizeFindInput();
+      window.VerticalTabs.resizeTabs();
     });
 
     let tooltiptext = mainWindow.getAttribute('tabspinned') === 'true' ? strings.sidebarShrink : strings.sidebarOpen;
