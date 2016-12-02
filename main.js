@@ -59,6 +59,9 @@ const {addVerticalTabs} = require('./verticaltabs');
 let self = require('sdk/self');
 const RESOURCE_HOST = 'tabcenter';
 
+let observerService = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
+let startupFinishedObserver = null;
+
 let hotkey;
 let VerticalTabsWindowId = 1;
 
@@ -85,7 +88,7 @@ function b64toBlob(win, b64Data, contentType, sliceSize) {
   return new win.Blob(byteArrays, {type: contentType});
 }
 
-function setPersistantAttrs(win){
+function setPersistantAttrs(win) {
   let mainWindow = win.document.getElementById('main-window');
   mainWindow.setAttribute('persist', mainWindow.getAttribute('persist') + ' tabspinned tabspinnedwidth toggledon');
   try {
@@ -94,6 +97,10 @@ function setPersistantAttrs(win){
       mainWindow.setAttribute('tabspinnedwidth', ss.getWindowValue(win, 'TCtabspinnedwidth'));
       mainWindow.setAttribute('tabspinned', ss.getWindowValue(win, 'TCtabspinned'));
     }
+    //set default Session values
+    ss.setWindowValue(win, 'TCtabspinnedwidth', mainWindow.getAttribute('tabspinnedwidth'));
+    ss.setWindowValue(win, 'TCtabspinned', mainWindow.getAttribute('tabspinned'));
+    ss.setWindowValue(win, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
   } catch (e) {
     if (e.name !== 'NS_ERROR_ILLEGAL_VALUE') {
       throw e;
@@ -105,6 +112,19 @@ function setPersistantAttrs(win){
 function initWindow(window) {
   // get the XUL window that corresponds to this high-level window
   let win = viewFor(window);
+
+  if (!('__SSi' in win)) {
+    startupFinishedObserver = {
+      observe : function (aSubject, aTopic, aData) {
+        observerService.removeObserver(this, 'browser-delayed-startup-finished');
+        setPersistantAttrs(win);
+        startupFinishedObserver = null;
+      }
+    };
+    observerService.addObserver(startupFinishedObserver, 'browser-delayed-startup-finished', false);
+  } else {
+    setPersistantAttrs(win);
+  }
 
   win.tabCenterEventListener = {};
 
@@ -142,12 +162,10 @@ function initWindow(window) {
 
   // if the dcoument is loaded
   if (isDocumentLoaded(win)) {
-    setPersistantAttrs(win);
     addVerticalTabs(win, data);
   } else {
     // Listen for load event before checking the window type
     win.addEventListener('load', () => {
-      setPersistantAttrs(win);
       addVerticalTabs(win, data);
     }, {once: true});
   }
@@ -242,16 +260,12 @@ exports.main = function (options, callbacks) {
 exports.onUnload = function (reason) {
   // If the app is shutting down, skip the rest
   if (reason === 'shutdown') {
-    for (let window of browserWindows) {
-      let win = viewFor(window);
-      let mainWindow = win.document.getElementById('main-window');
-      ss.setWindowValue(win, 'TCtabspinnedwidth', mainWindow.getAttribute('tabspinnedwidth'));
-      ss.setWindowValue(win, 'TCtabspinned', mainWindow.getAttribute('tabspinned'));
-      ss.setWindowValue(win, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
-    }
     return;
   }
-
+  if (startupFinishedObserver) {
+    observerService.removeObserver(startupFinishedObserver, 'browser-delayed-startup-finished');
+    startupFinishedObserver = null;
+  }
   hotkey.destroy();
 
   // Shutdown the VerticalTabs object for each window.
