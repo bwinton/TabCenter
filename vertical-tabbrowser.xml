@@ -292,9 +292,18 @@
           }
 
           if (tabbrowser.getAttribute('mouseInside') === 'true' && mouseY > bottomMin && mouseY < bottomMin + 30){
-            scrollbuttonDown.onmousedown(event);
+            //if tabs are reversed trigger the opposite button's scroll event instead
+            if (tabbrowser.getAttribute('opentabstop') === 'true') {
+              scrollbuttonUp.onmousedown(event);
+            } else {
+              scrollbuttonDown.onmousedown(event);
+            }
           } else if (tabbrowser.getAttribute('mouseInside') === 'true' && mouseY < topMax && mouseY > (topMax - 40)) {
-            scrollbuttonUp.onmousedown(event);
+            if (tabbrowser.getAttribute('opentabstop') === 'true') {
+              scrollbuttonDown.onmousedown(event);
+            } else {
+              scrollbuttonUp.onmousedown(event);
+            }
           } else {
             scrollbuttonUp.onmouseout();
             scrollbuttonDown.onmouseout();
