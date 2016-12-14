@@ -1,3 +1,11 @@
+# v.1.29 - Windows and Linux.
+
+### Fixes:
+
+* Restore each window session on windows and linux.
+* Restore persistant attributes for win and linux (not per window yet).  (Fixes #818.)
+
+
 # v1.28 - Go somewhere else…
 
 ### Fixes:
