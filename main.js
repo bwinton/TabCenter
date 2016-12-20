@@ -64,6 +64,11 @@ let startupFinishedObserver = null;
 let hotkey;
 let VerticalTabsWindowId = 1;
 
+function reminderTour(win){
+  win.activeInstall = true;
+  firstInstallTour(win);
+};
+
 function firstInstallTour(win) {
   if (win.activeInstall) {
     win.activeInstall = false;
@@ -99,7 +104,6 @@ function firstInstallTour(win) {
       let runtime = timestamp - starttime;
       let progress = runtime / duration;
       progress = Math.min(progress, 1);
-      win.console.log('xpos: ' + xpos, 'dist: ' + dist, 'progress: ' + progress);
       panel.moveTo(xpos + (dist * progress), outerRect.y);
       if (runtime < duration){
         win.requestAnimationFrame(function (timestamp) {
@@ -233,11 +237,15 @@ function initWindow(window) {
   win.addEventListener('TabClose', win.tabCenterEventListener, false);
   win.addEventListener('TabPinned', win.tabCenterEventListener, false);
   win.addEventListener('TabUnpinned', win.tabCenterEventListener, false);
+  let mainWindow = win.document.getElementById('main-window');
 
   win.tabCenterEventListener.handleEvent = function (aEvent) {
     switch (aEvent.type) {
     case 'TabOpen':
       utils.sendPing('tabs_created', win);
+      if (mainWindow.getAttribute('toggledon') === 'false' && win.gBrowser.tabs.length >= 7) {
+        reminderTour(win);
+      }
       return;
     case 'TabClose':
       utils.sendPing('tabs_destroyed', win);
