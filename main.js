@@ -37,7 +37,6 @@
 /* global require, exports:false */
 'use strict';
 
-
 const {prefixURI} = require('@loader/options');
 const prefs = require('sdk/simple-prefs');
 const {setInterval} = require('sdk/timers');
@@ -71,58 +70,80 @@ function firstInstallTour(win) {
     let document = win.document;
     let button = document.getElementById('side-tabs-button');
     let panel = document.createElement('panel');
-    let outerbox = document.createElement('vbox', 'onboard-panel-box');
+    let outerbox = document.createElement('vbox');
     let instructions = document.createElement('description');
-    let progressButton = document.createElement('button', 'step-one-button');
+    let progressButton = document.createElement('button');
+    let tourTitle = document.createElement('h2');
+    let tourVideo = document.createElement('img');
+    let dismissLabel = document.createElement('label');
     document.getElementById('mainPopupSet').appendChild(panel); //attach to DOM anywhere
     panel.setAttribute('id', 'tour-panel');
     panel.setAttribute('type', 'arrow');
     panel.setAttribute('flip', 'slide');
-    panel.style.width = '200px';
-    panel.style.height = '400px';
-    instructions.textContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum';
-    instructions.style.width = '200px';
+    outerbox.setAttribute('id', 'tour-box');
+    tourVideo.setAttribute('id', 'tour-video');
+    instructions.setAttribute('id', 'tour-instructions');
+    progressButton.setAttribute('id', 'tour-button');
+    dismissLabel.setAttribute('id', 'tour-dismiss-label');
+
+    tourTitle.textContent = 'Tame Your Tabs!';
+    instructions.textContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
     progressButton.setAttribute('label', 'Show me how');
-    progressButton.style.display = 'block';
-    progressButton.style.width = '200px';
-    progressButton.style.height = '50px';
+    dismissLabel.textContent = 'not now';
+
     let xpos;
     let outerRect = {};
+    let starttime;
 
-
-    let movePanelToFind = () => {
-      xpos -= 2;
-      panel.moveTo(xpos, outerRect.y);
-      //move amount of pixels center of find-input is away from center of pin-button
-      if (xpos > outerRect.x - 104) {
-        win.requestAnimationFrame(movePanelToFind);
-      }
-    };
-
-    let movePanelToTop = () => {
-      xpos += 2;
-      panel.moveTo(xpos, outerRect.y);
-      //move amount of pixels center of top-tabs-button is away from center of find-input
-      if (xpos < outerRect.x + 69) {
-        win.requestAnimationFrame(movePanelToTop);
+    let movePanel = function (timestamp, panel, dist, duration) {
+      let runtime = timestamp - starttime;
+      let progress = runtime / duration;
+      progress = Math.min(progress, 1);
+      win.console.log('xpos: ' + xpos, 'dist: ' + dist, 'progress: ' + progress);
+      panel.moveTo(xpos + (dist * progress), outerRect.y);
+      if (runtime < duration){
+        win.requestAnimationFrame(function (timestamp) {
+          movePanel(timestamp, panel, dist, duration);
+        });
       }
     };
 
     progressButton.onclick = (e) => {
       panel.hidePopup();
+      outerbox.removeChild(dismissLabel);
       document.getElementById('side-tabs-button').onclick(e); //will only accept left click...
       document.getElementById('mainPopupSet').appendChild(panel); //reattach to DOM after running unload
+      tourTitle.textContent = 'The Space You Need';
       progressButton.setAttribute('label', 'Next');
       panel.openPopup(document.getElementById('pin-button'), 'bottomcenter topleft', 0, 0, false, false);
+
       progressButton.onclick = (e) => {
+        outerbox.style.opacity = '0';
         outerRect = panel.getOuterScreenRect();
         xpos = outerRect.x;
-        win.requestAnimationFrame(movePanelToFind);
+        win.requestAnimationFrame(function (timestamp) {
+          starttime = timestamp;
+          movePanel(timestamp, panel, -104, 500);
+          win.setTimeout(function () {
+            outerbox.style.opacity = '1';
+            tourTitle.textContent = 'Find That Tab';
+          }, 250);
+        });
+
         progressButton.onclick = (e) => {
+          outerbox.style.opacity = '0';
           outerRect = panel.getOuterScreenRect();
           xpos = outerRect.x;
-          win.requestAnimationFrame(movePanelToTop);
-          progressButton.setAttribute('label', 'Finish');
+          win.requestAnimationFrame(function (timestamp) {
+            starttime = timestamp;
+            movePanel(timestamp, panel, 69, 500);
+            win.setTimeout(function () {
+              outerbox.style.opacity = '1';
+              tourTitle.textContent = 'Easy In, Easy Out';
+              progressButton.setAttribute('label', 'Got it!');
+            }, 250);
+          });
+
           progressButton.onclick = (e) => {
             panel.hidePopup();
           };
@@ -130,9 +151,16 @@ function firstInstallTour(win) {
       };
     };
 
+    dismissLabel.onclick = () => {
+      panel.hidePopup();
+    };
+
     panel.appendChild(outerbox);
+    outerbox.appendChild(tourTitle);
+    outerbox.appendChild(tourVideo);
     outerbox.appendChild(instructions);
     outerbox.appendChild(progressButton);
+    outerbox.appendChild(dismissLabel);
     panel.openPopup(button, 'bottomcenter topright', 0, 0, false, true);
   }
 }
@@ -235,11 +263,13 @@ function initWindow(window) {
 
   // if the dcoument is loaded
   if (isDocumentLoaded(win)) {
+    utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
     addVerticalTabs(win, data);
     firstInstallTour(win);
   } else {
     // Listen for load event before checking the window type
     win.addEventListener('load', () => {
+      utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
       addVerticalTabs(win, data);
       firstInstallTour(win);
     }, {once: true});
@@ -351,6 +381,7 @@ exports.onUnload = function (reason) {
   for (let window of browserWindows) {
     let win = viewFor(window);
     if (win.VerticalTabs) {
+      utils.removeStylesheet(win, 'resource://tabcenter/skin/persistant.css');
       win.VerticalTabs.unload();
       let mainWindow = win.document.getElementById('main-window');
       mainWindow.setAttribute('doNotReverse', 'true');

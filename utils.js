@@ -136,3 +136,13 @@ function removeStylesheets(win) {
   }
 }
 exports.removeStylesheets = removeStylesheets;
+
+function installStylesheet(win, uri) {
+  loadSheet(win, uri, 'author');
+}
+exports.installStylesheet = installStylesheet;
+
+function removeStylesheet(win, uri) {
+  removeSheet(win, uri, 'author');
+}
+exports.removeStylesheet = removeStylesheet;
