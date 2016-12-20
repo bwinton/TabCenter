@@ -66,8 +66,8 @@ let VerticalTabsWindowId = 1;
 
 function reminderTour(win){
   win.activeInstall = true;
-  firstInstallTour(win);
-};
+  firstInstallTour(win); //TODO: run the firt install tour as is for now
+}
 
 function firstInstallTour(win) {
   if (win.activeInstall) {
@@ -194,7 +194,7 @@ function b64toBlob(win, b64Data, contentType, sliceSize) {
 
 function setPersistantAttrs(win) {
   let mainWindow = win.document.getElementById('main-window');
-  mainWindow.setAttribute('persist', mainWindow.getAttribute('persist') + ' tabspinned tabspinnedwidth toggledon');
+  mainWindow.setAttribute('persist', mainWindow.getAttribute('persist') + ' tabspinned tabspinnedwidth toggledon lastUsedTimestamp');
   try {
     if(ss.getWindowValue(win, 'TCtoggledon') !== ''){ // on win/linux this does not throw an error, so check for value
       mainWindow.setAttribute('toggledon', ss.getWindowValue(win, 'TCtoggledon'));
@@ -211,6 +211,7 @@ function setPersistantAttrs(win) {
     }
     // on fresh windows getWindowValue throws an exception. Ignore this.
   }
+  mainWindow.setAttribute('lastUsedTimestamp', Date.now());
   mainWindow.setAttribute('toggledon', 'false'); //TODO: temporary for testing
 }
 
@@ -240,10 +241,13 @@ function initWindow(window) {
   let mainWindow = win.document.getElementById('main-window');
 
   win.tabCenterEventListener.handleEvent = function (aEvent) {
+    let timeUntilReminder = 604800000; // 7 days
+    let timeSinceUsed = Date.now() - parseInt(mainWindow.getAttribute('lastUsedTimestamp'));
+
     switch (aEvent.type) {
     case 'TabOpen':
       utils.sendPing('tabs_created', win);
-      if (mainWindow.getAttribute('toggledon') === 'false' && win.gBrowser.tabs.length >= 7) {
+      if (mainWindow.getAttribute('toggledon') === 'false' && win.gBrowser.tabs.length >= 7 && timeSinceUsed >= timeUntilReminder) {
         reminderTour(win);
       }
       return;
@@ -397,7 +401,7 @@ exports.onUnload = function (reason) {
       mainWindow.removeAttribute('tabspinnedwidth');
       mainWindow.removeAttribute('toggledon');
       mainWindow.setAttribute('persist',
-        mainWindow.getAttribute('persist').replace(' tabspinned', '').replace(' tabspinnedwidth', '').replace(' toggledon', ''));
+        mainWindow.getAttribute('persist').replace(' tabspinned', '').replace(' tabspinnedwidth', '').replace(' toggledon', '').replace(' lastUsedTimestamp', ''));
 
       win.removeEventListener('TabOpen', win.tabCenterEventListener, false);
       win.removeEventListener('TabClose', win.tabCenterEventListener, false);

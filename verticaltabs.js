@@ -115,6 +115,7 @@ VerticalTabs.prototype = {
         }
         this.unload();
         mainWindow.setAttribute('toggledon', 'true');
+        mainWindow.setAttribute('lastUsedTimestamp', Date.now());
         ss.setWindowValue(window, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
         this.init();
         window.VerticalTabs.sendPing('tab_center_toggled_on', window);
@@ -528,6 +529,7 @@ VerticalTabs.prototype = {
         return;
       }
       mainWindow.setAttribute('toggledon', 'false');
+      mainWindow.setAttribute('lastUsedTimestamp', Date.now());
       ss.setWindowValue(window, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
       window.VerticalTabs.sendPing('tab_center_toggled_off', window);
       this.init();
