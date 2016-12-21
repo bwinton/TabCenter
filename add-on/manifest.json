@@ -2,18 +2,18 @@
   "applications": {
     "gecko": {
       "id": "examplewebextension@mozilla.org",
-        "strict_min_version": "48.0",
-        "strict_max_version": "52.*"
+      "strict_min_version": "53a1"
     }
   },
+
   "background": {
     "scripts": ["main.js"]
   },
-  "browser_action": {
-    "browser_style": true,
-    "default_icon": "img/firefox-logo.svg",
-    "default_title": "__MSG_buttonTitle__",
-    "default_popup": "tabs.html"
+
+  "sidebar_action": {
+    "default_icon": "images/firefox-logo.svg",
+    "default_title" : "__MSG_extensionName__",
+    "default_panel": "tabs.html"
   },
 
   "default_locale": "en-US",
