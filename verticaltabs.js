@@ -576,15 +576,13 @@ VerticalTabs.prototype = {
         let arrowscrollbox = this.document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
         let scrollbox = this.document.getAnonymousElementByAttribute(arrowscrollbox, 'anonid', 'scrollbox');
         let scrolltop = scrollbox.scrollTop;
-        arrowscrollbox.skipNextScroll = true;
-        tabs.removeAttribute('mouseInside');
-        scrollbox.scrollTop = scrolltop;
 
         if (enterTimeout > 0) {
           window.clearTimeout(enterTimeout);
           enterTimeout = -1;
         }
         if (mainWindow.getAttribute('tabspinned') !== 'true' && leftbox.getAttribute('search_expanded') !== 'true' && !leftbox.contextMenuOpen) {
+          arrowscrollbox.skipNextScroll = true;
           leftbox.removeAttribute('expanded');
           this.clearFind();
           this.adjustCrop();
@@ -593,6 +591,9 @@ VerticalTabs.prototype = {
             tabsPopup.hidePopup();
           }
         }
+
+        tabs.removeAttribute('mouseInside');
+        scrollbox.scrollTop = scrolltop;
       }
     };
 
@@ -600,9 +601,8 @@ VerticalTabs.prototype = {
       let shouldExpand = tabs.getAttribute('mouseInside') !== 'true' &&
         leftbox.getAttribute('expanded') !== 'true';
       let arrowscrollbox = this.document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
-      arrowscrollbox.skipNextScroll = true;
-      this.mouseEntered();
       if (shouldExpand) {
+        arrowscrollbox.skipNextScroll = true;
         this.recordExpansion();
         if (event.type === 'mouseenter') {
           enterTimeout = window.setTimeout(() => {
@@ -618,6 +618,7 @@ VerticalTabs.prototype = {
           this.adjustCrop();
         }
       }
+      this.mouseEntered();
     };
 
 
