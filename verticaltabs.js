@@ -576,8 +576,6 @@ VerticalTabs.prototype = {
         let arrowscrollbox = this.document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
         let scrollbox = this.document.getAnonymousElementByAttribute(arrowscrollbox, 'anonid', 'scrollbox');
         let scrolltop = scrollbox.scrollTop;
-        tabs.removeAttribute('mouseInside');
-        scrollbox.scrollTop = scrolltop;
 
         if (enterTimeout > 0) {
           window.clearTimeout(enterTimeout);
@@ -593,6 +591,9 @@ VerticalTabs.prototype = {
             tabsPopup.hidePopup();
           }
         }
+
+        tabs.removeAttribute('mouseInside');
+        scrollbox.scrollTop = scrolltop;
       }
     };
 
@@ -600,7 +601,6 @@ VerticalTabs.prototype = {
       let shouldExpand = tabs.getAttribute('mouseInside') !== 'true' &&
         leftbox.getAttribute('expanded') !== 'true';
       let arrowscrollbox = this.document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
-      this.mouseEntered();
       if (shouldExpand) {
         arrowscrollbox.skipNextScroll = true;
         this.recordExpansion();
@@ -618,6 +618,7 @@ VerticalTabs.prototype = {
           this.adjustCrop();
         }
       }
+      this.mouseEntered();
     };
 
 
