@@ -124,30 +124,15 @@ function firstInstallTour(win) {
         xpos = outerRect.x;
         win.requestAnimationFrame(function (timestamp) {
           starttime = timestamp;
-          movePanel(timestamp, panel, -104, 500);
+          movePanel(timestamp, panel, -35, 500);
           win.setTimeout(function () {
             outerbox.style.opacity = '1';
-            tourTitle.textContent = 'Find That Tab';
+            tourTitle.textContent = 'Easy In, Easy Out';
+            progressButton.setAttribute('label', 'Got it!');
           }, 250);
         });
-
         progressButton.onclick = (e) => {
-          outerbox.style.opacity = '0';
-          outerRect = panel.getOuterScreenRect();
-          xpos = outerRect.x;
-          win.requestAnimationFrame(function (timestamp) {
-            starttime = timestamp;
-            movePanel(timestamp, panel, 69, 500);
-            win.setTimeout(function () {
-              outerbox.style.opacity = '1';
-              tourTitle.textContent = 'Easy In, Easy Out';
-              progressButton.setAttribute('label', 'Got it!');
-            }, 250);
-          });
-
-          progressButton.onclick = (e) => {
-            panel.hidePopup();
-          };
+          panel.hidePopup();
         };
       };
     };
