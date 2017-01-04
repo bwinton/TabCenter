@@ -86,6 +86,7 @@ function firstInstallTour(win) {
     panel.setAttribute('id', 'tour-panel');
     panel.setAttribute('type', 'arrow');
     panel.setAttribute('flip', 'slide');
+    panel.setAttribute('noautohide', true);
     outerbox.setAttribute('id', 'tour-box');
     tourVideo.setAttribute('id', 'tour-video');
     instructions.setAttribute('id', 'tour-instructions');
