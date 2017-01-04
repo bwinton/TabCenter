@@ -74,7 +74,7 @@ function firstInstallTour(win) {
   if (win.activeInstall) {
     win.activeInstall = false;
     let document = win.document;
-    let button = document.getElementById('side-tabs-button');
+    let sidetabsbutton = document.getElementById('side-tabs-button');
     let panel = document.createElement('panel');
     let outerbox = document.createElement('vbox');
     let instructions = document.createElement('description');
@@ -92,6 +92,8 @@ function firstInstallTour(win) {
     instructions.setAttribute('id', 'tour-instructions');
     progressButton.setAttribute('id', 'tour-button');
     dismissLabel.setAttribute('id', 'tour-dismiss-label');
+    let sidetabsbuttonClick = sidetabsbutton.onclick;
+    sidetabsbutton.onclick = null;
 
     tourTitle.textContent = 'Tame Your Tabs!';
     instructions.textContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
@@ -120,7 +122,7 @@ function firstInstallTour(win) {
       }
       panel.hidePopup();
       outerbox.removeChild(dismissLabel);
-      document.getElementById('side-tabs-button').onclick(e);
+      sidetabsbuttonClick(e);
       document.getElementById('mainPopupSet').appendChild(panel); //reattach to DOM after running unload
       tourTitle.textContent = 'The Space You Need';
       progressButton.setAttribute('label', 'Next');
@@ -164,7 +166,7 @@ function firstInstallTour(win) {
     outerbox.appendChild(instructions);
     outerbox.appendChild(progressButton);
     outerbox.appendChild(dismissLabel);
-    panel.openPopup(button, 'bottomcenter topright', 0, 0, false, true);
+    panel.openPopup(sidetabsbutton, 'bottomcenter topright', 0, 0, false, true);
   }
 }
 
