@@ -22,11 +22,11 @@
 }
 
 #tour-button {
+  border: none;
   display: block;
   width: 200px;
   height: 50px;
   margin: 4px;
-  border-color: #0670cc;
   border-radius: 4px;
   -moz-appearance: none;
   background-color: #0996f8;
@@ -34,18 +34,11 @@
 }
 
 #tour-button:hover {
-  border-color: #005bab;
   background-color: #0670cc;
 }
 
 #tour-button:hover:active {
-  border-color: #004480;
   background-color: #005bab;
-}
-
-#tour-button:focus:not(.disabled) {
-  border-color: #fff !important;
-  box-shadow: 0 0 0 2px rgba(97, 181, 255, 0.75);
 }
 
 #tour-dismiss-label {
