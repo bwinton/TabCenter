@@ -115,15 +115,21 @@ function firstInstallTour(win) {
     };
 
     progressButton.onclick = (e) => {
+      if (e.which !== 1) { //will only accept left click...
+        return;
+      }
       panel.hidePopup();
       outerbox.removeChild(dismissLabel);
-      document.getElementById('side-tabs-button').onclick(e); //will only accept left click...
+      document.getElementById('side-tabs-button').onclick(e);
       document.getElementById('mainPopupSet').appendChild(panel); //reattach to DOM after running unload
       tourTitle.textContent = 'The Space You Need';
       progressButton.setAttribute('label', 'Next');
       panel.openPopup(document.getElementById('pin-button'), 'bottomcenter topleft', 0, 0, false, false);
 
       progressButton.onclick = (e) => {
+        if (e.which !== 1) {
+          return;
+        }
         outerbox.style.opacity = '0';
         outerRect = panel.getOuterScreenRect();
         xpos = outerRect.x;
@@ -137,12 +143,18 @@ function firstInstallTour(win) {
           }, 250);
         });
         progressButton.onclick = (e) => {
+          if (e.which !== 1) {
+            return;
+          }
           panel.hidePopup();
         };
       };
     };
 
-    dismissLabel.onclick = () => {
+    dismissLabel.onclick = (e) => {
+      if (e.which !== 1) {
+        return;
+      }
       panel.hidePopup();
     };
 
