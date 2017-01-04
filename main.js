@@ -54,6 +54,7 @@ const ss = Cc['@mozilla.org/browser/sessionstore;1'].getService(Ci.nsISessionSto
 const strings = require('./get-locale-strings').getLocaleStrings();
 const utils = require('./utils');
 const {addVerticalTabs} = require('./verticaltabs');
+const {get, set} = require('sdk/preferences/service');
 
 let self = require('sdk/self');
 const RESOURCE_HOST = 'tabcenter';
@@ -207,6 +208,7 @@ function setPersistantAttrs(win) {
     }
     // on fresh windows getWindowValue throws an exception. Ignore this.
   }
+  set('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp', Date.now().toString());
   mainWindow.setAttribute('toggledon', 'false'); //TODO: temporary for testing
 }
 
@@ -235,6 +237,8 @@ function initWindow(window) {
   win.addEventListener('TabUnpinned', win.tabCenterEventListener, false);
 
   win.tabCenterEventListener.handleEvent = function (aEvent) {
+    let timeUntilReminder = 604800000; // 7 days
+    let timeSinceUsed = Date.now() - parseInt(get('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp'));
     switch (aEvent.type) {
     case 'TabOpen':
       utils.sendPing('tabs_created', win);
