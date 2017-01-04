@@ -31,6 +31,7 @@
   -moz-appearance: none;
   background-color: #0996f8;
   color: #fff;
+  border: none;
 }
 
 #tour-button:hover {
