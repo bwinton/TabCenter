@@ -23,6 +23,51 @@
 
       <property name="_verticalTabs" onget="return this.orient == 'vertical';"/>
 
+      <property name="lineScrollAmount" readonly="true">
+        <getter><![CDATA[
+          // line scroll amout should be the width (at horizontal scrollbox) or
+          // the height (at vertical scrollbox) of the scrolled elements.
+          // However, the elements may have different width or height.  So,
+          // for consistent speed, let's use avalage with of the elements.
+          let elements = this._getScrollableElements();
+          if (!elements.length) {
+            // Returning 0 shouldn't be problem because if there is no
+            // scrollable elements, it's impossible to scroll anyway.
+            return 0;
+          }
+
+          //TC: pinned tabs stay at the top when reversed but the index does not change
+          //this is a work-around for that
+          if (this._isRTLScrollbox){
+            elements.reverse();
+            elements.every(function (tab, index){
+              if (tab.pinned === true){
+                low = index;
+              }
+              return !tab.pinned;
+            });
+
+            if (elements[high].pinned){
+              elements.every(function (tab, index){
+                if (tab.pinned === true){
+                  return false;
+                }
+                high = index;
+                return true;
+              });
+            }
+          }
+
+          let [start, end] = this._startEndProps;
+          let low = 0;
+          let high = elements.length - 1;
+          // XXX If the total width is 0, do we need something more?
+          let totalWidth =
+            elements[high].getBoundingClientRect()[end] - elements[low].getBoundingClientRect()[start];
+          return totalWidth / elements.length;
+        ]]></getter>
+      </property>
+
       <method name="_canScrollToElement">
         <parameter name="tab"/>
         <body><![CDATA[
