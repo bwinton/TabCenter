@@ -50,6 +50,7 @@
 
 #tour-dismiss-label {
   color: blue;
+  cursor: pointer;
   text-align: center;
 }
 
