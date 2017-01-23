@@ -1,6 +1,3 @@
-#tour-panel {
-  width: 200px;
-}
 
 #tour-panel h2 {
   display: block;
@@ -10,23 +7,27 @@
 }
 
 #tour-instructions {
-  width: 200px;
+  width: 211px;
+  margin-bottom: 8px;
+  margin-inline-start: 5px;
+  margin-inline-end: 5px;
+}
+
+#tour-video-wrapper {
+  display: block;
+  margin: 8px 5px;
 }
 
 #tour-video {
-  height: 182px;
-  width: 218px;
-  border: solid black 1px;
-  border-radius: 3px;
-  margin-bottom: 2px;
+  width: 211px;
 }
 
 #tour-button {
   border: none;
   display: block;
-  width: 200px;
+  width: 211px;
   height: 50px;
-  margin: 4px;
+  margin: 5px;
   border-radius: 4px;
   -moz-appearance: none;
   background-color: #0996f8;
@@ -42,6 +43,7 @@
 }
 
 #tour-dismiss-label {
+  margin-top: 8px;
   color: blue;
   cursor: pointer;
   text-align: center;
