@@ -75,7 +75,13 @@ function firstInstallTour(win) {
     let instructions = document.createElement('description');
     let progressButton = document.createElement('button');
     let tourTitle = document.createElement('h2');
-    let tourVideo = document.createElement('img');
+    let tourVideoWrapper = document.createElement('div');
+    tourVideoWrapper.setAttribute('id', 'tour-video-wrapper');
+    let tourVideo = document.createElementNS('http://www.w3.org/1999/xhtml', 'video');
+    tourVideo.setAttribute('src', self.data.url('Intro.mp4'));
+    tourVideo.setAttribute('autoplay', 'true');
+    tourVideo.setAttribute('loop', 'true');
+
     let dismissLabel = document.createElement('label');
     document.getElementById('mainPopupSet').appendChild(panel); //attach to DOM anywhere
     panel.setAttribute('id', 'tour-panel');
@@ -122,6 +128,7 @@ function firstInstallTour(win) {
       document.getElementById('mainPopupSet').appendChild(panel); //reattach to DOM after running unload
       tourTitle.textContent = 'The Space You Need';
       progressButton.setAttribute('label', 'Next');
+      tourVideo.setAttribute('src', self.data.url('Collapse.mp4'));
       panel.openPopup(document.getElementById('pin-button'), 'bottomcenter topleft', 0, 0, false, false);
 
       progressButton.onclick = (e) => {
@@ -138,6 +145,7 @@ function firstInstallTour(win) {
             outerbox.style.opacity = '1';
             tourTitle.textContent = 'Easy In, Easy Out';
             progressButton.setAttribute('label', 'Got it!');
+            tourVideo.setAttribute('src', self.data.url('Restore.mp4'));
           }, 250);
         });
         progressButton.onclick = (e) => {
@@ -157,8 +165,9 @@ function firstInstallTour(win) {
     };
 
     panel.appendChild(outerbox);
+    tourVideoWrapper.appendChild(tourVideo);
     outerbox.appendChild(tourTitle);
-    outerbox.appendChild(tourVideo);
+    outerbox.appendChild(tourVideoWrapper);
     outerbox.appendChild(instructions);
     outerbox.appendChild(progressButton);
     outerbox.appendChild(dismissLabel);
