@@ -417,6 +417,9 @@ VerticalTabs.prototype = {
     document.documentElement.style.setProperty('--pinned-width', `${this.pinnedWidth}px`);
 
     splitter.addEventListener('mousedown', (event) => {
+      if (event.which !== 1) {
+        return;
+      }
       if (this.pinnedWidth > document.width / 2) {
         this.pinnedWidth = document.width / 2;
       }
