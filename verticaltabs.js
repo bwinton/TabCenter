@@ -624,7 +624,7 @@ VerticalTabs.prototype = {
       'id': 'pin-button'
     });
 
-    pin_button.addEventListener('click', function (event) {
+    pin_button.onclick = function (event) {
       if (event.which !== 1) {
         return;
       }
@@ -641,7 +641,7 @@ VerticalTabs.prototype = {
       }
       window.VerticalTabs.resizeFindInput();
       window.VerticalTabs.resizeTabs();
-    });
+    };
 
     let tooltiptext = mainWindow.getAttribute('tabspinned') === 'true' ? strings.sidebarShrink : strings.sidebarOpen;
     pin_button.setAttribute('tooltiptext', tooltiptext);

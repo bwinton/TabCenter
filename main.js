@@ -93,9 +93,6 @@ function firstInstallTour(win) {
     instructions.setAttribute('id', 'tour-instructions');
     progressButton.setAttribute('id', 'tour-button');
     dismissLabel.setAttribute('id', 'tour-dismiss-label');
-    let sidetabsbuttonClick = sidetabsbutton.onclick;
-    sidetabsbutton.onclick = null;
-
     tourTitle.textContent = strings.tourTitleIntro;
     instructions.textContent = strings.tourInstructionsIntro;
     progressButton.setAttribute('label', strings.progressButtonIntro);
@@ -125,12 +122,18 @@ function firstInstallTour(win) {
       panel.hidePopup();
       outerbox.removeChild(dismissLabel);
       sidetabsbuttonClick(e);
+      let pinButton = document.getElementById('pin-button');
+      let pinButtonClick = pinButton.onclick;
+      let topTabsButton = document.getElementById('top-tabs-button');
+      let topTabsButtonClick = topTabsButton.onclick;
+      topTabsButton.onclick = null;
+      pinButton.onclick = null;
       document.getElementById('mainPopupSet').appendChild(panel); //reattach to DOM after running unload
       tourTitle.textContent = strings.tourTitleCollapse;
       instructions.textContent = strings.tourInstructionsCollapse;
       progressButton.setAttribute('label', strings.progressButtonCollapse);
       tourVideo.setAttribute('src', self.data.url('Collapse.mp4'));
-      panel.openPopup(document.getElementById('pin-button'), 'bottomcenter topleft', 0, 0, false, false);
+      panel.openPopup(pinButton, 'bottomcenter topleft', 0, 0, false, false);
 
       progressButton.onclick = (e) => {
         if (e.which !== 1) {
@@ -154,15 +157,21 @@ function firstInstallTour(win) {
           if (e.which !== 1) {
             return;
           }
+          pinButton.onclick = pinButtonClick;
+          topTabsButton.onclick = topTabsButtonClick;
           panel.hidePopup();
         };
       };
     };
 
+    let sidetabsbuttonClick = sidetabsbutton.onclick;
+    sidetabsbutton.onclick = progressButton.onclick;
+
     dismissLabel.onclick = (e) => {
       if (e.which !== 1) {
         return;
       }
+      sidetabsbutton.onclick = sidetabsbuttonClick;
       panel.hidePopup();
     };
 
