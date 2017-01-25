@@ -399,7 +399,9 @@
               this.mTabstripHeight = height;
             }
 
-            this.tabbrowser.updateWindowResizers();
+            if (this.tabbrowser.updateWindowResizers) {
+              this.tabbrowser.updateWindowResizers(); //method only exists in older than v53
+            }
             break;
           case 'mouseout':
             // If the 'related target' (the node to which the pointer went) is not
