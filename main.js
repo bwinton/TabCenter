@@ -101,10 +101,10 @@ function firstInstallTour(win) {
     let sidetabsbuttonClick = sidetabsbutton.onclick;
     sidetabsbutton.onclick = null;
 
-    tourTitle.textContent = 'Tame Your Tabs!';
-    instructions.textContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-    progressButton.setAttribute('label', 'Show me how');
-    dismissLabel.textContent = 'not now';
+    tourTitle.textContent = strings.tourTitleIntro;
+    instructions.textContent = strings.tourInstructionsIntro;
+    progressButton.setAttribute('label', strings.progressButtonIntro);
+    dismissLabel.textContent = strings.dismissLabel;
 
     let xpos;
     let outerRect = {};
@@ -130,8 +130,9 @@ function firstInstallTour(win) {
       outerbox.removeChild(dismissLabel);
       sidetabsbuttonClick(e);
       document.getElementById('mainPopupSet').appendChild(panel); //reattach to DOM after running unload
-      tourTitle.textContent = 'The Space You Need';
-      progressButton.setAttribute('label', 'Next');
+      tourTitle.textContent = strings.tourTitleCollapse;
+      instructions.textContent = strings.tourInstructionsCollapse;
+      progressButton.setAttribute('label', strings.progressButtonCollapse);
       tourVideo.setAttribute('src', self.data.url('Collapse.mp4'));
       panel.openPopup(document.getElementById('pin-button'), 'bottomcenter topleft', 0, 0, false, false);
 
@@ -147,8 +148,9 @@ function firstInstallTour(win) {
           movePanel(timestamp, panel, -35, 500);
           win.setTimeout(function () {
             outerbox.style.opacity = '1';
-            tourTitle.textContent = 'Easy In, Easy Out';
-            progressButton.setAttribute('label', 'Got it!');
+            tourTitle.textContent = strings.tourTitleRestore;
+            instructions.textContent = strings.tourInstructionsRestore;
+            progressButton.setAttribute('label', strings.progressButtonRestore);
             tourVideo.setAttribute('src', self.data.url('Restore.mp4'));
           }, 250);
         });
