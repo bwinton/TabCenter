@@ -843,6 +843,25 @@ VerticalTabs.prototype = {
     }
   },
 
+  delayResizeTabs: function (delay) {
+    if (delay <= 0) {
+      delay = 0;
+    }
+
+    if (this.resizeTimeout >= 0) {
+      return;
+    }
+
+    this.resizeTimeout = this.window.setTimeout(() => this.actuallyResizeTabs(), delay);
+  },
+
+  cancelResizeTabs: function () {
+    if (this.resizeTimeout > 0) {
+      this.window.clearTimeout(this.resizeTimeout);
+      this.resizeTimeout = -1;
+    }
+  },
+
   filtertabs: function () {
     let document = this.document;
     this.visibleTabs = this.visibleTabs || Array.filter(this.window.gBrowser.tabs, tab => !tab.hidden && !tab.closing);
@@ -867,7 +886,7 @@ VerticalTabs.prototype = {
     } else {
       hidden_tab.setAttribute('hidden', 'true');
     }
-    this.actuallyResizeTabs();
+    this.delayResizeTabs(0);
   },
 
   getUri: function (tab) {
@@ -907,10 +926,7 @@ VerticalTabs.prototype = {
   },
 
   actuallyResizeTabs: function () {
-    if (this.resizeTimeout > 0) {
-      this.window.clearTimeout(this.resizeTimeout);
-      this.resizeTimeout = -1;
-    }
+    this.cancelResizeTabs();
     let tabs = this.document.getElementById('tabbrowser-tabs');
     switch (prefs.largetabs) {
     case 0:
@@ -944,17 +960,14 @@ VerticalTabs.prototype = {
   resizeTabs: function () {
     if (!this.mouseInside) {
       // If the mouse is outside the tab area,
-      // resize immediately
-      this.actuallyResizeTabs();
+      // resize immediately after the current script ends.
+      this.delayResizeTabs(0);
     }
   },
 
   mouseEntered: function () {
     let tabs = this.document.getElementById('tabbrowser-tabs');
-    if (this.resizeTimeout > 0) {
-      this.window.clearTimeout(this.resizeTimeout);
-      this.resizeTimeout = -1;
-    }
+    this.cancelResizeTabs();
     this.mouseInside = true;
     let arrowscrollbox = this.document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
     let scrollbox = this.document.getAnonymousElementByAttribute(arrowscrollbox, 'anonid', 'scrollbox');
@@ -967,16 +980,9 @@ VerticalTabs.prototype = {
   mouseExited: function () {
     this.mouseInside = false;
 
-    if (this.resizeTimeout < 0) {
-      // Once the mouse exits the tab area, wait
-      // a bit before resizing
-      this.resizeTimeout = this.window.setTimeout(() => {
-        this.resizeTimeout = -1;
-        if (!this.mouseInside) {
-          this.actuallyResizeTabs();
-        }
-      }, WAIT_BEFORE_RESIZE);
-    }
+    // Once the mouse exits the tab area, wait
+    // a bit before resizing.
+    this.delayResizeTabs(WAIT_BEFORE_RESIZE);
   },
 
   /*** Event handlers ***/
