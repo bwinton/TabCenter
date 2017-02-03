@@ -40,7 +40,7 @@
 
 const {Cc, Ci} = require('chrome');
 const prefs = require('sdk/simple-prefs');
-
+const {get, set, reset} = require('sdk/preferences/service');
 
 /* Payload */
 
@@ -56,10 +56,15 @@ const PAYLOAD_KEYS = [
   'tab_center_unpinned',
   'tab_center_expanded',
   'tab_center_toggled_off',
-  'tab_center_toggled_on'
+  'tab_center_toggled_on',
+  'tour_began',
+  'tour_accepted',
+  'tour_continue',
+  'tour_complete',
+  'tour_dismissed'
 ];
 
-function sendPing(key, window) {
+function sendPing(key, window, details) {
   if (!PAYLOAD_KEYS.includes(key)) {
     // console.log(`Could not find ${key} in payload keys.`);
     return false;
@@ -73,15 +78,18 @@ function sendPing(key, window) {
   };
 
   let payload = {
-    version: 1,
+    version: 2,
     tab_center_tabs_on_top: prefs.prefs.opentabstop,
     tab_center_show_thumbnails: prefs.prefs.largetabs,
     tab_center_window_id: window.VerticalTabsWindowId,
-    tab_center_currently_toggled_on: window.document.getElementById('main-window').getAttribute('toggledon') === 'true'
+    tab_center_currently_toggled_on: window.document.getElementById('main-window').getAttribute('toggledon') === 'true',
+    tour_completed: !!get('extensions.tabcentertest1@mozilla.com.tourComplete')
   };
   payload[key] = 1;
+  Object.assign(payload, details);
 
   let ping = JSON.stringify(payload);
+  // console.log('send ping: ' + ping); //debug: to check the ping details
 
   // Send metrics to the main Test Pilot add-on.
   notifyObservers(subject, 'testpilot::send-metric', ping);
@@ -91,8 +99,6 @@ exports.sendPing = sendPing;
 
 
 /* Preferences */
-
-const {set, reset} = require('sdk/preferences/service');
 
 const DEFAULT_PREFS = new Map([
   ['browser.tabs.animate', false]
