@@ -73,6 +73,16 @@ function reminderTour(win){
 
 function firstInstallTour(win) {
   if (win.activeInstall || win.reminderTour) {
+    let details = {};
+    if (get('extensions.tabcentertest1@mozilla.com.tourComplete')) {
+      details.tour_type = 'completed_reminder';
+    } else if (win.reminderTour){
+      details.tour_type = 'reminder';
+    } else {
+      details.tour_type = 'install';
+    }
+    utils.sendPing('tour_began', win, details);
+
     win.activeInstall = false;
     let document = win.document;
     let sidetabsbutton = document.getElementById('side-tabs-button');
@@ -111,6 +121,7 @@ function firstInstallTour(win) {
         if (e.which !== 1) {
           return;
         }
+        utils.sendPing('tour_accepted', win, details);
         panel.hidePopup();
         sidetabsbuttonClick(e);
       };
@@ -139,6 +150,10 @@ function firstInstallTour(win) {
         if (e.which !== 1) { //will only accept left click...
           return;
         }
+        details.trigger = e.target.id;
+        utils.sendPing('tour_accepted', win, details);
+        details.trigger = undefined;
+
         panel.hidePopup();
         outerbox.removeChild(dismissLabel);
         sidetabsbuttonClick(e);
@@ -159,6 +174,8 @@ function firstInstallTour(win) {
           if (e.which !== 1) {
             return;
           }
+          utils.sendPing('tour_continue', win, details);
+
           outerbox.style.opacity = '0';
           outerRect = panel.getOuterScreenRect();
           xpos = outerRect.x;
@@ -178,6 +195,7 @@ function firstInstallTour(win) {
             if (e.which !== 1) {
               return;
             }
+            utils.sendPing('tour_complete', win, details);
             pinButton.onclick = pinButtonClick;
             topTabsButton.onclick = topTabsButtonClick;
             panel.hidePopup();
@@ -193,6 +211,7 @@ function firstInstallTour(win) {
       if (e.which !== 1) {
         return;
       }
+      utils.sendPing('tour_dismissed', win, details);
       sidetabsbutton.onclick = sidetabsbuttonClick;
       panel.hidePopup();
     };
@@ -281,7 +300,7 @@ function initWindow(window) {
 
   win.tabCenterEventListener.handleEvent = function (aEvent) {
     let timeUntilReminder = get('extensions.tabcentertest1@mozilla.com.tourComplete') ? 432000000 : 259200000;  //5 days or 3 days in milliseconds
-    // let timeUntilReminder = get('extensions.tabcentertest1@mozilla.com.tourComplete') ? 1000: 2000; //Debug: small values to trigger reminder tour immediately
+    // let timeUntilReminder = get('extensions.tabcentertest1@mozilla.com.tourComplete') ? 30 * 1000 : 1000; //Debug: small values to trigger reminder tour immediately
     let timeSinceUsed = Date.now() - parseInt(get('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp'));
 
     switch (aEvent.type) {
