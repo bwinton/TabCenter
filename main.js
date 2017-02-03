@@ -66,12 +66,13 @@ let hotkey;
 let VerticalTabsWindowId = 1;
 
 function reminderTour(win){
-  win.activeInstall = true;
-  firstInstallTour(win); //TODO: run the firt install tour as is for now
+  win.reminderTour = true;
+  set('extensions.tabcentertest1@mozilla.com.doNotShowTour', true); //after reminder tour shown once, we will not show again.
+  firstInstallTour(win);
 }
 
 function firstInstallTour(win) {
-  if (win.activeInstall) {
+  if (win.activeInstall || win.reminderTour) {
     win.activeInstall = false;
     let document = win.document;
     let sidetabsbutton = document.getElementById('side-tabs-button');
@@ -103,70 +104,87 @@ function firstInstallTour(win) {
     progressButton.setAttribute('label', strings.progressButtonIntro);
     dismissLabel.textContent = strings.dismissLabel;
 
-    let xpos;
-    let outerRect = {};
-    let starttime;
-
-    let movePanel = function (timestamp, panel, dist, duration) {
-      let runtime = timestamp - starttime;
-      let progress = runtime / duration;
-      progress = Math.min(progress, 1);
-      panel.moveTo(xpos + (dist * progress), outerRect.y);
-      if (runtime < duration){
-        win.requestAnimationFrame(function (timestamp) {
-          movePanel(timestamp, panel, dist, duration);
-        });
-      }
-    };
-
-    progressButton.onclick = (e) => {
-      if (e.which !== 1) { //will only accept left click...
-        return;
-      }
-      panel.hidePopup();
-      outerbox.removeChild(dismissLabel);
-      sidetabsbuttonClick(e);
-      let pinButton = document.getElementById('pin-button');
-      let pinButtonClick = pinButton.onclick;
-      let topTabsButton = document.getElementById('top-tabs-button');
-      let topTabsButtonClick = topTabsButton.onclick;
-      topTabsButton.onclick = null;
-      pinButton.onclick = null;
-      document.getElementById('mainPopupSet').appendChild(panel); //reattach to DOM after running unload
-      tourTitle.textContent = strings.tourTitleCollapse;
-      instructions.textContent = strings.tourInstructionsCollapse;
-      progressButton.setAttribute('label', strings.progressButtonCollapse);
-      tourVideo.setAttribute('src', self.data.url('Collapse.mp4'));
-      panel.openPopup(pinButton, 'bottomcenter topleft', 0, 0, false, false);
-
+    if (win.reminderTour && get('extensions.tabcentertest1@mozilla.com.tourComplete')) {
+      progressButton.setAttribute('label', strings.progressButtonGo);
+      dismissLabel.textContent = strings.dismissLabelReminderTour;
       progressButton.onclick = (e) => {
         if (e.which !== 1) {
           return;
         }
-        outerbox.style.opacity = '0';
-        outerRect = panel.getOuterScreenRect();
-        xpos = outerRect.x;
-        win.requestAnimationFrame(function (timestamp) {
-          starttime = timestamp;
-          movePanel(timestamp, panel, -35, 500);
-          win.setTimeout(function () {
-            outerbox.style.opacity = '1';
-            tourTitle.textContent = strings.tourTitleRestore;
-            instructions.textContent = strings.tourInstructionsRestore;
-            progressButton.setAttribute('label', strings.progressButtonRestore);
-            tourVideo.setAttribute('src', self.data.url('Restore.mp4'));
-          }, 250);
-        });
+        panel.hidePopup();
+        sidetabsbuttonClick(e);
+      };
+    } else {
+      if (win.reminderTour) {
+        dismissLabel.textContent = strings.dismissLabelReminderTour;
+      }
+
+      let xpos;
+      let outerRect = {};
+      let starttime;
+
+      let movePanel = function (timestamp, panel, dist, duration) {
+        let runtime = timestamp - starttime;
+        let progress = runtime / duration;
+        progress = Math.min(progress, 1);
+        panel.moveTo(xpos + (dist * progress), outerRect.y);
+        if (runtime < duration){
+          win.requestAnimationFrame(function (timestamp) {
+            movePanel(timestamp, panel, dist, duration);
+          });
+        }
+      };
+
+      progressButton.onclick = (e) => {
+        if (e.which !== 1) { //will only accept left click...
+          return;
+        }
+        panel.hidePopup();
+        outerbox.removeChild(dismissLabel);
+        sidetabsbuttonClick(e);
+        let pinButton = document.getElementById('pin-button');
+        let pinButtonClick = pinButton.onclick;
+        let topTabsButton = document.getElementById('top-tabs-button');
+        let topTabsButtonClick = topTabsButton.onclick;
+        topTabsButton.onclick = null;
+        pinButton.onclick = null;
+        document.getElementById('mainPopupSet').appendChild(panel); //reattach to DOM after running unload
+        tourTitle.textContent = strings.tourTitleCollapse;
+        instructions.textContent = strings.tourInstructionsCollapse;
+        progressButton.setAttribute('label', strings.progressButtonCollapse);
+        tourVideo.setAttribute('src', self.data.url('Collapse.mp4'));
+        panel.openPopup(pinButton, 'bottomcenter topleft', 0, 0, false, false);
+
         progressButton.onclick = (e) => {
           if (e.which !== 1) {
             return;
           }
-          pinButton.onclick = pinButtonClick;
-          topTabsButton.onclick = topTabsButtonClick;
-          panel.hidePopup();
+          outerbox.style.opacity = '0';
+          outerRect = panel.getOuterScreenRect();
+          xpos = outerRect.x;
+          win.requestAnimationFrame(function (timestamp) {
+            starttime = timestamp;
+            movePanel(timestamp, panel, -35, 500);
+            win.setTimeout(function () {
+              outerbox.style.opacity = '1';
+              tourTitle.textContent = strings.tourTitleRestore;
+              instructions.textContent = strings.tourInstructionsRestore;
+              progressButton.setAttribute('label', strings.progressButtonRestore);
+              tourVideo.setAttribute('src', self.data.url('Restore.mp4'));
+              set('extensions.tabcentertest1@mozilla.com.tourComplete', true);
+            }, 250);
+          });
+          progressButton.onclick = (e) => {
+            if (e.which !== 1) {
+              return;
+            }
+            pinButton.onclick = pinButtonClick;
+            topTabsButton.onclick = topTabsButtonClick;
+            panel.hidePopup();
+          };
         };
       };
-    };
+    }
 
     let sidetabsbuttonClick = sidetabsbutton.onclick;
     sidetabsbutton.onclick = progressButton.onclick;
@@ -262,13 +280,14 @@ function initWindow(window) {
   let mainWindow = win.document.getElementById('main-window');
 
   win.tabCenterEventListener.handleEvent = function (aEvent) {
-    let timeUntilReminder = 604800000; // 7 days
+    let timeUntilReminder = get('extensions.tabcentertest1@mozilla.com.tourComplete') ? 432000000 : 259200000;  //5 days or 3 days in milliseconds
+    // let timeUntilReminder = get('extensions.tabcentertest1@mozilla.com.tourComplete') ? 1000: 2000; //Debug: small values to trigger reminder tour immediately
     let timeSinceUsed = Date.now() - parseInt(get('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp'));
 
     switch (aEvent.type) {
     case 'TabOpen':
       utils.sendPing('tabs_created', win);
-      if (mainWindow.getAttribute('toggledon') === 'false' && win.gBrowser.tabs.length >= 7 && timeSinceUsed >= timeUntilReminder) {
+      if (!get('extensions.tabcentertest1@mozilla.com.doNotShowTour') && mainWindow.getAttribute('toggledon') === 'false' && win.gBrowser.tabs.length >= 5 && timeSinceUsed >= timeUntilReminder) {
         reminderTour(win);
       }
       return;
@@ -294,7 +313,7 @@ function initWindow(window) {
     return;
   }
 
-  // if the dcoument is loaded
+  // if the document is loaded
   if (isDocumentLoaded(win)) {
     utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
     addVerticalTabs(win, data);
@@ -341,7 +360,8 @@ exports.main = function (options, callbacks) {
         tabbrowser.appendChild(tab, tabbrowser.firstChild);
       }
     }
-    //show onboarding experience in the active on "install"
+
+    //show onboarding experience in the active window on "install"
     if (browserWindows.activeWindow === window && options.loadReason === 'install') {
       win.activeInstall = true;
     }

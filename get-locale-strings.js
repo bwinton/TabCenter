@@ -18,9 +18,11 @@ exports.getLocaleStrings = function () {
     tourTitleCollapse: _('tour_title_collapse'),
     tourTitleRestore: _('tour_title_restore'),
     dismissLabel: _('dismiss_label'),
+    dismissLabelReminderTour: _('dismiss_label_reminder_tour'),
     tourInstructionsIntro: _('tour_instructions_intro'),
     tourInstructionsCollapse: _('tour_instructions_collapse'),
     tourInstructionsRestore: _('tour_instructions_restore'),
+    progressButtonGo: _('progress_button_go'),
     progressButtonIntro: _('progress_button_intro'),
     progressButtonCollapse: _('progress_button_collapse'),
     progressButtonRestore:  _('progress_button_restore')
