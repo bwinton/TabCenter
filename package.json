@@ -102,7 +102,7 @@
     "build": "npm run locales && npm run lint && jpm xpi",
     "test": "npm run locales && jpm run -b nightly -p Testing",
     "lint": "eslint . --ext=js,jsm vertical-tabbrowser.xml && stylelint \"**/*.css\"",
-    "locales": "./genlocales"
+    "locales": "node genlocales"
   },
   "permissions": {
     "multiprocess": true,
