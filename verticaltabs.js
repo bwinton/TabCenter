@@ -80,7 +80,7 @@ VerticalTabs.prototype = {
     let window = this.window;
     let document = this.document;
     this.window.VerticalTabs = this;
-    this.resizeTimeout = -1;
+    this.resizeTimeout = 0;
     this.mouseInside = false;
     let mainWindow = document.getElementById('main-window');
     let tabs = document.getElementById('tabbrowser-tabs');
@@ -844,11 +844,11 @@ VerticalTabs.prototype = {
   },
 
   delayResizeTabs: function (delay) {
-    if (delay <= 0) {
+    if (delay < 0) {
       delay = 0;
     }
 
-    if (this.resizeTimeout >= 0) {
+    if (this.resizeTimeout) {
       return;
     }
 
@@ -856,9 +856,9 @@ VerticalTabs.prototype = {
   },
 
   cancelResizeTabs: function () {
-    if (this.resizeTimeout > 0) {
+    if (this.resizeTimeout) {
       this.window.clearTimeout(this.resizeTimeout);
-      this.resizeTimeout = -1;
+      this.resizeTimeout = 0;
     }
   },
 
