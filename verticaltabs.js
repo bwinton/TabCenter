@@ -775,7 +775,7 @@ VerticalTabs.prototype = {
 
       // Restore the tab strip.
       toolbar.insertBefore(tabs, toolbar.children[tabsIndex]);
-      toolbox.insertBefore(toolbar, navbar);
+      navbar.parentNode.insertBefore(toolbar, navbar);
       browserPanel.insertBefore(toolbox, browserPanel.firstChild);
       //remove extra #newtab-popup before they get added again in the tabs constructor
       if (NewTabButton) {
