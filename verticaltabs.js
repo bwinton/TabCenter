@@ -41,6 +41,8 @@
 const {Cc, Ci, Cu} = require('chrome');
 const {platform} = require('sdk/system');
 const {prefs} = require('sdk/simple-prefs');
+const {get, set} = require('sdk/preferences/service');
+
 const {sendPing, setDefaultPrefs, removeStylesheets, installStylesheets} = require('./utils');
 const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
                                createInstance(Ci.nsIURIFixup);
@@ -115,6 +117,7 @@ VerticalTabs.prototype = {
         }
         this.unload();
         mainWindow.setAttribute('toggledon', 'true');
+        set('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp', Date.now().toString());
         ss.setWindowValue(window, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
         this.init();
         window.VerticalTabs.sendPing('tab_center_toggled_on', window);
@@ -528,6 +531,7 @@ VerticalTabs.prototype = {
         return;
       }
       mainWindow.setAttribute('toggledon', 'false');
+      set('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp', Date.now().toString());
       ss.setWindowValue(window, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
       window.VerticalTabs.sendPing('tab_center_toggled_off', window);
       this.init();
@@ -907,6 +911,11 @@ VerticalTabs.prototype = {
   },
 
   unload: function () {
+    let tourPanel = this.document.getElementById('tour-panel');
+    if (tourPanel){
+      this.document.getElementById('mainPopupSet').removeChild(tourPanel);
+    }
+
     let urlbar = this.document.getElementById('urlbar');
     let url = urlbar.value;
     this.unloaders.forEach(function (func) {
