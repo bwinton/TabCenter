@@ -2,15 +2,13 @@
 @namespace html url("http://www.w3.org/1999/xhtml");
 
 :root {
-  --tab-animation-time: 150ms;
+  --tab-animation-time-half: 150ms;
+  --tab-animation-time: 300ms;
   --collapsed-width: 45px;
   --pinned-width: 260px;
   --link-color: graytext;
   --link-color-brighttext: hsl(0, 0%, 60%);
-
-  --color-blue-light: #1aa1ff;
   --color-blue: #0996f8;
-  --color-blue-dark: #0675d3;
   --color-teal: #01bdad;
 }
 
@@ -72,17 +70,35 @@
   visibility: collapse;
 }
 
-.tab-background {
-  display: none !important;
+.tabbrowser-tab {
+  --tab-highlight: var(--color-blue);
+  position: relative;
+  -moz-appearance: none !important;
+  -moz-box-flex: 0;
+  -moz-box-pack: start;
+  width: 260px !important;
+  max-width: 100% !important;
+  max-height: 36px;
+  min-height: 36px;
+  margin: 0 0 -1px !important;
+  border: 0 !important;
+  border-bottom: 1px solid hsla(0, 0%, 0%, 0.06) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #000 !important;
+  pointer-events: auto !important;
 }
 
-.tabbrowser-tab {
-  position: relative;
-  max-width: 100% !important;
-  box-shadow: 0 0 0 var(--color-blue) inset;
-  pointer-events: auto !important;
-  transition-duration: 150ms;
-  transition-property: box-shadow;
+/* Use the Container color if available */
+/* Disable for now */
+/*.tabbrowser-tab[usercontextid] {
+  --tab-highlight: var(--identity-tab-color);
+}*/
+
+.tabbrowser-tabs.large-tabs .tab-content,
+.tabbrowser-tabs.large-tabs .tabbrowser-tab {
+  max-height: 56px;
+  min-height: 56px;
 }
 
 .tabbrowser-arrowscrollbox > .arrowscrollbox-scrollbox {
@@ -91,9 +107,33 @@
 }
 
 /* get rid of the tab separator from horizontal tabs */
-.tabbrowser-tab::after,
-.tabbrowser-tab::before {
+.tabbrowser-tab::after {
   content: none !important;
+}
+
+/* Repurpose the left separator for the "current tab" indicator */
+.tabbrowser-tab::before {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  display: block !important;
+  width: 6px !important;
+  height: calc(100% + 1px) !important;
+  background-color: transparent !important;
+  background-image:
+    linear-gradient(to right, #0003, #0000 20%, #fff0 50%, #fff3),
+    linear-gradient(to right, var(--tab-highlight), var(--tab-highlight)) !important;
+  background-position: 0 0 !important;
+  background-size: 100% !important;
+  content: "" !important;
+  opacity: 1 !important;
+  transform: translateX(-6px);
+  transition: transform var(--tab-animation-time-half), opacity 200ms;
+}
+
+/* Remove the horizontal rounded background */
+.tab-background {
+  display: none !important;
 }
 
 /* Make room for the close/max/min button on the right of the window */
@@ -411,28 +451,6 @@
   margin-top: -1px;
 }
 
-.tabbrowser-tab {
-  width: 260px !important;
-  max-height: 36px;
-  min-height: 36px;
-  margin: 0 !important;
-  margin-bottom: -1px !important;
-  border: 0 !important;
-  border-bottom: 1px solid hsla(0, 0%, 0%, 0.06) !important;
-  border-radius: 0 !important;
-  -moz-appearance: none !important;
-  background: transparent !important;
-  -moz-box-flex: 0;
-  -moz-box-pack: start;
-  color: #000 !important;
-}
-
-.tabbrowser-tabs.large-tabs .tab-content,
-.tabbrowser-tabs.large-tabs .tabbrowser-tab {
-  max-height: 56px;
-  min-height: 56px;
-}
-
 .title-wrapper {
   padding: 0 !important;
 }
@@ -469,19 +487,23 @@
 }
 
 .tabbrowser-tab.tab-hidden {
-  animation: var(--tab-animation-time) fade-out, var(--tab-animation-time) var(--tab-animation-time) slide-out;
+  animation:
+    var(--tab-animation-time-half) fade-out,
+    var(--tab-animation-time-half) var(--tab-animation-time-half) slide-out;
 }
 
 .tabbrowser-tab.tab-visible {
-  animation: 300ms slide-fade-in;
+  animation: var(--tab-animation-time) slide-fade-in;
 }
 
 .tabbrowser-tabs.large-tabs .tabbrowser-tab.tab-visible {
-  animation: 300ms slide-fade-in-large;
+  animation: var(--tab-animation-time) slide-fade-in-large;
 }
 
 .tabbrowser-tabs.large-tabs .tabbrowser-tab.tab-hidden {
-  animation: var(--tab-animation-time) fade-out, var(--tab-animation-time) var(--tab-animation-time) slide-out-large;
+  animation:
+    var(--tab-animation-time-half) fade-out,
+    var(--tab-animation-time-half) var(--tab-animation-time-half) slide-out-large;
 }
 
 #filler-tab {
@@ -530,12 +552,13 @@
   100% { max-height: 56px; min-height: 56px; opacity: 1; }
 }
 
-.tabbrowser-tab[pinned][selected="true"],
 .tabbrowser-tab[selected="true"] {
-  border-radius: 0 !important;
   background-color: hsla(0, 0%, 0%, 0.12) !important;
-  box-shadow: 1px 0 0 var(--color-blue-dark) inset, 3px 0 0 var(--color-blue) inset, 6px 0 0 var(--color-blue-light) inset;
   text-shadow: none;
+}
+
+.tabbrowser-tab[selected="true"]::before {
+  transform: translateX(0);
 }
 
 .tabbrowser-tab[pinned] {
@@ -673,6 +696,7 @@
 }
 
 .tabbrowser-tabs.large-tabs .tab-meta-image {
+  position: relative;
   max-width: 54px;
   max-height: 40px;
   min-width: 54px;
@@ -703,16 +727,16 @@
 
 .tabbrowser-tabs.large-tabs html|canvas {
   position: absolute;
-  top: 7.5px;
-  left: 12px;
   z-index: -1;
+  top: -2px;
+  left: -2px;
   width: 54px;
   height: 40px;
   background: url("resource://tabcenter/skin/blank.svg");
   background-color: #e6e6e6;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 42px 28px;
+  background-size: 54px 40px;
 }
 
 .tabbrowser-tabs:not(.large-tabs) .tab-meta-image html|canvas {
