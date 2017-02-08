@@ -95,11 +95,17 @@ Tab Center will record and report each of the following metrics:
   - Tab pins
   - Tab unpins
 - Tab Center actions, specifically:
+  - Tab Center on-boarding tour:
+    - complete or incomplete
+    - button clicks within the tour
   - Tab Center pins
   - Tab Center unpins
   - Tab Center contraction events
   - Tab Center expansion events
-  - Tab Center inaction contraction (Version 2)
+  - Tab Center activated
+  - Tab Center inactivated
+  - Tab Center tabs in reverse order
+  - Tab Center show large thumbnails
 
 This data will be used in three ways:
 
@@ -111,22 +117,18 @@ This data will be used in three ways:
 
 Tab Center is a purely client-side experiment so we will only be collecting metrics from the client leveraging Test Pilot’s reporting functionality with the `testpilottest` type identifier.
 
-Tab Center will record data and submit it periodically (vs sending data continuously).  At launch, we will record and send data every 24 hours or on shutdown of the browser, whichever is first.
+Tab Center will record data and submit it on each event trigger.
 
 An example payload (within the full Telemetry ping):
 
 ```js
-{
-  "version": 1,  // Just in case we need to drastically change the format later
-  "tabs_created": 1000,
-  "tabs_destroyed": 1000,
-  "tabs_pinned": 5,
-  "tabs_unpinned": 4,
-  "tab_center_pinned": 1,
-  "tab_center_unpinned": 0,
-  "tab_center_expanded": 9999
-  /* "tab_center_teased": 1234  (Version 2) */
-}
+  "version": 2,
+  "tab_center_tabs_on_top": false,
+  "tab_center_show_thumbnails": true,
+  "tab_center_window_id": 1,
+  "tab_center_currently_toggled_on": true,
+  "tour_completed": false,
+  "tabs_created":  1
 ```
 
 And the schema we will use for Redshift:
