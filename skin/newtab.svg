@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 40">
+  <style type="text/css">
+    .bg{fill:#F9F9F9;}
+    .search{fill:#FCFCFC;stroke:#C5C5C5;}
+    .t{fill:#EFEFEF;stroke:#CFCFCF;}
+  </style>
+  <rect x="0" y="0" class="bg" width="54" height="40"/>
+  <rect x="14.5" y="8.5" class="search" width="25" height="3"/>
+  <rect x="10.5" y="15.5" class="t" width="9" height="6"/>
+  <rect x="22.5" y="15.5" class="t" width="9" height="6"/>
+  <rect x="34.5" y="15.5" class="t" width="9" height="6"/>
+  <rect x="10.5" y="24.5" class="t" width="9" height="6"/>
+  <rect x="22.5" y="24.5" class="t" width="9" height="6"/>
+  <rect x="34.5" y="24.5" class="t" width="9" height="6"/>
+</svg>

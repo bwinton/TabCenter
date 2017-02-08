@@ -839,9 +839,12 @@
           if (uri.scheme.startsWith('http')) {
             label = uri.host;
           }
-          // URI can be shown immediately
-          if (label) {
+          const isInternal = label.indexOf('about:') === 0;
+          if (label && !isInternal) {
             this.setAttribute('address', label);
+          }
+          if (isInternal) {
+            this.removeAttribute('address');
           }
         ]]></body>
       </method>
