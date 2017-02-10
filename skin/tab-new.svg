@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 80">
+  <style type="text/css">
+    .bg { fill: #f9f9f9; }
+    .s { fill: #ffffff; stroke: #b4b4b4; }
+    .tiles { fill: #efefef; stroke: #c0c0c0; }
+  </style>
+  <rect class="bg" x="0" y="0" width="108" height="80"/>
+  <rect class="s" x="32.5" y="20.5" width="43" height="3"/>
+  <g class="tiles" transform="translate(20.5,30.5)">
+    <rect x="0"  y="0" width="19" height="13"/>
+    <rect x="24" y="0" width="19" height="13"/>
+    <rect x="48" y="0" width="19" height="13"/>
+    <rect x="0"  y="18" width="19" height="13"/>
+    <rect x="24" y="18" width="19" height="13"/>
+    <rect x="48" y="18" width="19" height="13"/>
+  </g>
+  <!-- testing / add opacity to show the pixel grid -->
+  <g id="grid" opacity="0">
+    <pattern id="pixels" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="2" height="2" x="0" y="0" fill="skyblue"/>
+      <rect width="2" height="2" x="2" y="2" fill="skyblue"/>
+    </pattern>
+    <rect x="0" y="0" width="108" height="80" fill="url(#pixels)"/>
+    <rect x="53" y="39" width="2" height="2" fill="red" />
+  </g>
+</svg>

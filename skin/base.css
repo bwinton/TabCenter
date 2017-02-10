@@ -733,8 +733,8 @@
   left: -2px;
   width: 54px;
   height: 40px;
-  background: url("resource://tabcenter/skin/blank.svg");
-  background-color: #e6e6e6;
+  background: url("resource://tabcenter/skin/tab-blank.svg");
+  background-color: #f6f6f6;
   background-position: center;
   background-repeat: no-repeat;
   background-size: 54px 40px;
