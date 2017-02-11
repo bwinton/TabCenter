@@ -422,8 +422,6 @@
         ]]></body>
       </method>
 
-      <!-- XXX todo: implement notifyBackgroundtab for vertical tabs-->
-
       <method name="_getDropIndex">
         <parameter name="event"/>
         <body><![CDATA[
@@ -799,6 +797,7 @@
           }
           let uri = VerticalTabs.getUri(this);
           let url = uri.spec;
+
           this.updateUriLabel(uri);
 
           if (!this.parentNode.classList.contains('large-tabs')) {
