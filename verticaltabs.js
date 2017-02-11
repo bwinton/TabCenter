@@ -199,12 +199,12 @@ VerticalTabs.prototype = {
 
     window.addEventListener('animationend', (e) => {
       let tab = e.target;
-      if (e.animationName === 'slide-fade-in' || e.animationName === 'slide-fade-in-large') {
+      if (e.animationName === 'slide-fade-in') {
         tab.classList.remove('tab-visible');
       } else if (e.animationName === 'fade-out') {
         let tabStack = this.document.getAnonymousElementByAttribute(tab, 'class', 'tab-stack');
         tabStack.collapsed = true; //there is a visual jump if we do not collapse the tab before the end of the animation
-      } else if (e.animationName === 'slide-out' || e.animationName === 'slide-out-large') {
+      } else if (e.animationName === 'slide-out') {
         this._endRemoveTab.bind(this.window.gBrowser)(tab);
         this.resizeTabs();
       }
@@ -413,8 +413,8 @@ VerticalTabs.prototype = {
 
     this.pinnedWidth = +mainWindow.getAttribute('tabspinnedwidth').replace('px', '') ||
                        +window.getComputedStyle(document.documentElement)
-                              .getPropertyValue('--pinned-width').replace('px', '');
-    document.documentElement.style.setProperty('--pinned-width', `${this.pinnedWidth}px`);
+                              .getPropertyValue('--vtabs-pinned-width').replace('px', '');
+    document.documentElement.style.setProperty('--vtabs-pinned-width', `${this.pinnedWidth}px`);
 
     splitter.addEventListener('mousedown', (event) => {
       if (event.which !== 1) {
@@ -430,7 +430,7 @@ VerticalTabs.prototype = {
         if (this.pinnedWidth < 30) {
           this.pinnedWidth = 30;
         }
-        document.documentElement.style.setProperty('--pinned-width', `${this.pinnedWidth}px`);
+        document.documentElement.style.setProperty('--vtabs-pinned-width', `${this.pinnedWidth}px`);
         mainWindow.setAttribute('tabspinnedwidth', `${this.pinnedWidth}px`);
         ss.setWindowValue(window, 'TCtabspinnedwidth', mainWindow.getAttribute('tabspinnedwidth'));
         this.resizeFindInput();
@@ -717,7 +717,7 @@ VerticalTabs.prototype = {
 
     let resizeListener = () => {
       this.resizeTabs();
-      document.documentElement.style.setProperty('--pinned-width', `${Math.min(this.pinnedWidth, document.width / 2)}px`);
+      document.documentElement.style.setProperty('--vtabs-pinned-width', `${Math.min(this.pinnedWidth, document.width / 2)}px`);
       ss.setWindowValue(window, 'TCtabspinnedwidth', mainWindow.getAttribute('tabspinnedwidth'));
     };
     window.addEventListener('resize', resizeListener);

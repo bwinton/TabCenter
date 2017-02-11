@@ -2,14 +2,24 @@
 @namespace html url("http://www.w3.org/1999/xhtml");
 
 :root {
-  --tab-animation-time-half: 150ms;
+  --vtabs-collapsed-width: 45px;
+  --vtabs-pinned-width: 260px;
+}
+
+/* Keep the custom properties local to the vertical tabs sidebar */
+#verticaltabs-box {
+  --tab-height: 36px;
   --tab-animation-time: 300ms;
-  --collapsed-width: 45px;
-  --pinned-width: 260px;
+  --tab-animation-halftime: 150ms;
   --link-color: graytext;
   --link-color-brighttext: hsl(0, 0%, 60%);
   --color-blue: #0996f8;
+  /* unused */
   --color-teal: #01bdad;
+}
+
+#verticaltabs-box .large-tabs {
+  --tab-height: 56px;
 }
 
 .tabbrowser-arrowscrollbox > scrollbox {
@@ -78,8 +88,8 @@
   -moz-box-pack: start;
   width: 260px !important;
   max-width: 100% !important;
-  max-height: 36px;
-  min-height: 36px;
+  max-height: var(--tab-height);
+  min-height: var(--tab-height);
   margin: 0 0 -1px !important;
   border: 0 !important;
   border-bottom: 1px solid hsla(0, 0%, 0%, 0.06) !important;
@@ -94,12 +104,6 @@
 /*.tabbrowser-tab[usercontextid] {
   --tab-highlight: var(--identity-tab-color);
 }*/
-
-.tabbrowser-tabs.large-tabs .tab-content,
-.tabbrowser-tabs.large-tabs .tabbrowser-tab {
-  max-height: 56px;
-  min-height: 56px;
-}
 
 .tabbrowser-arrowscrollbox > .arrowscrollbox-scrollbox {
   -moz-padding-end: 0 !important;
@@ -128,7 +132,7 @@
   content: "" !important;
   opacity: 1 !important;
   transform: translateX(-6px);
-  transition: transform var(--tab-animation-time-half), opacity 200ms;
+  transition: transform var(--tab-animation-halftime), opacity 200ms;
 }
 
 /* Remove the horizontal rounded background */
@@ -196,7 +200,7 @@
   z-index: 3;
   top: 0;
   left: 0;
-  width: var(--collapsed-width);
+  width: var(--vtabs-collapsed-width);
   height: 100vh;
   border-right: 1px solid hsla(0, 0%, 0%, 0.2) !important;
   border-top: 1px solid hsla(0, 0%, 0%, 0.2) !important;
@@ -231,7 +235,7 @@
 }
 
 #main-window[F11-fullscreen] #verticaltabs-box:hover {
-  width: var(--pinned-width) !important;
+  width: var(--vtabs-pinned-width) !important;
 }
 
 #main-window[F11-fullscreen] #sidebar-box,
@@ -272,7 +276,7 @@
   position: relative !important;
   z-index: 99 !important;
   display: none;
-  margin-left: calc(var(--pinned-width) - 3px);
+  margin-left: calc(var(--vtabs-pinned-width) - 3px);
   margin-right: -1px !important;
   max-width: 4px;
   min-width: 4px;
@@ -286,7 +290,7 @@
 }
 
 #main-window[tabspinned="true"] #verticaltabs-box {
-  width: var(--pinned-width);
+  width: var(--vtabs-pinned-width);
   box-shadow: none;
   transition: box-shadow 0ms ease-in-out;
 }
@@ -416,7 +420,7 @@
 
 #sidebar-box,
 #sidebar-box[hidden="true"] ~ #appcontent {
-  margin-left: var(--collapsed-width);
+  margin-left: var(--vtabs-collapsed-width);
 }
 
 #main-window[tabspinned="true"] #sidebar-box,
@@ -435,12 +439,12 @@
 
 #navigator-toolbox,
 .browserContainer {
-  width: calc(100vw - var(--collapsed-width));
+  width: calc(100vw - var(--vtabs-collapsed-width));
 }
 
 #main-window[tabspinned="true"] #verticaltabs-box + #appcontent #navigator-toolbox,
 #main-window[tabspinned="true"] #verticaltabs-box + #appcontent .browserContainer {
-  width: calc(100vw - var(--pinned-width));
+  width: calc(100vw - var(--vtabs-pinned-width));
 }
 
 #main-window[inFullscreen][inDOMFullscreen] .browserContainer {
@@ -483,32 +487,22 @@
 }
 
 #main-window[tabspinned="true"] .tabbrowser-tab {
-  width: var(--pinned-width) !important;
+  width: var(--vtabs-pinned-width) !important;
 }
 
 .tabbrowser-tab.tab-hidden {
   animation:
-    var(--tab-animation-time-half) fade-out,
-    var(--tab-animation-time-half) var(--tab-animation-time-half) slide-out;
+    var(--tab-animation-halftime) fade-out,
+    var(--tab-animation-halftime) var(--tab-animation-halftime) slide-out;
 }
 
 .tabbrowser-tab.tab-visible {
   animation: var(--tab-animation-time) slide-fade-in;
 }
 
-.tabbrowser-tabs.large-tabs .tabbrowser-tab.tab-visible {
-  animation: var(--tab-animation-time) slide-fade-in-large;
-}
-
-.tabbrowser-tabs.large-tabs .tabbrowser-tab.tab-hidden {
-  animation:
-    var(--tab-animation-time-half) fade-out,
-    var(--tab-animation-time-half) var(--tab-animation-time-half) slide-out-large;
-}
-
 #filler-tab {
-  height: 36px;
-  width: var(--pinned-width);
+  height: var(--tab-height);
+  width: var(--vtabs-pinned-width);
 }
 
 #filler-tab:hover {
@@ -531,39 +525,28 @@
 }
 
 @keyframes slide-out {
-  0% { max-height: 36px; min-height: 36px; opacity: 0; }
-  100% { max-height: 0; min-height: 0; opacity: 0; }
-}
-
-@keyframes slide-out-large {
-  0% { max-height: 56px; min-height: 56px; opacity: 0; }
+  0% { max-height: var(--tab-height); min-height: var(--tab-height); opacity: 0; }
   100% { max-height: 0; min-height: 0; opacity: 0; }
 }
 
 @keyframes slide-fade-in {
   0% { max-height: 0; min-height: 0; opacity: 0; }
-  50% { max-height: 36px; min-height: 36px; opacity: 0; }
-  100% { max-height: 36px; min-height: 36px; opacity: 1; }
+  50% { max-height: var(--tab-height); min-height: var(--tab-height); opacity: 0; }
+  100% { max-height: var(--tab-height); min-height: var(--tab-height); opacity: 1; }
 }
 
-@keyframes slide-fade-in-large {
-  0% { max-height: 0; min-height: 0; opacity: 0; }
-  50% { max-height: 56px; min-height: 56px; opacity: 0; }
-  100% { max-height: 56px; min-height: 56px; opacity: 1; }
+/* keep the order of [pinned] then [selected] */
+.tabbrowser-tab[pinned] {
+  background-color: hsla(0, 0%, 0%, 0.05) !important;
 }
 
-/* keep the specificity higher than the [pinned] background style */
-.tabbrowser-tab[selected][selected="true"] {
+.tabbrowser-tab[selected="true"] {
   background-color: hsla(0, 0%, 0%, 0.12) !important;
   text-shadow: none;
 }
 
 .tabbrowser-tab[selected="true"]::before {
   transform: translateX(0);
-}
-
-.tabbrowser-tab[pinned] {
-  background-color: hsla(0, 0%, 0%, 0.05) !important;
 }
 
 #main-window[brighttext] #verticaltabs-box .tabbrowser-tab[pinned] {
@@ -690,8 +673,8 @@
 }
 
 .tab-content {
-  min-height: 36px;
-  max-height: 36px;
+  min-height: var(--tab-height);
+  max-height: var(--tab-height);
   margin: 0 !important;
   padding: 0 !important;
 }
