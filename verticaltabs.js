@@ -117,6 +117,10 @@ VerticalTabs.prototype = {
         mainWindow.setAttribute('toggledon', 'true');
         ss.setWindowValue(window, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
         this.init();
+        let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+        if (arrowscrollbox) {
+          reverseTabs(arrowscrollbox);
+        }
         window.VerticalTabs.sendPing('tab_center_toggled_on', window);
       };
 
@@ -153,7 +157,7 @@ VerticalTabs.prototype = {
       }
 
       // Don't allow mixing pinned and unpinned tabs.
-      let reverse = document.getAnonymousElementByAttribute(this.tabContainer, 'anonid', 'arrowscrollbox')._isRTLScrollbox;
+      let reverse = tabs.getAttribute('opentabstop');
       if (aTab.pinned && !reverse) {
         aIndex = Math.min(aIndex, numPinned - 1);
       } else if (aTab.pinned && reverse) {
@@ -249,8 +253,9 @@ VerticalTabs.prototype = {
 
       this.getBrowserForTab(aTab).messageManager.sendAsyncMessage('Browser:AppTab', {isAppTab: true});
 
-      if (aTab.selected)
+      if (aTab.selected) {
         this._setClosesKeyState(false);
+      }
 
       let event = document.createEvent('Events');
       event.initEvent('TabPinned', true, false);
@@ -1077,22 +1082,31 @@ VerticalTabs.prototype = {
   },
 
   unload: function () {
+    let window = this.window;
     let urlbar = this.document.getElementById('urlbar');
     let url = urlbar.value;
+    let tabs = this.document.getElementById('tabbrowser-tabs');
+    tabs.removeAttribute('opentabstop');
+    if (prefs.opentabstop) {
+      window.gBrowser.tabs.forEach(function (tab) {
+        if (tab.pinned) {
+          window.gBrowser.moveTabTo(tab, 0);
+        }
+      });
+    }
+
     this.unloaders.forEach(function (func) {
       func.call(this);
     }, this);
     this.unloaders = [];
 
     urlbar.value = url;
-    let tabs = this.document.getElementById('tabbrowser-tabs');
     if (tabs) {
       tabs.removeAttribute('overflow'); //not needed? it sets its own overflow as necessary
       tabs._positionPinnedTabs(); //Does not do anything?
     }
-    removeStylesheets(this.window);
-    tabs.removeAttribute('opentabstop');
-    this.window.TabsInTitlebar.allowedBy('tabcenter', true);
+    removeStylesheets(window);
+    window.TabsInTitlebar.allowedBy('tabcenter', true);
   },
 
   actuallyResizeTabs: function () {
