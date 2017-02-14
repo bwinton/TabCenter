@@ -272,8 +272,18 @@ exports.onUnload = function (reason) {
   for (let window of browserWindows) {
     let win = viewFor(window);
     if (win.VerticalTabs) {
-      win.VerticalTabs.unload();
       let mainWindow = win.document.getElementById('main-window');
+      if (prefs.prefs.opentabstop) {
+        win.document.getElementById('tabbrowser-tabs').removeAttribute('opentabstop');
+        win.gBrowser.tabs.forEach(function (tab) {
+          if (tab.pinned) {
+            win.gBrowser.moveTabTo(tab, 0);
+          }
+        });
+      }
+
+      win.VerticalTabs.unload();
+
       mainWindow.setAttribute('doNotReverse', 'true');
       mainWindow.removeAttribute('tabspinned');
       mainWindow.removeAttribute('tabspinnedwidth');

@@ -870,10 +870,6 @@
   -moz-box-pack: end;
 }
 
-#tabbrowser-tabs[opentabstop] .tabbrowser-tab[pinned] {
-  -moz-box-ordinal-group: 99;
-}
-
 #tabbrowser-tabs[opentabstop] #filler-tab {
   -moz-box-ordinal-group: 0;
 }
