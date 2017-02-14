@@ -113,8 +113,8 @@ VerticalTabs.prototype = {
         if (e.which !== 1) {
           return;
         }
-        this.unload();
         mainWindow.setAttribute('toggledon', 'true');
+        this.unload();
         ss.setWindowValue(window, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
         this.init();
         window.VerticalTabs.sendPing('tab_center_toggled_on', window);
@@ -137,6 +137,122 @@ VerticalTabs.prototype = {
     this.inferFromText = window.ToolbarIconColor.inferFromText;
     this.receiveMessage = window.gBrowser.receiveMessage;
 
+    let oldMoveTabTo = window.gBrowser.moveTabTo;
+    window.gBrowser.moveTabTo = function (aTab, aIndex) {
+      let oldPosition = aTab._tPos;
+      if (oldPosition === aIndex){
+        return;
+      }
+
+      let numPinned = 0 ;
+      for (let i = 0; i < this.tabs.length; i++) {
+        if (!this.tabs[i].pinned){
+          continue;
+        }
+        numPinned += 1;
+      }
+
+      // Don't allow mixing pinned and unpinned tabs.
+      let reverse = tabs.getAttribute('opentabstop');
+      if (aTab.pinned && !reverse) {
+        aIndex = Math.min(aIndex, numPinned - 1);
+      } else if (aTab.pinned && reverse) {
+        aIndex = Math.max(aIndex, this.tabs.length - numPinned);
+      } else if (!aTab.pinned && !reverse) {
+        aIndex = Math.max(aIndex, numPinned);
+      } else {
+        aIndex = Math.min(aIndex, this.tabs.length - numPinned - 1);
+      }
+
+      this._lastRelatedTab = null;
+
+      let wasFocused = (document.activeElement === this.mCurrentTab);
+
+      aIndex = aIndex < aTab._tPos ? aIndex : aIndex + 1;
+
+      // invalidate cache
+      this._visibleTabs = null;
+
+      // use .item() instead of [] because dragging to the end of the strip goes out of
+      // bounds: .item() returns null (so it acts like appendChild), but [] throws
+      this.tabContainer.insertBefore(aTab, this.tabs.item(aIndex));
+
+      for (let i = 0; i < this.tabs.length; i++) {
+        this.tabs[i]._tPos = i;
+        this.tabs[i]._selected = false;
+      }
+
+      // If we're in the midst of an async tab switch while calling
+      // moveTabTo, we can get into a case where _visuallySelected
+      // is set to true on two different tabs.
+      //
+      // What we want to do in moveTabTo is to remove logical selection
+      // from all tabs, and then re-add logical selection to mCurrentTab
+      // (and visual selection as well if we're not running with e10s, which
+      // setting _selected will do automatically).
+      //
+      // If we're running with e10s, then the visual selection will not
+      // be changed, which is fine, since if we weren't in the midst of a
+      // tab switch, the previously visually selected tab should still be
+      // correct, and if we are in the midst of a tab switch, then the async
+      // tab switcher will set the visually selected tab once the tab switch
+      // has completed.
+      this.mCurrentTab._selected = true;
+
+      if (wasFocused) {
+        this.mCurrentTab.focus();
+      }
+
+      this.tabContainer._handleTabSelect(false);
+
+      if (aTab.pinned) {
+        this.tabContainer._positionPinnedTabs();
+      }
+
+      this.tabContainer._setPositionalAttributes();
+
+      let evt = document.createEvent('UIEvents');
+      evt.initUIEvent('TabMove', true, false, window, oldPosition);
+      aTab.dispatchEvent(evt);
+    };
+
+    let oldPinTab = window.gBrowser.pinTab;
+    window.gBrowser.pinTab = function (aTab) {
+      if (aTab.pinned){
+        return;
+      }
+
+      let numPinned = 0 ;
+      for (let i = 0; i < this.tabs.length; i++) {
+        if (!this.tabs[i].pinned){
+          continue;
+        }
+        numPinned += 1;
+      }
+
+      if (aTab.hidden){
+        this.showTab(aTab);
+      }
+
+      let reverse = document.getAnonymousElementByAttribute(this.tabContainer, 'anonid', 'arrowscrollbox')._isRTLScrollbox;
+      if (reverse) {
+        this.moveTabTo(aTab, this.tabs.length - numPinned - 1);
+      } else {
+        this.moveTabTo(aTab, numPinned);
+      }
+
+      aTab.setAttribute('pinned', 'true');
+      this.tabContainer._unlockTabSizing();
+      this.tabContainer._positionPinnedTabs();
+      this.tabContainer.adjustTabstrip();
+
+      this.getBrowserForTab(aTab).messageManager.sendAsyncMessage('Browser:AppTab', {isAppTab: true});
+
+      let event = document.createEvent('Events');
+      event.initEvent('TabPinned', true, false);
+      aTab.dispatchEvent(event);
+    };
+
     let OldPrintPreviewListenerEnter = window.PrintPreviewListener.onEnter;
     let OldPrintPreviewListenerExit = window.PrintPreviewListener.onExit;
 
@@ -155,26 +271,52 @@ VerticalTabs.prototype = {
     let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
     let previous_close_message = close_next_tabs_message.getAttribute('label');
 
-    let reverseTabs = (arrowscrollbox) => {
-      if (prefs.opentabstop) {
-        close_next_tabs_message.setAttribute('label', strings.closeTabsAbove);
-        arrowscrollbox._isRTLScrollbox = true;
-        tabs.setAttribute('opentabstop', 'true');
-      } else {
-        close_next_tabs_message.setAttribute('label', strings.closeTabsBelow);
-        arrowscrollbox._isRTLScrollbox = false;
-        tabs.removeAttribute('opentabstop');
+    let oldAddTab = window.gBrowser.addTab;
+    window.gBrowser.addTab = function (...args) {
+      let numPinned = 0 ;
+      for (let i = 0; i < this.tabs.length; i++) {
+        if (!this.tabs[i].pinned){
+          continue;
+        }
+        numPinned += 1;
       }
+
+      let t = oldAddTab.bind(window.gBrowser)(...args);
+      if (prefs.opentabstop) {
+        let aRelatedToCurrent;
+        let aReferrerURI;
+        if (arguments.length === 2 && typeof arguments[1] === 'object' && !(arguments[1] instanceof Ci.nsIURI)) {
+          let params = arguments[1];
+          aReferrerURI = params.referrerURI;
+          aRelatedToCurrent = params.relatedToCurrent;
+        }
+        if ((aRelatedToCurrent == null ? aReferrerURI : aRelatedToCurrent) &&
+        Services.prefs.getBoolPref('browser.tabs.insertRelatedAfterCurrent')) {
+          let newTabPos = (this._lastRelatedTab || this.selectedTab)._tPos;
+          this.moveTabTo(t, newTabPos);
+          this._lastRelatedTab = t;
+        } else {
+          this.moveTabTo(t, window.gBrowser.tabs.length - numPinned - 1);
+        }
+      }
+      return t;
     };
 
-    let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
-    reverseTabs(arrowscrollbox);
+    let reverseTabsListener = function () {
+      let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+      if (arrowscrollbox) {
+        window.VerticalTabs.reverseTabs(arrowscrollbox);
+      }
+      window.gBrowser._lastRelatedTab = null;
+    };
 
     // update on changing preferences
-    require('sdk/simple-prefs').on('opentabstop', function () {
-      let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
-      reverseTabs(arrowscrollbox);
-    });
+    require('sdk/simple-prefs').on('opentabstop', reverseTabsListener);
+
+    let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+    if (arrowscrollbox && prefs.opentabstop) {
+      window.VerticalTabs.reverseTabs(arrowscrollbox);
+    }
 
     let tabsProgressListener = {
       onLocationChange: (aBrowser, aWebProgress, aRequest, aLocation, aFlags) => {
@@ -256,10 +398,14 @@ VerticalTabs.prototype = {
       this.window.gBrowser.receiveMessage = this.receiveMessage;
       this.window.PrintPreviewListener.onEnter = OldPrintPreviewListenerEnter;
       this.window.PrintPreviewListener.onExit = OldPrintPreviewListenerExit;
+      this.window.gBrowser.moveTabTo = oldMoveTabTo;
+      this.window.gBrowser.pintab = oldPinTab;
+      this.window.gBrowser.addTab = oldAddTab;
       if (this.document.getElementById('top-tabs-button')){
         this.document.getElementById('TabsToolbar').removeChild(this.document.getElementById('top-tabs-button'));
       }
       close_next_tabs_message.setAttribute('label', previous_close_message);
+      require('sdk/simple-prefs').removeListener('opentabstop', reverseTabsListener);
     });
 
     this.rearrangeXUL();
@@ -792,6 +938,32 @@ VerticalTabs.prototype = {
     });
   },
 
+  reverseTabs: function (arrowscrollbox) {
+    let window = this.window;
+    let document = this.document;
+    let tabs = document.getElementById('tabbrowser-tabs');
+    let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
+    if (prefs.opentabstop) {
+      close_next_tabs_message.setAttribute('label', strings.closeTabsAbove);
+      arrowscrollbox._isRTLScrollbox = true;
+      tabs.setAttribute('opentabstop', 'true');
+      let i = window.gBrowser.tabs.length - 1;
+      while (window.gBrowser.tabs[0].pinned) {
+        window.gBrowser.moveTabTo(window.gBrowser.tabs[0], i);
+        i--;
+      }
+    } else {
+      close_next_tabs_message.setAttribute('label', strings.closeTabsBelow);
+      arrowscrollbox._isRTLScrollbox = false;
+      tabs.removeAttribute('opentabstop');
+      window.gBrowser.tabs.forEach(function (tab) {
+        if (tab.pinned) {
+          window.gBrowser.moveTabTo(tab, 0);
+        }
+      });
+    }
+  },
+
   recordExpansion: function () {
     this.sendPing('tab_center_expanded', this.window);
   },
@@ -909,22 +1081,24 @@ VerticalTabs.prototype = {
   },
 
   unload: function () {
+    let window = this.window;
     let urlbar = this.document.getElementById('urlbar');
     let url = urlbar.value;
+    let tabs = this.document.getElementById('tabbrowser-tabs');
+    tabs.removeAttribute('opentabstop');
+
     this.unloaders.forEach(function (func) {
       func.call(this);
     }, this);
     this.unloaders = [];
 
     urlbar.value = url;
-    let tabs = this.document.getElementById('tabbrowser-tabs');
     if (tabs) {
       tabs.removeAttribute('overflow'); //not needed? it sets its own overflow as necessary
       tabs._positionPinnedTabs(); //Does not do anything?
     }
-    removeStylesheets(this.window);
-    tabs.removeAttribute('opentabstop');
-    this.window.TabsInTitlebar.allowedBy('tabcenter', true);
+    removeStylesheets(window);
+    window.TabsInTitlebar.allowedBy('tabcenter', true);
   },
 
   actuallyResizeTabs: function () {
