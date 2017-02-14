@@ -843,6 +843,7 @@ VerticalTabs.prototype = {
 
     let beforeListener = function () {
       browserPanel.insertBefore(top, browserPanel.firstChild);
+      browserPanel.insertBefore(bottom, document.getElementById('fullscreen-warning').nextSibling);
       top.palette = palette;
     };
     window.addEventListener('beforecustomization', beforeListener);
@@ -854,6 +855,7 @@ VerticalTabs.prototype = {
 
     let afterListener = function () {
       contentbox.insertBefore(top, contentbox.firstChild);
+      contentbox.appendChild(bottom);
       top.palette = palette;
       checkDevTheme();
       //query for and restore the urlbar value after customize mode does things....
@@ -921,7 +923,7 @@ VerticalTabs.prototype = {
 
       // Restore the tab strip.
       toolbar.insertBefore(tabs, toolbar.children[tabsIndex]);
-      toolbox.insertBefore(toolbar, navbar);
+      navbar.parentNode.insertBefore(toolbar, navbar);
       browserPanel.insertBefore(toolbox, browserPanel.firstChild);
       //remove extra #newtab-popup before they get added again in the tabs constructor
       if (NewTabButton) {
