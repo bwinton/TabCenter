@@ -113,14 +113,10 @@ VerticalTabs.prototype = {
         if (e.which !== 1) {
           return;
         }
-        this.unload();
         mainWindow.setAttribute('toggledon', 'true');
+        this.unload();
         ss.setWindowValue(window, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
         this.init();
-        let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
-        if (arrowscrollbox) {
-          reverseTabs(arrowscrollbox);
-        }
         window.VerticalTabs.sendPing('tab_center_toggled_on', window);
       };
 
@@ -234,12 +230,11 @@ VerticalTabs.prototype = {
         numPinned += 1;
       }
 
-      let reverse = document.getAnonymousElementByAttribute(this.tabContainer, 'anonid', 'arrowscrollbox')._isRTLScrollbox;
-
       if (aTab.hidden){
         this.showTab(aTab);
       }
 
+      let reverse = document.getAnonymousElementByAttribute(this.tabContainer, 'anonid', 'arrowscrollbox')._isRTLScrollbox;
       if (reverse) {
         this.moveTabTo(aTab, this.tabs.length - numPinned - 1);
       } else {
@@ -253,15 +248,10 @@ VerticalTabs.prototype = {
 
       this.getBrowserForTab(aTab).messageManager.sendAsyncMessage('Browser:AppTab', {isAppTab: true});
 
-      if (aTab.selected) {
-        this._setClosesKeyState(false);
-      }
-
       let event = document.createEvent('Events');
       event.initEvent('TabPinned', true, false);
       aTab.dispatchEvent(event);
     };
-
 
     let OldPrintPreviewListenerEnter = window.PrintPreviewListener.onEnter;
     let OldPrintPreviewListenerExit = window.PrintPreviewListener.onExit;
@@ -312,41 +302,21 @@ VerticalTabs.prototype = {
       return t;
     };
 
-    let reverseTabs = (arrowscrollbox) => {
-      if (prefs.opentabstop) {
-        close_next_tabs_message.setAttribute('label', strings.closeTabsAbove);
-        arrowscrollbox._isRTLScrollbox = true;
-        tabs.setAttribute('opentabstop', 'true');
-        let i = window.gBrowser.tabs.length - 1;
-        while (window.gBrowser.tabs[0].pinned) {
-          window.gBrowser.moveTabTo(window.gBrowser.tabs[0], i);
-          i--;
-        }
-      } else {
-        close_next_tabs_message.setAttribute('label', strings.closeTabsBelow);
-        arrowscrollbox._isRTLScrollbox = false;
-        tabs.removeAttribute('opentabstop');
-        window.gBrowser.tabs.forEach(function (tab) {
-          if (tab.pinned) {
-            window.gBrowser.moveTabTo(tab, 0);
-          }
-        });
-      }
-    };
-
-    let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
-    if (arrowscrollbox) {
-      reverseTabs(arrowscrollbox);
-    }
-
-    // update on changing preferences
-    require('sdk/simple-prefs').on('opentabstop', function () {
+    let reverseTabsListener = function () {
       let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
       if (arrowscrollbox) {
-        reverseTabs(arrowscrollbox);
+        window.VerticalTabs.reverseTabs(arrowscrollbox);
       }
       window.gBrowser._lastRelatedTab = null;
-    });
+    };
+
+    // update on changing preferences
+    require('sdk/simple-prefs').on('opentabstop', reverseTabsListener);
+
+    let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+    if (arrowscrollbox && prefs.opentabstop) {
+      window.VerticalTabs.reverseTabs(arrowscrollbox);
+    }
 
     let tabsProgressListener = {
       onLocationChange: (aBrowser, aWebProgress, aRequest, aLocation, aFlags) => {
@@ -435,6 +405,7 @@ VerticalTabs.prototype = {
         this.document.getElementById('TabsToolbar').removeChild(this.document.getElementById('top-tabs-button'));
       }
       close_next_tabs_message.setAttribute('label', previous_close_message);
+      require('sdk/simple-prefs').removeListener('opentabstop', reverseTabsListener);
     });
 
     this.rearrangeXUL();
@@ -965,6 +936,32 @@ VerticalTabs.prototype = {
     });
   },
 
+  reverseTabs: function (arrowscrollbox) {
+    let window = this.window;
+    let document = this.document;
+    let tabs = document.getElementById('tabbrowser-tabs');
+    let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
+    if (prefs.opentabstop) {
+      close_next_tabs_message.setAttribute('label', strings.closeTabsAbove);
+      arrowscrollbox._isRTLScrollbox = true;
+      tabs.setAttribute('opentabstop', 'true');
+      let i = window.gBrowser.tabs.length - 1;
+      while (window.gBrowser.tabs[0].pinned) {
+        window.gBrowser.moveTabTo(window.gBrowser.tabs[0], i);
+        i--;
+      }
+    } else {
+      close_next_tabs_message.setAttribute('label', strings.closeTabsBelow);
+      arrowscrollbox._isRTLScrollbox = false;
+      tabs.removeAttribute('opentabstop');
+      window.gBrowser.tabs.forEach(function (tab) {
+        if (tab.pinned) {
+          window.gBrowser.moveTabTo(tab, 0);
+        }
+      });
+    }
+  },
+
   recordExpansion: function () {
     this.sendPing('tab_center_expanded', this.window);
   },
@@ -1087,13 +1084,6 @@ VerticalTabs.prototype = {
     let url = urlbar.value;
     let tabs = this.document.getElementById('tabbrowser-tabs');
     tabs.removeAttribute('opentabstop');
-    if (prefs.opentabstop) {
-      window.gBrowser.tabs.forEach(function (tab) {
-        if (tab.pinned) {
-          window.gBrowser.moveTabTo(tab, 0);
-        }
-      });
-    }
 
     this.unloaders.forEach(function (func) {
       func.call(this);

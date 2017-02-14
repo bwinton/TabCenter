@@ -258,7 +258,6 @@
                            (tabScreenPos + tabSize);
           translateVal = Math.max(translateVal, minBound);
           translateVal = Math.min(translateVal, maxBound);
-
           draggedTab.style.transform = 'translateY(' + translateVal + 'px)';
           // console.log('draggedTab transform: ' + draggedTab.style.transform + ' should be ' + 'translateY(' + translateVal + 'px)');
 
@@ -267,8 +266,8 @@
           let scrollbuttonDown = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-down');
           let scrollbuttonUp = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-up');
           let mouseY = event.clientY;
-
           let mainWindow = document.getElementById('main-window');
+
           let bottomMin = tabbrowser.boxObject.height + 5;
           let topMax;
           if (navigator.userAgent.indexOf('Mac') !== -1) {
@@ -311,8 +310,7 @@
           let tabCenter = tabScreenPos + translateVal + tabSize / 2;
           let newIndex = -1;
           let oldIndex = 'animDropIndex' in draggedTab._dragData ?
-                          draggedTab._dragData.animDropIndex : draggedTab._tPos;
-
+                         draggedTab._dragData.animDropIndex : draggedTab._tPos;
           let low = 0;
           let high = tabs.length - 1;
           while (low <= high) {
