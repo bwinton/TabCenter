@@ -143,13 +143,13 @@ VerticalTabs.prototype = {
     let oldMoveTabTo = window.gBrowser.moveTabTo;
     window.gBrowser.moveTabTo = function (aTab, aIndex) {
       let oldPosition = aTab._tPos;
-      if (oldPosition === aIndex){
+      if (oldPosition === aIndex) {
         return;
       }
 
       let numPinned = 0 ;
       for (let i = 0; i < this.tabs.length; i++) {
-        if (!this.tabs[i].pinned){
+        if (!this.tabs[i].pinned) {
           continue;
         }
         numPinned += 1;
@@ -221,19 +221,19 @@ VerticalTabs.prototype = {
 
     let oldPinTab = window.gBrowser.pinTab;
     window.gBrowser.pinTab = function (aTab) {
-      if (aTab.pinned){
+      if (aTab.pinned) {
         return;
       }
 
       let numPinned = 0 ;
       for (let i = 0; i < this.tabs.length; i++) {
-        if (!this.tabs[i].pinned){
+        if (!this.tabs[i].pinned) {
           continue;
         }
         numPinned += 1;
       }
 
-      if (aTab.hidden){
+      if (aTab.hidden) {
         this.showTab(aTab);
       }
 
@@ -278,7 +278,7 @@ VerticalTabs.prototype = {
     window.gBrowser.addTab = function (...args) {
       let numPinned = 0 ;
       for (let i = 0; i < this.tabs.length; i++) {
-        if (!this.tabs[i].pinned){
+        if (!this.tabs[i].pinned) {
           continue;
         }
         numPinned += 1;
@@ -404,7 +404,7 @@ VerticalTabs.prototype = {
       this.window.gBrowser.moveTabTo = oldMoveTabTo;
       this.window.gBrowser.pintab = oldPinTab;
       this.window.gBrowser.addTab = oldAddTab;
-      if (this.document.getElementById('top-tabs-button')){
+      if (this.document.getElementById('top-tabs-button')) {
         this.document.getElementById('TabsToolbar').removeChild(this.document.getElementById('top-tabs-button'));
       }
       close_next_tabs_message.setAttribute('label', previous_close_message);
@@ -426,7 +426,7 @@ VerticalTabs.prototype = {
                    mutation.attributeName === 'width') {
           results.removeAttribute('width');
         } else if (mutation.type === 'attributes' && mutation.attributeName === 'overflow' && mutation.target.id === 'tabbrowser-tabs') {
-          if (mutation.target.getAttribute('overflow') !== 'true'){
+          if (mutation.target.getAttribute('overflow') !== 'true') {
             tabs.setAttribute('overflow', 'true'); //always set overflow back to true
           }
         }
@@ -491,7 +491,7 @@ VerticalTabs.prototype = {
       } else {
         let offset = rect.left - elementRect.left;
         let width = rect.width;
-        if (mainWindow.getAttribute('F11-fullscreen') !== 'true'){
+        if (mainWindow.getAttribute('F11-fullscreen') !== 'true') {
           if (mainWindow.getAttribute('tabspinned') !== 'true') {
             offset += 45;
             width -= 45;
@@ -725,7 +725,7 @@ VerticalTabs.prototype = {
     let enterTimeout = -1;
 
     let exit = (event) => {
-      if (!this.mouseInside){
+      if (!this.mouseInside) {
         let arrowscrollbox = this.document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
         let scrollbox = this.document.getAnonymousElementByAttribute(arrowscrollbox, 'anonid', 'scrollbox');
         let scrolltop = scrollbox.scrollTop;
@@ -784,7 +784,7 @@ VerticalTabs.prototype = {
 
     tabs.ondragleave = function (e) {
       if (!e.relatedTarget || !e.relatedTarget.closest('#tabbrowser-tabs')) {
-        if (tabs.getAttribute('movingtab') === 'true'){
+        if (tabs.getAttribute('movingtab') === 'true') {
           let scrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
           let scrollbuttonDown = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-down');
           let scrollbuttonUp = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-up');
@@ -974,7 +974,7 @@ VerticalTabs.prototype = {
 
   adjustCrop: function () {
     let tabs = this.document.getElementById('tabbrowser-tabs');
-    if (this.window.document.getElementById('verticaltabs-box').getAttribute('expanded') === 'true' || this.document.getElementById('main-window').getAttribute('tabspinned') === ''){
+    if (this.window.document.getElementById('verticaltabs-box').getAttribute('expanded') === 'true' || this.document.getElementById('main-window').getAttribute('tabspinned') === '') {
       for (let i = 0; i < tabs.childNodes.length; i++) {
         tabs.childNodes[i].setAttribute('crop', 'end');
       }
@@ -999,7 +999,7 @@ VerticalTabs.prototype = {
 
   clearFind: function (purpose) {
     let find_input = this.document.getElementById('find-input');
-    if (find_input){
+    if (find_input) {
       if (purpose === 'tabGroupChange') {
         //manually show pinned tabs after changing groups for the tab groups add-on, as it does not re-show them
         Array.filter(this.window.gBrowser.tabs, tab => tab.getAttribute('pinned') === 'true').forEach(tab => {tab.setAttribute('hidden', false);});
@@ -1007,7 +1007,7 @@ VerticalTabs.prototype = {
         find_input.value = '';
         this.filtertabs();
       } else if (purpose === 'tabAction') {
-        if (find_input.value === ''){
+        if (find_input.value === '') {
           this.resizeTabs();
           return;
         }
@@ -1087,7 +1087,7 @@ VerticalTabs.prototype = {
   unload: function () {
     let window = this.window;
     let tourPanel = this.document.getElementById('tour-panel');
-    if (tourPanel){
+    if (tourPanel) {
       this.document.getElementById('mainPopupSet').removeChild(tourPanel);
     }
     let urlbar = this.document.getElementById('urlbar');
@@ -1121,10 +1121,10 @@ VerticalTabs.prototype = {
       let number_of_tabs = this.window.gBrowser.visibleTabs.length;
       if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60 && tabs.classList.contains('large-tabs')) {
         return;
-      } else if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60 ){
+      } else if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60 ) {
         tabs.classList.add('large-tabs');
         this.refreshAllTabs();
-      } else if (tabs.classList.contains('large-tabs')){
+      } else if (tabs.classList.contains('large-tabs')) {
         tabs.classList.remove('large-tabs');
       }
       return;

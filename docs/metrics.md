@@ -145,7 +145,11 @@ local schema = {
     {"tabs_unpinned",         "INTEGER",    nil,    nil,        "tabs_unpinned"},
     {"tab_center_pinned",     "INTEGER",    nil,    nil,        "tab_center_pinned"},
     {"tab_center_unpinned",   "INTEGER",    nil,    nil,        "tab_center_unpinned"},
-    {"tab_center_expanded",   "INTEGER",    nil,    nil,        "tab_center_expanded"}
+    {"tab_center_expanded",   "INTEGER",    nil,    nil,        "tab_center_expanded"},
+    {"tour_completed",        "BOOLEAN",    nil,    nil,        "tour_completed"},
+    {"tour_began",            "INTEGER",    nil,    nil,        "tour_began"},
+    {"tour_accepted",         "INTEGER",    nil,    nil,        "tour_accepted"},
+    {"tour_complete",         "INTEGER",    nil,    nil,        "tour_complete"}
 --  {"tab_center_teased",     "INTEGER",    nil,    nil,        "payload[tab_center_teased]"}  (Version 2)
 }
 

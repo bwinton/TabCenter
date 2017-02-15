@@ -131,14 +131,14 @@ const STYLESHEETS = [
 
 function installStylesheets(win) {
   for (let uri of STYLESHEETS) {
-    loadSheet(win, uri, 'author');
+    installStylesheet(win, uri);
   }
 }
 exports.installStylesheets = installStylesheets;
 
 function removeStylesheets(win) {
   for (let uri of STYLESHEETS) {
-    removeSheet(win, uri, 'author');
+    removeStylesheet(win, uri);
   }
 }
 exports.removeStylesheets = removeStylesheets;

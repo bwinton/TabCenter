@@ -65,7 +65,7 @@ let startupFinishedObserver = null;
 let hotkey;
 let VerticalTabsWindowId = 1;
 
-function reminderTour(win){
+function reminderTour(win) {
   win.reminderTour = true;
   set('extensions.tabcentertest1@mozilla.com.doNotShowTour', true); //after reminder tour shown once, we will not show again.
   firstInstallTour(win);
@@ -75,7 +75,7 @@ function firstInstallTour(win) {
     let details = {};
     if (get('extensions.tabcentertest1@mozilla.com.tourComplete')) {
       details.tour_type = 'completed_reminder';
-    } else if (win.reminderTour){
+    } else if (win.reminderTour) {
       details.tour_type = 'reminder';
     } else {
       details.tour_type = 'install';
@@ -138,7 +138,7 @@ function firstInstallTour(win) {
         let progress = runtime / duration;
         progress = Math.min(progress, 1);
         panel.moveTo(xpos + (dist * progress), outerRect.y);
-        if (runtime < duration){
+        if (runtime < duration) {
           win.requestAnimationFrame(function (timestamp) {
             movePanel(timestamp, panel, dist, duration);
           });
@@ -253,7 +253,7 @@ function setPersistantAttrs(win) {
   let mainWindow = win.document.getElementById('main-window');
   mainWindow.setAttribute('persist', mainWindow.getAttribute('persist') + ' tabspinned tabspinnedwidth toggledon');
   try {
-    if(ss.getWindowValue(win, 'TCtoggledon') !== ''){ // on win/linux this does not throw an error, so check for value
+    if(ss.getWindowValue(win, 'TCtoggledon') !== '') { // on win/linux this does not throw an error, so check for value
       mainWindow.setAttribute('toggledon', ss.getWindowValue(win, 'TCtoggledon'));
       mainWindow.setAttribute('tabspinnedwidth', ss.getWindowValue(win, 'TCtabspinnedwidth'));
       mainWindow.setAttribute('tabspinned', ss.getWindowValue(win, 'TCtabspinned'));
@@ -303,7 +303,10 @@ function initWindow(window) {
     switch (aEvent.type) {
     case 'TabOpen':
       utils.sendPing('tabs_created', win);
-      if (!get('extensions.tabcentertest1@mozilla.com.doNotShowTour') && mainWindow.getAttribute('toggledon') === 'false' && win.gBrowser.tabs.length >= 5 && timeSinceUsed >= timeUntilReminder) {
+      if (!get('extensions.tabcentertest1@mozilla.com.doNotShowTour')
+            && mainWindow.getAttribute('toggledon') === 'false'
+            && win.gBrowser.tabs.length >= 5
+            && timeSinceUsed >= timeUntilReminder) {
         reminderTour(win);
       }
       return;
