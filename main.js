@@ -296,6 +296,7 @@ function initWindow(window) {
   win.addEventListener('TabUnpinned', win.tabCenterEventListener, false);
 
   win.tabCenterEventListener.handleEvent = function (aEvent) {
+    let mainWindow = win.document.getElementById('main-window');
     let timeUntilReminder = get('extensions.tabcentertest1@mozilla.com.tourComplete') ? 432000000 : 259200000;  //5 days or 3 days in milliseconds
     // let timeUntilReminder = get('extensions.tabcentertest1@mozilla.com.tourComplete') ? 30 * 1000 : 1000; //Debug: small values to trigger reminder tour immediately
     let timeSinceUsed = Date.now() - parseInt(get('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp'));
