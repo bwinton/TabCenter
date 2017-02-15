@@ -41,6 +41,7 @@
 const {Cc, Ci} = require('chrome');
 const prefs = require('sdk/simple-prefs');
 const {get, set, reset} = require('sdk/preferences/service');
+const NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
 
 /* Payload */
 
@@ -152,3 +153,15 @@ function removeStylesheet(win, uri) {
   removeSheet(win, uri, 'author');
 }
 exports.removeStylesheet = removeStylesheet;
+
+function createElement(doc, label, attrs) {
+  let rv = doc.createElementNS(NS_XUL, label);
+  if (attrs) {
+    for (let attr in attrs) {
+      rv.setAttribute(attr, attrs[attr]);
+    }
+  }
+  return rv;
+}
+
+exports.createElement = createElement;

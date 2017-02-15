@@ -85,32 +85,31 @@ function firstInstallTour(win) {
     win.activeInstall = false;
     let document = win.document;
     let sidetabsbutton = document.getElementById('side-tabs-button');
-    let panel = document.createElement('panel');
-    let outerbox = document.createElement('vbox');
-    let instructions = document.createElement('description');
-    let progressButton = document.createElement('button');
-    let tourTitle = document.createElement('h2');
-    let tourVideoWrapper = document.createElement('div');
-    tourVideoWrapper.setAttribute('id', 'tour-video-wrapper');
+    let panel = utils.createElement(document, 'panel', {
+      'id': 'tour-panel',
+      'type': 'arrow',
+      'flip': 'slide',
+      'noautohide': true
+    });
+    let outerbox = utils.createElement(document, 'vbox', {'id': 'tour-box'});
+    let instructions = utils.createElement(document, 'description', {'id': 'tour-instructions'});
+    let progressButton = utils.createElement(document, 'button', {
+      'id': 'tour-button',
+      'label': strings.progressButtonIntro
+    });
+    let tourTitle = utils.createElement(document, 'h2');
+    let tourVideoWrapper = utils.createElement(document, 'div', {'id': 'tour-video-wrapper'});
     let tourVideo = document.createElementNS('http://www.w3.org/1999/xhtml', 'video');
     tourVideo.setAttribute('src', self.data.url('Intro.mp4'));
     tourVideo.setAttribute('autoplay', 'true');
     tourVideo.setAttribute('loop', 'true');
-
-    let dismissLabel = document.createElement('label');
-    document.getElementById('mainPopupSet').appendChild(panel); //attach to DOM anywhere
-    panel.setAttribute('id', 'tour-panel');
-    panel.setAttribute('type', 'arrow');
-    panel.setAttribute('flip', 'slide');
-    panel.setAttribute('noautohide', true);
-    outerbox.setAttribute('id', 'tour-box');
     tourVideo.setAttribute('id', 'tour-video');
-    instructions.setAttribute('id', 'tour-instructions');
-    progressButton.setAttribute('id', 'tour-button');
-    dismissLabel.setAttribute('id', 'tour-dismiss-label');
+
+    let dismissLabel = utils.createElement(document, 'label', {'id': 'tour-dismiss-label'});
+
+    document.getElementById('mainPopupSet').appendChild(panel); //attach to DOM anywhere
     tourTitle.textContent = strings.tourTitleIntro;
     instructions.textContent = strings.tourInstructionsIntro;
-    progressButton.setAttribute('label', strings.progressButtonIntro);
     dismissLabel.textContent = strings.dismissLabel;
 
     if (win.reminderTour && get('extensions.tabcentertest1@mozilla.com.tourComplete')) {

@@ -48,6 +48,7 @@ const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
                                createInstance(Ci.nsIURIFixup);
 const strings = require('./get-locale-strings').getLocaleStrings();
 const ss = Cc['@mozilla.org/browser/sessionstore;1'].getService(Ci.nsISessionStore);
+const utils = require('./utils');
 
 Cu.import('resource://gre/modules/PageThumbs.jsm');
 Cu.import('resource:///modules/CustomizableUI.jsm');
@@ -91,7 +92,7 @@ VerticalTabs.prototype = {
       let toolbar = document.getElementById('TabsToolbar');
       this.clearFind();
       tabs.removeAttribute('mouseInside');
-      let sidetabsbutton = this.createElement('toolbarbutton', {
+      let sidetabsbutton = utils.createElement(document, 'toolbarbutton', {
         'id': 'side-tabs-button',
         'label': strings.sideLabel,
         'tooltiptext': strings.sideTooltip,
@@ -448,16 +449,6 @@ VerticalTabs.prototype = {
     });
   },
 
-  createElement: function (label, attrs) {
-    let rv = this.document.createElementNS(NS_XUL, label);
-    if (attrs) {
-      for (let attr in attrs) {
-        rv.setAttribute(attr, attrs[attr]);
-      }
-    }
-    return rv;
-  },
-
   rearrangeXUL: function () {
     const window = this.window;
     const document = this.document;
@@ -545,8 +536,8 @@ VerticalTabs.prototype = {
     // Create a box next to the app content. It will hold the tab
     // bar and the tab toolbar.
     let browserbox = document.getElementById('browser');
-    let leftbox = this.createElement('vbox', {'id': 'verticaltabs-box'});
-    let splitter = this.createElement('vbox', {'id': 'verticaltabs-splitter'});
+    let leftbox = utils.createElement(document, 'vbox', {'id': 'verticaltabs-box'});
+    let splitter = utils.createElement(document, 'vbox', {'id': 'verticaltabs-splitter'});
 
     if (mainWindow.getAttribute('tabspinned') === '') {
       mainWindow.setAttribute('tabspinned', 'true');
@@ -620,7 +611,7 @@ VerticalTabs.prototype = {
     toolbar._toolbox = null; // reset value set by constructor
     toolbar.setAttribute('toolboxid', 'navigator-toolbox');
 
-    let pin_button = this.createElement('toolbarbutton', {
+    let pin_button = utils.createElement(document, 'toolbarbutton', {
       'id': 'pin-button'
     });
 
@@ -648,11 +639,11 @@ VerticalTabs.prototype = {
 
     toolbar.appendChild(pin_button);
     leftbox.insertBefore(toolbar, leftbox.firstChild);
-    let find_input = this.createElement('textbox', {
+    let find_input = utils.createElement(document, 'textbox', {
       'id': 'find-input',
       'class': 'searchbar-textbox'
     });
-    let search_icon = this.createElement('image', {
+    let search_icon = utils.createElement(document, 'image', {
       'id': 'tabs-search'
     });
     find_input.appendChild(search_icon);
@@ -667,7 +658,7 @@ VerticalTabs.prototype = {
     });
 
     //build button to toggle Tab Center on/off
-    let toptabsbutton = this.createElement('toolbarbutton', {
+    let toptabsbutton = utils.createElement(document, 'toolbarbutton', {
       'id': 'top-tabs-button',
       'label': strings.topLabel,
       'tooltiptext': strings.topTooltip
@@ -705,7 +696,7 @@ VerticalTabs.prototype = {
 
     document.getElementById('filler-tab').addEventListener('click', this.clearFind.bind(this));
 
-    let spacer = this.createElement('spacer', {'id': 'new-tab-spacer'});
+    let spacer = utils.createElement(document, 'spacer', {'id': 'new-tab-spacer'});
     toolbar.insertBefore(find_input, pin_button);
     toolbar.insertBefore(spacer, pin_button);
     toolbar.insertBefore(toptabsbutton, toolbar.lastChild);
