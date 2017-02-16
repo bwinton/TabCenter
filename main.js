@@ -380,7 +380,7 @@ exports.main = function (options, callbacks) {
     }
 
     //show onboarding experience in the active window on "install"
-    if (browserWindows.activeWindow === window && options.loadReason === 'install') {
+    if (browserWindows.activeWindow === window && !get('extensions.tabcentertest1@mozilla.com.doNotShowTour') && options.loadReason === 'install') {
       mainWindow.setAttribute('toggledon', 'false');
       win.activeInstall = true;
     }
