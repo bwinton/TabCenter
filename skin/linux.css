@@ -9,20 +9,11 @@
 }
 
 #TabsToolbar {
-  flex: 0 0 41px;
+  flex-basis: 41px;
 }
 
 #TabsToolbar:not(:-moz-lwtheme) {
   color: black !important;
-}
-
-.title-wrapper .tab-text {
-  font-weight: normal !important;
-  opacity: 0.65;
-}
-
-.title-wrapper .address-label {
-  opacity: 1;
 }
 
 #TabsToolbar .toolbarbutton-1 > .toolbarbutton-icon {

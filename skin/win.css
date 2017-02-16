@@ -4,6 +4,10 @@
   padding-left: 5px;
 }
 
+.title-wrapper .tab-text {
+  font-weight: 600 !important;
+}
+
 #TabsToolbar > #new-tab-button {
   width:auto !important;
 }
@@ -21,7 +25,7 @@
 
   #TabsToolbar {
     margin: 0 !important;
-    flex: 0 0 42px !important;
+    flex-basis: 42px;
   }
 
   #nav-bar {
@@ -42,12 +46,5 @@
   .tabbrowser-arrowscrollbox:not(:-moz-lwtheme),
   #main-window[devedition-theme] .tabbrowser-arrowscrollbox {
     height: calc(100vh - 44px);
-  }
-}
-
-/* win10 needs to be 1 px smaller*/
-@media (-moz-os-version: windows-win10) {
-  #TabsToolbar {
-    flex: 0 0 39px;
   }
 }

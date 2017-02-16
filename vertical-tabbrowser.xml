@@ -732,6 +732,7 @@
         </xul:hbox>
         <xul:hbox xbl:inherits="pinned,selected,visuallyselected,titlechanged,attention"
                   class="tab-content" align="center">
+          <xul:hbox class="tab-selection-indicator"/>
           <xul:vbox xbl:inherits="fadein,pinned,selected,visuallyselected,busy,crashed,sharing"
                      class="tab-meta-image">
             <html:canvas anonid="tab-meta-image"
