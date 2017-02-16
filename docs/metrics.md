@@ -122,13 +122,16 @@ Tab Center will record data and submit it on each event trigger.
 An example payload (within the full Telemetry ping):
 
 ```js
+{
   "version": 2,
   "tab_center_tabs_on_top": false,
   "tab_center_show_thumbnails": true,
   "tab_center_window_id": 1,
   "tab_center_currently_toggled_on": true,
   "tour_completed": false,
-  "tabs_created":  1
+  "tour_began":  1,
+  "details": "reminder"
+}
 ```
 
 And the schema we will use for Redshift:
@@ -149,8 +152,8 @@ local schema = {
     {"tour_completed",        "BOOLEAN",    nil,    nil,        "tour_completed"},
     {"tour_began",            "INTEGER",    nil,    nil,        "tour_began"},
     {"tour_accepted",         "INTEGER",    nil,    nil,        "tour_accepted"},
-    {"tour_complete",         "INTEGER",    nil,    nil,        "tour_complete"}
---  {"tab_center_teased",     "INTEGER",    nil,    nil,        "payload[tab_center_teased]"}  (Version 2)
+    {"tour_complete",         "INTEGER",    nil,    nil,        "tour_complete"},
+    {"details",               "VARCHAR",    31,     nil,        "details"}
 }
 
 ```
