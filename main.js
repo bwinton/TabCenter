@@ -454,9 +454,7 @@ exports.onUnload = function (reason) {
     let win = viewFor(window);
     if (win.VerticalTabs) {
       utils.removeStylesheet(win, 'resource://tabcenter/skin/persistant.css');
-      win.VerticalTabs.unload();
-      let mainWindow = win.document.getElementById('main-window');
-      if (prefs.prefs.opentabstop) {
+      if (prefs.prefs.opentabstop && win.document.getElementById('main-window').getAttribute('toggledon') === 'true') {
         win.document.getElementById('tabbrowser-tabs').removeAttribute('opentabstop');
         win.gBrowser.tabs.forEach(function (tab) {
           if (tab.pinned) {
@@ -464,6 +462,9 @@ exports.onUnload = function (reason) {
           }
         });
       }
+
+      win.VerticalTabs.unload();
+      let mainWindow = win.document.getElementById('main-window');
 
       mainWindow.setAttribute('doNotReverse', 'true');
       mainWindow.removeAttribute('tabspinned');

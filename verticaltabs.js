@@ -938,12 +938,12 @@ VerticalTabs.prototype = {
     let document = this.document;
     let tabs = document.getElementById('tabbrowser-tabs');
     let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
-    if (prefs.opentabstop) {
+    if (prefs.opentabstop && document.getElementById('main-window').getAttribute('toggledon') === 'true') {
       close_next_tabs_message.setAttribute('label', strings.closeTabsAbove);
       arrowscrollbox._isRTLScrollbox = true;
       tabs.setAttribute('opentabstop', 'true');
       let i = window.gBrowser.tabs.length - 1;
-      while (window.gBrowser.tabs[0].pinned) {
+      while (window.gBrowser.tabs[0].pinned && i >= 0) {
         window.gBrowser.moveTabTo(window.gBrowser.tabs[0], i);
         i--;
       }
@@ -1084,7 +1084,15 @@ VerticalTabs.prototype = {
     let urlbar = this.document.getElementById('urlbar');
     let url = urlbar.value;
     let tabs = this.document.getElementById('tabbrowser-tabs');
-    tabs.removeAttribute('opentabstop');
+
+    if (prefs.opentabstop && this.document.getElementById('main-window').getAttribute('toggledon') === 'false' && tabs.getAttribute('opentabstop')) {
+      tabs.removeAttribute('opentabstop');
+      window.gBrowser.tabs.forEach(function (tab) {
+        if (tab.pinned) {
+          window.gBrowser.moveTabTo(tab, 0);
+        }
+      });
+    }
 
     this.unloaders.forEach(function (func) {
       func.call(this);
