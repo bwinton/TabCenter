@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/* global require, exports:false, PageThumbs:false, CustomizableUI:false */
+/* global require, exports:false, PageThumbs:false, CustomizableUI:false PluralForm:false*/
 'use strict';
 
 const {Cc, Ci, Cu} = require('chrome');
@@ -53,6 +53,7 @@ const utils = require('./utils');
 Cu.import('resource://gre/modules/PageThumbs.jsm');
 Cu.import('resource:///modules/CustomizableUI.jsm');
 Cu.import('resource://gre/modules/Services.jsm');
+Cu.import('resource://gre/modules/PluralForm.jsm');
 
 const NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
 const TAB_DROP_TYPE = 'application/x-moz-tabbrowser-tab';
@@ -144,13 +145,7 @@ VerticalTabs.prototype = {
     let oldMoveTabTo = window.gBrowser.moveTabTo;
     window.gBrowser.moveTabTo = function (aTab, aIndex) {
       let oldPosition = aTab._tPos;
-      let numPinned = 0 ;
-      for (let i = 0; i < this.tabs.length; i++) {
-        if (!this.tabs[i].pinned) {
-          continue;
-        }
-        numPinned += 1;
-      }
+      let numPinned = window.VerticalTabs.numPinnedtabs();
       let reverse = tabs.getAttribute('opentabstop');
 
       if (oldPosition === aIndex && (!reverse || numPinned === 0)) {
@@ -226,13 +221,7 @@ VerticalTabs.prototype = {
         return;
       }
 
-      let numPinned = 0 ;
-      for (let i = 0; i < this.tabs.length; i++) {
-        if (!this.tabs[i].pinned) {
-          continue;
-        }
-        numPinned += 1;
-      }
+      let numPinned = window.VerticalTabs.numPinnedtabs();
 
       if (aTab.hidden) {
         this.showTab(aTab);
@@ -275,6 +264,74 @@ VerticalTabs.prototype = {
     let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
     let previous_close_message = close_next_tabs_message.getAttribute('label');
 
+    let oldWarnAboutClosingTabs = window.gBrowser.warnAboutClosingTabs;
+    window.gBrowser.warnAboutClosingTabs = function (aCloseTabs, aTab) {
+      let tabsToClose;
+      switch (aCloseTabs) {
+      case this.closingTabsEnum.ALL:
+        tabsToClose = this.tabs.length - this._removingTabs.length -
+                      window.VerticalTabs.numPinnedtabs();
+        break;
+      case this.closingTabsEnum.OTHER:
+        tabsToClose = this.visibleTabs.length - 1 - window.VerticalTabs.numPinnedtabs();
+        break;
+      case this.closingTabsEnum.TO_END:
+        if (!aTab){
+          throw new Error('Required argument missing: aTab');
+        }
+
+        tabsToClose = this.getTabsToTheEndFrom(aTab).length;
+        break;
+      default:
+        throw new Error('Invalid argument: ' + aCloseTabs);
+      }
+
+      if (tabsToClose <= 1) {
+        return true;
+      }
+
+      const pref = aCloseTabs === this.closingTabsEnum.ALL ?
+                   'browser.tabs.warnOnClose' : 'browser.tabs.warnOnCloseOtherTabs';
+      let shouldPrompt = Services.prefs.getBoolPref(pref);
+      if (!shouldPrompt) {
+        return true;
+      }
+
+      let ps = Services.prompt;
+
+      // default to true: if it were false, we wouldn't get this far
+      let warnOnClose = {value: true};
+      let bundle = this.mStringBundle;
+
+      // focus the window before prompting.
+      // this will raise any minimized window, which will
+      // make it obvious which window the prompt is for and will
+      // solve the problem of windows "obscuring" the prompt.
+      // see bug #350299 for more details
+      window.focus();
+      let warningMessage =
+        PluralForm.get(tabsToClose, bundle.getString('tabs.closeWarningMultiple'))
+                  .replace('#1', tabsToClose);
+      let buttonPressed =
+        ps.confirmEx(window,
+                     bundle.getString('tabs.closeWarningTitle'),
+                     warningMessage,
+                     (ps.BUTTON_TITLE_IS_STRING * ps.BUTTON_POS_0)
+                     + (ps.BUTTON_TITLE_CANCEL * ps.BUTTON_POS_1),
+                     bundle.getString('tabs.closeButtonMultiple'),
+                     null, null,
+                     aCloseTabs === this.closingTabsEnum.ALL ?
+                       bundle.getString('tabs.closeWarningPromptMe') : null,
+                     warnOnClose);
+      let reallyClose = (buttonPressed === 0);
+
+      // don't set the pref unless they press OK and it's false
+      if (aCloseTabs === this.closingTabsEnum.ALL && reallyClose && !warnOnClose.value) {
+        Services.prefs.setBoolPref(pref, false);
+      }
+
+      return reallyClose;
+    };
 
     let oldGetTabsToTheEndFrom = window.gBrowser.getTabsToTheEndFrom;
     window.gBrowser.getTabsToTheEndFrom = (aTab) => {
@@ -290,13 +347,7 @@ VerticalTabs.prototype = {
 
     let oldAddTab = window.gBrowser.addTab;
     window.gBrowser.addTab = function (...args) {
-      let numPinned = 0 ;
-      for (let i = 0; i < this.tabs.length; i++) {
-        if (!this.tabs[i].pinned) {
-          continue;
-        }
-        numPinned += 1;
-      }
+      let numPinned = window.numPinnedtabs();
 
       let t = oldAddTab.bind(window.gBrowser)(...args);
       if (prefs.opentabstop) {
@@ -307,7 +358,7 @@ VerticalTabs.prototype = {
           aReferrerURI = params.referrerURI;
           aRelatedToCurrent = params.relatedToCurrent;
         }
-        if ((aRelatedToCurrent == null ? aReferrerURI : aRelatedToCurrent) &&
+        if ((aRelatedToCurrent === null ? aReferrerURI : aRelatedToCurrent) &&
         Services.prefs.getBoolPref('browser.tabs.insertRelatedAfterCurrent')) {
           let newTabPos = (this._lastRelatedTab || this.selectedTab)._tPos;
           this.moveTabTo(t, newTabPos);
@@ -421,6 +472,7 @@ VerticalTabs.prototype = {
       this.window.gBrowser.pintab = oldPinTab;
       this.window.gBrowser.addTab = oldAddTab;
       this.window.gBrowser.getTabsToTheEndFrom = oldGetTabsToTheEndFrom;
+      window.gBrowser.warnAboutClosingTabs = oldWarnAboutClosingTabs;
       if (this.document.getElementById('top-tabs-button')){
         this.document.getElementById('TabsToolbar').removeChild(this.document.getElementById('top-tabs-button'));
       }
@@ -952,6 +1004,17 @@ VerticalTabs.prototype = {
       tabs.firstChild.label = label;
       this.window.TabsInTitlebar.updateAppearance(true);
     });
+  },
+
+  numPinnedtabs: function () {
+    let numPinned = 0 ;
+    for (let i = 0; i < this.window.gBrowser.tabs.length; i++) {
+      if (!this.window.gBrowser.tabs[i].pinned) {
+        continue;
+      }
+      numPinned += 1;
+    }
+    return numPinned;
   },
 
   reverseTabs: function (arrowscrollbox) {
