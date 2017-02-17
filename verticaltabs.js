@@ -522,6 +522,7 @@ VerticalTabs.prototype = {
     let palette = top.palette;
     let urlbar = document.getElementById('urlbar');
     let url = urlbar.value;
+    let activeTab = window.gBrowser.mCurrentTab;
 
     // Save the position of the tabs in the toolbar, for later restoring.
     let toolbar = document.getElementById('TabsToolbar');
@@ -621,6 +622,7 @@ VerticalTabs.prototype = {
     tabs.firstChild.label = label;
     top.palette = palette;
     urlbar.value = url;
+    window.gBrowser.tabContainer.selectedIndex = tabs.getIndexOfItem(activeTab);
 
     // Move the tabs toolbar into the tab strip
     toolbar.setAttribute('collapsed', 'false'); // no more vanishing new tab toolbar
@@ -918,7 +920,10 @@ VerticalTabs.prototype = {
 
       //save the first tab's label to restore after unbinding/binding
       label = tabs.firstChild.label;
+      activeTab = window.gBrowser.mCurrentTab;
       tabs.removeAttribute('vertical');
+
+      window.gBrowser.tabContainer.selectedIndex = tabs.getIndexOfItem(activeTab);
 
       // Restore all individual tabs.
       for (let i = 0; i < tabs.childNodes.length; i++) {
