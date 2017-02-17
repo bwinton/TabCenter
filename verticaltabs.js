@@ -275,6 +275,19 @@ VerticalTabs.prototype = {
     let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
     let previous_close_message = close_next_tabs_message.getAttribute('label');
 
+
+    let oldGetTabsToTheEndFrom = window.gBrowser.getTabsToTheEndFrom;
+    window.gBrowser.getTabsToTheEndFrom = (aTab) => {
+      let tabsToEnd = [];
+      let tabs = window.gBrowser.visibleTabs;
+      for (let i = tabs.length - 1; tabs[i] !== aTab && i >= 0; --i) {
+        if (!tabs[i].pinned) {
+          tabsToEnd.push(tabs[i]);
+        }
+      }
+      return tabsToEnd.reverse();
+    };
+
     let oldAddTab = window.gBrowser.addTab;
     window.gBrowser.addTab = function (...args) {
       let numPinned = 0 ;
@@ -320,6 +333,8 @@ VerticalTabs.prototype = {
     let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
     if (arrowscrollbox && prefs.opentabstop) {
       window.VerticalTabs.reverseTabs(arrowscrollbox);
+    } else {
+      close_next_tabs_message.setAttribute('label', strings.closeTabsBelow);
     }
 
     let tabsProgressListener = {
@@ -405,7 +420,8 @@ VerticalTabs.prototype = {
       this.window.gBrowser.moveTabTo = oldMoveTabTo;
       this.window.gBrowser.pintab = oldPinTab;
       this.window.gBrowser.addTab = oldAddTab;
-      if (this.document.getElementById('top-tabs-button')) {
+      this.window.gBrowser.getTabsToTheEndFrom = oldGetTabsToTheEndFrom;
+      if (this.document.getElementById('top-tabs-button')){
         this.document.getElementById('TabsToolbar').removeChild(this.document.getElementById('top-tabs-button'));
       }
       close_next_tabs_message.setAttribute('label', previous_close_message);
