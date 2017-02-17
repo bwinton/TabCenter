@@ -144,10 +144,6 @@ VerticalTabs.prototype = {
     let oldMoveTabTo = window.gBrowser.moveTabTo;
     window.gBrowser.moveTabTo = function (aTab, aIndex) {
       let oldPosition = aTab._tPos;
-      if (oldPosition === aIndex) {
-        return;
-      }
-
       let numPinned = 0 ;
       for (let i = 0; i < this.tabs.length; i++) {
         if (!this.tabs[i].pinned) {
@@ -155,9 +151,13 @@ VerticalTabs.prototype = {
         }
         numPinned += 1;
       }
+      let reverse = tabs.getAttribute('opentabstop');
+
+      if (oldPosition === aIndex && (!reverse || numPinned === 0)) {
+        return;
+      }
 
       // Don't allow mixing pinned and unpinned tabs.
-      let reverse = tabs.getAttribute('opentabstop');
       if (aTab.pinned && !reverse) {
         aIndex = Math.min(aIndex, numPinned - 1);
       } else if (aTab.pinned && reverse) {
