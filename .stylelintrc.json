@@ -46,6 +46,7 @@
         "box-ordinal-group",
         "box-direction",
         "box-align",
+        "box-orient",
         "box-pack",
         "box-flex",
         "flex-direction",

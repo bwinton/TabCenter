@@ -23,9 +23,11 @@
 #main-window:not(:-moz-lwtheme) #verticaltabs-box #TabsToolbar {
   background: linear-gradient(hsl(0, 0%, 93%), hsl(0, 0%, 83%)) !important;
   background-origin: border-box !important;
-  box-shadow:
-    inset 0 1px 0 hsla(0, 0%, 100%, 0.4),
-    inset 0 -1px 0 0 hsla(0, 0%, 100%, 0.15) !important;
+  box-shadow: inset 0 1px 0 hsla(0, 0%, 100%, 0.4) !important;
+}
+
+#main-window:not(:-moz-lwtheme) #verticaltabs-box #TabsToolbar::after {
+  border-top: solid 1px hsla(0, 0%, 100%, 0.15);
 }
 
 #main-window:not(:-moz-lwtheme):-moz-window-inactive #verticaltabs-box #TabsToolbar {
@@ -39,8 +41,8 @@
 #verticaltabs-box #TabsToolbar > toolbarbutton {
   padding: 0 4px !important;
   border-radius: 3px !important;
-  transition-property: background, border-color;
   transition-duration: 250ms;
+  transition-property: background, border-color;
 }
 
 #verticaltabs-box #TabsToolbar > toolbarbutton:hover {
@@ -83,11 +85,11 @@
 }
 
 .tab-close-button {
-  border-radius: 2.5px !important;
+  border-radius: 3px !important;
 }
 
 #TabsToolbar #find-input {
-  border-radius: 2.5px !important;
+  border-radius: 3px !important;
   background-position: 6px center !important;
   /* Original style was a very visible zoom-in-or-out effect,
      but it's inconsistent with the navigation bar so let's

@@ -3,20 +3,26 @@
 
 /* Prefix custom properties that are global to the window */
 :root {
-  --vtabs-collapsed-width: 45px;
+  --vtabs-collapsed-width: 42px;
+  /* default pinned width */
   --vtabs-pinned-width: 260px;
+  /* default expanded (= not pinned, but hovered) width */
+  --vtabs-expanded-width: 260px;
 }
 
 /* Keep most custom properties local to the vertical tabs sidebar */
 #verticaltabs-box {
-  --toolbar-height: 39px;
+  --toolbar-height: 40px;
+  --tab-height-compact: 36px;
+  --tab-height-large: 56px;
+  /* resolve to a single tab height (helps with animations) */
+  --tab-height: var(--tab-height-compact);
   --toolbar-side-border: hsla(0, 0%, 0%, 0.15);
   --toolbar-bottom-border: hsla(0, 0%, 0%, 0.15);
   --toolbar-background: hsl(0, 0%, 99%);
 
   --tabs-side-border: hsla(0, 0%, 0%, 0.2);
   --tabs-background: hsl(0, 0%, 99%);
-  --tab-height: 36px;
   --tab-border: hsla(0, 0%, 0%, 0.06);
   --tab-background: transparent;
   --tab-pinned-background: hsla(0, 0%, 0%, 0.05);
@@ -333,7 +339,7 @@
 
 #main-window[F11-fullscreen] #sidebar-box,
 #main-window[F11-fullscreen] #sidebar-box[hidden="true"] ~ #appcontent {
-  width: (100vw - 1px) !important;
+  width: calc(100vw - 1px) !important;
   margin-left: 1px !important;
   transition: margin-left 500ms linear;
 }
@@ -353,7 +359,7 @@
 
 #verticaltabs-box[expanded="true"],
 #verticaltabs-box[search_expanded="true"] {
-  width: 260px;
+  width: var(--vtabs-expanded-width);
   box-shadow: 0 0 10px hsla(0, 0%, 0%, 0.1), inset 0 0 10px hsla(0, 0%, 0%, 0);
 }
 
@@ -389,15 +395,11 @@
 }
 
 #verticaltabs-box #TabsToolbar > #top-tabs-button {
-  width: 32px;
-  min-width: 32px;
-  margin-right: 0;
-  margin-left: 4px;
+  -moz-box-flex: 0;
   background-image: url("resource://tabcenter/skin/tc-top.svg") !important;
   background-position: center;
   background-repeat: no-repeat;
   background-size: 16px;
-  -moz-box-flex: 0;
 }
 
 #main-window[brighttext] #verticaltabs-box #TabsToolbar > #top-tabs-button {
@@ -406,60 +408,44 @@
 
 #verticaltabs-box #TabsToolbar > #pin-button {
   z-index: 1;
-  width: 32px;
-  min-width: 32px;
-  margin: 0 8px 0 4px !important;
+  -moz-box-flex: 0;
   background-image: url("resource://tabcenter/skin/glyph-sidebar-expand-16.svg") !important;
   background-position: center;
   background-repeat: no-repeat;
   background-size: 16px;
-  -moz-box-flex: 0;
   transition: opacity 125ms ease-in-out 300ms;
-}
-
-#TabsToolbar > #find-tabs-button {
-  width: 40px;
-  margin: 0 !important;
-  border: none !important;
-  display: -moz-box;
-}
-
-#TabsToolbar > #find-tabs-button > .toolbarbutton-text {
-  display: -moz-box;
-}
-
-#TabsToolbar > #find-tabs-button > .toolbarbutton-icon {
-  display: none;
 }
 
 #TabsToolbar #find-input {
   display: flex;
-  margin: 0 4px !important;
+  align-items: center;
+  flex: 20 0 auto;
+  /* trying to get 6px empty space on each side, given that buttons
+     have 2px margins except the new tab button (4px) */
+  margin: 0 4px 0 2px !important;
   padding: 0 !important;
-  height: 26px;
-  min-height: auto !important;
+  height: 24px;
+  min-height: 0 !important;
   min-width: 45px !important;
   border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
   border-radius: 1px !important;
   overflow: -moz-hidden-unscrollable;
-  align-items: center;
-  flex: 20 0 auto;
   line-height: 26px;
   transition-duration: 100ms;
   transition-property: border-color, box-shadow;
 }
 
 #TabsToolbar #find-input[focused="true"] {
-  width: calc(100% - 126px) !important;
+  width: calc(100% - 108px) !important;
   border: 1px solid Highlight !important;
   box-shadow: 0 0 0 1px Highlight inset;
 }
 
 #tabs-search {
   display: block;
-  min-width: 20px;
-  max-width: 20px;
-  -moz-image-region: rect(0, 20px, 20px, 0);
+  min-width: 18px;
+  max-width: 18px;
+  margin-left: 2px;
   list-style-image: url("resource://tabcenter/skin/find.svg");
 }
 
@@ -590,7 +576,8 @@
 }
 
 #filler-tab {
-  height: var(--tab-height);
+  /* always use the compact height */
+  height: var(--tab-height-compact);
   width: var(--vtabs-pinned-width);
 }
 
@@ -641,6 +628,7 @@
   text-shadow: none;
 }
 
+/* dead code? */
 #verticaltabs-box[expanded="false"] .tabbrowser-tab[pinned],
 #verticaltabs-box[search_expanded="false"] .tabbrowser-tab[pinned],
 #main-window[tabspinned="false"] .tabbrowser-tab[pinned] {
@@ -829,14 +817,24 @@
 /* Toolbar */
 
 #TabsToolbar {
+  /* A top/bottom border will take space and misalign the buttons -> use ::after (not box-shadow, already used for some effects) */
+  position: relative;
   border: none !important;
   border-right: 1px solid var(--toolbar-side-border) !important;
-  border-bottom: 1px solid var(--toolbar-bottom-border) !important;
   display: flex;
-  padding: 0 !important;
+  padding: 0 4px !important;
   align-items: center;
   -moz-appearance: none !important;
   flex: 0 0 var(--toolbar-height);
+}
+
+#TabsToolbar::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-bottom: 1px solid var(--toolbar-bottom-border);
+  content: "";
 }
 
 #TabsToolbar > toolbarbutton:not(#pin-button):not(#new-tab-button):not(#top-tabs-button),
@@ -847,8 +845,10 @@
 #verticaltabs-box #TabsToolbar > toolbarbutton {
   border: 1px solid transparent !important;
   box-sizing: border-box;
-  height: 26px !important;
-  min-height: 26px !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  min-width: 28px !important;
+  margin: 0 2px !important;
   -moz-appearance: none;
   background-image: none !important;
 }
@@ -863,13 +863,14 @@
   box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1) inset !important;
 }
 
-#TabsToolbar > #new-tab-button {
-  margin: 0 4px !important;
-  min-width: 30px !important;
+#verticaltabs-box #TabsToolbar > #new-tab-button {
+  flex: 0 20 auto !important;
   -moz-box-align: center !important;
   -moz-box-orient: horizontal !important;
   -moz-box-pack: end !important;
-  flex: 0 20 auto !important;
+  /* account for the icon's margin */
+  min-width: 30px !important;
+  margin-right: 4px !important;
 }
 
 #TabsToolbar #new-tab-button .toolbarbutton-icon {
@@ -879,6 +880,7 @@
 
 #TabsToolbar #new-tab-button .toolbarbutton-text {
   display: inline !important;
+  margin: 0 !important;
   padding: 0 !important;
 }
 
