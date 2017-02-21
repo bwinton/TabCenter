@@ -41,12 +41,16 @@
 #tour-button:active {
   background-color: #005bab;
 }
+#tour-details-label {
+  display: none;
+}
 
-#tour-dismiss-label {
+#tour-dismiss-label, #tour-details-label[visible] {
   margin-top: 8px;
   color: #0996f8;
   cursor: pointer;
   text-align: center;
+  display: inherit;
 }
 
 #tour-box {
