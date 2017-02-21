@@ -89,6 +89,10 @@ VerticalTabs.prototype = {
     let mainWindow = document.getElementById('main-window');
     let tabs = document.getElementById('tabbrowser-tabs');
 
+    if (mainWindow.getAttribute('toggledon') === '') {
+      mainWindow.setAttribute('toggledon', 'false');
+    }
+
     if (mainWindow.getAttribute('toggledon') === 'false') {
       let toolbar = document.getElementById('TabsToolbar');
       this.clearFind();
@@ -611,10 +615,6 @@ VerticalTabs.prototype = {
     if (mainWindow.getAttribute('tabspinned') === '') {
       mainWindow.setAttribute('tabspinned', 'true');
       leftbox.setAttribute('expanded', 'true');
-    }
-
-    if (mainWindow.getAttribute('toggledon') === '') {
-      mainWindow.setAttribute('toggledon', 'true');
     }
 
     browserbox.insertBefore(leftbox, contentbox);
