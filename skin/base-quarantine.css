@@ -1,0 +1,65 @@
+/**
+ * Styles that look very much like legacy stuff not matching
+ * the current XUL. Tentatively removing from base.css.
+ */
+
+/*** Group related styles ***/
+
+.tabbrowser-tab[verticaltabs-ingroup],
+.tabbrowser-tab[verticaltabs-ingroup]:hover {
+  padding-left: 16px !important;
+}
+
+.tabbrowser-tab[verticaltabs-group] .tab-close-button {
+  opacity: 1 !important;
+}
+
+.tabbrowser-tab[verticaltabs-group] .tab-text {
+  padding-left: 3px !important;
+}
+
+.verticaltabs-textbox {
+  margin: 0;
+}
+
+.verticaltabs-counter {
+  visibility: collapse;
+}
+
+.verticaltabs-droptarget {
+  background-color: Highlight !important;
+  color: HighlightText !important;
+}
+
+.verticaltabs-dropingroup {
+  margin-left: 10px !important;
+}
+
+.verticaltabs-droptonewgroup {
+  /* TODO need icon to symbolize tab group */
+  -moz-image-region: rect(0, 234px, 18px, 216px);
+  list-style-image: url("chrome://browser/skin/Toolbar.png");
+}
+
+/* Ensure the twisty image doesn't stretch. */
+.verticaltabs-twisty-container {
+  -moz-box-align: center;
+  -moz-box-pack: start;
+}
+
+.verticaltabs-twisty {
+  margin-right: 2px !important;
+  margin-left: 1px !important;
+  -moz-appearance: treetwisty !important;
+  cursor: default !important;
+}
+
+.tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-twisty {
+  -moz-appearance: treetwistyopen !important;
+}
+
+/*** Other ***/
+
+#customization-titlebar-visibility-button {
+  display: none;
+}

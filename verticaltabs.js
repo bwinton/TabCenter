@@ -390,6 +390,8 @@ VerticalTabs.prototype = {
         NewTabButtonParent.insertBefore(NewTabButton, NewTabButtonSibling);
       });
     }
+    // Class meant for borderless buttons; removing it simplifies styling conflicts
+    NewTabButton.classList.remove('toolbarbutton-1');
 
     contentbox.insertBefore(top, contentbox.firstChild);
 

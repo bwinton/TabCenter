@@ -2,6 +2,9 @@
  * macOS style adaptations
  */
 
+/*** Main containers ***/
+
+#verticaltabs-box,
 #appcontent {
   border-top: 0 !important;
 }
@@ -10,60 +13,27 @@
   --toolbar-height: 40px;
 }
 
-/* === INACTIVE WINDOW === */
-
 #verticaltabs-box:-moz-window-inactive {
   --toolbar-side-border: hsla(0, 0%, 0%, 0.1);
   --tabs-side-border: hsla(0, 0%, 0%, 0.15);
 }
 
-/* Those two icons are not picking up the inactive style for some reason */
-#verticaltabs-box:-moz-window-inactive #top-tabs-button .toolbarbutton-icon,
-#verticaltabs-box:-moz-window-inactive #pin-button .toolbarbutton-icon {
-  opacity: 0.5;
-}
-
-/* Override background for standard theme; match navigation bar */
-#main-window:not(:-moz-lwtheme) #verticaltabs-box #TabsToolbar {
+/* Gradient to match standard theme */
+#main-window:not(:-moz-lwtheme) #TabsToolbar {
   background: linear-gradient(hsl(0, 0%, 93%), hsl(0, 0%, 83%)) !important;
   background-origin: border-box !important;
   box-shadow: inset 0 1px 0 hsla(0, 0%, 100%, 0.4) !important;
 }
 
-#main-window:not(:-moz-lwtheme) #verticaltabs-box #TabsToolbar::after {
-  border-top: solid 1px hsla(0, 0%, 100%, 0.15);
-}
-
-#main-window:not(:-moz-lwtheme):-moz-window-inactive #verticaltabs-box #TabsToolbar {
+#main-window:not(:-moz-lwtheme):-moz-window-inactive #TabsToolbar {
   background: linear-gradient(hsl(0, 0%, 97%), hsl(0, 0%, 95%)) !important;
 }
 
-/* Compact Light: fix title bar separator */
-#main-window:not([inFullscreen])[style*="compact.header.png"]:-moz-lwtheme-darktext #nav-bar,
-#main-window:not([inFullscreen])[style*="compact.header.png"]:-moz-lwtheme-darktext #TabsToolbar {
-  box-shadow: 0 1px hsla(0, 0%, 0%, 0.15) inset !important;
+#main-window:not(:-moz-lwtheme) #TabsToolbar::after {
+  border-top: solid 1px hsla(0, 0%, 100%, 0.15);
 }
 
-#verticaltabs-box {
-  border-top: 0 !important;
-}
-
-#verticaltabs-box #TabsToolbar > toolbarbutton {
-  border-radius: 3px !important;
-  transition-duration: 250ms;
-  transition-property: background, border-color;
-}
-
-#verticaltabs-box #TabsToolbar > toolbarbutton:hover {
-  border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
-  background-color: hsla(0, 0%, 0%, 0.1) !important;
-}
-
-#verticaltabs-box #TabsToolbar > toolbarbutton:hover:active {
-  border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
-  background-color: hsla(0, 0%, 0%, 0.16) !important;
-  box-shadow: none !important;
-}
+/*** Toolbar items ***/
 
 #TabsToolbar #new-tab-button .toolbarbutton-icon {
   width: 16px !important;
@@ -71,33 +41,29 @@
   -moz-image-region: rect(0, 16px, 16px, 0) !important;
 }
 
-#main-window[tabspinned="true"] #verticaltabs-box #pin-button {
-  box-shadow: none !important;
-}
-
-.title-wrapper .tab-text {
-  font-weight: normal;
-}
-
-.tab-close-button {
-  border-radius: 3px !important;
+/* Those two icons are not picking up the inactive style for some reason */
+#top-tabs-button .toolbarbutton-icon:-moz-window-inactive,
+#pin-button .toolbarbutton-icon:-moz-window-inactive {
+  opacity: 0.5;
 }
 
 #TabsToolbar #find-input {
   border-radius: 3px !important;
-  background-position: 6px center !important;
   /* Original style was a very visible zoom-in-or-out effect,
      but it's inconsistent with the navigation bar so let's
      make it more subtle. */
   /*box-shadow: 0 0 0 30px hsla(210, 100%, 60%, 0) !important;*/
   /*transition-duration: 150ms !important;*/
-  box-shadow: 0 0 0 0 hsla(210, 100%, 60%, 0) !important;
+  box-shadow: 0 0 hsla(210, 100%, 60%, 0) !important;
 }
 
-#TabsToolbar #find-input[focused="true"] {
+/* Compact themes don't use a blue outline for nav bar text inputs */
+#main-window:not([style*="compact.header.png"]) #find-input[focused="true"] {
   border: 1px solid hsla(210, 100%, 60%, 0.6) !important;
   box-shadow: 0 0 0 2.5px hsla(210, 100%, 60%, 0.45) !important;
 }
+
+/*** Tabs Scrollbox ***/
 
 .tabbrowser-arrowscrollbox {
   height: calc(100vh - 62px);
@@ -115,4 +81,22 @@
 
 #main-window[devedition-theme][inFullscreen] .tabbrowser-arrowscrollbox {
   height: calc(100vh - 40px);
+}
+
+/*** Tab content ***/
+
+.title-wrapper .tab-text {
+  font-weight: normal;
+}
+
+.tab-close-button {
+  border-radius: 3px !important;
+}
+
+/*** Lightweight Themes ***/
+
+/* Compact light: harmonize title bar separator */
+#main-window:not([inFullscreen])[style*="compact.header.png"]:-moz-lwtheme-darktext #nav-bar,
+#main-window:not([inFullscreen])[style*="compact.header.png"]:-moz-lwtheme-darktext #TabsToolbar {
+  box-shadow: 0 1px hsla(0, 0%, 0%, 0.15) inset !important;
 }

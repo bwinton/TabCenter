@@ -20,7 +20,7 @@
  *    patterns, so not fit to show behind a translucent tab container.
  */
 
-/* === COMPACT THEMES === */
+/*** Compact themes ***/
 
 #main-window[style*="compact.header.png"] #verticaltabs-box {
   --toolbar-height: 32px;
@@ -28,6 +28,8 @@
   --toolbar-background: var(--chrome-secondary-background-color);
   --searchbar-text-color: var(--chrome-color);
   --searchbar-background: var(--url-and-searchbar-background-color);
+  --searchbar-border: var(--chrome-nav-bar-controls-border-color);
+  --searchbar-border-focus: var(--chrome-nav-bar-controls-border-color);
   --tabs-background: var(--chrome-background-color);
   --tab-text-color: var(--chrome-color);
   --tab-text-color-selected: var(--tab-selection-color);
@@ -52,7 +54,7 @@
   display: none;
 }
 
-/* === OTHER LIGHTWEIGHT THEMES === */
+/*** Other Lightweight Themes ***/
 
 #main-window:-moz-lwtheme-brighttext:not([style*="compact.header.png"]) #verticaltabs-box {
   --toolbar-side-border: hsla(0, 0%, 100%, 0.25);
@@ -91,23 +93,7 @@
   --toolbar-side-border: hsla(0, 0%, 100%, 0.3);
 }
 
-/* === INVERT ICON COLOR === */
-
-/* Light theme, dark icons, not compact */
-#main-window:-moz-lwtheme-darktext:not([style*="compact.header.png"]) #TabsToolbar .toolbarbutton-icon {
-  filter: brightness(0.6) drop-shadow(0 1px hsla(0, 0%, 100%, 0.4));
-}
-
-/* Light theme, light icons, not compact */
-#main-window:-moz-lwtheme-brighttext:not([style*="compact.header.png"]) #TabsToolbar .toolbarbutton-icon {
-  filter: brightness(1.85) drop-shadow(0 0.75px 0.25px hsla(0, 0%, 0%, 0.5));
-}
-
-/* Compact themes: white icons for the dark theme,
-   and for the light theme's selected tab. */
-#main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] #TabsToolbar .toolbarbutton-icon {
-  filter: brightness(1.85);
-}
+/*** Invert icon colors ***/
 
 #main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] #tabs-search {
   filter: brightness(2) opacity(0.6);

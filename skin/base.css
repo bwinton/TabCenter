@@ -1,17 +1,72 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 @namespace html url("http://www.w3.org/1999/xhtml");
 
-/* Prefix custom properties that are global to the window */
+/**
+ * Prefix custom properties that are global to the window
+ * For other variables controlling the vertical tabs only,
+ * see #verticaltabs-box
+ */
 :root {
   --vtabs-collapsed-width: 42px;
-  /* default pinned width */
+  /* default pinned width, gets overriden in JS */
   --vtabs-pinned-width: 260px;
   /* default expanded (= not pinned, but hovered) width */
   --vtabs-expanded-width: 260px;
 }
 
-/* Keep most custom properties local to the vertical tabs sidebar */
+/*** Parents and sibligs of vertical tabs container ***/
+
+#browser {
+  position: relative;
+  height: 100vh;
+}
+
+#appcontent {
+  top: 0;
+  border-top: 1px solid rgb(160, 160, 160);
+}
+
+#sidebar-box,
+#sidebar-box[hidden="true"] ~ #appcontent {
+  margin-left: var(--vtabs-collapsed-width);
+}
+
+#main-window[tabspinned="true"] #sidebar-box,
+#main-window[tabspinned="true"] #sidebar-box[hidden="true"] ~ #appcontent {
+  margin-left: 0;
+}
+
+#main-window[chromehidden*="toolbar"] #appcontent,
+#main-window[chromehidden*="toolbar"] #sidebar-box[hidden="true"] ~ #appcontent {
+  margin-left: 0;
+}
+
+#main-window[inFullscreen][inDOMFullscreen] #appcontent {
+  margin-left: 0 !important;
+}
+
+#navigator-toolbox,
+.browserContainer {
+  width: calc(100vw - var(--vtabs-collapsed-width));
+}
+
+#main-window[tabspinned="true"] #verticaltabs-box + #appcontent #navigator-toolbox,
+#main-window[tabspinned="true"] #verticaltabs-box + #appcontent .browserContainer {
+  width: calc(100vw - var(--vtabs-pinned-width));
+}
+
+#main-window[inFullscreen][inDOMFullscreen] .browserContainer {
+  width: 100vw !important;
+}
+
+#main-window[inFullscreen][inDOMFullscreen] .browserContainer {
+  margin-top: -1px;
+}
+
+/*** Main container and variables ***/
+
 #verticaltabs-box {
+  /* Keep most custom properties local to the vertical tabs sidebar */
   --toolbar-height: 40px;
   --tab-height-compact: 36px;
   --tab-height-large: 56px;
@@ -22,6 +77,8 @@
   --toolbar-background: hsl(0, 0%, 97%);
   --searchbar-text-color: #000;
   --searchbar-background: #fff;
+  --searchbar-border: hsla(0, 0%, 0%, 0.16);
+  --searchbar-border-focus: Highlight;
 
   --tabs-side-border: hsla(0, 0%, 0%, 0.2);
   --tabs-background: hsl(0, 0%, 99%);
@@ -46,20 +103,25 @@
   width: var(--vtabs-collapsed-width);
   height: 100vh;
   overflow-x: hidden;
-  border-top: 1px solid var(--toolbar-side-border) !important;
   background: transparent !important;
   background-origin: border-box !important;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0), inset 0 0 10px hsla(0, 0%, 0%, 0.2);
   transition: box-shadow 150ms ease-out, width 150ms ease-out;
 }
 
-/* Bigger tabs is almost as easy as increasing the var height */
-
-#verticaltabs-box .tabbrowser-tabs.large-tabs {
+/* Bigger tabs is almost as easy as increasing the var height
+   (content will need some tweaking too) */
+#verticaltabs-box .large-tabs {
   --tab-height: 56px;
 }
 
-/* Scroll box */
+/* === SCROLL BOX === */
+
+.tabbrowser-arrowscrollbox {
+  flex: 1 0;
+  height: calc(100vh - var(--));
+}
+
 .tabbrowser-arrowscrollbox > scrollbox {
   overflow-x: hidden !important;
   overflow-y: hidden !important;
@@ -77,26 +139,6 @@
 .tabbrowser-arrowscrollbox .scrollbutton-up,
 .tabbrowser-arrowscrollbox .scrollbutton-down {
   visibility: collapse !important;
-}
-
-/* Hide the original tab toolbar buttons. */
-.tabs-newtab-button {
-  visibility: collapse;
-}
-
-/* Undo a bunch of stuff for app tabs */
-.tabbrowser-tabs[positionpinnedtabs] > .tabbrowser-tab[pinned] {
-  position: relative !important;
-}
-
-.tab-label[pinned] {
-  width: auto !important;
-}
-
-/* Ensure the twisty image doesn't stretch. */
-.verticaltabs-twisty-container {
-  -moz-box-align: center;
-  -moz-box-pack: start;
 }
 
 .verticaltabs-collapsed {
@@ -225,19 +267,10 @@
   content: "";
 }
 
-.tabbrowser-arrowscrollbox {
-  flex: 1 0;
-}
-
 #tabbrowser-tabs::before,
 #tabbrowser-tabs + hbox,
 #tabbrowser-tabs > hbox {
   display: none !important;
-}
-
-#browser {
-  position: relative;
-  height: 100vh;
 }
 
 #main-window[printPreview] #appcontent {
@@ -340,7 +373,7 @@
   height: 24px;
   min-height: 0 !important;
   min-width: 45px !important;
-  border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
+  border: 1px solid var(--searchbar-border) !important;
   border-radius: 1px !important;
   overflow: -moz-hidden-unscrollable;
   background-color: var(--searchbar-background);
@@ -352,7 +385,7 @@
 
 #TabsToolbar #find-input[focused="true"] {
   width: calc(100% - 108px) !important;
-  border: 1px solid Highlight !important;
+  border: 1px solid var(--searchbar-border-focus) !important;
   box-shadow: 0 0 0 1px Highlight inset;
 }
 
@@ -396,53 +429,11 @@
   opacity: 0;
 }
 
-#appcontent {
-  top: 0;
-  border-top: 1px solid rgb(160, 160, 160);
-}
-
-#sidebar-box,
-#sidebar-box[hidden="true"] ~ #appcontent {
-  margin-left: var(--vtabs-collapsed-width);
-}
-
-#main-window[tabspinned="true"] #sidebar-box,
-#main-window[tabspinned="true"] #sidebar-box[hidden="true"] ~ #appcontent {
-  margin-left: 0;
-}
-
-#main-window[chromehidden*="toolbar"] #appcontent,
-#main-window[chromehidden*="toolbar"] #sidebar-box[hidden="true"] ~ #appcontent {
-  margin-left: 0;
-}
-
-#main-window[inFullscreen][inDOMFullscreen] #appcontent {
-  margin-left: 0 !important;
-}
-
-#navigator-toolbox,
-.browserContainer {
-  width: calc(100vw - var(--vtabs-collapsed-width));
-}
-
-#main-window[tabspinned="true"] #verticaltabs-box + #appcontent #navigator-toolbox,
-#main-window[tabspinned="true"] #verticaltabs-box + #appcontent .browserContainer {
-  width: calc(100vw - var(--vtabs-pinned-width));
-}
-
-#main-window[inFullscreen][inDOMFullscreen] .browserContainer {
-  width: 100vw !important;
-}
-
-#main-window[inFullscreen][inDOMFullscreen] .browserContainer {
-  margin-top: -1px;
-}
-
-.title-wrapper {
+.tabbrowser-tab .title-wrapper {
   padding: 0 !important;
 }
 
-.title-wrapper .tab-text {
+.tabbrowser-tab .tab-text {
   margin: 0 !important;
   margin-right: 8px !important;
 }
@@ -451,7 +442,7 @@
   margin-right: 0 !important;
 }
 
-.title-wrapper .address-label {
+.tabbrowser-tab .address-label {
   display: none;
   opacity: 0.6;
 }
@@ -531,16 +522,6 @@
   background-color: var(--tab-selected-background) !important;
   color: var(--tab-text-color-selected) !important;
   text-shadow: none;
-}
-
-/* dead code? */
-#verticaltabs-box[expanded="false"] .tabbrowser-tab[pinned],
-#verticaltabs-box[search_expanded="false"] .tabbrowser-tab[pinned],
-#main-window[tabspinned="false"] .tabbrowser-tab[pinned] {
-  background-position: calc(100% + 12px) center !important;
-  transition-delay: 350ms !important;
-  transition-duration: 0ms !important;
-  transition-property: background-position !important;
 }
 
 .tabbrowser-tab:not([selected="true"]):hover {
@@ -690,7 +671,7 @@
   min-height: 20px !important;
   max-width: 20px !important;
   max-height: 20px !important;
-  margin-left: 8px !important;
+  margin-left: 10px !important;
   margin-right: 6px !important;
   padding: 2px;
   opacity: 1 !important;
@@ -742,18 +723,19 @@
   display: none;
 }
 
-/* Specificity war go! In addition to !important, we need a selector
-   that beats: #TabsToolbar .toolbarbutton-1:hover */
-#TabsToolbar#TabsToolbar > toolbarbutton {
-  border: 1px solid transparent !important;
+#TabsToolbar > toolbarbutton {
+  border: 1px solid transparent;
   box-sizing: border-box;
-  height: 24px !important;
-  min-height: 24px !important;
-  min-width: 28px !important;
-  margin: 0 2px !important;
-  padding: 0 4px !important;
+  height: 24px;
+  min-height: 24px;
+  min-width: 28px;
+  margin: 0 2px;
+  padding: 0 4px;
+  border-radius: 3px;
   -moz-appearance: none;
-  background-image: none !important;
+  background-image: none;
+  transition-duration: 250ms;
+  transition-property: background, border-color;
 }
 
 /* We use 50% gray icons (#808080) with a filter to get any grayscale
@@ -765,29 +747,51 @@
    brightness(2)    = #ffffff
 */
 #TabsToolbar .toolbarbutton-icon {
-  filter: brightness(0.6);
+  filter: brightness(0.6) drop-shadow(0 1px hsla(0, 0%, 100%, 0.25));
 }
 
-#TabsToolbar#TabsToolbar #side-tabs-button {
-  outline: solid 2px lime;
+#TabsToolbar toolbarbutton:hover:active .toolbarbutton-icon {
+  filter: brightness(0.4) drop-shadow(0 1px hsla(0, 0%, 100%, 0.25));
 }
 
-#TabsToolbar#TabsToolbar > toolbarbutton:hover {
+#TabsToolbar:-moz-lwtheme-brighttext .toolbarbutton-icon {
+  filter: brightness(1.85) drop-shadow(0 0.75px 0.5px hsla(0, 0%, 0%, 0.6));
+}
+
+#TabsToolbar:-moz-lwtheme-brighttext toolbarbutton:hover:active .toolbarbutton-icon {
+  filter: brightness(1.5) drop-shadow(0 0.75px 0.5px hsla(0, 0%, 0%, 0.6));
+}
+
+/* Old style, replaced by picking up the --toolbarbutton-hover|active styles */
+/*
+#TabsToolbar > toolbarbutton:hover {
   border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
   background-color: hsla(0, 0%, 0%, 0.1) !important;
 }
-
-#TabsToolbar#TabsToolbar > toolbarbutton:hover:active {
+#TabsToolbar > toolbarbutton:hover:active {
   background-color: hsla(0, 0%, 0%, 0.16) !important;
   box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1) inset !important;
 }
+*/
+#TabsToolbar > toolbarbutton:hover {
+  border-color: var(--toolbarbutton-hover-bordercolor);
+  background: var(--toolbarbutton-hover-background);
+  box-shadow: var(--toolbarbutton-hover-boxshadow);
+}
 
-#TabsToolbar#TabsToolbar > #new-tab-button {
-  flex: 0 20 auto !important;
-  -moz-box-align: center !important;
-  -moz-box-orient: horizontal !important;
-  -moz-box-pack: end !important;
+#TabsToolbar > toolbarbutton:hover:active,
+#TabsToolbar > toolbarbutton[open="true"] {
+  border-color: var(--toolbarbutton-active-bordercolor);
+  background: var(--toolbarbutton-active-background);
+  box-shadow: var(--toolbarbutton-active-boxshadow);
+  transition-duration: 10ms;
+}
+
+#TabsToolbar > #new-tab-button {
+  flex: 0 20 auto;
+  justify-content: flex-start;
   /* account for the icon's margin */
+  width: auto !important;
   min-width: 30px !important;
   margin-right: 4px !important;
   list-style-image: url("resource://tabcenter/skin/glyph-new-16.svg") !important;
@@ -799,67 +803,13 @@
 }
 
 #TabsToolbar #new-tab-button .toolbarbutton-text {
-  display: inline !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+  display: inline-block !important;
+  margin: 0 1px !important;
   padding: 0 !important;
 }
 
 #TabsToolbar #new-tab-spacer {
   flex: 20 0 auto;
-}
-
-/*** Group related styles ***/
-
-.tabbrowser-tab[verticaltabs-ingroup],
-.tabbrowser-tab[verticaltabs-ingroup]:hover {
-  padding-left: 16px !important;
-}
-
-.tabbrowser-tab[verticaltabs-group] .tab-close-button {
-  opacity: 1 !important;
-}
-
-.tabbrowser-tab[verticaltabs-group] .tab-text {
-  padding-left: 3px !important;
-}
-
-.verticaltabs-textbox {
-  margin: 0;
-}
-
-.verticaltabs-counter {
-  visibility: collapse;
-}
-
-.verticaltabs-droptarget {
-  background-color: Highlight !important;
-  color: HighlightText !important;
-}
-
-.verticaltabs-dropingroup {
-  margin-left: 10px !important;
-}
-
-.verticaltabs-droptonewgroup {
-  /* TODO need icon to symbolize tab group */
-  -moz-image-region: rect(0, 234px, 18px, 216px);
-  list-style-image: url("chrome://browser/skin/Toolbar.png");
-}
-
-.verticaltabs-twisty {
-  margin-right: 2px !important;
-  margin-left: 1px !important;
-  -moz-appearance: treetwisty !important;
-  cursor: default !important;
-}
-
-.tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-twisty {
-  -moz-appearance: treetwistyopen !important;
-}
-
-#customization-titlebar-visibility-button {
-  display: none;
 }
 
 .tab-content[pinned][titlechanged]:not([visuallyselected="true"]) {
@@ -874,9 +824,9 @@
   background-size: 16px !important;
 }
 
-/* opentabstop option */
+/*** opentabstop option ***/
 
-#tabbrowser-tabs[opentabstop] .tabbrowser-arrowscrollbox > .arrowscrollbox-scrollbox .scrollbox-innerbox {
+#tabbrowser-tabs[opentabstop] .tabbrowser-arrowscrollbox .scrollbox-innerbox {
   -moz-box-direction: reverse;
   -moz-box-pack: end;
 }
