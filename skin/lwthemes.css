@@ -125,13 +125,13 @@
 #main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tab-close-button,
 #main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tab-close-button[visuallyselected="true"] {
   background-image: url("resource://tabcenter/skin/glyph-close-inverted-16.svg") !important;
-  background-color: hsla(0, 0%, 100%, 0.08) !important;
+  background-color: hsla(0, 0%, 100%, 0.1) !important;
 }
 #main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tab-close-button:hover,
 #main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tab-close-button[visuallyselected="true"]:hover {
   background-color: hsla(0, 0%, 100%, 0.16) !important;
 }
-#main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tab-close-button:active,
-#main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tab-close-button[visuallyselected="true"]:active {
-  background-color: hsla(0, 0%, 100%, 0.24) !important;
+#main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tab-close-button:hover:active,
+#main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tab-close-button[visuallyselected="true"]:hover:active {
+  background-color: hsla(0, 0%, 100%, 0.2) !important;
 }
