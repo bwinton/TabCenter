@@ -694,10 +694,10 @@ VerticalTabs.prototype = {
       ss.setWindowValue(window, 'TCtabspinned', newstate);
       if (newstate === 'true') {
         window.VerticalTabs.sendPing('tab_center_pinned', window);
-        pin_button.setAttribute('tooltiptext', `${strings.sidebarShrink}`);
+        pin_button.setAttribute('tooltiptext', strings.sidebarShrink);
       } else {
         window.VerticalTabs.sendPing('tab_center_unpinned', window);
-        pin_button.setAttribute('tooltiptext', `${strings.sidebarOpen}`);
+        pin_button.setAttribute('tooltiptext', strings.sidebarOpen);
         document.getElementById('verticaltabs-box').removeAttribute('search_expanded');
       }
       window.VerticalTabs.resizeFindInput();
