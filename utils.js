@@ -84,9 +84,9 @@ function sendPing(key, window, details) {
     tab_center_show_thumbnails: prefs.prefs.largetabs,
     tab_center_window_id: window.VerticalTabsWindowId,
     tab_center_currently_toggled_on: window.document.getElementById('main-window').getAttribute('toggledon') === 'true',
-    tour_completed: !!get('extensions.tabcentertest1@mozilla.com.tourComplete')
+    tour_completed: !!get('extensions.tabcentertest1@mozilla.com.tourComplete'),
+    event_type: key
   };
-  payload[key] = 1;
   Object.assign(payload, details);
 
   let ping = JSON.stringify(payload);
