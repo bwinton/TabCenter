@@ -106,19 +106,32 @@
   filter: brightness(1.85) drop-shadow(0 0.75px 0.25px hsla(0, 0%, 0%, 0.5));
 }
 
-/* Compact dark */
+/* Compact themes: white icons for the dark theme,
+   and for the light theme's selected tab. */
 #main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] #TabsToolbar .toolbarbutton-icon {
   filter: brightness(1.85);
-}
-#main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tabbrowser-tab .pinned-icon {
-  filter: brightness(2) opacity(0.6);
 }
 
 #main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] #tabs-search {
   filter: brightness(2) opacity(0.6);
 }
 
+#main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tabbrowser-tab .pinned-icon,
+#main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tabbrowser-tab[visuallyselected="true"] .pinned-icon {
+  filter: brightness(2) opacity(0.6);
+}
+
 /* Can't filter this one */
-#main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tab-close-button .toolbarbutton-icon {
+#main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tab-close-button,
+#main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tab-close-button[visuallyselected="true"] {
   background-image: url("resource://tabcenter/skin/glyph-close-inverted-16.svg") !important;
+  background-color: hsla(0, 0%, 100%, 0.08) !important;
+}
+#main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tab-close-button:hover,
+#main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tab-close-button[visuallyselected="true"]:hover {
+  background-color: hsla(0, 0%, 100%, 0.16) !important;
+}
+#main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tab-close-button:active,
+#main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tab-close-button[visuallyselected="true"]:active {
+  background-color: hsla(0, 0%, 100%, 0.24) !important;
 }
