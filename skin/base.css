@@ -343,11 +343,11 @@
   border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
   border-radius: 1px !important;
   overflow: -moz-hidden-unscrollable;
+  background-color: var(--searchbar-background);
+  color: var(--searchbar-text-color);
   line-height: 26px;
   transition-duration: 100ms;
   transition-property: border-color, box-shadow;
-  color: var(--searchbar-text-color);
-  background-color: var(--searchbar-background);
 }
 
 #TabsToolbar #find-input[focused="true"] {
@@ -361,8 +361,8 @@
   min-width: 18px;
   max-width: 18px;
   margin-left: 2px;
-  list-style-image: url("resource://tabcenter/skin/glyph-find-18.svg");
   filter: brightness(0.8);
+  list-style-image: url("resource://tabcenter/skin/glyph-find-18.svg");
 }
 
 #find-input html|*.textbox-input {
@@ -800,7 +800,8 @@
 
 #TabsToolbar #new-tab-button .toolbarbutton-text {
   display: inline !important;
-  margin: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   padding: 0 !important;
 }
 

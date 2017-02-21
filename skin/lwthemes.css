@@ -2,24 +2,25 @@
  * Adaptations for lightweight and compact themes
  *
  * There are 2 situations:
- * - theme can be dark or light, which we can detect with window[lwthemetextcolor="dark|bright"]
- *   or with :-moz-lwtheme-darktext and :-moz-lwtheme-brighttext
- * - theme can be a lightweight theme with a background image, or a compact theme; we can only
- *   detect the compact themes with window[style*="compact.header.png"], as far as I know.
- * All lightweight/compact themes match the :-moz-lwtheme pseudo-class (on any element), but
- * that's too imprecise to use.
+ * - theme can be dark or light, which we can detect with
+ *   window[lwthemetextcolor="dark|bright"] or with
+ *   :-moz-lwtheme-darktext and :-moz-lwtheme-brighttext
+ * - theme can be a lightweight theme with a background image,
+ *   or a compact theme; we can only detect the compact themes with
+ *   window[style*="compact.header.png"], as far as I know.
+ * All lightweight/compact themes match the :-moz-lwtheme pseudo-class
+ * (on any element), but that's too imprecise to use.
  *
  * I suggest these styles:
  * 1. Compact themes: adapt the toolbar's height to match the navbar
- * 2. Toolbar colors: use a translucent white for non-compact lightweight themes, compact
- *    theme colors otherwise.
- * 3. Tabs: keep them light except for the "compact dark" theme. (Note: lightweight theme
- *    backgrounds are 200px high, and not patterns, so not fit to show behind a translucent
- *    tab container.
+ * 2. Toolbar colors: use a translucent white for non-compact
+ *    lightweight themes, compact theme colors otherwise.
+ * 3. Tabs: keep them light except for the "compact dark" theme.
+ *    (Note: lightweight theme backgrounds are 200px high, and not
+ *    patterns, so not fit to show behind a translucent tab container.
  */
 
-/* Compact themes
- ---------------- */
+/* === COMPACT THEMES === */
 
 #main-window[style*="compact.header.png"] #verticaltabs-box {
   --toolbar-height: 32px;
@@ -40,7 +41,7 @@
 #main-window[style*="compact.header.png"]:-moz-lwtheme-brighttext #verticaltabs-box {
   --tab-hover-background: hsla(0, 0%, 100%, 0.08);
   --tab-pinned-background: hsla(0, 0%, 100%, 0.05);
-  --toolbar-bottom-border: #24282B;
+  --toolbar-bottom-border: #24282b;
 }
 
 #main-window[style*="compact.header.png"] #TabsToolbar toolbarbutton {
@@ -51,10 +52,7 @@
   display: none;
 }
 
-
-/* Other lightweight themes
- -------------------------- */
-
+/* === OTHER LIGHTWEIGHT THEMES === */
 
 #main-window:-moz-lwtheme-brighttext:not([style*="compact.header.png"]) #verticaltabs-box {
   --toolbar-side-border: hsla(0, 0%, 100%, 0.25);
@@ -88,13 +86,12 @@
     rgba(255, 255, 255, 0.4) 0 1px 0 0 inset,
     rgba(255, 255, 255, 0.15) 0 -1px 0 0 inset;
 }
+
 #main-window[tabspinned="true"]:-moz-lwtheme-brighttext:not([style*="compact.header.png"]) #verticaltabs-box {
   --toolbar-side-border: hsla(0, 0%, 100%, 0.3);
 }
 
-
-/* Invert icon color
- ------------------- */
+/* === INVERT ICON COLOR === */
 
 /* Light theme, dark icons, not compact */
 #main-window:-moz-lwtheme-darktext:not([style*="compact.header.png"]) #TabsToolbar .toolbarbutton-icon {
@@ -124,13 +121,15 @@
 /* Can't filter this one */
 #main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tab-close-button,
 #main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tab-close-button[visuallyselected="true"] {
-  background-image: url("resource://tabcenter/skin/glyph-close-inverted-16.svg") !important;
   background-color: hsla(0, 0%, 100%, 0.1) !important;
+  background-image: url("resource://tabcenter/skin/glyph-close-inverted-16.svg") !important;
 }
+
 #main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tab-close-button:hover,
 #main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tab-close-button[visuallyselected="true"]:hover {
   background-color: hsla(0, 0%, 100%, 0.16) !important;
 }
+
 #main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tab-close-button:hover:active,
 #main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tab-close-button[visuallyselected="true"]:hover:active {
   background-color: hsla(0, 0%, 100%, 0.2) !important;
