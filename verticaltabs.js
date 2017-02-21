@@ -347,7 +347,7 @@ VerticalTabs.prototype = {
 
     let oldAddTab = window.gBrowser.addTab;
     window.gBrowser.addTab = function (...args) {
-      let numPinned = window.numPinnedtabs();
+      let numPinned = window.VerticalTabs.numPinnedtabs();
 
       let t = oldAddTab.bind(window.gBrowser)(...args);
       if (prefs.opentabstop) {
