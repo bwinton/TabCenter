@@ -719,6 +719,7 @@
   display: flex;
   flex: 0 0 var(--toolbar-height);
   align-items: center;
+  margin: 0 !important;
   /* A top/bottom border will take space and misalign the buttons -> use ::after (not box-shadow, already used for some effects) */
   border: none !important;
   border-right: 1px solid var(--toolbar-side-border) !important;

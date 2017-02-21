@@ -34,13 +34,13 @@
 }
 
 #main-window[style*="compact.header.png"]:-moz-lwtheme-darktext #verticaltabs-box {
-  --toolbar-bottom-border: #ccc;
+  --toolbar-bottom-border: #c8c8c8;
 }
 
 #main-window[style*="compact.header.png"]:-moz-lwtheme-brighttext #verticaltabs-box {
   --tab-hover-background: hsla(0, 0%, 100%, 0.08);
   --tab-pinned-background: hsla(0, 0%, 100%, 0.05);
-  --toolbar-bottom-border: #202428;
+  --toolbar-bottom-border: #24282B;
 }
 
 #main-window[style*="compact.header.png"] #TabsToolbar toolbarbutton {
