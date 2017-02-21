@@ -90,7 +90,7 @@ VerticalTabs.prototype = {
     let tabs = document.getElementById('tabbrowser-tabs');
 
     if (mainWindow.getAttribute('toggledon') === '') {
-      mainWindow.setAttribute('toggledon', 'true');
+      mainWindow.setAttribute('toggledon', 'false');
     }
 
     if (mainWindow.getAttribute('toggledon') !== 'true') {
