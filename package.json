@@ -103,7 +103,7 @@
     "test": "npm run locales && jpm run -b nightly -p Testing",
     "test-nocopy": "npm run locales && jpm run -b nightly -p Testing --no-copy",
     "lint": "eslint . --ext=js,jsm vertical-tabbrowser.xml && stylelint \"**/*.css\"",
-    "locales": "./genlocales"
+    "locales": "node genlocales"
   },
   "permissions": {
     "multiprocess": true,

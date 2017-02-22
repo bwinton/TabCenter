@@ -46,29 +46,6 @@
           let low = 0;
           let high = elements.length - 1;
 
-
-          //TC: pinned tabs stay at the top when reversed but the index does not change
-          //this is a work-around for that
-          if (this._isRTLScrollbox){
-            elements.reverse();
-            elements.every(function (tab, index){
-              if (tab.pinned === true){
-                low = index;
-              }
-              return !tab.pinned;
-            });
-
-            if (elements[high].pinned){
-              elements.every(function (tab, index){
-                if (tab.pinned === true){
-                  return false;
-                }
-                high = index;
-                return true;
-              });
-            }
-          }
-
           if (aX < elements[low].getBoundingClientRect()[start] ||
           aX > elements[high].getBoundingClientRect()[end]) {
             return null;
@@ -240,21 +217,35 @@
           draggedTab._dragData.animLastScreenPos = screenPos;
 
           let reverse = this.getAttribute('opentabstop') === 'true';
-          //if (window.getComputedStyle(this).direction === 'rtl') reverse=!reverse;
 
           let pinned = draggedTab.pinned;
-          let numPinned = this.tabbrowser._numPinnedTabs;
-          let tabs = this.tabbrowser.visibleTabs
-                                    .slice(pinned ? 0 : numPinned,
-                                           pinned ? numPinned : undefined);
-          if (reverse) {
+
+          let tabs = this.tabbrowser.visibleTabs;
+          let numPinned = 0 ;
+          for (let i = 0; i < tabs.length; i++) {
+            if (!tabs[i].pinned){
+              continue;
+            }
+            numPinned += 1;
+          }
+
+          if (reverse){
+            tabs = tabs.slice(pinned ? (tabs.length - numPinned) : 0, pinned ? undefined : (tabs.length - numPinned));
+          } else {
+            tabs = tabs.slice(pinned ? 0 : numPinned, pinned ? numPinned : undefined);
+          }
+
+          // only reverse tabs once, otherwise it will flicker
+          if (reverse && !tabs.reversed) {
+            tabs.reversed = true;
             tabs.reverse();
+          } if (!reverse) {
+            tabs.reversed = false;
           }
 
           let tabSize = draggedTab.getBoundingClientRect().height;
 
           // Move the dragged tab based on the mouse position.
-
           let leftTab = tabs[0];
           let rightTab = tabs[tabs.length - 1];
           let tabScreenPos = draggedTab.boxObject.screenY;

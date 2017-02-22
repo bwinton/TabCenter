@@ -35,21 +35,25 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/* global require, exports:false, PageThumbs:false, CustomizableUI:false */
+/* global require, exports:false, PageThumbs:false, CustomizableUI:false PluralForm:false*/
 'use strict';
 
 const {Cc, Ci, Cu} = require('chrome');
 const {platform} = require('sdk/system');
 const {prefs} = require('sdk/simple-prefs');
+const {get, set} = require('sdk/preferences/service');
+
 const {sendPing, setDefaultPrefs, removeStylesheets, installStylesheets} = require('./utils');
 const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
                                createInstance(Ci.nsIURIFixup);
 const strings = require('./get-locale-strings').getLocaleStrings();
 const ss = Cc['@mozilla.org/browser/sessionstore;1'].getService(Ci.nsISessionStore);
+const utils = require('./utils');
 
 Cu.import('resource://gre/modules/PageThumbs.jsm');
 Cu.import('resource:///modules/CustomizableUI.jsm');
 Cu.import('resource://gre/modules/Services.jsm');
+Cu.import('resource://gre/modules/PluralForm.jsm');
 
 const NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
 const TAB_DROP_TYPE = 'application/x-moz-tabbrowser-tab';
@@ -89,7 +93,7 @@ VerticalTabs.prototype = {
       let toolbar = document.getElementById('TabsToolbar');
       this.clearFind();
       tabs.removeAttribute('mouseInside');
-      let sidetabsbutton = this.createElement('toolbarbutton', {
+      let sidetabsbutton = utils.createElement(document, 'toolbarbutton', {
         'id': 'side-tabs-button',
         'label': strings.sideLabel,
         'tooltiptext': strings.sideTooltip,
@@ -113,8 +117,9 @@ VerticalTabs.prototype = {
         if (e.which !== 1) {
           return;
         }
-        this.unload();
         mainWindow.setAttribute('toggledon', 'true');
+        this.unload();
+        set('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp', Date.now().toString());
         ss.setWindowValue(window, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
         this.init();
         window.VerticalTabs.sendPing('tab_center_toggled_on', window);
@@ -137,6 +142,110 @@ VerticalTabs.prototype = {
     this.inferFromText = window.ToolbarIconColor.inferFromText;
     this.receiveMessage = window.gBrowser.receiveMessage;
 
+    let oldMoveTabTo = window.gBrowser.moveTabTo;
+    window.gBrowser.moveTabTo = function (aTab, aIndex) {
+      let oldPosition = aTab._tPos;
+      let numPinned = window.VerticalTabs.numPinnedtabs();
+      let reverse = tabs.getAttribute('opentabstop');
+
+      if (oldPosition === aIndex && (!reverse || numPinned === 0)) {
+        return;
+      }
+
+      // Don't allow mixing pinned and unpinned tabs.
+      if (aTab.pinned && !reverse) {
+        aIndex = Math.min(aIndex, numPinned - 1);
+      } else if (aTab.pinned && reverse) {
+        aIndex = Math.max(aIndex, this.tabs.length - numPinned);
+      } else if (!aTab.pinned && !reverse) {
+        aIndex = Math.max(aIndex, numPinned);
+      } else {
+        aIndex = Math.min(aIndex, this.tabs.length - numPinned - 1);
+      }
+
+      this._lastRelatedTab = null;
+
+      let wasFocused = (document.activeElement === this.mCurrentTab);
+
+      aIndex = aIndex < aTab._tPos ? aIndex : aIndex + 1;
+
+      // invalidate cache
+      this._visibleTabs = null;
+
+      // use .item() instead of [] because dragging to the end of the strip goes out of
+      // bounds: .item() returns null (so it acts like appendChild), but [] throws
+      this.tabContainer.insertBefore(aTab, this.tabs.item(aIndex));
+
+      for (let i = 0; i < this.tabs.length; i++) {
+        this.tabs[i]._tPos = i;
+        this.tabs[i]._selected = false;
+      }
+
+      // If we're in the midst of an async tab switch while calling
+      // moveTabTo, we can get into a case where _visuallySelected
+      // is set to true on two different tabs.
+      //
+      // What we want to do in moveTabTo is to remove logical selection
+      // from all tabs, and then re-add logical selection to mCurrentTab
+      // (and visual selection as well if we're not running with e10s, which
+      // setting _selected will do automatically).
+      //
+      // If we're running with e10s, then the visual selection will not
+      // be changed, which is fine, since if we weren't in the midst of a
+      // tab switch, the previously visually selected tab should still be
+      // correct, and if we are in the midst of a tab switch, then the async
+      // tab switcher will set the visually selected tab once the tab switch
+      // has completed.
+      this.mCurrentTab._selected = true;
+
+      if (wasFocused) {
+        this.mCurrentTab.focus();
+      }
+
+      this.tabContainer._handleTabSelect(false);
+
+      if (aTab.pinned) {
+        this.tabContainer._positionPinnedTabs();
+      }
+
+      this.tabContainer._setPositionalAttributes();
+
+      let evt = document.createEvent('UIEvents');
+      evt.initUIEvent('TabMove', true, false, window, oldPosition);
+      aTab.dispatchEvent(evt);
+    };
+
+    let oldPinTab = window.gBrowser.pinTab;
+    window.gBrowser.pinTab = function (aTab) {
+      if (aTab.pinned) {
+        return;
+      }
+
+      let numPinned = window.VerticalTabs.numPinnedtabs();
+
+      if (aTab.hidden) {
+        this.showTab(aTab);
+      }
+
+      let reverse = document.getAnonymousElementByAttribute(this.tabContainer, 'anonid', 'arrowscrollbox')._isRTLScrollbox;
+      if (reverse) {
+        this.moveTabTo(aTab, this.tabs.length - numPinned - 1);
+      } else {
+        this.moveTabTo(aTab, numPinned);
+      }
+
+      aTab.setAttribute('pinned', 'true');
+      this.tabContainer._unlockTabSizing();
+      this.tabContainer._positionPinnedTabs();
+      this.tabContainer.adjustTabstrip();
+
+      this.getBrowserForTab(aTab).messageManager.sendAsyncMessage('Browser:AppTab', {isAppTab: true});
+
+      let event = document.createEvent('Events');
+      event.initEvent('TabPinned', true, false);
+      aTab.dispatchEvent(event);
+    };
+
     let OldPrintPreviewListenerEnter = window.PrintPreviewListener.onEnter;
     let OldPrintPreviewListenerExit = window.PrintPreviewListener.onExit;
 
@@ -155,26 +264,129 @@ VerticalTabs.prototype = {
     let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
     let previous_close_message = close_next_tabs_message.getAttribute('label');
 
-    let reverseTabs = (arrowscrollbox) => {
-      if (prefs.opentabstop) {
-        close_next_tabs_message.setAttribute('label', strings.closeTabsAbove);
-        arrowscrollbox._isRTLScrollbox = true;
-        tabs.setAttribute('opentabstop', 'true');
-      } else {
-        close_next_tabs_message.setAttribute('label', strings.closeTabsBelow);
-        arrowscrollbox._isRTLScrollbox = false;
-        tabs.removeAttribute('opentabstop');
+    let oldWarnAboutClosingTabs = window.gBrowser.warnAboutClosingTabs;
+    window.gBrowser.warnAboutClosingTabs = function (aCloseTabs, aTab) {
+      let tabsToClose;
+      switch (aCloseTabs) {
+      case this.closingTabsEnum.ALL:
+        tabsToClose = this.tabs.length - this._removingTabs.length -
+                      window.VerticalTabs.numPinnedtabs();
+        break;
+      case this.closingTabsEnum.OTHER:
+        tabsToClose = this.visibleTabs.length - 1 - window.VerticalTabs.numPinnedtabs();
+        break;
+      case this.closingTabsEnum.TO_END:
+        if (!aTab){
+          throw new Error('Required argument missing: aTab');
+        }
+
+        tabsToClose = this.getTabsToTheEndFrom(aTab).length;
+        break;
+      default:
+        throw new Error('Invalid argument: ' + aCloseTabs);
       }
+
+      if (tabsToClose <= 1) {
+        return true;
+      }
+
+      const pref = aCloseTabs === this.closingTabsEnum.ALL ?
+                   'browser.tabs.warnOnClose' : 'browser.tabs.warnOnCloseOtherTabs';
+      let shouldPrompt = Services.prefs.getBoolPref(pref);
+      if (!shouldPrompt) {
+        return true;
+      }
+
+      let ps = Services.prompt;
+
+      // default to true: if it were false, we wouldn't get this far
+      let warnOnClose = {value: true};
+      let bundle = this.mStringBundle;
+
+      // focus the window before prompting.
+      // this will raise any minimized window, which will
+      // make it obvious which window the prompt is for and will
+      // solve the problem of windows "obscuring" the prompt.
+      // see bug #350299 for more details
+      window.focus();
+      let warningMessage =
+        PluralForm.get(tabsToClose, bundle.getString('tabs.closeWarningMultiple'))
+                  .replace('#1', tabsToClose);
+      let buttonPressed =
+        ps.confirmEx(window,
+                     bundle.getString('tabs.closeWarningTitle'),
+                     warningMessage,
+                     (ps.BUTTON_TITLE_IS_STRING * ps.BUTTON_POS_0)
+                     + (ps.BUTTON_TITLE_CANCEL * ps.BUTTON_POS_1),
+                     bundle.getString('tabs.closeButtonMultiple'),
+                     null, null,
+                     aCloseTabs === this.closingTabsEnum.ALL ?
+                       bundle.getString('tabs.closeWarningPromptMe') : null,
+                     warnOnClose);
+      let reallyClose = (buttonPressed === 0);
+
+      // don't set the pref unless they press OK and it's false
+      if (aCloseTabs === this.closingTabsEnum.ALL && reallyClose && !warnOnClose.value) {
+        Services.prefs.setBoolPref(pref, false);
+      }
+
+      return reallyClose;
     };
 
-    let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
-    reverseTabs(arrowscrollbox);
+    let oldGetTabsToTheEndFrom = window.gBrowser.getTabsToTheEndFrom;
+    window.gBrowser.getTabsToTheEndFrom = (aTab) => {
+      let tabsToEnd = [];
+      let tabs = window.gBrowser.visibleTabs;
+      for (let i = tabs.length - 1; tabs[i] !== aTab && i >= 0; --i) {
+        if (!tabs[i].pinned) {
+          tabsToEnd.push(tabs[i]);
+        }
+      }
+      return tabsToEnd.reverse();
+    };
+
+    let oldAddTab = window.gBrowser.addTab;
+    window.gBrowser.addTab = function (...args) {
+      let numPinned = window.VerticalTabs.numPinnedtabs();
+
+      let t = oldAddTab.bind(window.gBrowser)(...args);
+      if (prefs.opentabstop) {
+        let aRelatedToCurrent;
+        let aReferrerURI;
+        if (arguments.length === 2 && typeof arguments[1] === 'object' && !(arguments[1] instanceof Ci.nsIURI)) {
+          let params = arguments[1];
+          aReferrerURI = params.referrerURI;
+          aRelatedToCurrent = params.relatedToCurrent;
+        }
+        if ((aRelatedToCurrent === null ? aReferrerURI : aRelatedToCurrent) &&
+        Services.prefs.getBoolPref('browser.tabs.insertRelatedAfterCurrent')) {
+          let newTabPos = (this._lastRelatedTab || this.selectedTab)._tPos;
+          this.moveTabTo(t, newTabPos);
+          this._lastRelatedTab = t;
+        } else {
+          this.moveTabTo(t, window.gBrowser.tabs.length - numPinned - 1);
+        }
+      }
+      return t;
+    };
+
+    let reverseTabsListener = function () {
+      let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+      if (arrowscrollbox) {
+        window.VerticalTabs.reverseTabs(arrowscrollbox);
+      }
+      window.gBrowser._lastRelatedTab = null;
+    };
 
     // update on changing preferences
-    require('sdk/simple-prefs').on('opentabstop', function () {
-      let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
-      reverseTabs(arrowscrollbox);
-    });
+    require('sdk/simple-prefs').on('opentabstop', reverseTabsListener);
+
+    let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
+    if (arrowscrollbox && prefs.opentabstop) {
+      window.VerticalTabs.reverseTabs(arrowscrollbox);
+    } else {
+      close_next_tabs_message.setAttribute('label', strings.closeTabsBelow);
+    }
 
     let tabsProgressListener = {
       onLocationChange: (aBrowser, aWebProgress, aRequest, aLocation, aFlags) => {
@@ -256,10 +468,16 @@ VerticalTabs.prototype = {
       this.window.gBrowser.receiveMessage = this.receiveMessage;
       this.window.PrintPreviewListener.onEnter = OldPrintPreviewListenerEnter;
       this.window.PrintPreviewListener.onExit = OldPrintPreviewListenerExit;
+      this.window.gBrowser.moveTabTo = oldMoveTabTo;
+      this.window.gBrowser.pintab = oldPinTab;
+      this.window.gBrowser.addTab = oldAddTab;
+      this.window.gBrowser.getTabsToTheEndFrom = oldGetTabsToTheEndFrom;
+      window.gBrowser.warnAboutClosingTabs = oldWarnAboutClosingTabs;
       if (this.document.getElementById('top-tabs-button')){
         this.document.getElementById('TabsToolbar').removeChild(this.document.getElementById('top-tabs-button'));
       }
       close_next_tabs_message.setAttribute('label', previous_close_message);
+      require('sdk/simple-prefs').removeListener('opentabstop', reverseTabsListener);
     });
 
     this.rearrangeXUL();
@@ -277,7 +495,7 @@ VerticalTabs.prototype = {
                    mutation.attributeName === 'width') {
           results.removeAttribute('width');
         } else if (mutation.type === 'attributes' && mutation.attributeName === 'overflow' && mutation.target.id === 'tabbrowser-tabs') {
-          if (mutation.target.getAttribute('overflow') !== 'true'){
+          if (mutation.target.getAttribute('overflow') !== 'true') {
             tabs.setAttribute('overflow', 'true'); //always set overflow back to true
           }
         }
@@ -297,16 +515,6 @@ VerticalTabs.prototype = {
     this.unloaders.push(function () {
       this.tabObserver.disconnect();
     });
-  },
-
-  createElement: function (label, attrs) {
-    let rv = this.document.createElementNS(NS_XUL, label);
-    if (attrs) {
-      for (let attr in attrs) {
-        rv.setAttribute(attr, attrs[attr]);
-      }
-    }
-    return rv;
   },
 
   rearrangeXUL: function () {
@@ -342,7 +550,7 @@ VerticalTabs.prototype = {
       } else {
         let offset = rect.left - elementRect.left;
         let width = rect.width;
-        if (mainWindow.getAttribute('F11-fullscreen') !== 'true'){
+        if (mainWindow.getAttribute('F11-fullscreen') !== 'true') {
           if (mainWindow.getAttribute('tabspinned') !== 'true') {
             offset += 45;
             width -= 45;
@@ -366,6 +574,7 @@ VerticalTabs.prototype = {
     let palette = top.palette;
     let urlbar = document.getElementById('urlbar');
     let url = urlbar.value;
+    let activeTab = window.gBrowser.mCurrentTab;
 
     // Save the position of the tabs in the toolbar, for later restoring.
     let toolbar = document.getElementById('TabsToolbar');
@@ -398,8 +607,8 @@ VerticalTabs.prototype = {
     // Create a box next to the app content. It will hold the tab
     // bar and the tab toolbar.
     let browserbox = document.getElementById('browser');
-    let leftbox = this.createElement('vbox', {'id': 'verticaltabs-box'});
-    let splitter = this.createElement('vbox', {'id': 'verticaltabs-splitter'});
+    let leftbox = utils.createElement(document, 'vbox', {'id': 'verticaltabs-box'});
+    let splitter = utils.createElement(document, 'vbox', {'id': 'verticaltabs-splitter'});
 
     if (mainWindow.getAttribute('tabspinned') === '') {
       mainWindow.setAttribute('tabspinned', 'true');
@@ -467,17 +676,18 @@ VerticalTabs.prototype = {
     tabs.firstChild.label = label;
     top.palette = palette;
     urlbar.value = url;
+    window.gBrowser.tabContainer.selectedIndex = tabs.getIndexOfItem(activeTab);
 
     // Move the tabs toolbar into the tab strip
     toolbar.setAttribute('collapsed', 'false'); // no more vanishing new tab toolbar
     toolbar._toolbox = null; // reset value set by constructor
     toolbar.setAttribute('toolboxid', 'navigator-toolbox');
 
-    let pin_button = this.createElement('toolbarbutton', {
+    let pin_button = utils.createElement(document, 'toolbarbutton', {
       'id': 'pin-button'
     });
 
-    pin_button.addEventListener('click', function (event) {
+    pin_button.onclick = function (event) {
       if (event.which !== 1) {
         return;
       }
@@ -494,18 +704,18 @@ VerticalTabs.prototype = {
       }
       window.VerticalTabs.resizeFindInput();
       window.VerticalTabs.resizeTabs();
-    });
+    };
 
     let tooltiptext = mainWindow.getAttribute('tabspinned') === 'true' ? strings.sidebarShrink : strings.sidebarOpen;
     pin_button.setAttribute('tooltiptext', tooltiptext);
 
     toolbar.appendChild(pin_button);
     leftbox.insertBefore(toolbar, leftbox.firstChild);
-    let find_input = this.createElement('textbox', {
+    let find_input = utils.createElement(document, 'textbox', {
       'id': 'find-input',
       'class': 'searchbar-textbox'
     });
-    let search_icon = this.createElement('image', {
+    let search_icon = utils.createElement(document, 'image', {
       'id': 'tabs-search'
     });
     find_input.appendChild(search_icon);
@@ -520,7 +730,7 @@ VerticalTabs.prototype = {
     });
 
     //build button to toggle Tab Center on/off
-    let toptabsbutton = this.createElement('toolbarbutton', {
+    let toptabsbutton = utils.createElement(document, 'toolbarbutton', {
       'id': 'top-tabs-button',
       'label': strings.topLabel,
       'tooltiptext': strings.topTooltip
@@ -530,6 +740,7 @@ VerticalTabs.prototype = {
         return;
       }
       mainWindow.setAttribute('toggledon', 'false');
+      set('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp', Date.now().toString());
       ss.setWindowValue(window, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
       window.VerticalTabs.sendPing('tab_center_toggled_off', window);
       this.init();
@@ -557,7 +768,7 @@ VerticalTabs.prototype = {
 
     document.getElementById('filler-tab').addEventListener('click', this.clearFind.bind(this));
 
-    let spacer = this.createElement('spacer', {'id': 'new-tab-spacer'});
+    let spacer = utils.createElement(document, 'spacer', {'id': 'new-tab-spacer'});
     toolbar.insertBefore(find_input, pin_button);
     toolbar.insertBefore(spacer, pin_button);
     toolbar.insertBefore(toptabsbutton, toolbar.lastChild);
@@ -577,7 +788,7 @@ VerticalTabs.prototype = {
     let enterTimeout = -1;
 
     let exit = (event) => {
-      if (!this.mouseInside){
+      if (!this.mouseInside) {
         let arrowscrollbox = this.document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
         let scrollbox = this.document.getAnonymousElementByAttribute(arrowscrollbox, 'anonid', 'scrollbox');
         let scrolltop = scrollbox.scrollTop;
@@ -636,7 +847,7 @@ VerticalTabs.prototype = {
 
     tabs.ondragleave = function (e) {
       if (!e.relatedTarget || !e.relatedTarget.closest('#tabbrowser-tabs')) {
-        if (tabs.getAttribute('movingtab') === 'true'){
+        if (tabs.getAttribute('movingtab') === 'true') {
           let scrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
           let scrollbuttonDown = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-down');
           let scrollbuttonUp = document.getAnonymousElementByAttribute(scrollbox, 'anonid', 'scrollbutton-up');
@@ -699,6 +910,7 @@ VerticalTabs.prototype = {
 
     let beforeListener = function () {
       browserPanel.insertBefore(top, browserPanel.firstChild);
+      browserPanel.insertBefore(bottom, document.getElementById('fullscreen-warning').nextSibling);
       top.palette = palette;
     };
     window.addEventListener('beforecustomization', beforeListener);
@@ -710,6 +922,7 @@ VerticalTabs.prototype = {
 
     let afterListener = function () {
       contentbox.insertBefore(top, contentbox.firstChild);
+      contentbox.appendChild(bottom);
       top.palette = palette;
       checkDevTheme();
       //query for and restore the urlbar value after customize mode does things....
@@ -761,7 +974,10 @@ VerticalTabs.prototype = {
 
       //save the first tab's label to restore after unbinding/binding
       label = tabs.firstChild.label;
+      activeTab = window.gBrowser.mCurrentTab;
       tabs.removeAttribute('vertical');
+
+      window.gBrowser.tabContainer.selectedIndex = tabs.getIndexOfItem(activeTab);
 
       // Restore all individual tabs.
       for (let i = 0; i < tabs.childNodes.length; i++) {
@@ -777,7 +993,7 @@ VerticalTabs.prototype = {
 
       // Restore the tab strip.
       toolbar.insertBefore(tabs, toolbar.children[tabsIndex]);
-      toolbox.insertBefore(toolbar, navbar);
+      navbar.parentNode.insertBefore(toolbar, navbar);
       browserPanel.insertBefore(toolbox, browserPanel.firstChild);
       //remove extra #newtab-popup before they get added again in the tabs constructor
       if (NewTabButton) {
@@ -792,13 +1008,50 @@ VerticalTabs.prototype = {
     });
   },
 
+  numPinnedtabs: function () {
+    let numPinned = 0 ;
+    for (let i = 0; i < this.window.gBrowser.tabs.length; i++) {
+      if (!this.window.gBrowser.tabs[i].pinned) {
+        continue;
+      }
+      numPinned += 1;
+    }
+    return numPinned;
+  },
+
+  reverseTabs: function (arrowscrollbox) {
+    let window = this.window;
+    let document = this.document;
+    let tabs = document.getElementById('tabbrowser-tabs');
+    let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
+    if (prefs.opentabstop && document.getElementById('main-window').getAttribute('toggledon') === 'true') {
+      close_next_tabs_message.setAttribute('label', strings.closeTabsAbove);
+      arrowscrollbox._isRTLScrollbox = true;
+      tabs.setAttribute('opentabstop', 'true');
+      let i = window.gBrowser.tabs.length - 1;
+      while (window.gBrowser.tabs[0].pinned && i >= 0) {
+        window.gBrowser.moveTabTo(window.gBrowser.tabs[0], i);
+        i--;
+      }
+    } else {
+      close_next_tabs_message.setAttribute('label', strings.closeTabsBelow);
+      arrowscrollbox._isRTLScrollbox = false;
+      tabs.removeAttribute('opentabstop');
+      window.gBrowser.tabs.forEach(function (tab) {
+        if (tab.pinned) {
+          window.gBrowser.moveTabTo(tab, 0);
+        }
+      });
+    }
+  },
+
   recordExpansion: function () {
     this.sendPing('tab_center_expanded', this.window);
   },
 
   adjustCrop: function () {
     let tabs = this.document.getElementById('tabbrowser-tabs');
-    if (this.window.document.getElementById('verticaltabs-box').getAttribute('expanded') === 'true' || this.document.getElementById('main-window').getAttribute('tabspinned') === ''){
+    if (this.window.document.getElementById('verticaltabs-box').getAttribute('expanded') === 'true' || this.document.getElementById('main-window').getAttribute('tabspinned') === '') {
       for (let i = 0; i < tabs.childNodes.length; i++) {
         tabs.childNodes[i].setAttribute('crop', 'end');
       }
@@ -823,7 +1076,7 @@ VerticalTabs.prototype = {
 
   clearFind: function (purpose) {
     let find_input = this.document.getElementById('find-input');
-    if (find_input){
+    if (find_input) {
       if (purpose === 'tabGroupChange') {
         //manually show pinned tabs after changing groups for the tab groups add-on, as it does not re-show them
         Array.filter(this.window.gBrowser.tabs, tab => tab.getAttribute('pinned') === 'true').forEach(tab => {tab.setAttribute('hidden', false);});
@@ -831,7 +1084,7 @@ VerticalTabs.prototype = {
         find_input.value = '';
         this.filtertabs();
       } else if (purpose === 'tabAction') {
-        if (find_input.value === ''){
+        if (find_input.value === '') {
           this.resizeTabs();
           return;
         }
@@ -909,22 +1162,36 @@ VerticalTabs.prototype = {
   },
 
   unload: function () {
+    let window = this.window;
+    let tourPanel = this.document.getElementById('tour-panel');
+    if (tourPanel) {
+      this.document.getElementById('mainPopupSet').removeChild(tourPanel);
+    }
     let urlbar = this.document.getElementById('urlbar');
     let url = urlbar.value;
+    let tabs = this.document.getElementById('tabbrowser-tabs');
+
+    if (prefs.opentabstop && this.document.getElementById('main-window').getAttribute('toggledon') === 'false' && tabs.getAttribute('opentabstop')) {
+      tabs.removeAttribute('opentabstop');
+      window.gBrowser.tabs.forEach(function (tab) {
+        if (tab.pinned) {
+          window.gBrowser.moveTabTo(tab, 0);
+        }
+      });
+    }
+
     this.unloaders.forEach(function (func) {
       func.call(this);
     }, this);
     this.unloaders = [];
 
     urlbar.value = url;
-    let tabs = this.document.getElementById('tabbrowser-tabs');
     if (tabs) {
       tabs.removeAttribute('overflow'); //not needed? it sets its own overflow as necessary
       tabs._positionPinnedTabs(); //Does not do anything?
     }
-    removeStylesheets(this.window);
-    tabs.removeAttribute('opentabstop');
-    this.window.TabsInTitlebar.allowedBy('tabcenter', true);
+    removeStylesheets(window);
+    window.TabsInTitlebar.allowedBy('tabcenter', true);
   },
 
   actuallyResizeTabs: function () {
@@ -939,10 +1206,10 @@ VerticalTabs.prototype = {
       let number_of_tabs = this.window.gBrowser.visibleTabs.length;
       if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60 && tabs.classList.contains('large-tabs')) {
         return;
-      } else if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60 ){
+      } else if (tabbrowser_height / number_of_tabs >= 58 && this.pinnedWidth > 60 ) {
         tabs.classList.add('large-tabs');
         this.refreshAllTabs();
-      } else if (tabs.classList.contains('large-tabs')){
+      } else if (tabs.classList.contains('large-tabs')) {
         tabs.classList.remove('large-tabs');
       }
       return;

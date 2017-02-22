@@ -37,7 +37,6 @@
 /* global require, exports:false */
 'use strict';
 
-
 const {prefixURI} = require('@loader/options');
 const prefs = require('sdk/simple-prefs');
 const {setInterval} = require('sdk/timers');
@@ -55,6 +54,7 @@ const ss = Cc['@mozilla.org/browser/sessionstore;1'].getService(Ci.nsISessionSto
 const strings = require('./get-locale-strings').getLocaleStrings();
 const utils = require('./utils');
 const {addVerticalTabs} = require('./verticaltabs');
+const {get, set} = require('sdk/preferences/service');
 
 let self = require('sdk/self');
 const RESOURCE_HOST = 'tabcenter';
@@ -64,6 +64,166 @@ let startupFinishedObserver = null;
 
 let hotkey;
 let VerticalTabsWindowId = 1;
+
+function reminderTour(win) {
+  win.reminderTour = true;
+  set('extensions.tabcentertest1@mozilla.com.doNotShowTour', true); //after reminder tour shown once, we will not show again.
+  firstInstallTour(win);
+}
+function firstInstallTour(win) {
+  if (win.activeInstall || win.reminderTour) {
+    let details = {};
+    if (get('extensions.tabcentertest1@mozilla.com.tourComplete')) {
+      details.tour_type = 'completed_reminder';
+    } else if (win.reminderTour) {
+      details.tour_type = 'reminder';
+    } else {
+      details.tour_type = 'install';
+    }
+    utils.sendPing('tour_began', win, details);
+
+    win.activeInstall = false;
+    let document = win.document;
+    let sidetabsbutton = document.getElementById('side-tabs-button');
+    let panel = utils.createElement(document, 'panel', {
+      'id': 'tour-panel',
+      'type': 'arrow',
+      'flip': 'slide',
+      'noautohide': true
+    });
+    let outerbox = utils.createElement(document, 'vbox', {'id': 'tour-box'});
+    let instructions = utils.createElement(document, 'description', {'id': 'tour-instructions'});
+    let progressButton = utils.createElement(document, 'button', {
+      'id': 'tour-button',
+      'label': strings.progressButtonIntro
+    });
+    let tourTitle = utils.createElement(document, 'h2');
+    let tourVideoWrapper = utils.createElement(document, 'div', {'id': 'tour-video-wrapper'});
+    let tourVideo = document.createElementNS('http://www.w3.org/1999/xhtml', 'video');
+    tourVideo.setAttribute('src', self.data.url('Intro.mp4'));
+    tourVideo.setAttribute('autoplay', 'true');
+    tourVideo.setAttribute('loop', 'true');
+    tourVideo.setAttribute('id', 'tour-video');
+
+    let dismissLabel = utils.createElement(document, 'label', {'id': 'tour-dismiss-label'});
+
+    document.getElementById('mainPopupSet').appendChild(panel); //attach to DOM anywhere
+    tourTitle.textContent = strings.tourTitleIntro;
+    instructions.textContent = strings.tourInstructionsIntro;
+    dismissLabel.textContent = strings.dismissLabel;
+
+    if (win.reminderTour && get('extensions.tabcentertest1@mozilla.com.tourComplete')) {
+      progressButton.setAttribute('label', strings.progressButtonGo);
+      dismissLabel.textContent = strings.dismissLabelReminderTour;
+      progressButton.onclick = (e) => {
+        if (e.which !== 1) {
+          return;
+        }
+        utils.sendPing('tour_accepted', win, details);
+        panel.hidePopup();
+        sidetabsbuttonClick(e);
+      };
+    } else {
+      if (win.reminderTour) {
+        dismissLabel.textContent = strings.dismissLabelReminderTour;
+      }
+
+      let xpos;
+      let outerRect = {};
+      let starttime;
+
+      let movePanel = function (timestamp, panel, dist, duration) {
+        let runtime = timestamp - starttime;
+        let progress = runtime / duration;
+        progress = Math.min(progress, 1);
+        panel.moveTo(xpos + (dist * progress), outerRect.y);
+        if (runtime < duration) {
+          win.requestAnimationFrame(function (timestamp) {
+            movePanel(timestamp, panel, dist, duration);
+          });
+        }
+      };
+
+      progressButton.onclick = (e) => {
+        if (e.which !== 1) { //will only accept left click...
+          return;
+        }
+        details.trigger = e.target.id;
+        utils.sendPing('tour_accepted', win, details);
+        details.trigger = undefined;
+
+        panel.hidePopup();
+        outerbox.removeChild(dismissLabel);
+        sidetabsbuttonClick(e);
+        let pinButton = document.getElementById('pin-button');
+        let pinButtonClick = pinButton.onclick;
+        let topTabsButton = document.getElementById('top-tabs-button');
+        let topTabsButtonClick = topTabsButton.onclick;
+        topTabsButton.onclick = null;
+        pinButton.onclick = null;
+        document.getElementById('mainPopupSet').appendChild(panel); //reattach to DOM after running unload
+        tourTitle.textContent = strings.tourTitleCollapse;
+        instructions.textContent = strings.tourInstructionsCollapse;
+        progressButton.setAttribute('label', strings.progressButtonCollapse);
+        tourVideo.setAttribute('src', self.data.url('Collapse.mp4'));
+        panel.openPopup(pinButton, 'bottomcenter topleft', 0, 0, false, false);
+
+        progressButton.onclick = (e) => {
+          if (e.which !== 1) {
+            return;
+          }
+          utils.sendPing('tour_continue', win, details);
+
+          outerbox.style.opacity = '0';
+          outerRect = panel.getOuterScreenRect();
+          xpos = outerRect.x;
+          win.requestAnimationFrame(function (timestamp) {
+            starttime = timestamp;
+            movePanel(timestamp, panel, -35, 500);
+            win.setTimeout(function () {
+              outerbox.style.opacity = '1';
+              tourTitle.textContent = strings.tourTitleRestore;
+              instructions.textContent = strings.tourInstructionsRestore;
+              progressButton.setAttribute('label', strings.progressButtonRestore);
+              tourVideo.setAttribute('src', self.data.url('Restore.mp4'));
+              set('extensions.tabcentertest1@mozilla.com.tourComplete', true);
+            }, 250);
+          });
+          progressButton.onclick = (e) => {
+            if (e.which !== 1) {
+              return;
+            }
+            utils.sendPing('tour_complete', win, details);
+            pinButton.onclick = pinButtonClick;
+            topTabsButton.onclick = topTabsButtonClick;
+            panel.hidePopup();
+          };
+        };
+      };
+    }
+
+    let sidetabsbuttonClick = sidetabsbutton.onclick;
+    sidetabsbutton.onclick = progressButton.onclick;
+
+    dismissLabel.onclick = (e) => {
+      if (e.which !== 1) {
+        return;
+      }
+      utils.sendPing('tour_dismissed', win, details);
+      sidetabsbutton.onclick = sidetabsbuttonClick;
+      panel.hidePopup();
+    };
+
+    panel.appendChild(outerbox);
+    tourVideoWrapper.appendChild(tourVideo);
+    outerbox.appendChild(tourTitle);
+    outerbox.appendChild(tourVideoWrapper);
+    outerbox.appendChild(instructions);
+    outerbox.appendChild(progressButton);
+    outerbox.appendChild(dismissLabel);
+    panel.openPopup(sidetabsbutton, 'bottomcenter topright', 0, 0, false, true);
+  }
+}
 
 function b64toBlob(win, b64Data, contentType, sliceSize) {
   contentType = contentType || '';
@@ -92,7 +252,7 @@ function setPersistantAttrs(win) {
   let mainWindow = win.document.getElementById('main-window');
   mainWindow.setAttribute('persist', mainWindow.getAttribute('persist') + ' tabspinned tabspinnedwidth toggledon');
   try {
-    if(ss.getWindowValue(win, 'TCtoggledon') !== ''){ // on win/linux this does not throw an error, so check for value
+    if(ss.getWindowValue(win, 'TCtoggledon') !== '') { // on win/linux this does not throw an error, so check for value
       mainWindow.setAttribute('toggledon', ss.getWindowValue(win, 'TCtoggledon'));
       mainWindow.setAttribute('tabspinnedwidth', ss.getWindowValue(win, 'TCtabspinnedwidth'));
       mainWindow.setAttribute('tabspinned', ss.getWindowValue(win, 'TCtabspinned'));
@@ -107,6 +267,7 @@ function setPersistantAttrs(win) {
     }
     // on fresh windows getWindowValue throws an exception. Ignore this.
   }
+  set('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp', Date.now().toString());
 }
 
 function initWindow(window) {
@@ -134,9 +295,19 @@ function initWindow(window) {
   win.addEventListener('TabUnpinned', win.tabCenterEventListener, false);
 
   win.tabCenterEventListener.handleEvent = function (aEvent) {
+    let mainWindow = win.document.getElementById('main-window');
+    let timeUntilReminder = get('extensions.tabcentertest1@mozilla.com.tourComplete') ? 432000000 : 259200000;  //5 days or 3 days in milliseconds
+    // let timeUntilReminder = get('extensions.tabcentertest1@mozilla.com.tourComplete') ? 30 * 1000 : 1000; //Debug: small values to trigger reminder tour immediately
+    let timeSinceUsed = Date.now() - parseInt(get('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp'));
     switch (aEvent.type) {
     case 'TabOpen':
       utils.sendPing('tabs_created', win);
+      if (!get('extensions.tabcentertest1@mozilla.com.doNotShowTour')
+            && mainWindow.getAttribute('toggledon') === 'false'
+            && win.gBrowser.tabs.length >= 5
+            && timeSinceUsed >= timeUntilReminder) {
+        reminderTour(win);
+      }
       return;
     case 'TabClose':
       utils.sendPing('tabs_destroyed', win);
@@ -160,13 +331,17 @@ function initWindow(window) {
     return;
   }
 
-  // if the dcoument is loaded
+  // if the document is loaded
   if (isDocumentLoaded(win)) {
+    utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
     addVerticalTabs(win, data);
+    firstInstallTour(win);
   } else {
     // Listen for load event before checking the window type
     win.addEventListener('load', () => {
+      utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
       addVerticalTabs(win, data);
+      firstInstallTour(win);
     }, {once: true});
   }
 }
@@ -202,6 +377,12 @@ exports.main = function (options, callbacks) {
       for (let tab of reversedTabs) {
         tabbrowser.appendChild(tab, tabbrowser.firstChild);
       }
+    }
+
+    //show onboarding experience in the active window on "install"
+    if (browserWindows.activeWindow === window && !get('extensions.tabcentertest1@mozilla.com.doNotShowTour') && options.loadReason === 'install') {
+      mainWindow.setAttribute('toggledon', 'false');
+      win.activeInstall = true;
     }
     initWindow(window);
   }
@@ -272,8 +453,19 @@ exports.onUnload = function (reason) {
   for (let window of browserWindows) {
     let win = viewFor(window);
     if (win.VerticalTabs) {
+      utils.removeStylesheet(win, 'resource://tabcenter/skin/persistant.css');
+      if (prefs.prefs.opentabstop && win.document.getElementById('main-window').getAttribute('toggledon') === 'true') {
+        win.document.getElementById('tabbrowser-tabs').removeAttribute('opentabstop');
+        win.gBrowser.tabs.forEach(function (tab) {
+          if (tab.pinned) {
+            win.gBrowser.moveTabTo(tab, 0);
+          }
+        });
+      }
+
       win.VerticalTabs.unload();
       let mainWindow = win.document.getElementById('main-window');
+
       mainWindow.setAttribute('doNotReverse', 'true');
       mainWindow.removeAttribute('tabspinned');
       mainWindow.removeAttribute('tabspinnedwidth');
