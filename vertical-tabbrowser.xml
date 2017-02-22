@@ -839,11 +839,12 @@
           if (uri.scheme.startsWith('http')) {
             label = uri.host;
           }
-          const isInternal = label.indexOf('about:') === 0;
-          if (label && !isInternal) {
+          const urlHidden = ['about:newtab', 'about:blank', 'about:home', 'about:privatebrowsing', 'about:sessionrestore', 'about:welcomeback'];
+          const noAddress = urlHidden.includes(label);
+          if (label && !noAddress) {
             this.setAttribute('address', label);
           }
-          if (isInternal) {
+          if (noAddress) {
             this.removeAttribute('address');
           }
         ]]></body>
