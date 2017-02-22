@@ -89,7 +89,11 @@ VerticalTabs.prototype = {
     let mainWindow = document.getElementById('main-window');
     let tabs = document.getElementById('tabbrowser-tabs');
 
-    if (mainWindow.getAttribute('toggledon') === 'false') {
+    if (mainWindow.getAttribute('toggledon') === '') {
+      mainWindow.setAttribute('toggledon', 'true');
+    }
+
+    if (mainWindow.getAttribute('toggledon') !== 'true') {
       let toolbar = document.getElementById('TabsToolbar');
       this.clearFind();
       tabs.removeAttribute('mouseInside');
@@ -629,10 +633,6 @@ VerticalTabs.prototype = {
     if (mainWindow.getAttribute('tabspinned') === '') {
       mainWindow.setAttribute('tabspinned', 'true');
       leftbox.setAttribute('expanded', 'true');
-    }
-
-    if (mainWindow.getAttribute('toggledon') === '') {
-      mainWindow.setAttribute('toggledon', 'true');
     }
 
     browserbox.insertBefore(leftbox, contentbox);
@@ -1190,7 +1190,7 @@ VerticalTabs.prototype = {
     let url = urlbar.value;
     let tabs = this.document.getElementById('tabbrowser-tabs');
 
-    if (prefs.opentabstop && this.document.getElementById('main-window').getAttribute('toggledon') === 'false' && tabs.getAttribute('opentabstop')) {
+    if (prefs.opentabstop && this.document.getElementById('main-window').getAttribute('toggledon') !== 'true' && tabs.getAttribute('opentabstop')) {
       tabs.removeAttribute('opentabstop');
       window.gBrowser.tabs.forEach(function (tab) {
         if (tab.pinned) {
