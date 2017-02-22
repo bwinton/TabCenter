@@ -147,13 +147,13 @@
   left: 0;
   box-sizing: border-box;
   display: flex;
-  flex-direction: column;
   width: var(--vtabs-collapsed-width);
   height: 100vh;
   overflow-x: hidden;
   background: transparent !important;
   background-origin: border-box !important;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0), inset 0 0 10px hsla(0, 0%, 0%, 0.2);
+  flex-direction: column;
   transition: box-shadow 150ms ease-out, width 150ms ease-out;
 }
 
@@ -168,15 +168,15 @@
 #TabsToolbar {
   position: relative;
   display: flex;
-  flex: 0 0 var(--toolbar-height);
-  align-items: center;
   margin: 0 !important;
   /* A top/bottom border will take space and misalign the buttons -> use ::after (not box-shadow, already used for some effects) */
   border: none !important;
   border-right: 1px solid var(--toolbar-side-border) !important;
   padding: 0 4px !important;
+  align-items: center;
   -moz-appearance: none !important;
   background-color: var(--toolbar-background);
+  flex: 0 0 var(--toolbar-height);
 }
 
 #TabsToolbar::after {
@@ -247,12 +247,12 @@
 }
 
 #TabsToolbar > #new-tab-button {
-  flex: 0 20 auto;
-  justify-content: flex-start;
-  /* account for the icon's margin */
   width: auto !important;
+  /* account for the icon's margin */
   min-width: 30px !important;
   margin-right: 4px !important;
+  flex: 0 20 auto;
+  justify-content: flex-start;
   list-style-image: url("resource://tabcenter/skin/glyph-new-16.svg") !important;
 }
 
@@ -296,8 +296,6 @@
 
 #TabsToolbar #find-input {
   display: flex;
-  align-items: center;
-  flex: 20 0 auto;
   /* trying to get 6px empty space on each side, given that buttons
      have 2px margins except the new tab button (4px) */
   margin: 0 4px 0 2px !important;
@@ -308,8 +306,10 @@
   border: 1px solid var(--searchbar-border) !important;
   border-radius: 1px !important;
   overflow: -moz-hidden-unscrollable;
+  align-items: center;
   background-color: var(--searchbar-background);
   color: var(--searchbar-text-color);
+  flex: 20 0 auto;
   line-height: 26px;
   transition-duration: 100ms;
   transition-property: border-color, box-shadow;
@@ -363,12 +363,12 @@
   overflow-x: hidden;
   overflow-y: hidden;
   box-sizing: border-box;
-  flex: 1 0;
   margin: 0 !important;
   padding: 0 !important;
   border-top: none !important;
   border-right: 1px solid var(--tabs-side-border) !important;
   background-color: var(--tabs-background) !important;
+  flex: 1 0;
 }
 
 /* Small outline for keyboard users.
@@ -403,7 +403,6 @@
 
 .tabbrowser-arrowscrollbox {
   flex: 1 0;
-  height: calc(100vh - var(--));
 }
 
 .tabbrowser-arrowscrollbox > scrollbox {
@@ -430,9 +429,6 @@
 .tabbrowser-tab {
   position: relative !important;
   z-index: 1;
-  -moz-appearance: none !important;
-  -moz-box-flex: 0;
-  -moz-box-pack: start;
   width: 260px !important;
   max-width: 100% !important;
   max-height: var(--tab-height);
@@ -442,7 +438,10 @@
   border-width: 1px 0 !important;
   border-radius: 0 !important;
   /* Main opaque background */
+  -moz-appearance: none !important;
   background: var(--tabs-background) !important;
+  -moz-box-flex: 0;
+  -moz-box-pack: start;
   color: var(--tab-text-color) !important;
   pointer-events: auto !important;
 }

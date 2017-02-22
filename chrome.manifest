@@ -1,6 +1,6 @@
 content tabcenter vertical-tabbrowser.xml
 
 
-override  chrome://tabcenter/skin/platform.css resource://tabcenter/skin/platform-mac.css os=Darwin
-override  chrome://tabcenter/skin/platform.css resource://tabcenter/skin/platform-win.css os=WINNT
-override  chrome://tabcenter/skin/platform.css resource://tabcenter/skin/platform-linux.css os=Linux
+override  chrome://tabcenter/skin/platform.css resource://tabcenter/skin/osx.css os=Darwin
+override  chrome://tabcenter/skin/platform.css resource://tabcenter/skin/win.css os=WINNT
+override  chrome://tabcenter/skin/platform.css resource://tabcenter/skin/linux.css os=Linux
