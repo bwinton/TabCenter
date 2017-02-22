@@ -2,7 +2,8 @@
 @namespace html url("http://www.w3.org/1999/xhtml");
 
 /**
- * Prefix custom properties that are global to the window
+ * Variables for sizing, theming, animation, etc.
+ * Prefix custom properties that are global to the window.
  * For other variables controlling the vertical tabs only,
  * see #verticaltabs-box
  */
@@ -14,11 +15,85 @@
   --vtabs-expanded-width: 260px;
 }
 
-/*** Parents and sibligs of vertical tabs container ***/
+#verticaltabs-box {
+  /* Keep most custom properties local to the vertical tabs sidebar */
+  --toolbar-height: 40px;
+  --tab-height-compact: 36px;
+  --tab-height-large: 56px;
+  /* resolve to a single tab height (helps with animations) */
+  --tab-height: var(--tab-height-compact);
+  --toolbar-side-border: hsla(0, 0%, 0%, 0.15);
+  --toolbar-bottom-border: hsla(0, 0%, 0%, 0.15);
+  --toolbar-background: hsl(0, 0%, 97%);
+  --searchbar-text-color: #000;
+  --searchbar-background: #fff;
+  --searchbar-border: hsla(0, 0%, 0%, 0.16);
+  --searchbar-border-focus: Highlight;
+
+  --tabs-side-border: hsla(0, 0%, 0%, 0.2);
+  --tabs-background: hsl(0, 0%, 99%);
+  --tab-border: hsla(0, 0%, 0%, 0.06);
+  --tab-background: transparent;
+  --tab-pinned-background: hsla(0, 0%, 0%, 0.04);
+  --tab-hover-background: hsla(0, 0%, 0%, 0.08);
+  --tab-selected-background: hsla(0, 0%, 0%, 0.12);
+  --tab-text-color: black;
+  --tab-text-color-selected: black;
+  --tab-highlight: #0996f8;
+  --tab-animation-time: 300ms;
+  --tab-animation-halftime: 150ms;
+}
+
+/* Bigger tabs is almost as easy as increasing the var height
+   (content will need some tweaking too) */
+#verticaltabs-box .large-tabs {
+  --tab-height: 56px;
+}
+
+/*** Animations ***/
+
+@keyframes fade-out {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes slide-out {
+  0% { max-height: var(--tab-height); min-height: var(--tab-height); opacity: 0; }
+  100% { max-height: 0; min-height: 0; opacity: 0; }
+}
+
+@keyframes slide-fade-in {
+  0% { max-height: 0; min-height: 0; opacity: 0; }
+  50% { max-height: var(--tab-height); min-height: var(--tab-height); opacity: 0; }
+  100% { max-height: var(--tab-height); min-height: var(--tab-height); opacity: 1; }
+}
+
+/*** Parents and siblings of vertical tabs container ***/
 
 #browser {
   position: relative;
   height: 100vh;
+}
+
+#browser-border-start {
+  display: none !important;
+}
+
+#verticaltabs-splitter {
+  position: relative !important;
+  z-index: 99 !important;
+  display: none;
+  margin-left: calc(var(--vtabs-pinned-width) - 3px);
+  margin-right: -1px !important;
+  max-width: 4px;
+  min-width: 4px;
+  width: 4px;
+  background-color: transparent;
+  cursor: ew-resize;
+}
+
+#main-window[tabspinned="true"] #verticaltabs-splitter {
+  display: -moz-box;
 }
 
 #appcontent {
@@ -63,36 +138,9 @@
   margin-top: -1px;
 }
 
-/*** Main container and variables ***/
+/*** Main container ***/
 
 #verticaltabs-box {
-  /* Keep most custom properties local to the vertical tabs sidebar */
-  --toolbar-height: 40px;
-  --tab-height-compact: 36px;
-  --tab-height-large: 56px;
-  /* resolve to a single tab height (helps with animations) */
-  --tab-height: var(--tab-height-compact);
-  --toolbar-side-border: hsla(0, 0%, 0%, 0.15);
-  --toolbar-bottom-border: hsla(0, 0%, 0%, 0.15);
-  --toolbar-background: hsl(0, 0%, 97%);
-  --searchbar-text-color: #000;
-  --searchbar-background: #fff;
-  --searchbar-border: hsla(0, 0%, 0%, 0.16);
-  --searchbar-border-focus: Highlight;
-
-  --tabs-side-border: hsla(0, 0%, 0%, 0.2);
-  --tabs-background: hsl(0, 0%, 99%);
-  --tab-border: hsla(0, 0%, 0%, 0.06);
-  --tab-background: transparent;
-  --tab-pinned-background: hsla(0, 0%, 0%, 0.04);
-  --tab-hover-background: hsla(0, 0%, 0%, 0.08);
-  --tab-selected-background: hsla(0, 0%, 0%, 0.12);
-  --tab-text-color: black;
-  --tab-text-color-selected: black;
-  --tab-highlight: #0996f8;
-  --tab-animation-time: 300ms;
-  --tab-animation-halftime: 150ms;
-
   position: absolute;
   z-index: 3;
   top: 0;
@@ -109,591 +157,13 @@
   transition: box-shadow 150ms ease-out, width 150ms ease-out;
 }
 
-/* Bigger tabs is almost as easy as increasing the var height
-   (content will need some tweaking too) */
-#verticaltabs-box .large-tabs {
-  --tab-height: 56px;
-}
-
-/* === SCROLL BOX === */
-
-.tabbrowser-arrowscrollbox {
-  flex: 1 0;
-  height: calc(100vh - var(--));
-}
-
-.tabbrowser-arrowscrollbox > scrollbox {
-  overflow-x: hidden !important;
-  overflow-y: hidden !important;
-}
-
-#tabbrowser-tabs[mouseInside] .tabbrowser-arrowscrollbox > scrollbox {
-  overflow-y: auto !important;
-}
-
-.tabbrowser-arrowscrollbox > .arrowscrollbox-scrollbox {
-  -moz-padding-end: 0 !important;
-  -moz-padding-start: 0 !important;
-}
-
-.tabbrowser-arrowscrollbox .scrollbutton-up,
-.tabbrowser-arrowscrollbox .scrollbutton-down {
-  visibility: collapse !important;
-}
-
-.verticaltabs-collapsed {
-  height: 0 !important;  /* animation shrinks height */
-  min-height: 0 !important;
-  max-height: 0 !important;
-  visibility: collapse;
-}
-
-.tabbrowser-tab {
-  position: relative !important;
-  z-index: 1;
-  -moz-appearance: none !important;
-  -moz-box-flex: 0;
-  -moz-box-pack: start;
-  width: 260px !important;
-  max-width: 100% !important;
-  max-height: var(--tab-height);
-  min-height: var(--tab-height);
-  margin: -1px 0 0 !important;
-  border: solid var(--tab-border) !important;
-  border-width: 1px 0 !important;
-  border-radius: 0 !important;
-  /* Main opaque background */
-  background: var(--tabs-background) !important;
-  color: var(--tab-text-color) !important;
-  pointer-events: auto !important;
-}
-
-/* Tab background overlay */
-.tabbrowser-tab .tab-content {
-  background: var(--tab-background) !important;
-}
-
-/* Use the Container color if available */
-.tabbrowser-tab[usercontextid] {
-  --tab-highlight: var(--identity-tab-color);
-}
-
-/* Progressively reduce border opacity for darker tabs */
-.tabbrowser-tab:hover,
-.tabbrowser-tab[pinned] {
-  --tab-border: hsla(0, 0%, 0%, 0.04);
-}
-
-.tabbrowser-tab[visuallyselected="true"] {
-  --tab-border: hsla(0, 0%, 0%, 0.02);
-}
-
-/* Get rid of the tab separator from horizontal tabs */
-.tabbrowser-tab::before,
-.tabbrowser-tab::after {
-  content: none !important;
-}
-
-/* Hide background elements (from horizontal rounded tabs) */
-.tab-background {
-  display: none !important;
-}
-
-/* Blue indicator on selected tab (can be a different color for container tabs) */
-.tab-selection-indicator {
-  position: absolute;
-  top: -1px;
-  bottom: -1px;
-  left: 0;
-  width: 6px;
-  background-image:
-    linear-gradient(to right, #0003, #0000 20%, #fff0 50%, #fff3),
-    linear-gradient(to right, var(--tab-highlight), var(--tab-highlight));
-  background-position: 0 0;
-  background-size: 100%;
-  opacity: 1;
-  transform: translateX(-6px);
-  transition: transform var(--tab-animation-halftime), opacity 200ms;
-}
-
-.tabbrowser-tab[selected="true"] .tab-selection-indicator {
-  transform: translateX(0);
-}
-
-/* Make room for the close/max/min button on the right of the window */
-/* XXX this should probably be per-OS, yes? */
-/* XXX if I was smarter I'd find a way to make a swoop on the right side of the bar, under the window buttons */
-/* Maybe not - this conveniently leaves a hit target for dragging. */
-/*#nav-bar {
-  margin-right: 100px;
-}*/
-
-/* hide private browsing indicator in the vertical tab box */
-#verticaltabs-box .private-browsing-indicator,
-#verticaltabs-box #private-browsing-indicator {
-  display: none !important;
-}
-
-#main-window[privatebrowsingmode="temporary"] #titlebar-buttonbox-container {
-  margin-top: 4px;
-}
-
-.tabbrowser-tabs {
-  position: relative;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  box-sizing: border-box;
-  flex: 1 0;
-  margin: 0 !important;
-  padding: 0 !important;
-  border-top: none !important;
-  border-right: 1px solid var(--tabs-side-border) !important;
-  background-color: var(--tabs-background) !important;
-}
-
-/* Small outline for keyboard users.
-   The child tab elements get the :focus when tabbed to from
-   the toolbars, but not when clicking or when using keyboard
-   shortcuts such as Ctrl+1.
-   Using the same outline as content windows. */
-.tabbrowser-tabs:focus-within::after {
-  position: absolute;
-  z-index: 10;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border: dotted 1px;
-  content: "";
-}
-
-#tabbrowser-tabs::before,
-#tabbrowser-tabs + hbox,
-#tabbrowser-tabs > hbox {
-  display: none !important;
-}
-
-#main-window[printPreview] #appcontent {
-  width: 100vw !important;
-  margin-left: 0 !important;
-}
-
-#main-window[printPreview] #verticaltabs-box {
-  width: 0 !important;
-}
-
-#main-window[printPreview] #verticaltabs-splitter {
-  width: 0 !important;
-  margin-left: 0 !important;
-  min-width: 0 !important;
-  max-width: 0 !important;
-}
-
-#main-window[F11-fullscreen] #verticaltabs-box {
-  width: 1px !important;
-  transition: none;
-}
-
-#main-window[F11-fullscreen] #verticaltabs-box:hover {
-  width: var(--vtabs-pinned-width) !important;
-}
-
-#main-window[F11-fullscreen] #sidebar-box,
-#main-window[F11-fullscreen] #sidebar-box[hidden="true"] ~ #appcontent {
-  width: calc(100vw - 1px) !important;
-  margin-left: 1px !important;
-  transition: margin-left 500ms linear;
-}
-
-#main-window[tabspinned="true"][F11-fullscreen] #verticaltabs-splitter {
-  width: 0 !important;
-  margin-left: 0 !important;
-  min-width: 0 !important;
-  max-width: 0 !important;
-  transition: margin-left 500ms linear;
-}
-
-#main-window[inFullscreen][inDOMFullscreen] #verticaltabs-box,
-#main-window[inFullscreen][inDOMFullscreen] #verticaltabs-splitter {
-  visibility: collapse;
-}
-
 #verticaltabs-box[expanded="true"],
 #verticaltabs-box[search_expanded="true"] {
   width: var(--vtabs-expanded-width);
   box-shadow: 0 0 10px hsla(0, 0%, 0%, 0.1), inset 0 0 10px hsla(0, 0%, 0%, 0);
 }
 
-#browser-border-start {
-  display: none !important;
-}
-
-#verticaltabs-splitter {
-  position: relative !important;
-  z-index: 99 !important;
-  display: none;
-  margin-left: calc(var(--vtabs-pinned-width) - 3px);
-  margin-right: -1px !important;
-  max-width: 4px;
-  min-width: 4px;
-  width: 4px;
-  background-color: transparent;
-  cursor: ew-resize;
-}
-
-#main-window[tabspinned="true"] #verticaltabs-splitter {
-  display: -moz-box;
-}
-
-#main-window[tabspinned="true"] #verticaltabs-box {
-  width: var(--vtabs-pinned-width);
-  box-shadow: none;
-  transition: box-shadow 0ms ease-in-out;
-}
-
-#verticaltabs-box #TabsToolbar > #top-tabs-button {
-  -moz-box-flex: 0;
-  list-style-image: url("resource://tabcenter/skin/glyph-tabs-top-16.svg") !important;
-}
-
-#verticaltabs-box #TabsToolbar > #pin-button {
-  z-index: 1;
-  -moz-box-flex: 0;
-  list-style-image: url("resource://tabcenter/skin/glyph-sidebar-expand-16.svg") !important;
-}
-
-#TabsToolbar #find-input {
-  display: flex;
-  align-items: center;
-  flex: 20 0 auto;
-  /* trying to get 6px empty space on each side, given that buttons
-     have 2px margins except the new tab button (4px) */
-  margin: 0 4px 0 2px !important;
-  padding: 0 !important;
-  height: 24px;
-  min-height: 0 !important;
-  min-width: 45px !important;
-  border: 1px solid var(--searchbar-border) !important;
-  border-radius: 1px !important;
-  overflow: -moz-hidden-unscrollable;
-  background-color: var(--searchbar-background);
-  color: var(--searchbar-text-color);
-  line-height: 26px;
-  transition-duration: 100ms;
-  transition-property: border-color, box-shadow;
-}
-
-#TabsToolbar #find-input[focused="true"] {
-  width: calc(100% - 108px) !important;
-  border: 1px solid var(--searchbar-border-focus) !important;
-  box-shadow: 0 0 0 1px Highlight inset;
-}
-
-#find-input #tabs-search {
-  display: block;
-  min-width: 18px;
-  max-width: 18px;
-  margin-left: 2px;
-  filter: brightness(0.8);
-  list-style-image: url("resource://tabcenter/skin/glyph-find-18.svg");
-}
-
-#find-input html|*.textbox-input {
-  max-width: 100% !important;
-}
-
-#find-input .textbox-input-box {
-  display: block;
-  max-width: calc(100% - 20px);
-}
-
-/* [inDOMFullscreen] for video */
-#main-window[inFullscreen][inDOMFullscreen] #find-input {
-  display: none;
-}
-
-#verticaltabs-box:not([expanded="true"]):not([search_expanded="true"]) #find-input {
-  visibility: collapse !important;
-}
-
-#verticaltabs-box:not([expanded="true"]):not([search_expanded="true"]) #new-tab-spacer {
-  visibility: visible !important;
-}
-
-#main-window[tabspinned="true"] #verticaltabs-box #pin-button {
-  list-style-image: url("resource://tabcenter/skin/glyph-sidebar-collapse-16.svg") !important;
-}
-
-#main-window:not([tabspinned="true"])
-#verticaltabs-box:not([expanded="true"]):not([search_expanded="true"]) #pin-button {
-  opacity: 0;
-}
-
-.tabbrowser-tab .title-wrapper {
-  padding: 0 !important;
-}
-
-.tabbrowser-tab .tab-text {
-  margin: 0 !important;
-  margin-right: 8px !important;
-}
-
-.tabbrowser-tab[pinned] .title-wrapper .tab-text {
-  margin-right: 0 !important;
-}
-
-.tabbrowser-tab .address-label {
-  display: none;
-  opacity: 0.6;
-}
-
-.tabbrowser-tabs.large-tabs .address-label {
-  display: -moz-box;
-}
-
-/* If not selected, tab text should be more discrete */
-.tabbrowser-tab:not([visuallyselected="true"]) .tab-text {
-  opacity: 0.8;
-}
-
-.tabbrowser-tab:not([visuallyselected="true"]) .address-label {
-  opacity: 0.5;
-}
-
-#main-window[tabspinned="true"] .tabbrowser-tab {
-  width: var(--vtabs-pinned-width) !important;
-}
-
-.tabbrowser-tab.tab-hidden {
-  animation:
-    var(--tab-animation-halftime) fade-out,
-    var(--tab-animation-halftime) var(--tab-animation-halftime) slide-out;
-}
-
-.tabbrowser-tab.tab-visible {
-  animation: var(--tab-animation-time) slide-fade-in;
-}
-
-#filler-tab {
-  /* always use the compact height */
-  height: var(--tab-height-compact);
-  width: var(--vtabs-pinned-width);
-  color: var(--tab-text-color);
-}
-
-#filler-tab:hover {
-  background-color: var(--tab-hover-background);
-}
-
-#filler-tab label {
-  -moz-margin-start: 31px !important;
-  font: message-box;
-  text-shadow: none;
-}
-
-@keyframes fade-out {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-@keyframes slide-out {
-  0% { max-height: var(--tab-height); min-height: var(--tab-height); opacity: 0; }
-  100% { max-height: 0; min-height: 0; opacity: 0; }
-}
-
-@keyframes slide-fade-in {
-  0% { max-height: 0; min-height: 0; opacity: 0; }
-  50% { max-height: var(--tab-height); min-height: var(--tab-height); opacity: 0; }
-  100% { max-height: var(--tab-height); min-height: var(--tab-height); opacity: 1; }
-}
-
-/* keep the order of [pinned] then [selected] */
-.tabbrowser-tab[pinned] {
-  z-index: 2;
-  background-color: var(--tab-pinned-background) !important;
-}
-
-.tabbrowser-tab:hover {
-  z-index: 3;
-}
-
-.tabbrowser-tab[selected="true"] {
-  z-index: 4;
-  background-color: var(--tab-selected-background) !important;
-  color: var(--tab-text-color-selected) !important;
-  text-shadow: none;
-}
-
-.tabbrowser-tab:not([selected="true"]):hover {
-  background-color: var(--tab-hover-background) !important;
-}
-
-.tabbrowser-tab[pinned] .tab-close-button,
-.tabbrowser-tab:not(:hover)[pinned] .tab-close-button {
-  visibility: hidden !important;
-}
-
-.tabbrowser-tab[pinned] .pinned-icon {
-  background-image: url("resource://tabcenter/skin/glyph-pin-pinned-12.svg") !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
-  background-size: 12px !important;
-  filter: brightness(0) opacity(0.5);
-}
-
-.tabbrowser-tab:not([pinned]) .pinned-icon {
-  visibility: hidden !important;
-}
-
-.tabbrowser-tab:not(:hover) .tab-close-button {
-  visibility: collapse !important;
-}
-
-.tab-stack {
-  position: relative;
-  min-height: 28px;
-  text-shadow: none;
-}
-
-.tab-icon-sound {
-  display: none;
-}
-
-.tab-icon-overlay[muted],
-.tab-icon-overlay[soundplaying] {
-  display: -moz-box !important;
-  margin-top: -14px !important;
-  margin-inline-start: -30px !important;
-  margin-inline-end: 14px !important;
-  border: 1px solid hsla(0, 0%, 0%, 0.2);
-  background-clip: padding-box;
-  background-color: white !important;
-  box-shadow: 0 1px 0 hsla(0, 0%, 0%, 0.5) !important;
-}
-
-.tabbrowser-tabs.large-tabs .tab-icon-overlay[muted],
-.tabbrowser-tabs.large-tabs .tab-icon-overlay[soundplaying] {
-  margin-inline-start: -64px !important;
-  margin-inline-end: 48px !important;
-  margin-top: -32px !important;
-}
-
-/* Keep the close button at a safe distance from the tab label. */
-.tab-close-button {
-  display: -moz-box !important;
-  width: 24px !important;
-  height: 24px !important;
-  margin: 0 6px !important;
-  border-radius: 100%;
-  background-color: hsla(0, 0%, 0%, 0.1) !important;
-  background-image: url("resource://tabcenter/skin/glyph-close-16.svg") !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-  background-size: 16px;
-  opacity: 0 !important;
-}
-
-.tabbrowser-tab:hover .tab-close-button {
-  opacity: 1 !important;
-}
-
-.tab-close-button:hover {
-  background-color: hsla(0, 0%, 0%, 0.16) !important;
-}
-
-.tab-close-button:hover:active {
-  background-color: hsla(0, 0%, 0%, 0.2) !important;
-}
-
-.tab-close-button > .toolbarbutton-icon {
-  display: none;
-}
-
-.tab-content {
-  min-height: var(--tab-height);
-  max-height: var(--tab-height);
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.tabbrowser-tabs.large-tabs .tab-meta-image {
-  position: relative;
-  max-width: 54px;
-  max-height: 40px;
-  min-width: 54px;
-  min-height: 40px;
-  border: 2px solid white;
-  margin-left: 12px;
-  margin-right: 6px;
-  background-color: transparent;
-  background-position: top center !important;
-  background-repeat: no-repeat !important;
-  background-size: cover !important;
-  box-shadow:
-    0 0 2px 2px hsla(0, 0%, 0%, 0.02),
-    0 2px 0 hsla(0, 0%, 0%, 0.05),
-    0 0 0 1px hsla(0, 0%, 0%, 0.2);
-}
-
-.tabbrowser-tabs.large-tabs .tab-throbber,
-.tabbrowser-tabs.large-tabs .tab-icon-image {
-  margin-top: 18px !important;
-  margin-left: -2px !important;
-  border-radius: 2px;
-  background-color: #fff !important;
-  box-shadow:
-    0 0 2px hsla(0, 0%, 0%, 0.08),
-    0 0 0 1px hsla(0, 0%, 0%, 0.08);
-}
-
-.tabbrowser-tabs.large-tabs html|canvas {
-  position: absolute;
-  z-index: -1;
-  top: -2px;
-  left: -2px;
-  width: 54px;
-  height: 40px;
-  background: url("resource://tabcenter/skin/tab-blank.svg");
-  background-color: #f6f6f6;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 54px 40px;
-}
-
-.tabbrowser-tabs:not(.large-tabs) .tab-meta-image html|canvas {
-  display: none;
-}
-
-.tab-throbber,
-.tab-icon-image {
-  display: -moz-box !important;
-  min-width: 20px !important;
-  min-height: 20px !important;
-  max-width: 20px !important;
-  max-height: 20px !important;
-  margin-left: 10px !important;
-  margin-right: 6px !important;
-  padding: 2px;
-  opacity: 1 !important;
-}
-
-.tab-throbber,
-.tabbrowser-tab[busy] .tab-icon-image {
-  display: none !important;
-}
-
-.tabbrowser-tab[busy] .tab-throbber {
-  display: -moz-box !important;
-}
-
-/* Drop indicator for drag'n'drop of tabs - Works OOTB(TM)- Just needs a margin. */
-
-.tab-drop-indicator {
-  margin-top: -11px !important;
-  margin-bottom: 0 !important;
-}
-
-/* Toolbar */
+/*** Tabs Toolbar ***/
 
 #TabsToolbar {
   position: relative;
@@ -762,17 +232,6 @@
   filter: brightness(1.5) drop-shadow(0 0.75px 0.5px hsla(0, 0%, 0%, 0.6));
 }
 
-/* Old style, replaced by picking up the --toolbarbutton-hover|active styles */
-/*
-#TabsToolbar > toolbarbutton:hover {
-  border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
-  background-color: hsla(0, 0%, 0%, 0.1) !important;
-}
-#TabsToolbar > toolbarbutton:hover:active {
-  background-color: hsla(0, 0%, 0%, 0.16) !important;
-  box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1) inset !important;
-}
-*/
 #TabsToolbar > toolbarbutton:hover {
   border-color: var(--toolbarbutton-hover-bordercolor);
   background: var(--toolbarbutton-hover-background);
@@ -824,6 +283,478 @@
   background-size: 16px !important;
 }
 
+#TabsToolbar > #top-tabs-button {
+  -moz-box-flex: 0;
+  list-style-image: url("resource://tabcenter/skin/glyph-tabs-top-16.svg") !important;
+}
+
+#TabsToolbar > #pin-button {
+  z-index: 1;
+  -moz-box-flex: 0;
+  list-style-image: url("resource://tabcenter/skin/glyph-sidebar-expand-16.svg") !important;
+}
+
+#TabsToolbar #find-input {
+  display: flex;
+  align-items: center;
+  flex: 20 0 auto;
+  /* trying to get 6px empty space on each side, given that buttons
+     have 2px margins except the new tab button (4px) */
+  margin: 0 4px 0 2px !important;
+  padding: 0 !important;
+  height: 24px;
+  min-height: 0 !important;
+  min-width: 45px !important;
+  border: 1px solid var(--searchbar-border) !important;
+  border-radius: 1px !important;
+  overflow: -moz-hidden-unscrollable;
+  background-color: var(--searchbar-background);
+  color: var(--searchbar-text-color);
+  line-height: 26px;
+  transition-duration: 100ms;
+  transition-property: border-color, box-shadow;
+}
+
+#TabsToolbar #find-input[focused="true"] {
+  width: calc(100% - 108px) !important;
+  border: 1px solid var(--searchbar-border-focus) !important;
+  box-shadow: 0 0 0 1px Highlight inset;
+}
+
+#TabsToolbar #tabs-search {
+  display: block;
+  min-width: 18px;
+  max-width: 18px;
+  margin-left: 2px;
+  filter: brightness(0.8);
+  list-style-image: url("resource://tabcenter/skin/glyph-find-18.svg");
+}
+
+#TabsToolbar #find-input html|*.textbox-input {
+  max-width: 100% !important;
+}
+
+#TabsToolbar .textbox-input-box {
+  display: block;
+  max-width: calc(100% - 20px);
+}
+
+#verticaltabs-box:not([expanded="true"]):not([search_expanded="true"]) #find-input {
+  visibility: collapse !important;
+}
+
+#verticaltabs-box:not([expanded="true"]):not([search_expanded="true"]) #new-tab-spacer {
+  visibility: visible !important;
+}
+
+#main-window[tabspinned="true"] #verticaltabs-box #pin-button {
+  list-style-image: url("resource://tabcenter/skin/glyph-sidebar-collapse-16.svg") !important;
+}
+
+#main-window:not([tabspinned="true"])
+#verticaltabs-box:not([expanded="true"]):not([search_expanded="true"]) #pin-button {
+  opacity: 0;
+}
+
+/*** Tabs Container ***/
+
+.tabbrowser-tabs {
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  box-sizing: border-box;
+  flex: 1 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-top: none !important;
+  border-right: 1px solid var(--tabs-side-border) !important;
+  background-color: var(--tabs-background) !important;
+}
+
+/* Small outline for keyboard users.
+   The child tab elements get the :focus when tabbed to from
+   the toolbars, but not when clicking or when using keyboard
+   shortcuts such as Ctrl+1.
+   Using the same outline as content windows. */
+.tabbrowser-tabs:focus-within::after {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border: dotted 1px;
+  content: "";
+}
+
+#tabbrowser-tabs::before,
+#tabbrowser-tabs + hbox,
+#tabbrowser-tabs > hbox {
+  display: none !important;
+}
+
+/* hide private browsing indicator in the vertical tab box */
+#verticaltabs-box .private-browsing-indicator,
+#verticaltabs-box #private-browsing-indicator {
+  display: none !important;
+}
+
+/*** Scroll box ***/
+
+.tabbrowser-arrowscrollbox {
+  flex: 1 0;
+  height: calc(100vh - var(--));
+}
+
+.tabbrowser-arrowscrollbox > scrollbox {
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+}
+
+#tabbrowser-tabs[mouseInside] .tabbrowser-arrowscrollbox > scrollbox {
+  overflow-y: auto !important;
+}
+
+.tabbrowser-arrowscrollbox > .arrowscrollbox-scrollbox {
+  -moz-padding-end: 0 !important;
+  -moz-padding-start: 0 !important;
+}
+
+.tabbrowser-arrowscrollbox .scrollbutton-up,
+.tabbrowser-arrowscrollbox .scrollbutton-down {
+  visibility: collapse !important;
+}
+
+/*** Tab element (container and decoration) ***/
+
+.tabbrowser-tab {
+  position: relative !important;
+  z-index: 1;
+  -moz-appearance: none !important;
+  -moz-box-flex: 0;
+  -moz-box-pack: start;
+  width: 260px !important;
+  max-width: 100% !important;
+  max-height: var(--tab-height);
+  min-height: var(--tab-height);
+  margin: -1px 0 0 !important;
+  border: solid var(--tab-border) !important;
+  border-width: 1px 0 !important;
+  border-radius: 0 !important;
+  /* Main opaque background */
+  background: var(--tabs-background) !important;
+  color: var(--tab-text-color) !important;
+  pointer-events: auto !important;
+}
+
+#main-window[tabspinned="true"] .tabbrowser-tab {
+  width: var(--vtabs-pinned-width) !important;
+}
+
+.tabbrowser-tab.tab-hidden {
+  animation:
+    var(--tab-animation-halftime) fade-out,
+    var(--tab-animation-halftime) var(--tab-animation-halftime) slide-out;
+}
+
+.tabbrowser-tab.tab-visible {
+  animation: var(--tab-animation-time) slide-fade-in;
+}
+
+/* keep the order of [pinned] then [selected] */
+.tabbrowser-tab[pinned] {
+  z-index: 2;
+  background-color: var(--tab-pinned-background) !important;
+}
+
+.tabbrowser-tab:hover {
+  z-index: 3;
+}
+
+.tabbrowser-tab[selected="true"] {
+  z-index: 4;
+  background-color: var(--tab-selected-background) !important;
+  color: var(--tab-text-color-selected) !important;
+  text-shadow: none;
+}
+
+.tabbrowser-tab:not([selected="true"]):hover {
+  background-color: var(--tab-hover-background) !important;
+}
+
+#filler-tab {
+  /* always use the compact height */
+  height: var(--tab-height-compact);
+  width: var(--vtabs-pinned-width);
+  color: var(--tab-text-color);
+}
+
+#filler-tab:hover {
+  background-color: var(--tab-hover-background);
+}
+
+#filler-tab label {
+  -moz-margin-start: 31px !important;
+  font: message-box;
+  text-shadow: none;
+}
+
+/* Drop indicator for drag'n'drop of tabs - Works OOTB(TM)- Just needs a margin. */
+.tab-drop-indicator {
+  margin-top: -11px !important;
+  margin-bottom: 0 !important;
+}
+
+/* Tab background overlay */
+.tabbrowser-tab .tab-content {
+  background: var(--tab-background) !important;
+}
+
+/* Use the Container color if available */
+.tabbrowser-tab[usercontextid] {
+  --tab-highlight: var(--identity-tab-color);
+}
+
+/* Reduce border opacity for darker tabs */
+.tabbrowser-tab:hover,
+.tabbrowser-tab[pinned],
+.tabbrowser-tab[visuallyselected="true"] {
+  --tab-border: hsla(0, 0%, 0%, 0.04);
+}
+
+/* Get rid of the tab separator from horizontal tabs */
+.tabbrowser-tab::before,
+.tabbrowser-tab::after {
+  content: none !important;
+}
+
+/* Hide background elements (from horizontal rounded tabs) */
+.tab-background {
+  display: none !important;
+}
+
+.tab-content {
+  min-height: var(--tab-height);
+  max-height: var(--tab-height);
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/*** Tab content: image and icons ***/
+
+/* Image and icon container */
+.tab-meta-image {
+  margin-left: 10px;
+  margin-right: 6px;
+}
+
+.tabbrowser-tabs.large-tabs .tab-meta-image {
+  position: relative;
+  max-width: 54px;
+  max-height: 40px;
+  min-width: 54px;
+  min-height: 40px;
+  border: 2px solid white;
+  margin-left: 12px;
+  margin-right: 6px;
+  background-color: transparent;
+  background-position: top center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  box-shadow:
+    0 0 2px 2px hsla(0, 0%, 0%, 0.02),
+    0 2px 0 hsla(0, 0%, 0%, 0.05),
+    0 0 0 1px hsla(0, 0%, 0%, 0.2);
+}
+
+.tabbrowser-tabs.large-tabs .tab-throbber,
+.tabbrowser-tabs.large-tabs .tab-icon-image {
+  margin-top: 18px !important;
+  margin-left: -2px !important;
+  border-radius: 2px;
+  background-color: #fff !important;
+  box-shadow:
+    0 0 2px hsla(0, 0%, 0%, 0.08),
+    0 0 0 1px hsla(0, 0%, 0%, 0.08);
+}
+
+.tabbrowser-tabs.large-tabs .tab-meta-image html|canvas {
+  position: absolute;
+  z-index: -1;
+  top: -2px;
+  left: -2px;
+  width: 54px;
+  height: 40px;
+  background: url("resource://tabcenter/skin/tab-blank.svg");
+  background-color: #f6f6f6;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 54px 40px;
+}
+
+.tabbrowser-tabs:not(.large-tabs) .tab-meta-image html|canvas {
+  display: none;
+}
+
+.tab-throbber,
+.tab-icon-image {
+  display: -moz-box !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding: 2px;
+  opacity: 1 !important;
+}
+
+.tab-throbber,
+.tabbrowser-tab[busy] .tab-icon-image {
+  display: none !important;
+}
+
+.tabbrowser-tab[busy] .tab-throbber {
+  display: -moz-box !important;
+}
+
+/*** Tab content: text ***/
+
+.tabbrowser-tab .title-wrapper {
+  padding: 0 !important;
+}
+
+.tabbrowser-tab .tab-text {
+  margin: 0 !important;
+  margin-right: 8px !important;
+}
+
+.tabbrowser-tab[pinned] .tab-text {
+  margin-right: 0 !important;
+}
+
+.tabbrowser-tab .address-label {
+  display: none;
+  opacity: 0.6;
+}
+
+.tabbrowser-tabs.large-tabs .address-label {
+  display: -moz-box;
+}
+
+/* If not selected, tab text should be more discrete */
+.tabbrowser-tab:not([visuallyselected="true"]) .tab-text {
+  opacity: 0.8;
+}
+
+.tabbrowser-tab:not([visuallyselected="true"]) .address-label {
+  opacity: 0.5;
+}
+
+/*** Tab content: buttons and indicators ***/
+
+/* Blue indicator on selected tab (can be a different color for container tabs) */
+.tab-selection-indicator {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: 0;
+  width: 6px;
+  background-image:
+    linear-gradient(to right, #0003, #0000 20%, #fff0 50%, #fff3),
+    linear-gradient(to right, var(--tab-highlight), var(--tab-highlight));
+  background-position: 0 0;
+  background-size: 100%;
+  opacity: 1;
+  transform: translateX(-6px);
+  transition: transform var(--tab-animation-halftime), opacity 200ms;
+}
+
+.tabbrowser-tab[selected="true"] .tab-selection-indicator {
+  transform: translateX(0);
+}
+
+.tabbrowser-tab[pinned] .tab-close-button,
+.tabbrowser-tab:not(:hover)[pinned] .tab-close-button {
+  visibility: hidden !important;
+}
+
+.tabbrowser-tab[pinned] .pinned-icon {
+  background-image: url("resource://tabcenter/skin/glyph-pin-pinned-12.svg") !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-size: 12px !important;
+  filter: brightness(0) opacity(0.5);
+}
+
+.tabbrowser-tab:not([pinned]) .pinned-icon {
+  visibility: hidden !important;
+}
+
+.tabbrowser-tab:not(:hover) .tab-close-button {
+  visibility: collapse !important;
+}
+
+/* Keep the close button at a safe distance from the tab label. */
+.tab-close-button {
+  display: -moz-box !important;
+  width: 24px !important;
+  height: 24px !important;
+  margin: 0 6px !important;
+  border-radius: 100%;
+  background-color: hsla(0, 0%, 0%, 0.1) !important;
+  background-image: url("resource://tabcenter/skin/glyph-close-16.svg") !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: 16px;
+  opacity: 0 !important;
+}
+
+.tabbrowser-tab:hover .tab-close-button {
+  opacity: 1 !important;
+}
+
+.tab-close-button:hover {
+  background-color: hsla(0, 0%, 0%, 0.16) !important;
+}
+
+.tab-close-button:hover:active {
+  background-color: hsla(0, 0%, 0%, 0.2) !important;
+}
+
+.tab-close-button > .toolbarbutton-icon {
+  display: none;
+}
+
+.tab-stack {
+  position: relative;
+  min-height: 28px;
+  text-shadow: none;
+}
+
+.tab-icon-sound {
+  display: none;
+}
+
+.tab-icon-overlay[muted],
+.tab-icon-overlay[soundplaying] {
+  display: -moz-box !important;
+  margin-top: -14px !important;
+  margin-inline-start: -30px !important;
+  margin-inline-end: 14px !important;
+  border: 1px solid hsla(0, 0%, 0%, 0.2);
+  background-clip: padding-box;
+  background-color: white !important;
+  box-shadow: 0 1px 0 hsla(0, 0%, 0%, 0.5) !important;
+}
+
+.tabbrowser-tabs.large-tabs .tab-icon-overlay[muted],
+.tabbrowser-tabs.large-tabs .tab-icon-overlay[soundplaying] {
+  margin-inline-start: -64px !important;
+  margin-inline-end: 48px !important;
+  margin-top: -32px !important;
+}
+
 /*** opentabstop option ***/
 
 #tabbrowser-tabs[opentabstop] .tabbrowser-arrowscrollbox .scrollbox-innerbox {
@@ -833,4 +764,64 @@
 
 #tabbrowser-tabs[opentabstop] #filler-tab {
   -moz-box-ordinal-group: 0;
+}
+
+/*** Print Preview ***/
+
+#main-window[printPreview] #appcontent {
+  width: 100vw !important;
+  margin-left: 0 !important;
+}
+
+#main-window[printPreview] #verticaltabs-box {
+  width: 0 !important;
+}
+
+#main-window[printPreview] #verticaltabs-splitter {
+  width: 0 !important;
+  margin-left: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+}
+
+/*** Fullscreen ***/
+
+#main-window[F11-fullscreen] #verticaltabs-box {
+  width: 1px !important;
+  transition: none;
+}
+
+#main-window[F11-fullscreen] #verticaltabs-box:hover {
+  width: var(--vtabs-pinned-width) !important;
+}
+
+#main-window[F11-fullscreen] #sidebar-box,
+#main-window[F11-fullscreen] #sidebar-box[hidden="true"] ~ #appcontent {
+  width: calc(100vw - 1px) !important;
+  margin-left: 1px !important;
+  transition: margin-left 500ms linear;
+}
+
+#main-window[tabspinned="true"] #verticaltabs-box {
+  width: var(--vtabs-pinned-width);
+  box-shadow: none;
+  transition: box-shadow 0ms ease-in-out;
+}
+
+#main-window[tabspinned="true"][F11-fullscreen] #verticaltabs-splitter {
+  width: 0 !important;
+  margin-left: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  transition: margin-left 500ms linear;
+}
+
+#main-window[inFullscreen][inDOMFullscreen] #verticaltabs-box,
+#main-window[inFullscreen][inDOMFullscreen] #verticaltabs-splitter {
+  visibility: collapse;
+}
+
+/* [inDOMFullscreen] for video */
+#main-window[inFullscreen][inDOMFullscreen] #find-input {
+  display: none;
 }

@@ -63,3 +63,24 @@
 #customization-titlebar-visibility-button {
   display: none;
 }
+
+/* Can't find trace of this class in the XML or JS */
+.verticaltabs-collapsed {
+  height: 0 !important;  /* animation shrinks height */
+  min-height: 0 !important;
+  max-height: 0 !important;
+  visibility: collapse;
+}
+
+/* Not relevant for tabs sidebar? */
+#main-window[privatebrowsingmode="temporary"] #titlebar-buttonbox-container {
+  margin-top: 4px;
+}
+
+/* Make room for the close/max/min button on the right of the window */
+/* XXX this should probably be per-OS, yes? */
+/* XXX if I was smarter I'd find a way to make a swoop on the right side of the bar, under the window buttons */
+/* Maybe not - this conveniently leaves a hit target for dragging. */
+/*#nav-bar {
+  margin-right: 100px;
+}*/

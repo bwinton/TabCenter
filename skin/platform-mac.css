@@ -41,9 +41,7 @@
   -moz-image-region: rect(0, 16px, 16px, 0) !important;
 }
 
-/* Those two icons are not picking up the inactive style for some reason */
-#top-tabs-button .toolbarbutton-icon:-moz-window-inactive,
-#pin-button .toolbarbutton-icon:-moz-window-inactive {
+#TabsToolbar toolbarbutton:-moz-window-inactive:not(:hover) {
   opacity: 0.5;
 }
 
