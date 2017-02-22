@@ -303,7 +303,7 @@ function initWindow(window) {
     case 'TabOpen':
       utils.sendPing('tabs_created', win);
       if (!get('extensions.tabcentertest1@mozilla.com.doNotShowTour')
-            && mainWindow.getAttribute('toggledon') === 'false'
+            && mainWindow.getAttribute('toggledon') !== 'true'
             && win.gBrowser.tabs.length >= 5
             && timeSinceUsed >= timeUntilReminder) {
         reminderTour(win);
