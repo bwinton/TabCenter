@@ -106,11 +106,13 @@ function firstInstallTour(win) {
     tourVideo.setAttribute('id', 'tour-video');
 
     let dismissLabel = utils.createElement(document, 'label', {'id': 'tour-dismiss-label'});
+    let detailsLabel = utils.createElement(document, 'label', {'id': 'tour-details-label'});
 
     document.getElementById('mainPopupSet').appendChild(panel); //attach to DOM anywhere
     tourTitle.textContent = strings.tourTitleIntro;
     instructions.textContent = strings.tourInstructionsIntro;
     dismissLabel.textContent = strings.dismissLabel;
+    detailsLabel.textContent = strings.detailsLabel;
 
     if (win.reminderTour && get('extensions.tabcentertest1@mozilla.com.tourComplete')) {
       progressButton.setAttribute('label', strings.progressButtonGo);
@@ -152,6 +154,12 @@ function firstInstallTour(win) {
         utils.sendPing('tour_accepted', win, details);
         details.trigger = undefined;
 
+        let unloadTour = function () {
+          pinButton.onclick = pinButtonClick;
+          topTabsButton.onclick = topTabsButtonClick;
+          panel.hidePopup();
+        };
+
         panel.hidePopup();
         outerbox.removeChild(dismissLabel);
         sidetabsbuttonClick(e);
@@ -181,6 +189,7 @@ function firstInstallTour(win) {
             starttime = timestamp;
             movePanel(timestamp, panel, -35, 500);
             win.setTimeout(function () {
+              detailsLabel.setAttribute('visible', true);
               outerbox.style.opacity = '1';
               tourTitle.textContent = strings.tourTitleRestore;
               instructions.textContent = strings.tourInstructionsRestore;
@@ -194,9 +203,16 @@ function firstInstallTour(win) {
               return;
             }
             utils.sendPing('tour_complete', win, details);
-            pinButton.onclick = pinButtonClick;
-            topTabsButton.onclick = topTabsButtonClick;
-            panel.hidePopup();
+            unloadTour();
+          };
+          detailsLabel.onclick = (e) => {
+            if (e.which !== 1) {
+              return;
+            }
+            utils.sendPing('tour_complete_details_clicked', win, details);
+            unloadTour();
+            let tab = win.gBrowser.addTab('https://support.mozilla.org/t5/Basic-Browsing/Shield-Studies/ta-p/1361203');
+            win.gBrowser.tabContainer.selectedIndex = win.document.getElementById('tabbrowser-tabs').getIndexOfItem(tab);
           };
         };
       };
@@ -221,6 +237,7 @@ function firstInstallTour(win) {
     outerbox.appendChild(instructions);
     outerbox.appendChild(progressButton);
     outerbox.appendChild(dismissLabel);
+    outerbox.appendChild(detailsLabel);
     panel.openPopup(sidetabsbutton, 'bottomcenter topright', 0, 0, false, true);
   }
 }
