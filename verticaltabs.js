@@ -604,7 +604,25 @@ VerticalTabs.prototype = {
       });
     }
 
+    function restorePlacesControllers() {
+      // Rearranging the #navigator-toolbox (top) element results in releaseing
+      // the `controllers` of the #PlacesToolbar element that's inside
+      // #navigator-toolbox, and regenerated `controllers` doesn't contain the
+      // controller added in `PlacesViewBase` constructor.  That breaks
+      // Bookmarks Toolbar and its menu items.  Restore the controller to make
+      // them working again.
+      let PlacesToolbar = document.getElementById('PlacesToolbar');
+      if (PlacesToolbar &&
+          PlacesToolbar.controllers &&
+          PlacesToolbar.controllers.getControllerCount() === 0 &&
+          PlacesToolbar._placesView &&
+          PlacesToolbar._placesView._controller) {
+        PlacesToolbar.controllers.appendController(PlacesToolbar._placesView._controller);
+      }
+    }
+
     contentbox.insertBefore(top, contentbox.firstChild);
+    restorePlacesControllers();
 
     // Create a box next to the app content. It will hold the tab
     // bar and the tab toolbar.
@@ -908,6 +926,7 @@ VerticalTabs.prototype = {
 
     let beforeListener = function () {
       browserPanel.insertBefore(top, browserPanel.firstChild);
+      restorePlacesControllers();
       browserPanel.insertBefore(bottom, document.getElementById('fullscreen-warning').nextSibling);
       top.palette = palette;
     };
@@ -920,6 +939,7 @@ VerticalTabs.prototype = {
 
     let afterListener = function () {
       contentbox.insertBefore(top, contentbox.firstChild);
+      restorePlacesControllers();
       contentbox.appendChild(bottom);
       top.palette = palette;
       checkDevTheme();
@@ -993,6 +1013,7 @@ VerticalTabs.prototype = {
       toolbar.insertBefore(tabs, toolbar.children[tabsIndex]);
       navbar.parentNode.insertBefore(toolbar, navbar);
       browserPanel.insertBefore(toolbox, browserPanel.firstChild);
+      restorePlacesControllers();
       //remove extra #newtab-popup before they get added again in the tabs constructor
       if (NewTabButton) {
         while (NewTabButton.children.length > 1) {
