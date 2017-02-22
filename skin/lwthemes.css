@@ -41,9 +41,9 @@
 }
 
 #main-window[style*="compact.header.png"]:-moz-lwtheme-brighttext #verticaltabs-box {
+  --toolbar-bottom-border: #24282b;
   --tab-hover-background: hsla(0, 0%, 100%, 0.08);
   --tab-pinned-background: hsla(0, 0%, 100%, 0.05);
-  --toolbar-bottom-border: #24282b;
 }
 
 #main-window[style*="compact.header.png"] #TabsToolbar toolbarbutton {
@@ -80,13 +80,12 @@
 /* White translucent overlay with some depth (same as navbar)
    We can only use this style in pinned mode. */
 #main-window[tabspinned="true"]:-moz-lwtheme:not([style*="compact.header.png"]) #TabsToolbar {
+  --toolbar-top-border: hsla(0, 0%, 100%, 0.4);
   background-clip: border-box;
-  background-color: rgba(253, 253, 253, 0.45);
+  background-color: hsla(0, 0%, 99%, 0.45);
   background-image: url("chrome://browser/skin/Toolbar-background-noise.png");
   background-origin: border-box;
-  box-shadow:
-    rgba(255, 255, 255, 0.4) 0 1px 0 0 inset,
-    rgba(255, 255, 255, 0.15) 0 -1px 0 0 inset;
+  box-shadow: inset 0 -1px hsla(0, 0%, 100%, 0.1);
 }
 
 #main-window[tabspinned="true"]:-moz-lwtheme-brighttext:not([style*="compact.header.png"]) #verticaltabs-box {

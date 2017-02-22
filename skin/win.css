@@ -24,6 +24,7 @@
 }
 
 /*** Tabs Scrollbox ***/
+/* FIXME: can we just change --toolbar-height, or do we need to add an offset as on OSX? */
 
 .tabbrowser-arrowscrollbox,
 .tabbrowser-arrowscrollbox:not(:-moz-lwtheme),

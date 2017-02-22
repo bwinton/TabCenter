@@ -5,51 +5,26 @@
 }
 
 #verticaltabs-box {
+  /* Match navigation bar which has a border-bottom adding 1px */
+  --toolbar-height: 41px;
   border-top: 0 !important;
 }
 
-#TabsToolbar {
-  flex-basis: 41px;
-}
-
-#TabsToolbar:not(:-moz-lwtheme) {
-  color: black !important;
-}
-
-#TabsToolbar .toolbarbutton-1 > .toolbarbutton-icon {
-  border: none !important;
-  background: none !important;
-  box-shadow: none !important;
-}
-
 #TabsToolbar > toolbarbutton {
-  padding: 0 5px !important;
+  padding: 0 5px;
+  border-radius: 2px;
+}
+
+#TabsToolbar #find-input {
   border-radius: 2px !important;
-  border: 1px solid transparent !important;
 }
 
-#TabsToolbar > toolbarbutton:hover {
-  border-color: var(--toolbarbutton-hover-bordercolor) !important;
-  background: var(--toolbarbutton-hover-background) !important;
-  background-clip: padding-box !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
-  box-shadow: var(--toolbarbutton-hover-boxshadow) !important;
-}
-
-#TabsToolbar > toolbarbutton:hover:active {
-  border-color: var(--toolbarbutton-active-bordercolor) !important;
-  background: var(--toolbarbutton-active-background) !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
-  box-shadow: var(--toolbarbutton-active-boxshadow) !important;
-}
-
-.tabbrowser-arrowscrollbox,
-.tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
-  height: calc(100vh - 40px);
-}
-
-#main-window[devedition-theme] .tabbrowser-arrowscrollbox {
-  height: calc(100vh - 41px);
-}
+/*** Button design ***/
+/*
+  Button layout on Linux is rather different from OSX.
+  The 28x24 px rectangle is actually the .toolbarbutton-icon element,
+  and the surrounding button is transparent and adds 3px padding on
+  each side (bigger hitbox, yay!). Can we check:
+  - how it works on Windows?
+  - can we replicate that behavior on Mac/Win?
+*/

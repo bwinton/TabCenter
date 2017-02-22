@@ -1,12 +1,5 @@
 /*Only Mac Styles*/
 
-/*** Main containers ***/
-
-#verticaltabs-box,
-#appcontent {
-  border-top: 0 !important;
-}
-
 #verticaltabs-box {
   --toolbar-height: 40px;
 }
@@ -16,19 +9,23 @@
   --tabs-side-border: hsla(0, 0%, 0%, 0.15);
 }
 
-/* Gradient to match standard theme */
+/*** Main containers ***/
+
+#verticaltabs-box,
+#appcontent {
+  border-top: 0 !important;
+}
+
+/* Gradient and highlights to match standard theme */
 #main-window:not(:-moz-lwtheme) #TabsToolbar {
-  background: linear-gradient(hsl(0, 0%, 93%), hsl(0, 0%, 83%)) !important;
+  --toolbar-top-border: hsla(0, 0%, 100%, 0.4);
+  background: linear-gradient(#ebebeb, #d3d3d3) !important;
   background-origin: border-box !important;
-  box-shadow: inset 0 1px 0 hsla(0, 0%, 100%, 0.4) !important;
+  box-shadow: inset 0 -1px hsla(0, 0%, 100%, 0.12);
 }
 
 #main-window:not(:-moz-lwtheme):-moz-window-inactive #TabsToolbar {
   background: linear-gradient(hsl(0, 0%, 97%), hsl(0, 0%, 95%)) !important;
-}
-
-#main-window:not(:-moz-lwtheme) #TabsToolbar::after {
-  border-top: solid 1px hsla(0, 0%, 100%, 0.15);
 }
 
 /*** Toolbar items ***/
@@ -59,40 +56,34 @@
   box-shadow: 0 0 0 2.5px hsla(210, 100%, 60%, 0.45) !important;
 }
 
-/*** Tabs Scrollbox ***/
-
-.tabbrowser-arrowscrollbox {
-  height: calc(100vh - 62px);
-}
-
-#main-window[inFullscreen] .tabbrowser-arrowscrollbox,
-#main-window[inFullscreen] .tabbrowser-arrowscrollbox:not(:-moz-lwtheme),
-.tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
-  height: calc(100vh - 40px);
-}
-
-#main-window[devedition-theme] .tabbrowser-arrowscrollbox {
-  height: calc(100vh - 62px);
-}
-
-#main-window[devedition-theme][inFullscreen] .tabbrowser-arrowscrollbox {
-  height: calc(100vh - 40px);
-}
-
 /*** Tab content ***/
-
-.title-wrapper .tab-text {
-  font-weight: normal;
-}
 
 .tab-close-button {
   border-radius: 3px !important;
 }
 
+/*** Scrollbox height ***/
+/*
+ * When using the main theme, the titlebar does not count in the `100vh`
+ * height. When using a lightweight theme, there are two situations:
+ * - a 22px title bar shows the background, and counts in 100vh;
+ * - or the user checked the "Title Bar" option in Customize, switching
+ *   back to the gray title bar.
+ * We can't account for both situations (without a matching CSS selector),
+ * so let's pick "translucent 22px title bar" as our default for
+ * lightweight themes.
+ */
+#main-window:-moz-lwtheme:not([inFullscreen]) .tabbrowser-arrowscrollbox {
+  height: calc(100vh - var(--toolbar-height) - 22px);
+}
+
 /*** Lightweight Themes ***/
 
 /* Compact light: harmonize title bar separator */
-#main-window:not([inFullscreen])[style*="compact.header.png"]:-moz-lwtheme-darktext #nav-bar,
-#main-window:not([inFullscreen])[style*="compact.header.png"]:-moz-lwtheme-darktext #TabsToolbar {
+#main-window:not([inFullscreen])[style*="compact.header.png"]:-moz-lwtheme-darktext #nav-bar {
   box-shadow: 0 1px hsla(0, 0%, 0%, 0.15) inset !important;
+}
+
+#main-window:not([inFullscreen])[style*="compact.header.png"]:-moz-lwtheme-darktext #TabsToolbar {
+  --toolbar-top-border: hsla(0, 0%, 0%, 0.15);
 }

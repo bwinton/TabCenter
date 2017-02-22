@@ -16,13 +16,13 @@
 }
 
 #verticaltabs-box {
-  /* Keep most custom properties local to the vertical tabs sidebar */
   --toolbar-height: 40px;
   --tab-height-compact: 36px;
   --tab-height-large: 56px;
   /* resolve to a single tab height (helps with animations) */
   --tab-height: var(--tab-height-compact);
   --toolbar-side-border: hsla(0, 0%, 0%, 0.15);
+  --toolbar-top-border: transparent;
   --toolbar-bottom-border: hsla(0, 0%, 0%, 0.15);
   --toolbar-background: hsl(0, 0%, 97%);
   --searchbar-text-color: #000;
@@ -152,7 +152,6 @@
   overflow-x: hidden;
   background: transparent !important;
   background-origin: border-box !important;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0), inset 0 0 10px hsla(0, 0%, 0%, 0.2);
   flex-direction: column;
   transition: box-shadow 150ms ease-out, width 150ms ease-out;
 }
@@ -160,7 +159,6 @@
 #verticaltabs-box[expanded="true"],
 #verticaltabs-box[search_expanded="true"] {
   width: var(--vtabs-expanded-width);
-  box-shadow: 0 0 10px hsla(0, 0%, 0%, 0.1), inset 0 0 10px hsla(0, 0%, 0%, 0);
 }
 
 /*** Tabs Toolbar ***/
@@ -169,23 +167,18 @@
   position: relative;
   display: flex;
   margin: 0 !important;
-  /* A top/bottom border will take space and misalign the buttons -> use ::after (not box-shadow, already used for some effects) */
-  border: none !important;
+  /* Use both top and bottom border, even if top is transparent,
+     so that the content is centered correctly. Avoid box-shadow,
+     used by some themes for highlights. */
+  border-top: 1px solid var(--toolbar-top-border) !important;
+  border-bottom: 1px solid var(--toolbar-bottom-border) !important;
+  border-left: none !important;
   border-right: 1px solid var(--toolbar-side-border) !important;
   padding: 0 4px !important;
   align-items: center;
   -moz-appearance: none !important;
   background-color: var(--toolbar-background);
   flex: 0 0 var(--toolbar-height);
-}
-
-#TabsToolbar::after {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border-bottom: 1px solid var(--toolbar-bottom-border);
-  content: "";
 }
 
 #TabsToolbar > toolbarbutton:not(#pin-button):not(#new-tab-button):not(#top-tabs-button),
@@ -235,6 +228,9 @@
 #TabsToolbar > toolbarbutton:hover {
   border-color: var(--toolbarbutton-hover-bordercolor);
   background: var(--toolbarbutton-hover-background);
+  background-clip: padding-box;
+  background-position: center center;
+  background-repeat: no-repeat;
   box-shadow: var(--toolbarbutton-hover-boxshadow);
 }
 
@@ -402,8 +398,14 @@
 /*** Scroll box ***/
 
 .tabbrowser-arrowscrollbox {
+  height: calc(100vh - var(--toolbar-height));
   flex: 1 0;
 }
+
+/* TESTING:
+.tabbrowser-arrowscrollbox { box-shadow: inset 0 0 0 4px red; }
+.tabbrowser-arrowscrollbox > * { opacity: 0.2; }
+*/
 
 .tabbrowser-arrowscrollbox > scrollbox {
   overflow-x: hidden !important;
