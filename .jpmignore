@@ -12,3 +12,5 @@
 !/utils.js
 !/vertical-tabbrowser.xml
 !/verticaltabs.js
+!/node_modules/shield-studies-addon-utils/**
+!/shield-config.js

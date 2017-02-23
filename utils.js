@@ -42,6 +42,12 @@ const {Cc, Ci} = require('chrome');
 const prefs = require('sdk/simple-prefs');
 const {get, set, reset} = require('sdk/preferences/service');
 const NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
+const self = require('sdk/self');
+const {studyConfig} = require('shield-config.js');
+
+const shield = require('shield-studies-addon-utils');
+const TCStudy = new shield.Study(studyConfig);
+TCStudy.startup(self.loadReason);
 
 /* Payload */
 
@@ -89,11 +95,11 @@ function sendPing(key, window, details) {
   payload[key] = 1;
   Object.assign(payload, details);
 
-  let ping = JSON.stringify(payload);
+  // Send metrics to shield telemetry
+  TCStudy.report(payload);
+
   // console.log('send ping: ' + ping); //debug: to check the ping details
 
-  // Send metrics to the main Test Pilot add-on.
-  notifyObservers(subject, 'testpilot::send-metric', ping);
   return true;
 }
 exports.sendPing = sendPing;
