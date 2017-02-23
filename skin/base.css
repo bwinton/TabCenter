@@ -83,8 +83,8 @@
   position: relative !important;
   z-index: 99 !important;
   display: none;
-  margin-inline-start: calc(var(--vtabs-pinned-width) - 3px);
-  margin-inline-end: -1px !important;
+  margin-left: calc(var(--vtabs-pinned-width) - 3px);
+  margin-right: -1px !important;
   max-width: 4px;
   min-width: 4px;
   width: 4px;
@@ -103,21 +103,21 @@
 
 #sidebar-box,
 #sidebar-box[hidden="true"] ~ #appcontent {
-  margin-inline-start: var(--vtabs-collapsed-width);
+  margin-left: var(--vtabs-collapsed-width);
 }
 
 #main-window[tabspinned="true"] #sidebar-box,
 #main-window[tabspinned="true"] #sidebar-box[hidden="true"] ~ #appcontent {
-  margin-inline-start: 0;
+  margin-left: 0;
 }
 
 #main-window[chromehidden*="toolbar"] #appcontent,
 #main-window[chromehidden*="toolbar"] #sidebar-box[hidden="true"] ~ #appcontent {
-  margin-inline-start: 0;
+  margin-left: 0;
 }
 
 #main-window[inFullscreen][inDOMFullscreen] #appcontent {
-  margin-inline-start: 0 !important;
+  margin-left: 0 !important;
 }
 
 #navigator-toolbox,
@@ -144,8 +144,7 @@
   position: absolute;
   z-index: 3;
   top: 0;
-  /* direction-independent (e.g. "left" in ltr) */
-  offset-inline-start: 0;
+  left: 0;
   box-sizing: border-box;
   display: flex;
   width: var(--vtabs-collapsed-width);
@@ -173,8 +172,8 @@
      used by some themes for highlights. */
   border-top: 1px solid var(--toolbar-top-border) !important;
   border-bottom: 1px solid var(--toolbar-bottom-border) !important;
-  border-inline-start: none !important;
-  border-inline-end: 1px solid var(--toolbar-side-border) !important;
+  border-left: none !important;
+  border-right: 1px solid var(--toolbar-side-border) !important;
   padding: 0 4px !important;
   align-items: center;
   -moz-appearance: none !important;
@@ -202,16 +201,15 @@
   transition-property: background, border-color;
 }
 
+/* We use 50% gray icons (#808080) with a filter to get any grayscale
+   value we want, from a single image:
+   brightness(0)    = #000000
+   brightness(0.6)  = #4d4d4d
+   brightness(1)    = #808080
+   brightness(1.85) = #ededed
+   brightness(2)    = #ffffff
+*/
 #TabsToolbar .toolbarbutton-icon {
-  margin: 0 !important;
-  /* We use 50% gray icons (#808080) with a filter to get any grayscale
-     value we want, from a single image:
-     brightness(0)    = #000000
-     brightness(0.6)  = #4d4d4d
-     brightness(1)    = #808080
-     brightness(1.85) = #ededed
-     brightness(2)    = #ffffff
-  */
   filter: brightness(0.6) drop-shadow(0 1px hsla(0, 0%, 100%, 0.25));
 }
 
@@ -248,20 +246,20 @@
   width: auto !important;
   /* account for the icon's margin */
   min-width: 30px !important;
-  margin-inline-end: 4px !important;
+  margin-right: 4px !important;
   flex: 0 20 auto;
   justify-content: flex-start;
   list-style-image: url("resource://tabcenter/skin/glyph-new-16.svg") !important;
 }
 
 #TabsToolbar #new-tab-button .toolbarbutton-icon {
-  margin: 0 !important;
+  margin: 0 2px !important;
   padding: 0 !important;
 }
 
 #TabsToolbar #new-tab-button .toolbarbutton-text {
   display: inline-block !important;
-  margin-inline-start: 2px !important;
+  margin: 0 1px !important;
   padding: 0 !important;
 }
 
@@ -294,18 +292,15 @@
 
 #TabsToolbar #find-input {
   display: flex;
+  /* trying to get 6px empty space on each side, given that buttons
+     have 2px margins except the new tab button (4px) */
+  margin: 0 4px 0 2px !important;
+  padding: 0 !important;
   height: 24px;
   min-height: 0 !important;
   min-width: 45px !important;
-  /* trying to get 6px empty space on each side, given that buttons
-     have 2px margins except the new tab button (4px) */
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-  margin-inline-start: 2px !important;
-  margin-inline-end: 4px !important;
-  padding: 0 !important;
   border: 1px solid var(--searchbar-border) !important;
-  border-radius: 2px !important;
+  border-radius: 1px !important;
   overflow: -moz-hidden-unscrollable;
   align-items: center;
   background-color: var(--searchbar-background);
@@ -326,7 +321,7 @@
   display: block;
   min-width: 18px;
   max-width: 18px;
-  margin-inline-start: 2px;
+  margin-left: 2px;
   filter: brightness(0.8);
   list-style-image: url("resource://tabcenter/skin/glyph-find-18.svg");
 }
@@ -550,8 +545,8 @@
 
 /* Image and icon container */
 .tab-meta-image {
-  margin-inline-start: 10px;
-  margin-inline-end: 6px;
+  margin-left: 10px;
+  margin-right: 6px;
 }
 
 .tabbrowser-tabs.large-tabs .tab-meta-image {
@@ -561,8 +556,8 @@
   min-width: 54px;
   min-height: 40px;
   border: 2px solid white;
-  margin-inline-start: 12px;
-  margin-inline-end: 6px;
+  margin-left: 12px;
+  margin-right: 6px;
   background-color: transparent;
   background-position: top center !important;
   background-repeat: no-repeat !important;
@@ -576,7 +571,7 @@
 .tabbrowser-tabs.large-tabs .tab-throbber,
 .tabbrowser-tabs.large-tabs .tab-icon-image {
   margin-top: 18px !important;
-  margin-inline-start: -2px !important;
+  margin-left: -2px !important;
   border-radius: 2px;
   background-color: #fff !important;
   box-shadow:
@@ -609,8 +604,8 @@
   min-height: 20px !important;
   max-width: 20px !important;
   max-height: 20px !important;
-  margin-inline-start: 0 !important;
-  margin-inline-end: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   padding: 2px;
   opacity: 1 !important;
 }
@@ -632,11 +627,11 @@
 
 .tabbrowser-tab .tab-text {
   margin: 0 !important;
-  margin-inline-end: 8px !important;
+  margin-right: 8px !important;
 }
 
 .tabbrowser-tab[pinned] .tab-text {
-  margin-inline-end: 0 !important;
+  margin-right: 0 !important;
 }
 
 .tabbrowser-tab .address-label {
@@ -664,7 +659,7 @@
   position: absolute;
   top: -1px;
   bottom: -1px;
-  offset-inline-start: 0;
+  left: 0;
   width: 6px;
   background-image:
     linear-gradient(to right, #0003, #0000 20%, #fff0 50%, #fff3),
@@ -776,7 +771,7 @@
 
 #main-window[printPreview] #appcontent {
   width: 100vw !important;
-  margin-inline-start: 0 !important;
+  margin-left: 0 !important;
 }
 
 #main-window[printPreview] #verticaltabs-box {
@@ -785,7 +780,7 @@
 
 #main-window[printPreview] #verticaltabs-splitter {
   width: 0 !important;
-  margin-inline-start: 0 !important;
+  margin-left: 0 !important;
   min-width: 0 !important;
   max-width: 0 !important;
 }
@@ -804,8 +799,8 @@
 #main-window[F11-fullscreen] #sidebar-box,
 #main-window[F11-fullscreen] #sidebar-box[hidden="true"] ~ #appcontent {
   width: calc(100vw - 1px) !important;
-  margin-inline-start: 1px !important;
-  transition: margin-inline-start 500ms linear;
+  margin-left: 1px !important;
+  transition: margin-left 500ms linear;
 }
 
 #main-window[tabspinned="true"] #verticaltabs-box {
@@ -816,10 +811,10 @@
 
 #main-window[tabspinned="true"][F11-fullscreen] #verticaltabs-splitter {
   width: 0 !important;
-  margin-inline-start: 0 !important;
+  margin-left: 0 !important;
   min-width: 0 !important;
   max-width: 0 !important;
-  transition: margin-inline-start 500ms linear;
+  transition: margin-left 500ms linear;
 }
 
 #main-window[inFullscreen][inDOMFullscreen] #verticaltabs-box,
