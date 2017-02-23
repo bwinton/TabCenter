@@ -201,15 +201,16 @@
   transition-property: background, border-color;
 }
 
-/* We use 50% gray icons (#808080) with a filter to get any grayscale
-   value we want, from a single image:
-   brightness(0)    = #000000
-   brightness(0.6)  = #4d4d4d
-   brightness(1)    = #808080
-   brightness(1.85) = #ededed
-   brightness(2)    = #ffffff
-*/
 #TabsToolbar .toolbarbutton-icon {
+  margin: 0;
+  /* We use 50% gray icons (#808080) with a filter to get any grayscale
+     value we want, from a single image:
+     brightness(0)    = #000000
+     brightness(0.6)  = #4d4d4d
+     brightness(1)    = #808080
+     brightness(1.85) = #ededed
+     brightness(2)    = #ffffff
+  */
   filter: brightness(0.6) drop-shadow(0 1px hsla(0, 0%, 100%, 0.25));
 }
 
@@ -300,7 +301,7 @@
   min-height: 0 !important;
   min-width: 45px !important;
   border: 1px solid var(--searchbar-border) !important;
-  border-radius: 1px !important;
+  border-radius: 2px !important;
   overflow: -moz-hidden-unscrollable;
   align-items: center;
   background-color: var(--searchbar-background);
@@ -313,8 +314,7 @@
 
 #TabsToolbar #find-input[focused="true"] {
   width: calc(100% - 108px) !important;
-  border: 1px solid var(--searchbar-border-focus) !important;
-  box-shadow: 0 0 0 1px Highlight inset;
+  border-color: var(--searchbar-border-focus) !important;
 }
 
 #TabsToolbar #tabs-search {
@@ -367,23 +367,8 @@
   flex: 1 0;
 }
 
-/* Small outline for keyboard users.
-   The child tab elements get the :focus when tabbed to from
-   the toolbars, but not when clicking or when using keyboard
-   shortcuts such as Ctrl+1.
-   Using the same outline as content windows. */
-.tabbrowser-tabs:focus-within::after {
-  position: absolute;
-  z-index: 10;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border: dotted 1px;
-  content: "";
-}
-
 #tabbrowser-tabs::before,
+#tabbrowser-tabs::after,
 #tabbrowser-tabs + hbox,
 #tabbrowser-tabs > hbox {
   display: none !important;
@@ -539,6 +524,11 @@
   max-height: var(--tab-height);
   margin: 0 !important;
   padding: 0 !important;
+}
+
+#verticaltabs-box .tabbrowser-tab:focus .tab-content {
+  outline: 1px dotted;
+  outline-offset: -3px;
 }
 
 /*** Tab content: image and icons ***/

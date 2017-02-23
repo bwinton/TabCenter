@@ -23,6 +23,12 @@
   }
 }
 
+/*** Toolbar ***/
+
+#TabsToolbar #find-input[focused="true"] {
+  box-shadow: 0 0 0 1px Highlight inset;
+}
+
 /*** Tabs Scrollbox ***/
 /* FIXME: can we just change --toolbar-height, or do we need to add an offset as on OSX? */
 
