@@ -348,18 +348,21 @@ function initWindow(window) {
     return;
   }
 
-  // if the document is loaded
-  if (isDocumentLoaded(win)) {
-    utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
-    addVerticalTabs(win, data);
-    firstInstallTour(win);
-  } else {
-    // Listen for load event before checking the window type
-    win.addEventListener('load', () => {
+  // Don't init VerticalTabs if it's part of the control group
+  if (get('extensions.tabcentertest1@mozilla.com.shield') !== 'control'){
+    // if the document is loaded
+    if (isDocumentLoaded(win)) {
       utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
       addVerticalTabs(win, data);
       firstInstallTour(win);
-    }, {once: true});
+    } else {
+      // Listen for load event before checking the window type
+      win.addEventListener('load', () => {
+        utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
+        addVerticalTabs(win, data);
+        firstInstallTour(win);
+      }, {once: true});
+    }
   }
 }
 
