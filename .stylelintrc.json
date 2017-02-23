@@ -28,7 +28,8 @@
         "top",
         "right",
         "bottom",
-        "left"
+        "left",
+        "offset"
       ]},
     {
       "order": "flexible",
