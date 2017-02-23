@@ -36,6 +36,10 @@
   -moz-image-region: rect(0, 16px, 16px, 0) !important;
 }
 
+#TabsToolbar #new-tab-button .toolbarbutton-icon {
+  margin: 0 2px !important;
+}
+
 #TabsToolbar toolbarbutton:-moz-window-inactive:not(:hover) {
   opacity: 0.5;
 }

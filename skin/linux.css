@@ -10,6 +10,13 @@
   border-top: 0 !important;
 }
 
+#main-window:not(:-moz-lwtheme) #TabsToolbar {
+  --toolbar-background: -moz-dialog;
+  --toolbar-top-border: rgba(255, 255, 255, 0.4);
+  --toolbar-bottom-border: ThreeDShadow;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.15)) !important;
+}
+
 #TabsToolbar > toolbarbutton {
   padding: 0 5px;
   border-radius: 2px;
@@ -18,13 +25,3 @@
 #TabsToolbar #find-input {
   border-radius: 2px !important;
 }
-
-/*** Button design ***/
-/*
-  Button layout on Linux is rather different from OSX.
-  The 28x24 px rectangle is actually the .toolbarbutton-icon element,
-  and the surrounding button is transparent and adds 3px padding on
-  each side (bigger hitbox, yay!). Can we check:
-  - how it works on Windows?
-  - can we replicate that behavior on Mac/Win?
-*/
