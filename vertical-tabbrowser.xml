@@ -826,6 +826,7 @@
       <method name="updateUriLabel">
         <parameter name="uri"/>
         <body><![CDATA[
+          /* global VerticalTabs:false */
           let label = uri.spec;
           if (uri.scheme.startsWith('http')) {
             label = uri.host;
