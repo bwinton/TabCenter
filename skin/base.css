@@ -2,7 +2,6 @@
 @namespace html url("http://www.w3.org/1999/xhtml");
 
 :root {
-  --tab-animation-time: 150ms;
   --collapsed-width: 45px;
   --pinned-width: 260px;
   --link-color: graytext;
@@ -469,11 +468,25 @@
 }
 
 .tabbrowser-tab.tab-hidden {
-  animation: var(--tab-animation-time) fade-out, var(--tab-animation-time) var(--tab-animation-time) slide-out;
+  animation: 150ms tab-fade-out;
 }
 
 .tabbrowser-tab.tab-visible {
-  animation: 300ms slide-fade-in;
+  animation: 300ms tab-fade-in;
+}
+
+.large-tabs .tabbrowser-tab.tab-hidden {
+  animation: 300ms large-tab-fade-out;
+}
+
+.large-tabs .tabbrowser-tab.tab-visible {
+  animation: 300ms large-tab-fade-in;
+}
+
+/* there is a visual jump if we do not collapse the tab content before the end of the animation */
+.tabbrowser-tab.tab-hidden .tab-stack {
+  transition: visibility 150ms 0ms;
+  visibility: collapse;
 }
 
 #filler-tab {
@@ -495,20 +508,28 @@
   text-shadow: none;
 }
 
-@keyframes fade-out {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-@keyframes slide-out {
-  0% { max-height: 36px; min-height: 36px; opacity: 0; }
+@keyframes tab-fade-out {
+  0% { max-height: 36px; min-height: 36px; opacity: 1; }
+  50% { max-height: 36px; min-height: 36px; opacity: 0; }
   100% { max-height: 0; min-height: 0; opacity: 0; }
 }
 
-@keyframes slide-fade-in {
+@keyframes tab-fade-in {
   0% { max-height: 0; min-height: 0; opacity: 0; }
   50% { max-height: 36px; min-height: 36px; opacity: 0; }
   100% { max-height: 36px; min-height: 36px; opacity: 1; }
+}
+
+@keyframes large-tab-fade-out {
+  0% { max-height: 56px; min-height: 56px; opacity: 1; }
+  50% { max-height: 56px; min-height: 56px; opacity: 0; }
+  100% { max-height: 0; min-height: 0; opacity: 0; }
+}
+
+@keyframes large-tab-fade-in {
+  0% { max-height: 0; min-height: 0; opacity: 0; }
+  50% { max-height: 56px; min-height: 56px; opacity: 0; }
+  100% { max-height: 56px; min-height: 56px; opacity: 1; }
 }
 
 .tabbrowser-tab[pinned][selected="true"],
