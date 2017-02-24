@@ -816,3 +816,87 @@
 #main-window[inFullscreen][inDOMFullscreen] #find-input {
   display: none;
 }
+
+/*** Group related styles (deprecated?) ***/
+
+.tabbrowser-tab[verticaltabs-ingroup],
+.tabbrowser-tab[verticaltabs-ingroup]:hover {
+  padding-left: 16px !important;
+}
+
+.tabbrowser-tab[verticaltabs-group] .tab-close-button {
+  opacity: 1 !important;
+}
+
+.tabbrowser-tab[verticaltabs-group] .tab-text {
+  padding-left: 3px !important;
+}
+
+.verticaltabs-textbox {
+  margin: 0;
+}
+
+.verticaltabs-counter {
+  visibility: collapse;
+}
+
+.verticaltabs-droptarget {
+  background-color: Highlight !important;
+  color: HighlightText !important;
+}
+
+.verticaltabs-dropingroup {
+  margin-left: 10px !important;
+}
+
+.verticaltabs-droptonewgroup {
+  /* TODO need icon to symbolize tab group */
+  -moz-image-region: rect(0, 234px, 18px, 216px);
+  list-style-image: url("chrome://browser/skin/Toolbar.png");
+}
+
+/*** Twisty tabs (deprecated?) ***/
+
+/* Ensure the twisty image doesn't stretch. */
+.verticaltabs-twisty-container {
+  -moz-box-align: center;
+  -moz-box-pack: start;
+}
+
+.verticaltabs-twisty {
+  margin-right: 2px !important;
+  margin-left: 1px !important;
+  -moz-appearance: treetwisty !important;
+  cursor: default !important;
+}
+
+.tabbrowser-tab[verticaltabs-collapsed="true"] .verticaltabs-twisty {
+  -moz-appearance: treetwistyopen !important;
+}
+
+/*** Other ***/
+
+#customization-titlebar-visibility-button {
+  display: none;
+}
+
+/* Can't find trace of this class in the XML or JS */
+.verticaltabs-collapsed {
+  height: 0 !important;  /* animation shrinks height */
+  min-height: 0 !important;
+  max-height: 0 !important;
+  visibility: collapse;
+}
+
+/* Not relevant for tabs sidebar? */
+#main-window[privatebrowsingmode="temporary"] #titlebar-buttonbox-container {
+  margin-top: 4px;
+}
+
+/* Make room for the close/max/min button on the right of the window */
+/* XXX this should probably be per-OS, yes? */
+/* XXX if I was smarter I'd find a way to make a swoop on the right side of the bar, under the window buttons */
+/* Maybe not - this conveniently leaves a hit target for dragging. */
+/*#nav-bar {
+  margin-right: 100px;
+}*/
