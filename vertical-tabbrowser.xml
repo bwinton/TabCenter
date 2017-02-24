@@ -797,7 +797,7 @@
             return;
           }
           const canvas = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
-          if (VerticalTabs.newTabImage && (url === 'about:newtab' || url === 'about:blank')) {
+          if (VerticalTabs.newTabImage && VerticalTabs.NEWTAB_URLS.includes(url)) {
             const ctx = canvas.getContext('2d');
             ctx.save();
             ctx.scale(
@@ -830,8 +830,7 @@
           if (uri.scheme.startsWith('http')) {
             label = uri.host;
           }
-          const urlHidden = ['about:newtab', 'about:blank', 'about:home', 'about:privatebrowsing', 'about:sessionrestore', 'about:welcomeback'];
-          const noAddress = urlHidden.includes(label);
+          const noAddress = VerticalTabs.HIDDEN_URLS.includes(label);
           if (label && !noAddress) {
             this.setAttribute('address', label);
           }
