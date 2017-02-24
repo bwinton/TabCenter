@@ -388,9 +388,14 @@
 }
 
 /* TESTING:
-.tabbrowser-arrowscrollbox { box-shadow: inset 0 0 0 4px red; }
+.tabbrowser-arrowscrollbox { box-shadow: inset 0 0 0 2px red; }
 .tabbrowser-arrowscrollbox > * { opacity: 0.2; }
-*/
+/**/
+
+.tabbrowser-arrowscrollbox .arrowscrollbox-overflow-start-indicator,
+.tabbrowser-arrowscrollbox .arrowscrollbox-overflow-end-indicator {
+  display: none;
+}
 
 .tabbrowser-arrowscrollbox > scrollbox {
   overflow-x: hidden !important;
