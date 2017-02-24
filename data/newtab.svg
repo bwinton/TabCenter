@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 80">
+  <style type="text/css">
+    .bg { fill: #f9f9f9; }
+    .s { fill: #fcfcfc; stroke: #b4b4b4; }
+    .tiles { fill: #efefef; stroke: #c0c0c0; }
+  </style>
+  <rect class="bg" x="0" y="0" width="108" height="80"/>
+  <rect class="s" x="32.5" y="18.5" width="43" height="5"/>
+  <g class="tiles" transform="translate(20.5,30.5)">
+    <rect x="0"  y="0" width="19" height="13"/>
+    <rect x="24" y="0" width="19" height="13"/>
+    <rect x="48" y="0" width="19" height="13"/>
+    <rect x="0"  y="18" width="19" height="13"/>
+    <rect x="24" y="18" width="19" height="13"/>
+    <rect x="48" y="18" width="19" height="13"/>
+  </g>
+</svg>
