@@ -413,8 +413,6 @@
         ]]></body>
       </method>
 
-      <!-- XXX todo: implement notifyBackgroundtab for vertical tabs-->
-
       <method name="_getDropIndex">
         <parameter name="event"/>
         <body><![CDATA[
@@ -725,6 +723,7 @@
         </xul:hbox>
         <xul:hbox xbl:inherits="pinned,selected,visuallyselected,titlechanged,attention"
                   class="tab-content" align="center">
+          <xul:hbox class="tab-selection-indicator"/>
           <xul:vbox xbl:inherits="fadein,pinned,selected,visuallyselected,busy,crashed,sharing"
                      class="tab-meta-image">
             <html:canvas anonid="tab-meta-image"
@@ -790,6 +789,7 @@
           }
           let uri = VerticalTabs.getUri(this);
           let url = uri.spec;
+
           this.updateUriLabel(uri);
 
           if (!this.parentNode.classList.contains('large-tabs')) {
@@ -797,7 +797,7 @@
             return;
           }
           const canvas = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
-          if (VerticalTabs.newTabImage && (url === 'about:newtab' || url === 'about:blank')) {
+          if (VerticalTabs.newTabImage && VerticalTabs.NEWTAB_URLS.includes(url)) {
             const ctx = canvas.getContext('2d');
             ctx.save();
             ctx.scale(
@@ -826,13 +826,17 @@
       <method name="updateUriLabel">
         <parameter name="uri"/>
         <body><![CDATA[
+          /* global VerticalTabs:false */
           let label = uri.spec;
           if (uri.scheme.startsWith('http')) {
             label = uri.host;
           }
-          // URI can be shown immediately
-          if (label) {
+          const noAddress = VerticalTabs.HIDDEN_URLS.includes(label);
+          if (label && !noAddress) {
             this.setAttribute('address', label);
+          }
+          if (noAddress) {
+            this.removeAttribute('address');
           }
         ]]></body>
       </method>

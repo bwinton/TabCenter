@@ -127,6 +127,7 @@ const {loadSheet, removeSheet} = require('sdk/stylesheet/utils');
 const STYLESHEETS = [
   'resource://tabcenter/override-bindings.css',
   'resource://tabcenter/skin/base.css',
+  'resource://tabcenter/skin/lwthemes.css',
   'chrome://tabcenter/skin/platform.css'
 ];
 

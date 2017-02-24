@@ -1,33 +1,34 @@
 /*Only Mac Styles*/
 
+#verticaltabs-box {
+  --toolbar-height: 40px;
+}
+
+#verticaltabs-box:-moz-window-inactive {
+  --toolbar-side-border: hsla(0, 0%, 0%, 0.1);
+  --tabs-side-border: hsla(0, 0%, 0%, 0.15);
+}
+
+/*** Main containers ***/
+
+#verticaltabs-box,
 #appcontent {
   border-top: 0 !important;
 }
 
-#verticaltabs-box #TabsToolbar {
-  margin-bottom: 0 !important;
-  flex: 0 0 40px !important;
+/* Gradient and highlights to match standard theme */
+#main-window:not(:-moz-lwtheme) #TabsToolbar {
+  --toolbar-top-border: hsla(0, 0%, 100%, 0.4);
+  background: linear-gradient(#ebebeb, #d3d3d3) !important;
+  background-origin: border-box !important;
+  box-shadow: inset 0 -1px hsla(0, 0%, 100%, 0.12);
 }
 
-#verticaltabs-box {
-  border-top: 0 !important;
+#main-window:not(:-moz-lwtheme):-moz-window-inactive #TabsToolbar {
+  background: linear-gradient(hsl(0, 0%, 97%), hsl(0, 0%, 95%)) !important;
 }
 
-#verticaltabs-box #TabsToolbar > toolbarbutton {
-  padding: 0 4px !important;
-  border-radius: 2.5px !important;
-}
-
-#verticaltabs-box #TabsToolbar > toolbarbutton:hover {
-  border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
-  background-color: hsla(0, 0%, 0%, 0.1) !important;
-}
-
-#verticaltabs-box #TabsToolbar > toolbarbutton:hover:active {
-  border: 1px solid hsla(0, 0%, 0%, 0.16) !important;
-  background-color: hsla(0, 0%, 0%, 0.16) !important;
-  box-shadow: none !important;
-}
+/*** Toolbar items ***/
 
 #TabsToolbar #new-tab-button .toolbarbutton-icon {
   width: 16px !important;
@@ -35,66 +36,58 @@
   -moz-image-region: rect(0, 16px, 16px, 0) !important;
 }
 
-#main-window[tabspinned="true"] #verticaltabs-box #pin-button {
-  box-shadow: none !important;
+#TabsToolbar #new-tab-button .toolbarbutton-icon {
+  margin: 0 2px !important;
 }
 
-@media (min-resolution: 2dppx) {
-  .tabs-newtab-button,
-  #TabsToolbar > #new-tab-button,
-  #TabsToolbar > toolbarpaletteitem > #new-tab-button {
-    list-style-image: url("resource://tabcenter/skin/glyph-new-16.svg") !important;
-  }
-
-  #main-window[brighttext] #TabsToolbar .tabs-newtab-button,
-  #main-window[brighttext] #TabsToolbar > #new-tab-button,
-  #main-window[brighttext] #TabsToolbar > toolbarpaletteitem > #new-tab-button {
-    list-style-image: url("resource://tabcenter/skin/glyph-new-inverted-16.svg") !important;
-  }
-}
-
-.title-wrapper .tab-text {
-  font-weight: normal;
-}
-
-.title-wrapper .address-label {
-  opacity: 0.8;
-}
-
-.tab-close-button {
-  border-radius: 2.5px !important;
+#TabsToolbar toolbarbutton:-moz-window-inactive:not(:hover) {
+  opacity: 0.5;
 }
 
 #TabsToolbar #find-input {
-  border-radius: 2.5px !important;
-  background-position: 6px center !important;
-  box-shadow: 0 0 0 30px hsla(210, 100%, 60%, 0) !important;
+  border-radius: 3px !important;
+  /* Original style was a very visible zoom-in-or-out effect,
+     but it's inconsistent with the navigation bar so let's
+     make it more subtle. */
+  /*box-shadow: 0 0 0 30px hsla(210, 100%, 60%, 0) !important;*/
+  /*transition-duration: 150ms !important;*/
+  box-shadow: 0 0 hsla(210, 100%, 60%, 0) !important;
 }
 
-#TabsToolbar #find-input[focused="true"] {
+/* Compact themes don't use a blue outline for nav bar text inputs */
+#main-window:not([style*="compact.header.png"]) #find-input[focused="true"] {
   border: 1px solid hsla(210, 100%, 60%, 0.6) !important;
-  box-shadow: 0 0 0 3px hsla(210, 100%, 60%, 0.45) !important;
-  transition-duration: 150ms !important;
+  box-shadow: 0 0 0 2.5px hsla(210, 100%, 60%, 0.45) !important;
 }
 
-#navigator-toolbox > toolbar:not(#TabsToolbar):-moz-lwtheme {
-  box-shadow: none !important;
+/*** Tab content ***/
+
+.tab-close-button {
+  border-radius: 3px !important;
 }
 
-.tabbrowser-arrowscrollbox {
-  height: calc(100vh - 61px);
+/*** Scrollbox height ***/
+/*
+ * When using the main theme, the titlebar does not count in the `100vh`
+ * height. When using a lightweight theme, there are two situations:
+ * - a 22px title bar shows the background, and counts in 100vh;
+ * - or the user checked the "Title Bar" option in Customize, switching
+ *   back to the gray title bar.
+ * We can't account for both situations (without a matching CSS selector),
+ * so let's pick "translucent 22px title bar" as our default for
+ * lightweight themes.
+ */
+#main-window:-moz-lwtheme:not([inFullscreen]) .tabbrowser-arrowscrollbox {
+  height: calc(100vh - var(--toolbar-height) - 22px);
 }
 
-#main-window[inFullscreen] .tabbrowser-arrowscrollbox,
-#main-window[inFullscreen] .tabbrowser-arrowscrollbox:not(:-moz-lwtheme),
-.tabbrowser-arrowscrollbox:not(:-moz-lwtheme) {
-  height: calc(100vh - 39px);
+/*** Lightweight Themes ***/
+
+/* Compact light: harmonize title bar separator */
+#main-window:not([inFullscreen])[style*="compact.header.png"]:-moz-lwtheme-darktext #nav-bar {
+  box-shadow: 0 1px hsla(0, 0%, 0%, 0.15) inset !important;
 }
 
-#main-window[devedition-theme] .tabbrowser-arrowscrollbox {
-  height: calc(100vh - 62px);
-}
-
-#main-window[devedition-theme][inFullscreen] .tabbrowser-arrowscrollbox {
-  height: calc(100vh - 40px);
+#main-window:not([inFullscreen])[style*="compact.header.png"]:-moz-lwtheme-darktext #TabsToolbar {
+  --toolbar-top-border: hsla(0, 0%, 0%, 0.15);
 }

@@ -1,0 +1,121 @@
+/**
+ * Adaptations for lightweight and compact themes
+ *
+ * There are 2 situations:
+ * - theme can be dark or light, which we can detect with
+ *   window[lwthemetextcolor="dark|bright"] or with
+ *   :-moz-lwtheme-darktext and :-moz-lwtheme-brighttext
+ * - theme can be a lightweight theme with a background image,
+ *   or a compact theme; we can only detect the compact themes with
+ *   window[style*="compact.header.png"], as far as I know.
+ * All lightweight/compact themes match the :-moz-lwtheme pseudo-class
+ * (on any element), but that's too imprecise to use.
+ *
+ * I suggest these styles:
+ * 1. Compact themes: adapt the toolbar's height to match the navbar
+ * 2. Toolbar colors: use a translucent white for non-compact
+ *    lightweight themes, compact theme colors otherwise.
+ * 3. Tabs: keep them light except for the "compact dark" theme.
+ *    (Note: lightweight theme backgrounds are 200px high, and not
+ *    patterns, so not fit to show behind a translucent tab container.
+ */
+
+/*** Compact themes ***/
+
+#main-window[style*="compact.header.png"] #verticaltabs-box {
+  --toolbar-height: 32px;
+  /* Compact themes define some color variables that we can use */
+  --toolbar-background: var(--chrome-secondary-background-color);
+  --searchbar-text-color: var(--chrome-color);
+  --searchbar-background: var(--url-and-searchbar-background-color);
+  --searchbar-border: var(--chrome-nav-bar-controls-border-color);
+  --searchbar-border-focus: var(--chrome-nav-bar-controls-border-color);
+  --tabs-background: var(--chrome-background-color);
+  --tab-text-color: var(--chrome-color);
+  --tab-text-color-selected: var(--tab-selection-color);
+  --tab-selected-background: var(--tab-selection-background-color);
+}
+
+#main-window[style*="compact.header.png"]:-moz-lwtheme-darktext #verticaltabs-box {
+  --toolbar-bottom-border: #c8c8c8;
+}
+
+#main-window[style*="compact.header.png"]:-moz-lwtheme-brighttext #verticaltabs-box {
+  --toolbar-bottom-border: #24282b;
+  --tab-hover-background: hsla(0, 0%, 100%, 0.08);
+  --tab-pinned-background: hsla(0, 0%, 100%, 0.05);
+}
+
+#main-window[style*="compact.header.png"] #TabsToolbar toolbarbutton {
+  text-shadow: none;
+}
+
+#main-window[style*="compact.header.png"] .tab-selection-indicator {
+  display: none;
+}
+
+/*** Other Lightweight Themes ***/
+
+#main-window:-moz-lwtheme-brighttext:not([style*="compact.header.png"]) #verticaltabs-box {
+  --toolbar-side-border: hsla(0, 0%, 100%, 0.25);
+}
+
+#main-window:-moz-lwtheme-darktext:not([style*="compact.header.png"]) #verticaltabs-box {
+  --toolbar-side-border: hsla(0, 0%, 0%, 0.15);
+  --toolbar-bottom-border: hsla(0, 0%, 0%, 0.15);
+}
+
+#main-window:-moz-lwtheme-brighttext:not([style*="compact.header.png"]) #TabsToolbar toolbarbutton {
+  text-shadow: 0 0.75px 0.25px hsla(0, 0%, 0%, 0.5);
+}
+
+#main-window:-moz-lwtheme-darktext:not([style*="compact.header.png"]) #verticaltabs-box {
+  --toolbar-background: hsl(0, 0%, 97%);
+}
+
+#main-window:-moz-lwtheme-brighttext:not([style*="compact.header.png"]) #verticaltabs-box {
+  --toolbar-background: hsl(0, 0%, 28%);
+}
+
+/* White translucent overlay with some depth (same as navbar)
+   We can only use this style in pinned mode. */
+#main-window[tabspinned="true"]:-moz-lwtheme:not([style*="compact.header.png"]) #TabsToolbar {
+  --toolbar-top-border: hsla(0, 0%, 100%, 0.4);
+  background-clip: border-box;
+  background-color: hsla(0, 0%, 99%, 0.45);
+  background-image: url("chrome://browser/skin/Toolbar-background-noise.png");
+  background-origin: border-box;
+  box-shadow: inset 0 -1px hsla(0, 0%, 100%, 0.1);
+}
+
+#main-window[tabspinned="true"]:-moz-lwtheme-brighttext:not([style*="compact.header.png"]) #verticaltabs-box {
+  --toolbar-side-border: hsla(0, 0%, 100%, 0.3);
+}
+
+/*** Invert icon colors ***/
+
+#main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] #tabs-search {
+  filter: brightness(2) opacity(0.6);
+}
+
+#main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tabbrowser-tab .pinned-icon,
+#main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tabbrowser-tab[visuallyselected="true"] .pinned-icon {
+  filter: brightness(2) opacity(0.6);
+}
+
+/* Can't filter this one */
+#main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tab-close-button,
+#main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tab-close-button[visuallyselected="true"] {
+  background-color: hsla(0, 0%, 100%, 0.1) !important;
+  background-image: url("resource://tabcenter/skin/glyph-close-inverted-16.svg") !important;
+}
+
+#main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tab-close-button:hover,
+#main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tab-close-button[visuallyselected="true"]:hover {
+  background-color: hsla(0, 0%, 100%, 0.16) !important;
+}
+
+#main-window:-moz-lwtheme-brighttext[style*="compact.header.png"] .tab-close-button:hover:active,
+#main-window:-moz-lwtheme-darktext[style*="compact.header.png"] .tab-close-button[visuallyselected="true"]:hover:active {
+  background-color: hsla(0, 0%, 100%, 0.2) !important;
+}

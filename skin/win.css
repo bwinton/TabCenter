@@ -1,17 +1,11 @@
 /*Only Windows Styles*/
 
-.title-wrapper {
-  padding-left: 5px;
-}
+/*** Main containers ***/
 
-#TabsToolbar > #new-tab-button {
-  width:auto !important;
-}
-
-.tabbrowser-arrowscrollbox,
-.tabbrowser-arrowscrollbox:not(:-moz-lwtheme),
-#main-window[devedition-theme] .tabbrowser-arrowscrollbox {
-  height: calc(100vh - 40px);
+#verticaltabs-box {
+  /* reported from base.css since it's the only platform which kept this,
+     but pretty sure we will have to remove or tweak it. */
+  border-top: 1px solid var(--toolbar-side-border);
 }
 
 @media (-moz-os-version: windows-win7), (-moz-os-version: windows-win8) {
@@ -19,14 +13,29 @@
     top: 1px;
   }
 
-  #TabsToolbar {
-    margin: 0 !important;
-    flex: 0 0 42px !important;
+  #verticaltabs-box {
+    --toolbar-height: 42px;
   }
 
+  /* candidate for removal? */
   #nav-bar {
     border-left: none !important;
   }
+}
+
+/*** Toolbar ***/
+
+#TabsToolbar #find-input[focused="true"] {
+  box-shadow: 0 0 0 1px Highlight inset;
+}
+
+/*** Tabs Scrollbox ***/
+/* FIXME: can we just change --toolbar-height, or do we need to add an offset as on OSX? */
+
+.tabbrowser-arrowscrollbox,
+.tabbrowser-arrowscrollbox:not(:-moz-lwtheme),
+#main-window[devedition-theme] .tabbrowser-arrowscrollbox {
+  height: calc(100vh - 40px);
 }
 
 @media (-moz-os-version: windows-win8) {
@@ -45,9 +54,8 @@
   }
 }
 
-/* win10 needs to be 1 px smaller*/
-@media (-moz-os-version: windows-win10) {
-  #TabsToolbar {
-    flex: 0 0 39px;
-  }
+/*** Tab content ***/
+
+.tabbrowser-tab .tab-text {
+  font-weight: 600 !important;
 }

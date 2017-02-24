@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <style>
+    .stroke { stroke: #808080; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .fill { fill: #808080; fill-rule: nonzero; }
+  </style>
+  <path class="stroke" d="M8 12V7m-3 3l3-3 3 3"/>
+  <path class="fill" d="M14 15H2c-1.1 0-2-.9-2-2V2C0 .9.9 0 2 0h12c1.1 0 2 .9 2 2v11c0 1.1-.9 2-2 2zM12 2.5c0 .27.23.5.5.5h1c.3 0 .5-.22.5-.5 0-.27-.23-.5-.5-.5h-1c-.3 0-.5.22-.5.5zm-3.34 0c0 .27.23.5.5.5h1c.3 0 .5-.22.5-.5 0-.27-.23-.5-.5-.5h-1c-.3 0-.5.22-.5.5zm-3.33 0c0 .27.23.5.5.5h1c.3 0 .5-.22.5-.5 0-.27-.23-.5-.5-.5h-1c-.3 0-.5.22-.5.5zM2 2.5c0 .27.23.5.5.5h1c.3 0 .5-.22.5-.5 0-.27-.23-.5-.5-.5h-1c-.3 0-.5.22-.5.5zM1 5v8c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V5H1z"/>
+</svg>

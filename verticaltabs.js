@@ -57,6 +57,8 @@ Cu.import('resource://gre/modules/PluralForm.jsm');
 
 const NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
 const TAB_DROP_TYPE = 'application/x-moz-tabbrowser-tab';
+const NEWTAB_URLS = ['about:newtab', 'about:blank', 'about:privatebrowsing'];
+const HIDDEN_URLS = ['about:newtab', 'about:blank', 'about:home', 'about:privatebrowsing', 'about:sessionrestore', 'about:welcomeback'];
 
 // Wait these many milliseconds before resizing tabs
 // after mousing out
@@ -71,6 +73,8 @@ function VerticalTabs(window, data) {
   this.document = window.document;
   this.sendPing = sendPing;
   this.unloaders = [];
+  this.NEWTAB_URLS = NEWTAB_URLS;
+  this.HIDDEN_URLS = HIDDEN_URLS;
 
   window.createImageBitmap(data).then((response) => {
     this.newTabImage = response;
@@ -603,6 +607,8 @@ VerticalTabs.prototype = {
         NewTabButtonParent.insertBefore(NewTabButton, NewTabButtonSibling);
       });
     }
+    // Class meant for borderless buttons; removing it simplifies styling conflicts
+    NewTabButton.classList.remove('toolbarbutton-1');
 
     function restorePlacesControllers() {
       // Rearranging the #navigator-toolbox (top) element results in releaseing
@@ -640,8 +646,8 @@ VerticalTabs.prototype = {
 
     this.pinnedWidth = +mainWindow.getAttribute('tabspinnedwidth').replace('px', '') ||
                        +window.getComputedStyle(document.documentElement)
-                              .getPropertyValue('--pinned-width').replace('px', '');
-    document.documentElement.style.setProperty('--pinned-width', `${this.pinnedWidth}px`);
+                              .getPropertyValue('--vtabs-pinned-width').replace('px', '');
+    document.documentElement.style.setProperty('--vtabs-pinned-width', `${this.pinnedWidth}px`);
 
     splitter.addEventListener('mousedown', (event) => {
       if (event.which !== 1) {
@@ -657,7 +663,7 @@ VerticalTabs.prototype = {
         if (this.pinnedWidth < 30) {
           this.pinnedWidth = 30;
         }
-        document.documentElement.style.setProperty('--pinned-width', `${this.pinnedWidth}px`);
+        document.documentElement.style.setProperty('--vtabs-pinned-width', `${this.pinnedWidth}px`);
         mainWindow.setAttribute('tabspinnedwidth', `${this.pinnedWidth}px`);
         ss.setWindowValue(window, 'TCtabspinnedwidth', mainWindow.getAttribute('tabspinnedwidth'));
         this.resizeFindInput();
@@ -950,7 +956,7 @@ VerticalTabs.prototype = {
 
     let resizeListener = () => {
       this.resizeTabs();
-      document.documentElement.style.setProperty('--pinned-width', `${Math.min(this.pinnedWidth, document.width / 2)}px`);
+      document.documentElement.style.setProperty('--vtabs-pinned-width', `${Math.min(this.pinnedWidth, document.width / 2)}px`);
       ss.setWindowValue(window, 'TCtabspinnedwidth', mainWindow.getAttribute('tabspinnedwidth'));
     };
     window.addEventListener('resize', resizeListener);
