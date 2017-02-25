@@ -457,7 +457,7 @@
 }
 
 .tabbrowser-tab.tab-hidden {
-  animation: 150ms tab-fade-out;
+  animation: 300ms tab-fade-out;
 }
 
 .tabbrowser-tab.tab-visible {
