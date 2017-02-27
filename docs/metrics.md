@@ -129,7 +129,7 @@ An example payload (within the full Telemetry ping):
   "tab_center_window_id": 1,
   "tab_center_currently_toggled_on": true,
   "tour_completed": false,
-  "tour_began":  1,
+  "event_type": "tour_began",
   "details": "reminder"
 }
 ```
@@ -137,23 +137,45 @@ An example payload (within the full Telemetry ping):
 And the schema we will use for Redshift:
 ```sql
 local schema = {
---   column name              field type    length  attributes   field name
-    {"timestamp",             "TIMESTAMP",  nil,    "SORTKEY",  "Timestamp"},
-    {"uuid",                  "VARCHAR",    36,     nil,        get_uuid},
-    {"service",               "VARCHAR",    255,    nil,        "test"},
-
-    {"tabs_created",          "INTEGER",    nil,    nil,        "tabs_created"},
-    {"tabs_destroyed",        "INTEGER",    nil,    nil,        "tabs_destroyed"},
-    {"tabs_pinned",           "INTEGER",    nil,    nil,        "tabs_pinned"},
-    {"tabs_unpinned",         "INTEGER",    nil,    nil,        "tabs_unpinned"},
-    {"tab_center_pinned",     "INTEGER",    nil,    nil,        "tab_center_pinned"},
-    {"tab_center_unpinned",   "INTEGER",    nil,    nil,        "tab_center_unpinned"},
-    {"tab_center_expanded",   "INTEGER",    nil,    nil,        "tab_center_expanded"},
-    {"tour_completed",        "BOOLEAN",    nil,    nil,        "tour_completed"},
-    {"tour_began",            "INTEGER",    nil,    nil,        "tour_began"},
-    {"tour_accepted",         "INTEGER",    nil,    nil,        "tour_accepted"},
-    {"tour_complete",         "INTEGER",    nil,    nil,        "tour_complete"},
-    {"details",               "VARCHAR",    31,     nil,        "details"}
+--   column name                        field type    length  attributes   field name
+    {"version",                         "INTEGER",    nil,    nil,        "version"},
+    {"timestamp",                       "TIMESTAMP",  nil,    "SORTKEY",  "Timestamp"},
+    {"uuid",                            "VARCHAR",    36,     nil,        get_uuid},
+    {"service",                         "VARCHAR",    255,    nil,        "test"},
+    {"tour_completed",                  "BOOLEAN",    nil,    nil,        "tour_completed"},
+    {"tab_center_tabs_on_top",          "BOOLEAN",    nil,    nil,        "tab_center_tabs_on_top"},
+    {"tab_center_show_thumbnails",      "BOOLEAN",    nil,    nil,        "tab_center_show_thumbnails"},
+    {"tab_center_window_id",            "INTEGER",    nil,    nil,        "tab_center_window_id"},
+    {"tab_center_currently_toggled_on", "BOOLEAN",    nil,    nil,        "tab_center_currently_toggled_on"},
+    {"event_type",                      "VARCHAR",    255,    nil,        "event_type"},
+    {"details",                         "VARCHAR",    255,    nil,        "details"}
 }
 
+```
+
+Possible values for `event_type`:
+
+```js
+"tabs_created",
+"tabs_destroyed",
+"tabs_pinned",
+"tabs_unpinned",
+"tab_center_pinned",
+"tab_center_unpinned",
+"tab_center_expanded",
+"tab_center_toggled_off",
+"tab_center_toggled_on",
+"tour_began",
+"tour_accepted",
+"tour_continue",
+"tour_complete",
+"tour_dismissed"
+```
+
+Possible values for `details`:
+
+```js
+"install",
+"reminder",
+"completed_reminder"
 ```
