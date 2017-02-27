@@ -2,34 +2,26 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="54" height="40" viewBox="0 0 54 40">
-  <style>
-    .stroke {
-      stroke: #4d4d4d;
-      stroke-opacity: .5;
-      stroke-width: 1;
-      stroke-dasharray: 3 4;
-      stroke-linejoin: round;
-      stroke-dashoffset: 0;
-      stroke-linecap: round;
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 80">
+  <style type="text/css">
+    .h, .v {
+      stroke: #aaa;
       fill: none;
     }
-
-    .base {
-      fill: #e6e6e6;
+    .h {
+      /* center the middle dash (no idea why this value for this dasharray) */
+      stroke-dashoffset: 2.5;
+      stroke-dasharray: 7 6;
     }
-
-    .icon { 
-      fill: none;
-      stroke: #4d4d4d;
-      stroke-opacity: .5;
-      stroke-linejoin: round;
-      stroke-miterlimit: 10;
+    .v {
+      stroke-dashoffset: 1.5;
+      stroke-dasharray: 6.5 5.5;
     }
   </style>
-
-  <rect class="base" x="0" y="0" width="54" height="39" />
-  <rect class="stroke" x=".5" y=".5" width="53" height="38" />
-<!--   <polygon class="icon" points="32.5,27.5 21.5,27.5 21.5,12.5 29,12.5 32.5,16 "/>
-  <polyline class="icon" points="28.5,12.5 28.5,16.5 32.5,16.5 "/> -->
+  <g transform="translate(14, 14)">
+    <line class="h" x1="0" y1="0.5" x2="80" y2="0.5" />
+    <line class="h" x1="0" y1="51.5" x2="80" y2="51.5" />
+    <line class="v" x1="0.5" y1="0" x2="0.5" y2="52" />
+    <line class="v" x1="79.5" y1="0" x2="79.5" y2="52" />
+  </g>
 </svg>
