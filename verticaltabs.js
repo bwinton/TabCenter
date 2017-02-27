@@ -415,12 +415,9 @@ VerticalTabs.prototype = {
 
     window.addEventListener('animationend', (e) => {
       let tab = e.target;
-      if (e.animationName === 'slide-fade-in') {
+      if (e.animationName.endsWith('tab-fade-in')) {
         tab.classList.remove('tab-visible');
-      } else if (e.animationName === 'fade-out') {
-        let tabStack = this.document.getAnonymousElementByAttribute(tab, 'class', 'tab-stack');
-        tabStack.collapsed = true; //there is a visual jump if we do not collapse the tab before the end of the animation
-      } else if (e.animationName === 'slide-out') {
+      } else if (e.animationName.endsWith('tab-fade-out')) {
         this._endRemoveTab.bind(this.window.gBrowser)(tab);
         this.resizeTabs();
       }
