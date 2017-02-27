@@ -7,12 +7,6 @@
   --link-color: graytext;
   --link-color-brighttext: hsl(0, 0%, 60%);
   --tab-highlight-color: #1aa1ff;
-  /* Teal not used, blues replaced with highlight color + black gradient
-  --color-blue-light: #1aa1ff;
-  --color-blue: #0996f8;
-  --color-blue-dark: #0675d3;
-  --color-teal: #01bdad;
-  */
 }
 
 .tabbrowser-arrowscrollbox > scrollbox {
@@ -674,8 +668,14 @@
   height: 56px;
 }
 
-.tab-selected-indicator[visuallyselected="true"] {
+/* Show the indicator background in if tab is a) selected and b) not closing */
+.tabbrowser-tab[visuallyselected="true"]:not(.tab-hidden) .tab-selected-indicator {
   background-position: 0 0;
+}
+
+/* New tab gets selected + remains opacity:0 for 150ms; delay the animation by as much */
+.tabbrowser-tab.tab-visible .tab-selected-indicator {
+  transition-delay: 150ms;
 }
 
 .tab-meta-image {
