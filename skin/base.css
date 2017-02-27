@@ -720,10 +720,10 @@
   width: 54px;
   height: 40px;
   background: url("resource://tabcenter/skin/blank.svg");
-  background-color: #e6e6e6;
+  background-color: #f6f6f6;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 42px 28px;
+  background-size: 54px 40px;
 }
 
 .tabbrowser-tabs:not(.large-tabs) .tab-meta-image html|canvas {

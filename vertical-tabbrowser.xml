@@ -797,7 +797,8 @@
             return;
           }
           const canvas = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
-          if (VerticalTabs.newTabImage && (url === 'about:newtab' || url === 'about:blank')) {
+          const NEWTAB_URLS = ['about:newtab', 'about:blank', 'about:privatebrowsing'];
+          if (VerticalTabs.newTabImage && NEWTAB_URLS.includes(url)) {
             const ctx = canvas.getContext('2d');
             ctx.save();
             ctx.scale(
@@ -831,8 +832,14 @@
             label = uri.host;
           }
           // URI can be shown immediately
+          const HIDE_URL_FOR = ['about:blank', 'about:home', 'about:newtab',
+            'about:privatebrowsing', 'about:sessionrestore', 'about:welcomeback'];
           if (label) {
-            this.setAttribute('address', label);
+            if (HIDE_URL_FOR.includes(label)) {
+              this.removeAttribute('address');
+            } else {
+              this.setAttribute('address', label);
+            }
           }
         ]]></body>
       </method>
