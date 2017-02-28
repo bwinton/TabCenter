@@ -44,15 +44,70 @@ const {get, set, reset} = require('sdk/preferences/service');
 const NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
 const self = require('sdk/self');
 const {studyConfig} = require('shield-config.js');
+const {AddonManager} = require('resource://gre/modules/AddonManager.jsm');
 
 const shield = require('shield-studies-addon-utils');
-const TCStudy = new shield.Study(studyConfig);
-TCStudy.startup(self.loadReason);
+const INCOMPATIBLE_ADDONS = {
+  'TooManyTabs@visibotech.com': 'Too Many Tabs',
+  'firebug@software.joehewitt.com': 'Firebug',
+  'hidecaptionplus-dp@dummy.addons.mozilla.org': 'Hide Caption Titlebar Plus',
+  'tabgroups@quicksaver': 'Tab Groups',
+  'tabgroupshelper@kevinallasso.org': 'Tab Groups Helper',
+  'treestyletab@piro.sakura.ne.jp': 'Tree-Style Tab',
+  '{097d3191-e6fa-4728-9826-b533d755359d}': 'All-In-One Sidebar',
+  '{c6448328-31f7-4b12-a2e0-5c39d0290307}': 'HTitle',
+  '{dc572301-7619-498c-a57d-39143191b318}': 'Tab Mix Plus',
+  'multipletab@piro.sakura.ne.jp': 'Multiple Tab Handler',
+  'tabscope@xuldev.org': 'Tab Scope',
+  'bug566510@vovcacik.addons.mozilla.org': 'Allow multiselect operations on tabs',
+  'jid1-rOGUyxs2TvBBuA@jetpack': 'Previous tab highlighting',
+  '{fc2b8f80-d9a5-4f51-8076-7c7ce3c67ee3}': 'Diigo Toolbar',
+  'tabcentertest1@mozilla.com': 'Tab Center',
+  '{ec8030f7-c20a-464f-9b0e-13a3a9e97384}': 'Tab Tree',
+  '@testpilot-addon': 'Test Pilot',
+  '{0545b830-f0aa-4d7e-8820-50a4629a56fe}': 'ColorfulTabs',
+  'rightbar@realmtech.net': 'RightBar',
+  'tabsonbottom@piro.sakura.ne.jp':'Tabs on Bottom',
+  'extension@one-tab.com':'OneTab',
+  'bartablitex@szabolcs.hubai':'BarTab Lite X',
+  'jid0-AjzBVlpzVAaBqxcar9QDqMWWAVQ@jetpack':'Side Tabs',
+  'TabsTree@traxium':'Tab Tree',
+  '{e5bbc237-c99b-4ced-a061-0be27703295f}':'Hide Tab Bar With One Tab',
+  'tiletabs@DW-dev':'Tile Tabs',
+  'bartabheavy@philikon.de':'BarTab Heavy',
+};
 
-/* Payload */
+class tabCenterStudy extends shield.Study {
+  constructor(config, unloadFn) {
+    super(config);
+    this.unloadFn = unloadFn;
+  }
 
-const {notifyObservers} = Cc['@mozilla.org/observer-service;1'].
-                            getService(Ci.nsIObserverService);
+  isEligible() {
+    // Bool, does not already have similar feature or things that interfere with tabs
+
+    let conflictingAddons = [];
+    AddonManager.getAllAddons(function (aAddons) {
+      let activeAddonIds = aAddons.filter(a => a.isActive && !a.appDisabled && !a.userDisabled).map(a => a.id);
+      conflictingAddons = Object.keys(INCOMPATIBLE_ADDONS).filter(guid => (activeAddonIds.indexOf(guid) !== -1));
+    });
+
+    return super.isEligible() && !conflictingAddons.length;
+  }
+
+  cleanup() {
+    // code to run on any uninstall
+    super.cleanup();
+    this.unloadFn();
+  }
+}
+
+let TCStudy;
+
+exports.makeStudy = function (unload) {
+  TCStudy = new tabCenterStudy(studyConfig, unload);
+  TCStudy.startup(self.loadReason);
+};
 
 const PAYLOAD_KEYS = [
   'tabs_created',
@@ -76,13 +131,6 @@ function sendPing(key, window, details) {
     // console.log(`Could not find ${key} in payload keys.`);
     return false;
   }
-  // This looks strange, but it's required to send over the test ID.
-  const subject = {
-    wrappedJSObject: {
-      observersModuleSubjectWrapper: true,
-      object: 'tabcentertest1@mozilla.com'
-    }
-  };
 
   let payload = {
     version: 2,
@@ -97,8 +145,6 @@ function sendPing(key, window, details) {
 
   // Send metrics to shield telemetry
   TCStudy.report(payload);
-
-  // console.log('send ping: ' + ping); //debug: to check the ping details
 
   return true;
 }
