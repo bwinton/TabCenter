@@ -55,13 +55,13 @@ const strings = require('./get-locale-strings').getLocaleStrings();
 const utils = require('./utils');
 const {addVerticalTabs} = require('./verticaltabs');
 const {get, set} = require('sdk/preferences/service');
+const SHIELD_PREF = 'extensions.verticaltabs.shield.variation';
 
 let self = require('sdk/self');
 const RESOURCE_HOST = 'tabcenter';
 
 let observerService = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
 let startupFinishedObserver = null;
-
 let hotkey;
 let VerticalTabsWindowId = 1;
 
@@ -70,6 +70,7 @@ function reminderTour(win) {
   set('extensions.tabcentertest1@mozilla.com.doNotShowTour', true); //after reminder tour shown once, we will not show again.
   firstInstallTour(win);
 }
+
 function firstInstallTour(win) {
   if (win.activeInstall || win.reminderTour) {
     let details = {};
@@ -349,7 +350,10 @@ function initWindow(window) {
   }
 
   // Don't init VerticalTabs if it's part of the control group
-  if (get('extensions.tabcentertest1@mozilla.com.shield') !== 'control'){
+  if (get(SHIELD_PREF) === 'default' || get(SHIELD_PREF) === 'small-tabs') {
+    if (get(SHIELD_PREF) === 'small-tabs') {
+      prefs.prefs.largetabs = 0;
+    }
     // if the document is loaded
     if (isDocumentLoaded(win)) {
       utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
@@ -457,7 +461,7 @@ exports.main = function (options, callbacks) {
   });
 };
 
-exports.onUnload = function (reason) {
+let onUnload = function (reason) {
   // If the app is shutting down, skip the rest
   if (reason === 'shutdown') {
     return;
@@ -471,6 +475,7 @@ exports.onUnload = function (reason) {
   // Shutdown the VerticalTabs object for each window.
   for (let window of browserWindows) {
     let win = viewFor(window);
+    let mainWindow = win.document.getElementById('main-window');
     if (win.VerticalTabs) {
       utils.removeStylesheet(win, 'resource://tabcenter/skin/persistant.css');
       if (prefs.prefs.opentabstop && win.document.getElementById('main-window').getAttribute('toggledon') === 'true') {
@@ -483,21 +488,20 @@ exports.onUnload = function (reason) {
       }
 
       win.VerticalTabs.unload();
-      let mainWindow = win.document.getElementById('main-window');
-
-      mainWindow.setAttribute('doNotReverse', 'true');
-      mainWindow.removeAttribute('tabspinned');
-      mainWindow.removeAttribute('tabspinnedwidth');
-      mainWindow.removeAttribute('toggledon');
-      mainWindow.setAttribute('persist',
-        mainWindow.getAttribute('persist').replace(' tabspinned', '').replace(' tabspinnedwidth', '').replace(' toggledon', ''));
-
-      win.removeEventListener('TabOpen', win.tabCenterEventListener, false);
-      win.removeEventListener('TabClose', win.tabCenterEventListener, false);
-      win.removeEventListener('TabPinned', win.tabCenterEventListener, false);
-      win.removeEventListener('TabUnpinned', win.tabCenterEventListener, false);
       delete win.VerticalTabs;
     }
+
+    mainWindow.setAttribute('doNotReverse', 'true');
+    mainWindow.removeAttribute('tabspinned');
+    mainWindow.removeAttribute('tabspinnedwidth');
+    mainWindow.removeAttribute('toggledon');
+    mainWindow.setAttribute('persist',
+      mainWindow.getAttribute('persist').replace(' tabspinned', '').replace(' tabspinnedwidth', '').replace(' toggledon', ''));
+
+    win.removeEventListener('TabOpen', win.tabCenterEventListener, false);
+    win.removeEventListener('TabClose', win.tabCenterEventListener, false);
+    win.removeEventListener('TabPinned', win.tabCenterEventListener, false);
+    win.removeEventListener('TabUnpinned', win.tabCenterEventListener, false);
   }
 
   // Restore default preferences
@@ -506,3 +510,5 @@ exports.onUnload = function (reason) {
   // Unregister the resource:// alias.
   unmount(RESOURCE_HOST, null);
 };
+exports.onUnload = onUnload;
+utils.makeStudy(onUnload);
