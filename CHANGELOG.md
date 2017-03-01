@@ -1,4 +1,33 @@
-# v.1.29 - Windows and Linux.
+# v1.30 - Welcome on board! 🛳
+
+### New Features:
+
+* Simplified large look for new tabs.
+* Onboarding tour.
+
+### Fixes:
+
+* Add event_type field.  (Fixes #939.)
+* Tab animation fixes.  (Fixes #918, #897.)
+* Restore Places controllers after rearranging navigator-toolbox. . 🎉  (Fixes #583.)
+* Always check toggledon attribute against 'true'.
+* Tour videos had a black border.
+* Toolbar customization.
+* "Close Other Tabs" confirmation dialog.  (Fixes #937.)
+* Toggle top/side tabs focuses wrong tab.  (Fixes #849.)
+* Don't allow tabs opened from pinned tabs to open above them.  (Fixes #932.)
+* Pinned tabs get closed from 'Close Tabs Above' context option.  (Fixes #928.)
+* pinned tabs stay to the left when on top.  (Fixes #927.)
+* compatibility with Toolbar Position Changer add-on
+* Rework pinned tabs.  (Fixes #880, #888, #879, #817, #881.)
+* Merge all tab resize requests in an event loop turn.
+* updateWindowResizers doesn't exist sometimes.
+* Splitter only accepts left clicks.  (Fixes #900.)
+* Scroll to open tab correctly after exiting the tab column
+* Drag & scroll on reversed tabs.
+
+
+# v1.29 - Windows and Linux.
 
 ### Fixes:
 
