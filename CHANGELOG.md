@@ -1,4 +1,4 @@
-# v1.30 - Welcome on board! 🛳
+# v1.31 - Welcome on board! 🛳
 
 ### New Features:
 
@@ -25,6 +25,7 @@
 * Splitter only accepts left clicks.  (Fixes #900.)
 * Scroll to open tab correctly after exiting the tab column
 * Drag & scroll on reversed tabs.
+* Tabs are opened in correct positions in reverse.  (Fixes #956.)
 
 
 # v1.29 - Windows and Linux.
