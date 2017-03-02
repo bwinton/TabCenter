@@ -362,11 +362,12 @@ VerticalTabs.prototype = {
           aReferrerURI = params.referrerURI;
           aRelatedToCurrent = params.relatedToCurrent;
         }
-        if ((aRelatedToCurrent === null ? aReferrerURI : aRelatedToCurrent) &&
+        // aRelatedToCurrent can be undefined or null if the tab is
+        //opened from an external application or bookmark
+        if (((aRelatedToCurrent === null || aRelatedToCurrent === undefined) ? aReferrerURI : aRelatedToCurrent) &&
         Services.prefs.getBoolPref('browser.tabs.insertRelatedAfterCurrent')) {
           let newTabPos = (this._lastRelatedTab || this.selectedTab)._tPos;
           this.moveTabTo(t, newTabPos);
-          this._lastRelatedTab = t;
         } else {
           this.moveTabTo(t, window.gBrowser.tabs.length - numPinned - 1);
         }
