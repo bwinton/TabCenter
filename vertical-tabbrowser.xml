@@ -43,8 +43,15 @@
           }
 
           let [start, end] = this._startEndProps;
-          let low = 0;
-          let high = elements.length - 1;
+          let low, high;
+          let reverse = this.parentNode.getAttribute('opentabstop') === 'true';
+          if (reverse) {
+            high = 0;
+            low = elements.length - 1;
+          } else {
+            low = 0;
+            high = elements.length - 1;
+          }
 
           if (aX < elements[low].getBoundingClientRect()[start] ||
           aX > elements[high].getBoundingClientRect()[end]) {
