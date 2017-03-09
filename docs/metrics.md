@@ -165,6 +165,7 @@ Possible values for `event_type`:
 "tab_center_expanded",
 "tab_center_toggled_off",
 "tab_center_toggled_on",
+"tab_center_search_engaged",
 "tour_began",
 "tour_accepted",
 "tour_continue",

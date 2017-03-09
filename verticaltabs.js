@@ -743,6 +743,7 @@ VerticalTabs.prototype = {
         this.clearFind();
       }
     });
+    find_input.onfocus = () => { this.sendPing('tab_center_search_engaged', window);};
 
     //build button to toggle Tab Center on/off
     let toptabsbutton = utils.createElement(document, 'toolbarbutton', {
