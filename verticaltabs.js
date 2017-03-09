@@ -368,6 +368,7 @@ VerticalTabs.prototype = {
         Services.prefs.getBoolPref('browser.tabs.insertRelatedAfterCurrent')) {
           let newTabPos = (this._lastRelatedTab || this.selectedTab)._tPos;
           this.moveTabTo(t, newTabPos);
+          this._lastRelatedTab = t;
         } else {
           this.moveTabTo(t, window.gBrowser.tabs.length - numPinned - 1);
         }
