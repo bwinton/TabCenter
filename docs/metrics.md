@@ -165,7 +165,8 @@ Possible values for `event_type`:
 "tab_center_expanded",
 "tab_center_toggled_off",
 "tab_center_toggled_on",
-"tab_center_search_engaged",
+"tab_center_search_focus",
+"tab_center_search_blur",
 "tour_began",
 "tour_accepted",
 "tour_continue",
@@ -178,5 +179,6 @@ Possible values for `details`:
 ```js
 "install",
 "reminder",
-"completed_reminder"
+"completed_reminder",
+"search_engaged"
 ```

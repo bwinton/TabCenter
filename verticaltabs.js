@@ -737,13 +737,22 @@ VerticalTabs.prototype = {
     search_icon.addEventListener('click', function (e) {
       find_input.focus();
     });
-    find_input.addEventListener('input', this.filtertabs.bind(this));
+    find_input.addEventListener('input', () => {
+      this.search_engaged = true;
+      this.filtertabs.call(this);
+    });
     this.window.addEventListener('keyup', (e) => {
       if(e.keyCode === 27) {
         this.clearFind();
       }
     });
-    find_input.onfocus = () => { this.sendPing('tab_center_search_engaged', window);};
+    find_input.onfocus = () => { this.sendPing('tab_center_search_focus', window);};
+    find_input.onblur = () => {
+      let details = {search_engaged: this.search_engaged};
+      this.sendPing('tab_center_search_blur', window, details);
+      this.search_engaged = false;
+    };
+    this.search_engaged = false;
 
     //build button to toggle Tab Center on/off
     let toptabsbutton = utils.createElement(document, 'toolbarbutton', {
