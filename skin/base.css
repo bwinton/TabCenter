@@ -664,6 +664,16 @@
   transition: background-position 150ms ease-out;
 }
 
+/* Use the Container color if available */
+.tabbrowser-tab[usercontextid] {
+  --tab-highlight-color: var(--identity-tab-color);
+}
+
+/* Make the indicator partly visible for Container tabs */
+.tabbrowser-tab[usercontextid] .tab-selected-indicator {
+  background-position: -3px 0;
+}
+
 .tabbrowser-tabs.large-tabs .tab-selected-indicator {
   height: 56px;
 }
