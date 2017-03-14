@@ -66,7 +66,7 @@ const WAIT_BEFORE_RESIZE = 1000;
  *
  * Main entry point of this add-on.
  */
-function VerticalTabs(window, data) {
+function VerticalTabs(window, data, tabCenterStartup) {
   this.window = window;
   this.document = window.document;
   this.sendPing = sendPing;
@@ -76,11 +76,11 @@ function VerticalTabs(window, data) {
     this.newTabImage = response;
   });
 
-  this.init();
+  this.init(tabCenterStartup);
 }
 VerticalTabs.prototype = {
 
-  init: function () {
+  init: function (tabCenterStartup) {
     let window = this.window;
     let document = this.document;
     this.window.VerticalTabs = this;
@@ -388,7 +388,16 @@ VerticalTabs.prototype = {
     require('sdk/simple-prefs').on('opentabstop', reverseTabsListener);
 
     let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
-    if (arrowscrollbox && prefs.opentabstop) {
+    if (tabCenterStartup && arrowscrollbox && prefs.opentabstop) {
+      close_next_tabs_message.setAttribute('label', strings.closeTabsAbove);
+      arrowscrollbox._isRTLScrollbox = true;
+      tabs.setAttribute('opentabstop', 'true');
+      let i = 0;
+      while (window.gBrowser.tabs[0].pinned && i <= window.gBrowser.tabs.length - 1) {
+        window.gBrowser.moveTabTo(window.gBrowser.tabs[0], window.gBrowser.tabs.length - 1);
+        i++;
+      }
+    } else if (arrowscrollbox && prefs.opentabstop) {
       window.VerticalTabs.reverseTabs(arrowscrollbox);
     } else {
       close_next_tabs_message.setAttribute('label', strings.closeTabsBelow);
@@ -1311,8 +1320,8 @@ VerticalTabs.prototype = {
   },
 };
 
-exports.addVerticalTabs = (win, data) => {
+exports.addVerticalTabs = (win, data, tabCenterStartup) => {
   if (!win.VerticalTabs) {
-    new VerticalTabs(win, data);
+    new VerticalTabs(win, data, tabCenterStartup);
   }
 };
