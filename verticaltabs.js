@@ -1187,6 +1187,7 @@ VerticalTabs.prototype = {
     } else {
       aTab.setAttribute('crop', 'end');
     }
+    this.visibleTabs = null;
   },
 
   unload: function () {
@@ -1305,6 +1306,7 @@ VerticalTabs.prototype = {
   },
 
   onTabClose: function (aEvent) {
+    this.visibleTabs = null;
     this.clearFind('tabAction');
   },
 };
