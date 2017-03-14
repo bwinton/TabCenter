@@ -71,7 +71,9 @@ function reminderTour(win) {
   firstInstallTour(win);
 }
 function firstInstallTour(win) {
-  if (win.activeInstall || win.reminderTour) {
+  let document = win.document;
+  let sidetabsbutton = document.getElementById('side-tabs-button');
+  if (sidetabsbutton && (win.activeInstall || win.reminderTour)) {
     let details = {};
     if (get('extensions.tabcentertest1@mozilla.com.tourComplete')) {
       details.tour_type = 'completed_reminder';
@@ -83,8 +85,6 @@ function firstInstallTour(win) {
     utils.sendPing('tour_began', win, details);
 
     win.activeInstall = false;
-    let document = win.document;
-    let sidetabsbutton = document.getElementById('side-tabs-button');
     let panel = utils.createElement(document, 'panel', {
       'id': 'tour-panel',
       'type': 'arrow',
@@ -270,7 +270,7 @@ function setPersistantAttrs(win) {
   set('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp', Date.now().toString());
 }
 
-function initWindow(window) {
+function initWindow(window, tabCenterStartup) {
   // get the XUL window that corresponds to this high-level window
   let win = viewFor(window);
 
@@ -334,13 +334,13 @@ function initWindow(window) {
   // if the document is loaded
   if (isDocumentLoaded(win)) {
     utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
-    addVerticalTabs(win, data);
+    addVerticalTabs(win, data, tabCenterStartup);
     firstInstallTour(win);
   } else {
     // Listen for load event before checking the window type
     win.addEventListener('load', () => {
       utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
-      addVerticalTabs(win, data);
+      addVerticalTabs(win, data, tabCenterStartup);
       firstInstallTour(win);
     }, {once: true});
   }
@@ -384,7 +384,9 @@ exports.main = function (options, callbacks) {
       mainWindow.setAttribute('toggledon', 'false');
       win.activeInstall = true;
     }
-    initWindow(window);
+
+    let tabCenterStartup = (options.loadReason === 'startup');
+    initWindow(window, tabCenterStartup);
   }
 
   windowWatcher.registerNotification({
