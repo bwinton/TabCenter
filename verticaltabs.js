@@ -1102,7 +1102,7 @@ VerticalTabs.prototype = {
   resizeFindInput: function () {
     let spacer = this.document.getElementById('new-tab-spacer');
     let find_input = this.document.getElementById('find-input');
-    if (this.pinnedWidth > 170 || this.document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
+    if (this.pinnedWidth > 90 || this.document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
       spacer.style.visibility = 'collapse';
       find_input.style.visibility = 'visible';
     } else {
