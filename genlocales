@@ -29,6 +29,9 @@ glob('locales/*/*.properties', function (err, files) {
     if (match && lang !== 'en-US') {
       descriptions[lang] = {'description': match[1]};
     }
+    if (lang === 'en-US') {
+      fs.createReadStream(path).pipe(fs.createWriteStream(`locale/en.properties`));
+    }
   });
   package.locales = descriptions;
   fs.writeFile('./package.json', JSON.stringify(package, null, 2), function (err) {
@@ -37,7 +40,6 @@ glob('locales/*/*.properties', function (err, files) {
     }
   });
 });
-
 
 function parseLang(path) {
   const segments = path.split('/');
