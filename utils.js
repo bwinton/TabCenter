@@ -64,7 +64,9 @@ const PAYLOAD_KEYS = [
   'tour_accepted',
   'tour_continue',
   'tour_complete',
-  'tour_dismissed'
+  'tour_dismissed',
+  'hotkey_on',
+  'hotkey_off'
 ];
 
 function sendPing(key, window, details) {

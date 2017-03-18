@@ -420,6 +420,7 @@ exports.main = function (options, callbacks) {
         if (sidebar.getAttribute('search_expanded') === 'true') {
           sidebar.removeAttribute('search_expanded');
           input.blur();
+          utils.sendPing('hotkey_off', window);
           if (mainWindow.getAttribute('tabspinned') !== 'true') {
             sidebar.removeAttribute('expanded');
             window.VerticalTabs.clearFind();
@@ -429,6 +430,7 @@ exports.main = function (options, callbacks) {
           sidebar.setAttribute('expanded', 'true');
           window.setTimeout(() => {
             input.focus();
+            utils.sendPing('hotkey_on', window);
           }, 150);
           if (mainWindow.getAttribute('tabspinned') !== 'true') {
             window.VerticalTabs.recordExpansion();

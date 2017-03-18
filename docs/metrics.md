@@ -171,7 +171,9 @@ Possible values for `event_type`:
 "tour_accepted",
 "tour_continue",
 "tour_complete",
-"tour_dismissed"
+"tour_dismissed",
+"hotkey_on",
+"hotkey_off"
 ```
 
 Possible values for `details`:
