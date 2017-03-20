@@ -291,14 +291,20 @@
   align-items: center;
   flex: 20 0 auto;
   line-height: 26px;
-  transition-duration: 0.1s;
-  transition-property: border-color, box-shadow;
+  transition: min-width ease-in 0.1s, border-color 0.1s, box-shadow 0.1s;
 }
 
 #TabsToolbar #find-input[focused="true"] {
   width: calc(100% - 126px) !important;
   border: 1px solid Highlight !important;
   box-shadow: 0 0 0 1px Highlight inset;
+}
+
+#TabsToolbar #find-input.hide-search {
+  min-width: 0 !important;
+  max-width: 0 !important;
+  border: none !important;
+  margin: 0 !important;
 }
 
 #tabs-search {
