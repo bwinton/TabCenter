@@ -1104,10 +1104,10 @@ VerticalTabs.prototype = {
     let find_input = this.document.getElementById('find-input');
     if (this.pinnedWidth > 90 || this.document.getElementById('main-window').getAttribute('tabspinned') !== 'true') {
       spacer.style.visibility = 'collapse';
-      find_input.style.visibility = 'visible';
+      find_input.classList.remove('hide-search');
     } else {
-      find_input.style.visibility = 'collapse';
       spacer.style.visibility = 'visible';
+      find_input.classList.add('hide-search');
     }
   },
 

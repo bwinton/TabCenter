@@ -414,7 +414,7 @@ exports.main = function (options, callbacks) {
         let mainWindow = window.document.getElementById('main-window');
         let sidebar = window.document.getElementById('verticaltabs-box');
         if (mainWindow.getAttribute('tabspinned') === 'true' &&
-          input.style.visibility === 'collapse') {
+          input.classList.contains('hide-search')) {
           return;
         }
         if (sidebar.getAttribute('search_expanded') === 'true') {
