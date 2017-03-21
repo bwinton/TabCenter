@@ -270,9 +270,90 @@ function setPersistantAttrs(win) {
   set('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp', Date.now().toString());
 }
 
+function fullscreenSpecial(win) {
+  let mainWindow = win.document.getElementById('main-window');
+  let fullscreenctls = win.document.getElementById('window-controls');
+
+  win.oldUpdateToolbars = win.FullScreen._updateToolbars;
+  win.FullScreen._updateToolbars = (aEnterFS) => {
+    let navbar = win.document.getElementById('nav-bar');
+    let toggler = win.document.getElementById('fullscr-toggler');
+    let sibling = win.document.getElementById('navigator-toolbox').nextSibling;
+    for (let el of win.document.querySelectorAll('toolbar[fullscreentoolbar=true]')) {
+      if (aEnterFS) {
+        // Give the main nav bar and the tab bar the fullscreen context menu,
+        // otherwise remove context menu to prevent breakage
+        el.setAttribute('saved-context', el.getAttribute('context'));
+        if (el.id === 'nav-bar' || el.id === 'TabsToolbar'){
+          el.setAttribute('context', 'autohide-context');
+        } else {
+          el.removeAttribute('context');
+        }
+
+        // Set the inFullscreen attribute to allow specific styling
+        // in fullscreen mode
+        el.setAttribute('inFullscreen', true);
+      } else {
+        if (el.hasAttribute('saved-context')) {
+          el.setAttribute('context', el.getAttribute('saved-context'));
+          el.removeAttribute('saved-context');
+        }
+        el.removeAttribute('inFullscreen');
+      }
+    }
+
+    win.ToolbarIconColor.inferFromText();
+
+    // For Lion fullscreen, all fullscreen controls are hidden, don't
+    // bother to touch them. If we don't stop here, the following code
+    // could cause the native fullscreen button be shown unexpectedly.
+    // See bug 1165570.
+    if (win.FullScreen.useLionFullScreen) {
+      return;
+    }
+
+    //something about these two if-conditions is wrong I think....behaves correctly, but the code isn't right
+
+    let ctlsOnTabbar = win.toolbar.visible;
+    if (fullscreenctls.parentNode === navbar && ctlsOnTabbar) {
+      fullscreenctls.removeAttribute('flex');
+      win.document.getElementById('TabsToolbar').appendChild(fullscreenctls);
+    } else if (fullscreenctls.parentNode.id === 'TabsToolbar' && !ctlsOnTabbar) {
+      fullscreenctls.setAttribute('flex', '1');
+      navbar.appendChild(fullscreenctls);
+    }
+    fullscreenctls.hidden = !aEnterFS;
+
+    if (mainWindow.getAttribute('toggledon') === 'true' && aEnterFS && fullscreenctls.parentNode.id === 'TabsToolbar') {
+      navbar.appendChild(fullscreenctls);
+      toggler.removeAttribute('hidden');
+      //hidden nav toolbox needs to be moved 1 pix higher to account for the toggler every time it hides
+      win.gNavToolbox.style.marginTop = (-win.gNavToolbox.getBoundingClientRect().height - 1) + 'px';
+      win.document.getElementById('appcontent').insertBefore(toggler, sibling);
+      mainWindow.setAttribute('F11-fullscreen', 'true');
+    } else if (aEnterFS && fullscreenctls.parentNode.id === 'TabsToolbar') {
+      mainWindow.setAttribute('F11-fullscreen', 'true');
+    } else {
+      mainWindow.removeAttribute('F11-fullscreen');
+    }
+  };
+
+  win.oldCleanup = win.FullScreen.cleanup;
+  win.FullScreen.cleanup = () => {
+    win.oldCleanup.bind(win.FullScreen)();
+    mainWindow.removeAttribute('F11-fullscreen');
+    if (fullscreenctls.parentNode.id === 'nav-bar') {
+      win.document.getElementById('TabsToolbar').appendChild(fullscreenctls);
+    }
+  };
+
+  win.FullScreen._updateToolbars(win.fullScreen);
+}
+
 function initWindow(window, tabCenterStartup) {
   // get the XUL window that corresponds to this high-level window
   let win = viewFor(window);
+  let mainWindow = win.document.getElementById('main-window');
 
   if (!('__SSi' in win)) {
     startupFinishedObserver = {
@@ -295,7 +376,6 @@ function initWindow(window, tabCenterStartup) {
   win.addEventListener('TabUnpinned', win.tabCenterEventListener, false);
 
   win.tabCenterEventListener.handleEvent = function (aEvent) {
-    let mainWindow = win.document.getElementById('main-window');
     let timeUntilReminder = get('extensions.tabcentertest1@mozilla.com.tourComplete') ? 432000000 : 259200000;  //5 days or 3 days in milliseconds
     // let timeUntilReminder = get('extensions.tabcentertest1@mozilla.com.tourComplete') ? 30 * 1000 : 1000; //Debug: small values to trigger reminder tour immediately
     let timeSinceUsed = Date.now() - parseInt(get('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp'));
@@ -335,12 +415,14 @@ function initWindow(window, tabCenterStartup) {
   if (isDocumentLoaded(win)) {
     utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
     addVerticalTabs(win, data, tabCenterStartup);
+    fullscreenSpecial(win);
     firstInstallTour(win);
   } else {
     // Listen for load event before checking the window type
     win.addEventListener('load', () => {
       utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
       addVerticalTabs(win, data, tabCenterStartup);
+      fullscreenSpecial(win);
       firstInstallTour(win);
     }, {once: true});
   }
@@ -379,7 +461,7 @@ exports.main = function (options, callbacks) {
       }
     }
 
-    //show onboarding experience in the active window on "install"
+    //show onboarding experience in the active window on 'install'
     if (browserWindows.activeWindow === window && !get('extensions.tabcentertest1@mozilla.com.doNotShowTour') && options.loadReason === 'install') {
       mainWindow.setAttribute('toggledon', 'false');
       win.activeInstall = true;
