@@ -45,6 +45,7 @@ const {viewFor} = require('sdk/view/core');
 const {browserWindows} = require('sdk/windows');
 const {isBrowser, isDocumentLoaded} = require('sdk/window/utils');
 const {Hotkey} = require('sdk/hotkeys');
+const system = require('sdk/system');
 
 const {Cc, Ci, Cu} = require('chrome');
 const windowWatcher = Cc['@mozilla.org/embedcomp/window-watcher;1'].
@@ -169,9 +170,9 @@ function firstInstallTour(win) {
         instructions.textContent = strings.tourInstructionsCollapse;
         progressButton.setAttribute('label', strings.progressButtonCollapse);
         tourVideo.setAttribute('src', self.data.url('Collapse.mp4'));
-        panel.openPopup(pinButton, 'bottomcenter topleft', 0, 0, false, false);
         leftbox.setAttribute('tour', 'true');
-        win.gNavToolbox.style.marginTop = (-win.gNavToolbox.getBoundingClientRect().height) + 'px';
+        panel.openPopup(pinButton, 'bottomcenter topleft', 0, 0, false, false);
+        win.FullScreen.hideNavToolbox(true);
 
         progressButton.onclick = (e) => {
           if (e.which !== 1) {
@@ -280,6 +281,38 @@ function fullscreenSetup(win) {
   let mainWindow = win.document.getElementById('main-window');
   let fullscreenctls = win.document.getElementById('window-controls');
 
+  win.oldHideNavToolbox = win.FullScreen.hideNavToolbox;
+  win.FullScreen.hideNavToolbox = (aAnimate = false) => {
+    if (win.FullScreen._isChromeCollapsed || !win.FullScreen._safeToCollapse()){
+      return;
+    }
+
+    win.FullScreen._fullScrToggler.hidden = false;
+
+    if (aAnimate && win.gPrefService.getBoolPref('browser.fullscreen.animate')) {
+      win.gNavToolbox.setAttribute('fullscreenShouldAnimate', true);
+      // Hide the fullscreen toggler until the transition ends.
+      let listener = () => {
+        win.gNavToolbox.removeEventListener('transitionend', listener, true);
+        if (win.FullScreen._isChromeCollapsed){
+          win.FullScreen._fullScrToggler.hidden = false;
+        }
+      };
+      win.gNavToolbox.addEventListener('transitionend', listener, true);
+      win.FullScreen._fullScrToggler.hidden = true;
+    }
+
+    // in Windows hidden nav toolbox needs to be moved 1 pix higher to account for the toggler every time it hides
+    if (system.platform === 'winnt' && mainWindow.getAttribute('toggledon') === 'true') {
+      win.gNavToolbox.style.marginTop = (-win.gNavToolbox.getBoundingClientRect().height - 1) + 'px';
+    } else {
+      win.gNavToolbox.style.marginTop = (-win.gNavToolbox.getBoundingClientRect().height) + 'px';
+    }
+
+    win.FullScreen._isChromeCollapsed = true;
+    win.MousePosTracker.removeListener(this);
+  },
+
   win.oldUpdateToolbars = win.FullScreen._updateToolbars;
   win.FullScreen._updateToolbars = (aEnterFS) => {
     let navbar = win.document.getElementById('nav-bar');
@@ -333,12 +366,11 @@ function fullscreenSetup(win) {
     if (mainWindow.getAttribute('toggledon') === 'true' && aEnterFS && fullscreenctls.parentNode.id === 'TabsToolbar') {
       navbar.appendChild(fullscreenctls);
       toggler.removeAttribute('hidden');
-      //hidden nav toolbox needs to be moved 1 pix higher to account for the toggler every time it hides
-      win.gNavToolbox.style.marginTop = (-win.gNavToolbox.getBoundingClientRect().height) + 'px';
       win.document.getElementById('appcontent').insertBefore(toggler, sibling);
       mainWindow.setAttribute('F11-fullscreen', 'true');
-    } else if (aEnterFS && fullscreenctls.parentNode.id === 'TabsToolbar') {
+    } else if (aEnterFS) {
       mainWindow.setAttribute('F11-fullscreen', 'true');
+      win.document.getElementById('TabsToolbar').appendChild(fullscreenctls);
     } else {
       mainWindow.removeAttribute('F11-fullscreen');
     }
@@ -354,6 +386,8 @@ function fullscreenSetup(win) {
   };
 
   win.FullScreen._updateToolbars(win.fullScreen);
+  win.FullScreen._isChromeCollapsed = false;
+  win.FullScreen.hideNavToolbox();
 }
 
 function initWindow(window, tabCenterStartup) {
@@ -556,6 +590,9 @@ exports.onUnload = function (reason) {
       }
 
       win.VerticalTabs.unload();
+      win.FullScreen.hideNavToolbox = win.oldHideNavToolbox;
+      win.FullScreen._updateToolbars = win.oldUpdateToolbars;
+
       let mainWindow = win.document.getElementById('main-window');
 
       mainWindow.setAttribute('doNotReverse', 'true');

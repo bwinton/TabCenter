@@ -49,6 +49,7 @@ const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
 const strings = require('./get-locale-strings').getLocaleStrings();
 const ss = Cc['@mozilla.org/browser/sessionstore;1'].getService(Ci.nsISessionStore);
 const utils = require('./utils');
+const system = require('sdk/system');
 
 Cu.import('resource://gre/modules/PageThumbs.jsm');
 Cu.import('resource:///modules/CustomizableUI.jsm');
@@ -133,10 +134,9 @@ VerticalTabs.prototype = {
           let sibling = document.getElementById('navigator-toolbox').nextSibling;
           toggler.removeAttribute('hidden');
           //hidden nav toolbox needs to be moved 1 pix higher to account for the toggler every time it hides
-          window.oldUpdateToolbars.bind(window.FullScreen)(true);
+          window.FullScreen._updateToolbars.bind(window.FullScreen)(true);
           navbar.appendChild(fullscreenctls);
           document.getElementById('appcontent').insertBefore(toggler, sibling);
-          window.gNavToolbox.style.marginTop = (-window.gNavToolbox.getBoundingClientRect().height) + 'px';
         }
         window.VerticalTabs.sendPing('tab_center_toggled_on', window);
       };
@@ -791,9 +791,10 @@ VerticalTabs.prototype = {
       window.VerticalTabs.sendPing('tab_center_toggled_off', window);
       this.init();
       if (mainWindow.getAttribute('F11-fullscreen') === 'true'){
-        window.oldUpdateToolbars.bind(window.FullScreen)(true);
+        window.FullScreen._updateToolbars.bind(window.FullScreen)(true);
+        window.FullScreen._isChromeCollapsed = false;
+        window.FullScreen.hideNavToolbox();
         document.getElementById('TabsToolbar').appendChild(document.getElementById('window-controls'));
-        window.gNavToolbox.style.marginTop = (-window.gNavToolbox.getBoundingClientRect().height) + 'px';
       }
     };
 
@@ -974,7 +975,6 @@ VerticalTabs.prototype = {
 
     this.unloaders.push(function () {
       autocomplete._openAutocompletePopup = autocompleteOpen;
-      // window.FullScreen._updateToolbars = oldUpdateToolbars;
 
       // Move the tabs toolbar back to where it was
       toolbar._toolbox = null; // reset value set by constructor
