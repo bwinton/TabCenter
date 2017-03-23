@@ -70,6 +70,7 @@ function reminderTour(win) {
   set('extensions.tabcentertest1@mozilla.com.doNotShowTour', true); //after reminder tour shown once, we will not show again.
   firstInstallTour(win);
 }
+
 function firstInstallTour(win) {
   let document = win.document;
   let sidetabsbutton = document.getElementById('side-tabs-button');
@@ -83,6 +84,7 @@ function firstInstallTour(win) {
       details.tour_type = 'install';
     }
     utils.sendPing('tour_began', win, details);
+    win.gNavToolbox.style.marginTop = '0';
 
     win.activeInstall = false;
     let panel = utils.createElement(document, 'panel', {
@@ -155,6 +157,7 @@ function firstInstallTour(win) {
         panel.hidePopup();
         outerbox.removeChild(dismissLabel);
         sidetabsbuttonClick(e);
+        let leftbox = win.document.getElementById('verticaltabs-box');
         let pinButton = document.getElementById('pin-button');
         let pinButtonClick = pinButton.onclick;
         let topTabsButton = document.getElementById('top-tabs-button');
@@ -167,6 +170,8 @@ function firstInstallTour(win) {
         progressButton.setAttribute('label', strings.progressButtonCollapse);
         tourVideo.setAttribute('src', self.data.url('Collapse.mp4'));
         panel.openPopup(pinButton, 'bottomcenter topleft', 0, 0, false, false);
+        leftbox.setAttribute('tour', 'true');
+        win.gNavToolbox.style.marginTop = (-win.gNavToolbox.getBoundingClientRect().height) + 'px';
 
         progressButton.onclick = (e) => {
           if (e.which !== 1) {
@@ -197,6 +202,7 @@ function firstInstallTour(win) {
             pinButton.onclick = pinButtonClick;
             topTabsButton.onclick = topTabsButtonClick;
             panel.hidePopup();
+            leftbox.removeAttribute('tour');
           };
         };
       };
@@ -270,7 +276,7 @@ function setPersistantAttrs(win) {
   set('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp', Date.now().toString());
 }
 
-function fullscreenSpecial(win) {
+function fullscreenSetup(win) {
   let mainWindow = win.document.getElementById('main-window');
   let fullscreenctls = win.document.getElementById('window-controls');
 
@@ -328,7 +334,7 @@ function fullscreenSpecial(win) {
       navbar.appendChild(fullscreenctls);
       toggler.removeAttribute('hidden');
       //hidden nav toolbox needs to be moved 1 pix higher to account for the toggler every time it hides
-      win.gNavToolbox.style.marginTop = (-win.gNavToolbox.getBoundingClientRect().height - 1) + 'px';
+      win.gNavToolbox.style.marginTop = (-win.gNavToolbox.getBoundingClientRect().height) + 'px';
       win.document.getElementById('appcontent').insertBefore(toggler, sibling);
       mainWindow.setAttribute('F11-fullscreen', 'true');
     } else if (aEnterFS && fullscreenctls.parentNode.id === 'TabsToolbar') {
@@ -415,14 +421,14 @@ function initWindow(window, tabCenterStartup) {
   if (isDocumentLoaded(win)) {
     utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
     addVerticalTabs(win, data, tabCenterStartup);
-    fullscreenSpecial(win);
+    fullscreenSetup(win);
     firstInstallTour(win);
   } else {
     // Listen for load event before checking the window type
     win.addEventListener('load', () => {
       utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
       addVerticalTabs(win, data, tabCenterStartup);
-      fullscreenSpecial(win);
+      fullscreenSetup(win);
       firstInstallTour(win);
     }, {once: true});
   }

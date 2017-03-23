@@ -169,8 +169,10 @@
   transition: none;
 }
 
-#main-window[F11-fullscreen] #verticaltabs-box:hover {
+#main-window[F11-fullscreen] #verticaltabs-box:hover,
+#main-window[F11-fullscreen] #verticaltabs-box[tour="true"] {
   width: var(--pinned-width) !important;
+  /*can cause problems - pinned width*/
 }
 
 #main-window[F11-fullscreen] #sidebar-box,
