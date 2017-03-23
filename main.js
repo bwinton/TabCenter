@@ -573,7 +573,9 @@ exports.onUnload = function (reason) {
     observerService.removeObserver(startupFinishedObserver, 'browser-delayed-startup-finished');
     startupFinishedObserver = null;
   }
-  hotkey.destroy();
+  if (hotkey) {
+    hotkey.destroy();
+  }
 
   // Shutdown the VerticalTabs object for each window.
   for (let window of browserWindows) {
