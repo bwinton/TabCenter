@@ -133,8 +133,7 @@ VerticalTabs.prototype = {
           let toggler = document.getElementById('fullscr-toggler');
           let sibling = document.getElementById('navigator-toolbox').nextSibling;
           toggler.removeAttribute('hidden');
-          //hidden nav toolbox needs to be moved 1 pix higher to account for the toggler every time it hides
-          window.FullScreen._updateToolbars.bind(window.FullScreen)(true);
+          window.FullScreen._updateToolbars(true);
           navbar.appendChild(fullscreenctls);
           document.getElementById('appcontent').insertBefore(toggler, sibling);
         }
@@ -791,7 +790,7 @@ VerticalTabs.prototype = {
       window.VerticalTabs.sendPing('tab_center_toggled_off', window);
       this.init();
       if (mainWindow.getAttribute('F11-fullscreen') === 'true'){
-        window.FullScreen._updateToolbars.bind(window.FullScreen)(true);
+        window.FullScreen._updateToolbars(true);
         window.FullScreen._isChromeCollapsed = false;
         window.FullScreen.hideNavToolbox();
         document.getElementById('TabsToolbar').appendChild(document.getElementById('window-controls'));

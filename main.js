@@ -86,6 +86,7 @@ function firstInstallTour(win) {
     }
     utils.sendPing('tour_began', win, details);
     win.gNavToolbox.style.marginTop = '0';
+    win.gNavToolbox.setAttribute('tour_first_panel', 'true');
 
     win.activeInstall = false;
     let panel = utils.createElement(document, 'panel', {
@@ -125,6 +126,11 @@ function firstInstallTour(win) {
         utils.sendPing('tour_accepted', win, details);
         panel.hidePopup();
         sidetabsbuttonClick(e);
+        win.gNavToolbox.removeAttribute('tour_first_panel');
+        if (win.FullScreen){
+          win.FullScreen._isChromeCollapsed = false;
+          win.FullScreen.hideNavToolbox(true);
+        }
       };
     } else {
       if (win.reminderTour) {
@@ -172,8 +178,11 @@ function firstInstallTour(win) {
         tourVideo.setAttribute('src', self.data.url('Collapse.mp4'));
         leftbox.setAttribute('tour', 'true');
         panel.openPopup(pinButton, 'bottomcenter topleft', 0, 0, false, false);
-        win.FullScreen._isChromeCollapsed = false;
-        win.FullScreen.hideNavToolbox(true);
+        win.gNavToolbox.removeAttribute('tour_first_panel');
+        if (win.fullScreen){
+          win.FullScreen._isChromeCollapsed = false;
+          win.FullScreen.hideNavToolbox(true);
+        }
 
         progressButton.onclick = (e) => {
           if (e.which !== 1) {
@@ -220,8 +229,11 @@ function firstInstallTour(win) {
       utils.sendPing('tour_dismissed', win, details);
       sidetabsbutton.onclick = sidetabsbuttonClick;
       panel.hidePopup();
-      win.FullScreen._isChromeCollapsed = false;
-      win.FullScreen.hideNavToolbox(true);
+      win.gNavToolbox.removeAttribute('tour_first_panel');
+      if (win.fullScreen){
+        win.FullScreen._isChromeCollapsed = false;
+        win.FullScreen.hideNavToolbox(true);
+      }
     };
 
     panel.appendChild(outerbox);
@@ -286,7 +298,7 @@ function fullscreenSetup(win) {
 
   win.oldHideNavToolbox = win.FullScreen.hideNavToolbox;
   win.FullScreen.hideNavToolbox = (aAnimate = false) => {
-    if (win.FullScreen._isChromeCollapsed || !win.FullScreen._safeToCollapse()){
+    if (win.FullScreen._isChromeCollapsed || !win.FullScreen._safeToCollapse() || win.gNavToolbox.getAttribute('tour_first_panel') === 'true'){
       return;
     }
 
@@ -597,6 +609,7 @@ exports.onUnload = function (reason) {
       }
 
       win.VerticalTabs.unload();
+      win.FullScreen.cleanup = win.oldCleanup;
       win.FullScreen.hideNavToolbox = win.oldHideNavToolbox;
       win.FullScreen._updateToolbars = win.oldUpdateToolbars;
 
