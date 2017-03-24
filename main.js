@@ -172,6 +172,7 @@ function firstInstallTour(win) {
         tourVideo.setAttribute('src', self.data.url('Collapse.mp4'));
         leftbox.setAttribute('tour', 'true');
         panel.openPopup(pinButton, 'bottomcenter topleft', 0, 0, false, false);
+        win.FullScreen._isChromeCollapsed = false;
         win.FullScreen.hideNavToolbox(true);
 
         progressButton.onclick = (e) => {
@@ -219,6 +220,8 @@ function firstInstallTour(win) {
       utils.sendPing('tour_dismissed', win, details);
       sidetabsbutton.onclick = sidetabsbuttonClick;
       panel.hidePopup();
+      win.FullScreen._isChromeCollapsed = false;
+      win.FullScreen.hideNavToolbox(true);
     };
 
     panel.appendChild(outerbox);
@@ -385,9 +388,11 @@ function fullscreenSetup(win) {
     }
   };
 
-  win.FullScreen._updateToolbars(win.fullScreen);
-  win.FullScreen._isChromeCollapsed = false;
-  win.FullScreen.hideNavToolbox();
+  if (win.fullScreen){
+    win.FullScreen._updateToolbars(win.fullScreen);
+    win.FullScreen._isChromeCollapsed = false;
+    win.FullScreen.hideNavToolbox();
+  }
 }
 
 function initWindow(window, tabCenterStartup) {
