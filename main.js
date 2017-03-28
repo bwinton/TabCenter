@@ -580,6 +580,10 @@ exports.main = function (options, callbacks) {
 };
 
 exports.onUnload = function (reason) {
+  for (let window of browserWindows) {
+    viewFor(window).VerticalTabs.clearFind();
+  }
+
   // If the app is shutting down, skip the rest
   if (reason === 'shutdown') {
     return;

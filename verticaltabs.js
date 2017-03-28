@@ -1201,7 +1201,6 @@ VerticalTabs.prototype = {
     if (tourPanel) {
       this.document.getElementById('mainPopupSet').removeChild(tourPanel);
     }
-    this.clearFind();
     let urlbar = this.document.getElementById('urlbar');
     let url = urlbar.value;
     let tabs = this.document.getElementById('tabbrowser-tabs');
