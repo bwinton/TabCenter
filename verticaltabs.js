@@ -49,6 +49,7 @@ const {createExposableURI} = Cc['@mozilla.org/docshell/urifixup;1'].
 const strings = require('./get-locale-strings').getLocaleStrings();
 const ss = Cc['@mozilla.org/browser/sessionstore;1'].getService(Ci.nsISessionStore);
 const utils = require('./utils');
+const system = require('sdk/system');
 
 Cu.import('resource://gre/modules/PageThumbs.jsm');
 Cu.import('resource:///modules/CustomizableUI.jsm');
@@ -126,6 +127,16 @@ VerticalTabs.prototype = {
         set('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp', Date.now().toString());
         ss.setWindowValue(window, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
         this.init();
+        if (mainWindow.getAttribute('F11-fullscreen') === 'true') {
+          let fullscreenctls = document.getElementById('window-controls');
+          let navbar = document.getElementById('nav-bar');
+          let toggler = document.getElementById('fullscr-toggler');
+          let sibling = document.getElementById('navigator-toolbox').nextSibling;
+          toggler.removeAttribute('hidden');
+          window.FullScreen._updateToolbars(true);
+          navbar.appendChild(fullscreenctls);
+          document.getElementById('appcontent').insertBefore(toggler, sibling);
+        }
         window.VerticalTabs.sendPing('tab_center_toggled_on', window);
       };
 
@@ -778,6 +789,12 @@ VerticalTabs.prototype = {
       ss.setWindowValue(window, 'TCtoggledon', mainWindow.getAttribute('toggledon'));
       window.VerticalTabs.sendPing('tab_center_toggled_off', window);
       this.init();
+      if (mainWindow.getAttribute('F11-fullscreen') === 'true'){
+        window.FullScreen._updateToolbars(true);
+        window.FullScreen._isChromeCollapsed = false;
+        window.FullScreen.hideNavToolbox();
+        document.getElementById('TabsToolbar').appendChild(document.getElementById('window-controls'));
+      }
     };
 
     leftbox.contextMenuOpen = false;
@@ -902,26 +919,6 @@ VerticalTabs.prototype = {
       }
     }, true);
 
-    let oldUpdateToolbars = window.FullScreen._updateToolbars;
-    window.FullScreen._updateToolbars = (aEnterFS) => {
-      oldUpdateToolbars.bind(window.FullScreen)(aEnterFS);
-      let fullscreenctls = document.getElementById('window-controls');
-      let navbar = document.getElementById('nav-bar');
-      let toggler = document.getElementById('fullscr-toggler');
-      let sibling = document.getElementById('navigator-toolbox').nextSibling;
-
-      if (aEnterFS && fullscreenctls.parentNode.id === 'TabsToolbar') {
-        navbar.appendChild(fullscreenctls);
-        toggler.removeAttribute('hidden');
-        //hidden nav toolbox needs to be moved 1 pix higher to account for the toggler every time it hides
-        window.gNavToolbox.style.marginTop = (-window.gNavToolbox.getBoundingClientRect().height - 1) + 'px';
-        document.getElementById('appcontent').insertBefore(toggler, sibling);
-        mainWindow.setAttribute('F11-fullscreen', 'true');
-      } else {
-        mainWindow.removeAttribute('F11-fullscreen');
-      }
-    };
-
     tabs.addEventListener('TabOpen', this, false);
     tabs.addEventListener('TabClose', this, false);
     window.setTimeout(() => {
@@ -977,7 +974,6 @@ VerticalTabs.prototype = {
 
     this.unloaders.push(function () {
       autocomplete._openAutocompletePopup = autocompleteOpen;
-      window.FullScreen._updateToolbars = oldUpdateToolbars;
 
       // Move the tabs toolbar back to where it was
       toolbar._toolbox = null; // reset value set by constructor

@@ -45,6 +45,7 @@ const {viewFor} = require('sdk/view/core');
 const {browserWindows} = require('sdk/windows');
 const {isBrowser, isDocumentLoaded} = require('sdk/window/utils');
 const {Hotkey} = require('sdk/hotkeys');
+const system = require('sdk/system');
 
 const {Cc, Ci, Cu} = require('chrome');
 const windowWatcher = Cc['@mozilla.org/embedcomp/window-watcher;1'].
@@ -70,6 +71,7 @@ function reminderTour(win) {
   set('extensions.tabcentertest1@mozilla.com.doNotShowTour', true); //after reminder tour shown once, we will not show again.
   firstInstallTour(win);
 }
+
 function firstInstallTour(win) {
   let document = win.document;
   let sidetabsbutton = document.getElementById('side-tabs-button');
@@ -83,6 +85,8 @@ function firstInstallTour(win) {
       details.tour_type = 'install';
     }
     utils.sendPing('tour_began', win, details);
+    win.gNavToolbox.style.marginTop = '0';
+    win.gNavToolbox.setAttribute('tour_first_panel', 'true');
 
     win.activeInstall = false;
     let panel = utils.createElement(document, 'panel', {
@@ -122,6 +126,11 @@ function firstInstallTour(win) {
         utils.sendPing('tour_accepted', win, details);
         panel.hidePopup();
         sidetabsbuttonClick(e);
+        win.gNavToolbox.removeAttribute('tour_first_panel');
+        if (win.FullScreen){
+          win.FullScreen._isChromeCollapsed = false;
+          win.FullScreen.hideNavToolbox(true);
+        }
       };
     } else {
       if (win.reminderTour) {
@@ -155,6 +164,7 @@ function firstInstallTour(win) {
         panel.hidePopup();
         outerbox.removeChild(dismissLabel);
         sidetabsbuttonClick(e);
+        let leftbox = win.document.getElementById('verticaltabs-box');
         let pinButton = document.getElementById('pin-button');
         let pinButtonClick = pinButton.onclick;
         let topTabsButton = document.getElementById('top-tabs-button');
@@ -166,7 +176,13 @@ function firstInstallTour(win) {
         instructions.textContent = strings.tourInstructionsCollapse;
         progressButton.setAttribute('label', strings.progressButtonCollapse);
         tourVideo.setAttribute('src', self.data.url('Collapse.mp4'));
+        leftbox.setAttribute('tour', 'true');
         panel.openPopup(pinButton, 'bottomcenter topleft', 0, 0, false, false);
+        win.gNavToolbox.removeAttribute('tour_first_panel');
+        if (win.fullScreen){
+          win.FullScreen._isChromeCollapsed = false;
+          win.FullScreen.hideNavToolbox(true);
+        }
 
         progressButton.onclick = (e) => {
           if (e.which !== 1) {
@@ -197,6 +213,7 @@ function firstInstallTour(win) {
             pinButton.onclick = pinButtonClick;
             topTabsButton.onclick = topTabsButtonClick;
             panel.hidePopup();
+            leftbox.removeAttribute('tour');
           };
         };
       };
@@ -212,6 +229,11 @@ function firstInstallTour(win) {
       utils.sendPing('tour_dismissed', win, details);
       sidetabsbutton.onclick = sidetabsbuttonClick;
       panel.hidePopup();
+      win.gNavToolbox.removeAttribute('tour_first_panel');
+      if (win.fullScreen){
+        win.FullScreen._isChromeCollapsed = false;
+        win.FullScreen.hideNavToolbox(true);
+      }
     };
 
     panel.appendChild(outerbox);
@@ -270,9 +292,123 @@ function setPersistantAttrs(win) {
   set('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp', Date.now().toString());
 }
 
+function fullscreenSetup(win) {
+  let mainWindow = win.document.getElementById('main-window');
+  let fullscreenctls = win.document.getElementById('window-controls');
+
+  win.oldHideNavToolbox = win.FullScreen.hideNavToolbox;
+  win.FullScreen.hideNavToolbox = (aAnimate = false) => {
+    if (win.FullScreen._isChromeCollapsed || !win.FullScreen._safeToCollapse() || win.gNavToolbox.getAttribute('tour_first_panel') === 'true'){
+      return;
+    }
+
+    win.FullScreen._fullScrToggler.hidden = false;
+
+    if (aAnimate && win.gPrefService.getBoolPref('browser.fullscreen.animate')) {
+      win.gNavToolbox.setAttribute('fullscreenShouldAnimate', true);
+      // Hide the fullscreen toggler until the transition ends.
+      let listener = () => {
+        win.gNavToolbox.removeEventListener('transitionend', listener, true);
+        if (win.FullScreen._isChromeCollapsed){
+          win.FullScreen._fullScrToggler.hidden = false;
+        }
+      };
+      win.gNavToolbox.addEventListener('transitionend', listener, true);
+      win.FullScreen._fullScrToggler.hidden = true;
+    }
+
+    // in Windows hidden nav toolbox needs to be moved 1 pix higher to account for the toggler every time it hides
+    if (system.platform === 'winnt' && mainWindow.getAttribute('toggledon') === 'true') {
+      win.gNavToolbox.style.marginTop = (-win.gNavToolbox.getBoundingClientRect().height - 1) + 'px';
+    } else {
+      win.gNavToolbox.style.marginTop = (-win.gNavToolbox.getBoundingClientRect().height) + 'px';
+    }
+
+    win.FullScreen._isChromeCollapsed = true;
+    win.MousePosTracker.removeListener(this);
+  },
+
+  win.oldUpdateToolbars = win.FullScreen._updateToolbars;
+  win.FullScreen._updateToolbars = (aEnterFS) => {
+    let navbar = win.document.getElementById('nav-bar');
+    let toggler = win.document.getElementById('fullscr-toggler');
+    let sibling = win.document.getElementById('navigator-toolbox').nextSibling;
+    for (let el of win.document.querySelectorAll('toolbar[fullscreentoolbar=true]')) {
+      if (aEnterFS) {
+        // Give the main nav bar and the tab bar the fullscreen context menu,
+        // otherwise remove context menu to prevent breakage
+        el.setAttribute('saved-context', el.getAttribute('context'));
+        if (el.id === 'nav-bar' || el.id === 'TabsToolbar'){
+          el.setAttribute('context', 'autohide-context');
+        } else {
+          el.removeAttribute('context');
+        }
+
+        // Set the inFullscreen attribute to allow specific styling
+        // in fullscreen mode
+        el.setAttribute('inFullscreen', true);
+      } else {
+        if (el.hasAttribute('saved-context')) {
+          el.setAttribute('context', el.getAttribute('saved-context'));
+          el.removeAttribute('saved-context');
+        }
+        el.removeAttribute('inFullscreen');
+      }
+    }
+
+    win.ToolbarIconColor.inferFromText();
+
+    // For Lion fullscreen, all fullscreen controls are hidden, don't
+    // bother to touch them. If we don't stop here, the following code
+    // could cause the native fullscreen button be shown unexpectedly.
+    // See bug 1165570.
+    if (win.FullScreen.useLionFullScreen) {
+      return;
+    }
+
+    let ctlsOnTabbar = win.toolbar.visible;
+    if (fullscreenctls.parentNode === navbar && ctlsOnTabbar) {
+      fullscreenctls.removeAttribute('flex');
+      win.document.getElementById('TabsToolbar').appendChild(fullscreenctls);
+    } else if (fullscreenctls.parentNode.id === 'TabsToolbar' && !ctlsOnTabbar) {
+      fullscreenctls.setAttribute('flex', '1');
+      navbar.appendChild(fullscreenctls);
+    }
+    fullscreenctls.hidden = !aEnterFS;
+
+    if (mainWindow.getAttribute('toggledon') === 'true' && aEnterFS && fullscreenctls.parentNode.id === 'TabsToolbar') {
+      navbar.appendChild(fullscreenctls);
+      toggler.removeAttribute('hidden');
+      win.document.getElementById('appcontent').insertBefore(toggler, sibling);
+      mainWindow.setAttribute('F11-fullscreen', 'true');
+    } else if (aEnterFS) {
+      mainWindow.setAttribute('F11-fullscreen', 'true');
+      win.document.getElementById('TabsToolbar').appendChild(fullscreenctls);
+    } else {
+      mainWindow.removeAttribute('F11-fullscreen');
+    }
+  };
+
+  win.oldCleanup = win.FullScreen.cleanup;
+  win.FullScreen.cleanup = () => {
+    win.oldCleanup.bind(win.FullScreen)();
+    mainWindow.removeAttribute('F11-fullscreen');
+    if (fullscreenctls.parentNode.id === 'nav-bar') {
+      win.document.getElementById('TabsToolbar').appendChild(fullscreenctls);
+    }
+  };
+
+  if (win.fullScreen){
+    win.FullScreen._updateToolbars(win.fullScreen);
+    win.FullScreen._isChromeCollapsed = false;
+    win.FullScreen.hideNavToolbox();
+  }
+}
+
 function initWindow(window, tabCenterStartup) {
   // get the XUL window that corresponds to this high-level window
   let win = viewFor(window);
+  let mainWindow = win.document.getElementById('main-window');
 
   if (!('__SSi' in win)) {
     startupFinishedObserver = {
@@ -295,7 +431,6 @@ function initWindow(window, tabCenterStartup) {
   win.addEventListener('TabUnpinned', win.tabCenterEventListener, false);
 
   win.tabCenterEventListener.handleEvent = function (aEvent) {
-    let mainWindow = win.document.getElementById('main-window');
     let timeUntilReminder = get('extensions.tabcentertest1@mozilla.com.tourComplete') ? 432000000 : 259200000;  //5 days or 3 days in milliseconds
     // let timeUntilReminder = get('extensions.tabcentertest1@mozilla.com.tourComplete') ? 30 * 1000 : 1000; //Debug: small values to trigger reminder tour immediately
     let timeSinceUsed = Date.now() - parseInt(get('extensions.tabcentertest1@mozilla.com.lastUsedTimestamp'));
@@ -335,12 +470,14 @@ function initWindow(window, tabCenterStartup) {
   if (isDocumentLoaded(win)) {
     utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
     addVerticalTabs(win, data, tabCenterStartup);
+    fullscreenSetup(win);
     firstInstallTour(win);
   } else {
     // Listen for load event before checking the window type
     win.addEventListener('load', () => {
       utils.installStylesheet(win, 'resource://tabcenter/skin/persistant.css');
       addVerticalTabs(win, data, tabCenterStartup);
+      fullscreenSetup(win);
       firstInstallTour(win);
     }, {once: true});
   }
@@ -379,7 +516,7 @@ exports.main = function (options, callbacks) {
       }
     }
 
-    //show onboarding experience in the active window on "install"
+    //show onboarding experience in the active window on 'install'
     if (browserWindows.activeWindow === window && !get('extensions.tabcentertest1@mozilla.com.doNotShowTour') && options.loadReason === 'install') {
       mainWindow.setAttribute('toggledon', 'false');
       win.activeInstall = true;
@@ -451,7 +588,9 @@ exports.onUnload = function (reason) {
     observerService.removeObserver(startupFinishedObserver, 'browser-delayed-startup-finished');
     startupFinishedObserver = null;
   }
-  hotkey.destroy();
+  if (hotkey) {
+    hotkey.destroy();
+  }
 
   // Shutdown the VerticalTabs object for each window.
   for (let window of browserWindows) {
@@ -468,6 +607,13 @@ exports.onUnload = function (reason) {
       }
 
       win.VerticalTabs.unload();
+      if (win.fullScreen) {
+        win.gNavToolbox.style.marginTop = (-win.gNavToolbox.getBoundingClientRect().height) + 'px';
+      }
+      win.FullScreen.cleanup = win.oldCleanup;
+      win.FullScreen.hideNavToolbox = win.oldHideNavToolbox;
+      win.FullScreen._updateToolbars = win.oldUpdateToolbars;
+
       let mainWindow = win.document.getElementById('main-window');
 
       mainWindow.setAttribute('doNotReverse', 'true');
