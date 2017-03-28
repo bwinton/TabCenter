@@ -366,8 +366,6 @@ function fullscreenSetup(win) {
       return;
     }
 
-    //something about these two if-conditions is wrong I think....behaves correctly, but the code isn't right
-
     let ctlsOnTabbar = win.toolbar.visible;
     if (fullscreenctls.parentNode === navbar && ctlsOnTabbar) {
       fullscreenctls.removeAttribute('flex');
@@ -609,6 +607,9 @@ exports.onUnload = function (reason) {
       }
 
       win.VerticalTabs.unload();
+      if (win.fullScreen) {
+        win.gNavToolbox.style.marginTop = (-win.gNavToolbox.getBoundingClientRect().height) + 'px';
+      }
       win.FullScreen.cleanup = win.oldCleanup;
       win.FullScreen.hideNavToolbox = win.oldHideNavToolbox;
       win.FullScreen._updateToolbars = win.oldUpdateToolbars;
