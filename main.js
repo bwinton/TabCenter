@@ -502,6 +502,13 @@ exports.main = function (options, callbacks) {
   // Override default preferences
   utils.setDefaultPrefs();
 
+  browserWindows.on('close', function (window) {
+    let win = viewFor(window);
+    if (win.VerticalTabs) {
+      win.VerticalTabs.clearFind();
+    }
+  });
+
   // Startup VerticalTabs object for each window.
   for (let window of browserWindows) {
     //cause no disruption to users when changing the way we handle
@@ -581,7 +588,10 @@ exports.main = function (options, callbacks) {
 
 exports.onUnload = function (reason) {
   for (let window of browserWindows) {
-    viewFor(window).VerticalTabs.clearFind();
+    let win = viewFor(window);
+    if (win.VerticalTabs) {
+      win.VerticalTabs.clearFind();
+    }
   }
 
   // If the app is shutting down, skip the rest
