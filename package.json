@@ -22,6 +22,9 @@
     "dsb": {
       "description": "Tab Center jo wopyt, někotare problemy rozwězaś, kótarež su z tofo wujšli, kak luźe wužywaju rejtarki (pśedewšym problem \"pśewjele rejtarkow\") a bitujo wěcej wjelebocnu bazu wužywarskego pówjercha za pśichodnu inowaciju. Prědna wersija toś togo dodanka Firefox zastoj rejtarki we wertikalnrm pórěźe, nic w horicontalnem. Jo se pśez wjelicny dodank VerticalTabs inspirěrował, z kótaregož jo ideje pśewzeł."
     },
+    "es-AR": {
+      "description": "Central de pestañas es un intento de resolver alguno de los problemas que surgieron respecto a la manera en que la gente utiliza las pestañas (más específicamente el problema de \"demasiadas pestañas\") y brindar una base más versátil de IU para alguna futura innovación. La primera versión de este complemento de Firefox acomoda las pestañas de forma vertical en lugar de horizontal. Está inspirado en el excelente complemento VerticalTabs del que toma prestadas las ideas."
+    },
     "es-CL": {
       "description": "Tab Center es un intento de resolver algunos de los problemas que han aparecido con la forma en que las personas usan las pestañas (especialmente el problema de \"muchas pestañas\") y les provee una base de IU más versátil para innovaciones futuras. La primera versión de este complemento de Firefox ordena las pestañas de forma vertical en lugar de horizontal. Esta inspirado y toma prestadas ideas del remarcado complemento VerticalTabs."
     },
@@ -63,6 +66,9 @@
     },
     "nl": {
       "description": "Tab Center is een poging om een aantal problemen op te lossen die zijn voortgekomen uit de manier waarop mensen tabbladen gebruiken (met name het probleem van ‘te veel tabbladen’) en om een meer veelzijdige UI-basis voor toekomstige innovatie te bieden. De eerste versie van deze Firefox-add-on schikt tabbladen op een verticale in plaats van horizontale manier. De add-on is met name geïnspireerd door en leent ideeën van de uitstekende VerticalTabs-add-on."
+    },
+    "nn-NO": {
+      "description": "Tab Center er ein freistnad på å løyse nokre av spørsmåla som har kome frå måten folk brukar faner på (framfor alt problemet med «altfor mange faner»), og gir eit meir mangfaldig grensesnitt som basis for framtidige innovasjonar. Den første versjonen av dette tillegget ordnar faner på ein vertikal, i staden for horisonntal, måte. Det er sterkt inspirert av, og låner idéar frå, den utmerkte utvidinga VerticalTabs."
     },
     "pt-BR": {
       "description": "A Central de Abas é uma tentativa de resolver alguns problemas que surgiram no modo como as pessoas usam as abas (mais especificamente o problema das “muitas abas”), e fornecer uma base de IU mais versátil para futuras inovações. A primeira versão desta extensão do Firefox organiza as abas na vertical ao invés de horizontal. A ideia foi pega emprestada e fortemente inspirado na excelente extensão VerticalTabs."
