@@ -1,4 +1,22 @@
-# v1.30 - Welcome on board! 🛳
+# v1.32 - Filtering, Telemetry, FullScreen
+
+### Fixes:
+
+* Don't permanently hide tabs if you close the window while filtering.  (Fixes #1015.)
+* Don't filter tabs on browser restart.  (Fixes #1015.)
+* Get F11 fullscreen and toggle working.  (Fixes #951, #952.)
+* Search stays visible until impossible.
+* Tabs are permanently destroyed when filtered and browser closes.
+* Add en-locale for those who are not set to en-US.
+* Send ping when hotkey used to open and close sidebar (and focus and unfocus search as a side-effect).  (Fixes #1002.)
+* Pinned tabs are reversed on browser restart
+* New tabs are now filtered in search.  (Fixes #1004.)
+* Send ping to telemetry when search is engaged.
+* Child tabs open in correct position (reverse and pinned set).
+* Enable scrolling in reverse mode when using a mouse.  (Fixes #988.)
+* Tabs are opened in correct positions in reverse.  (Fixes #956.)
+
+# v1.31 - Welcome on board! 🛳
 
 ### New Features:
 
