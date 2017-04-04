@@ -288,7 +288,7 @@ VerticalTabs.prototype = {
                       window.VerticalTabs.numPinnedtabs();
         break;
       case this.closingTabsEnum.OTHER:
-        tabsToClose = this.visibleTabs.length - 1 - window.VerticalTabs.numPinnedtabs();
+        tabsToClose = window.gBrowser.visibleTabs.length - 1 - window.VerticalTabs.numPinnedtabs();
         break;
       case this.closingTabsEnum.TO_END:
         if (!aTab){
@@ -1113,7 +1113,6 @@ VerticalTabs.prototype = {
       if (purpose === 'tabGroupChange') {
         //manually show pinned tabs after changing groups for the tab groups add-on, as it does not re-show them
         Array.filter(this.window.gBrowser.tabs, tab => tab.getAttribute('pinned') === 'true').forEach(tab => {tab.setAttribute('hidden', false);});
-        this.visibleTabs = Array.filter(this.window.gBrowser.tabs, tab => !tab.hidden && !tab.closing);
         find_input.value = '';
         this.filtertabs();
       } else if (purpose === 'tabAction') {
@@ -1123,7 +1122,6 @@ VerticalTabs.prototype = {
         }
         find_input.value = '';
         this.filtertabs();
-        this.visibleTabs = null;
       } else {
         find_input.value = '';
         this.filtertabs();
@@ -1152,20 +1150,22 @@ VerticalTabs.prototype = {
 
   filtertabs: function () {
     let document = this.document;
-    this.visibleTabs = this.visibleTabs || Array.filter(this.window.gBrowser.tabs, tab => !tab.hidden && !tab.closing);
+    let visibleTabs = Array.filter(this.window.gBrowser.tabs, tab => (tab.getAttribute('filtered-out') || !tab.hidden) && !tab.closing);
     let find_input = document.getElementById('find-input');
     let input_value = find_input.value.toLowerCase();
     let hidden_counter = 0;
     let hidden_tab = document.getElementById('filler-tab');
     let hidden_tab_label = hidden_tab.firstChild;
 
-    for (let i = 0; i < this.visibleTabs.length; i++) {
-      let tab = this.visibleTabs[i];
+    for (let i = 0; i < visibleTabs.length; i++) {
+      let tab = visibleTabs[i];
       if ((tab.label || '').toLowerCase().match(input_value) || this.getUri(tab).spec.toLowerCase().match(input_value)) {
         tab.setAttribute('hidden', false);
+        tab.removeAttribute('filtered-out');
       } else {
         hidden_counter += 1;
         tab.setAttribute('hidden', true);
+        tab.setAttribute('filtered-out', true);
       }
     }
     if (hidden_counter > 0) {
@@ -1174,6 +1174,8 @@ VerticalTabs.prototype = {
     } else {
       hidden_tab.setAttribute('hidden', 'true');
     }
+    // clear the cache to force a recalculation (for tab sizing etc)
+    this.window.gBrowser._visibleTabs = null;
     this.delayResizeTabs(0);
   },
 
@@ -1192,7 +1194,6 @@ VerticalTabs.prototype = {
     } else {
       aTab.setAttribute('crop', 'end');
     }
-    this.visibleTabs = null;
   },
 
   unload: function () {
@@ -1311,7 +1312,6 @@ VerticalTabs.prototype = {
   },
 
   onTabClose: function (aEvent) {
-    this.visibleTabs = null;
     this.clearFind('tabAction');
   },
 };
