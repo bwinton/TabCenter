@@ -156,6 +156,22 @@ VerticalTabs.prototype = {
     this._endRemoveTab = window.gBrowser._endRemoveTab;
     this.inferFromText = window.ToolbarIconColor.inferFromText;
     this.receiveMessage = window.gBrowser.receiveMessage;
+    this.showTab = window.gBrowser.showTab;
+
+    window.gBrowser.showTab = function (aTab) {
+      if (aTab.hidden && !aTab.getAttribute('filtered-out')) {
+        aTab.removeAttribute('hidden');
+        this._visibleTabs = null; // invalidate cache
+
+        this.tabContainer.adjustTabstrip();
+
+        this.tabContainer._setPositionalAttributes();
+
+        let event = document.createEvent('Events');
+        event.initEvent('TabShow', true, false);
+        aTab.dispatchEvent(event);
+      }
+    };
 
     let oldMoveTabTo = window.gBrowser.moveTabTo;
     window.gBrowser.moveTabTo = function (aTab, aIndex) {
@@ -486,6 +502,7 @@ VerticalTabs.prototype = {
       }
       this.window.gBrowser.removeTabsProgressListener(tabsProgressListener);
 
+      this.window.gBrowser.showTab = this.showTab;
       this.window.ToolbarIconColor.inferFromText = this.inferFromText;
       this.window.gBrowser._endRemoveTab = this._endRemoveTab;
       this.window.gBrowser.receiveMessage = this.receiveMessage;
@@ -1299,9 +1316,6 @@ VerticalTabs.prototype = {
     case 'TabOpen':
       this.onTabOpen(aEvent);
       return;
-    case 'TabClose':
-      this.onTabClose(aEvent);
-      return;
     }
   },
 
@@ -1309,10 +1323,6 @@ VerticalTabs.prototype = {
     let tab = aEvent.target;
     tab.classList.add('tab-visible');
     this.initTab(tab);
-  },
-
-  onTabClose: function (aEvent) {
-    this.clearFind('tabAction');
   },
 };
 
