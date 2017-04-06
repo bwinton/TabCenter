@@ -1316,6 +1316,11 @@ VerticalTabs.prototype = {
     case 'TabOpen':
       this.onTabOpen(aEvent);
       return;
+    case 'TabClose':
+      if(!this.window.gBrowser.visibleTabs.length) {
+        this.onCloseLastTab();
+      }
+      return;
     }
   },
 
@@ -1323,6 +1328,10 @@ VerticalTabs.prototype = {
     let tab = aEvent.target;
     tab.classList.add('tab-visible');
     this.initTab(tab);
+  },
+
+  onCloseLastTab: function () {
+    this.clearFind();
   },
 };
 
