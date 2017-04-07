@@ -1,3 +1,10 @@
+# v1.33 - subject
+
+### Fixes:
+
+* Restore spinners in various versions and in compact themes.  (Fixes #1038.)
+* Add custom attribute to the filtered out tabs to keep track of them.  (Fixes #1043, #1045, #1044, #1046, #999, #1040.)
+
 # v1.32 - Filtering, Telemetry, FullScreen
 
 ### Fixes:
