@@ -786,6 +786,9 @@
         const canvas = document.getAnonymousElementByAttribute(this, 'anonid', 'tab-meta-image');
         canvas.width *= window.devicePixelRatio;
         canvas.height *= window.devicePixelRatio;
+        if (window.VerticalTabs.getFirefoxVersion() >= 55) {
+          document.getAnonymousNodes(this)[0].getElementsByClassName('tab-throbber')[0].removeAttribute('layer');
+        }
        ]]></constructor>
 
       <method name="refreshThumbAndLabel">

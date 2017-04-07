@@ -729,6 +729,10 @@
     0 0 0 1px hsla(0, 0%, 0%, 0.08);
 }
 
+#main-window[compact-theme=true] .tabbrowser-tabs.large-tabs .tab-throbber[visuallyselected=true] {
+  background-color: var(--tab-highlight-color) !important;
+}
+
 .tabbrowser-tabs.large-tabs html|canvas {
   position: absolute;
   top: 7.5px;
