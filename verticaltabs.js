@@ -39,7 +39,6 @@
 'use strict';
 
 const {Cc, Ci, Cu} = require('chrome');
-const {platform} = require('sdk/system');
 const {prefs} = require('sdk/simple-prefs');
 const {get, set} = require('sdk/preferences/service');
 
@@ -947,6 +946,12 @@ VerticalTabs.prototype = {
       }
     }, 150);
 
+    function checkCompactTheme() {
+      if(window.getComputedStyle(document.documentElement).getPropertyValue('--lwt-header-image').indexOf('browser/defaultthemes/compact') >= 0) {
+        mainWindow.setAttribute('compact-theme', true);
+      }
+    }
+
     function checkDevTheme() {
       if (/devedition/.test(mainWindow.style.backgroundImage)) {
         mainWindow.setAttribute('devedition-theme', 'true');
@@ -955,6 +960,7 @@ VerticalTabs.prototype = {
       }
     }
     checkDevTheme();
+    checkCompactTheme();
 
     let beforeListener = function () {
       browserPanel.insertBefore(top, browserPanel.firstChild);
@@ -975,6 +981,7 @@ VerticalTabs.prototype = {
       contentbox.appendChild(bottom);
       top.palette = palette;
       checkDevTheme();
+      checkCompactTheme();
       //query for and restore the urlbar value after customize mode does things....
       urlbar.value = window.gBrowser.mCurrentTab.linkedBrowser.currentURI.spec;
     };
@@ -1333,6 +1340,10 @@ VerticalTabs.prototype = {
   onCloseLastTab: function () {
     this.clearFind();
   },
+
+  getFirefoxVersion: function () {
+    return Number.parseInt(system.version);
+  }
 };
 
 exports.addVerticalTabs = (win, data, tabCenterStartup) => {
