@@ -32,6 +32,7 @@ We are incompatible with a number of add-ons:
 - TooManyTabs
 - All-In-One Sidebar
 - Firebug
+- Mozilla Labs: Prospector - LessChrome HD
 
 Please let us know if you find any problems with extensions not mentioned.
 
