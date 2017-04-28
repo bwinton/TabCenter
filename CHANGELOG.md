@@ -1,4 +1,10 @@
-# v1.33 - subject
+# v1.34 - Stop the Crashes
+
+### Fixes:
+
+* Closing tabs on nightly no longer leaves space and crashes. (Fixes #1062.)
+
+# v1.33 - Spinners and Filters
 
 ### Fixes:
 
