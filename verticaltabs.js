@@ -467,6 +467,9 @@ VerticalTabs.prototype = {
     };
 
     window.gBrowser._endRemoveTab = (aTab) => {
+      if (!aTab || !aTab._endRemoveArgs) {
+        return;
+      }
       window.gBrowser._blurTab(aTab);
       aTab.classList.add('tab-hidden');
     };
