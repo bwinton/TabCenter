@@ -467,10 +467,11 @@ VerticalTabs.prototype = {
     };
 
     window.gBrowser._endRemoveTab = (aTab) => {
-      if (aTab._endRemoveArgs) {
-        window.gBrowser._blurTab(aTab);
-        aTab.classList.add('tab-hidden');
+      if (!aTab || !aTab._endRemoveArgs) {
+        return;
       }
+      window.gBrowser._blurTab(aTab);
+      aTab.classList.add('tab-hidden');
     };
 
     window.gBrowser.receiveMessage = (...args) => {
