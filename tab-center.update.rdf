@@ -10,7 +10,7 @@
               <Description>
                 <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox -->
                 <em:minVersion>51.0</em:minVersion>
-                <em:maxVersion>54.*</em:maxVersion>
+                <em:maxVersion>56.*</em:maxVersion>
                 <em:strictCompatibility>true</em:strictCompatibility>
                 <em:updateLink>https://testpilot.firefox.com/files/tabcentertest1@mozilla.com/latest</em:updateLink>
               </Description>
