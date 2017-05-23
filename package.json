@@ -115,7 +115,7 @@
     "doc": "docs"
   },
   "engines": {
-    "firefox": ">=40.0a1"
+    "firefox": ">=51.* || <=54.*"
   },
   "icon": "resource://tabcenter/skin/icon.png",
   "id": "tabcentertest1@mozilla.com",
