@@ -1,6 +1,6 @@
 {
   "name": "tab-center",
-  "version": "1.34.0",
+  "version": "1.35.0",
   "title": "Tab Center",
   "description": "Tab Center is an attempt to solve some of the issues that have emerged from the way people use tabs (most notably the “too many tabs” problem) and provide a more versatile UI basis for future innovation. The first version of this Firefox add-on arranges tabs in a vertical rather than horizontal fashion. It is heavily inspired by and borrows ideas from the excellent VerticalTabs add-on.",
   "locales": {
@@ -90,6 +90,9 @@
     },
     "sq": {
       "description": "Tab Center është një orvatje për të zgjidhur disa nga problemet që kanë lindur nga mënyrat se si i përdorin njerëzit skedat (më i njohuri mes tyre ai i “shumë skeda mër jahu”) dhe ofron një NP më të zhdërvjellët për risi të ardhshme. Versioni i parë i kësaj shtese për Firefox i sistemon skedat vertikalisht, në vend se horizontalisht. Është frymëzuar goxha dhe ka huazuar ide nga shtesa e shkëlqyer VerticalTabs."
+    },
+    "sr": {
+      "description": "Tab Center је покушај решавања неких проблема насталих из начина на који људи користе језичке (најзначајнији проблем \"превише језичака\") и омогућавања свестране базе корисничког интерфејса за будуће иновације. Прва верзија овог Firefox додатка уређује језичке у вертикалном, уместо у хоризонталном поретку. Доста је инспирисан и позајмљује идеје од одличног VerticalTabs додатка."
     },
     "sv-SE": {
       "description": "Tab Center är ett försök att lösa några av de frågor som har uppstått från hur personer använder flikar (framförallt problemet med “alltför många flikar”) och ger en mer mångsidigt gränssnitt som grund för framtida innovationer. Den första versionen av detta tillägg ordnar flikar i ett vertikalt snarare än horisontellt läge. Det är starkt inspirerat av och lånar idéer från de utmärkta tillägget VerticalTabs."
