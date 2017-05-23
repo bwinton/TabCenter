@@ -1,3 +1,13 @@
+# v1.35 - Sunset with Version 54
+
+### Fixes:
+
+* Let people close tabs with a 'Stay on Page' confirmation dialogue.  (Fixes #1077.)
+
+### Chore:
+
+* restrict version between 51 and 54
+
 # v1.34 - Stop the Crashes
 
 ### Fixes:
