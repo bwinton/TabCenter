@@ -1,3 +1,9 @@
+# v1.36 - Sunset with Version 55
+
+### Changes:
+
+* actually, sunset after Firefox v55
+
 # v1.35 - Sunset with Version 54
 
 ### Fixes:
