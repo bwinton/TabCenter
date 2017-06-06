@@ -50,3 +50,12 @@ After cloning this repository, run `npm install` and `npm install jpm` then:
 * `npm run locales && jpm xpi` to generate an installable XPI file locally
 
 Read more about [`jpm` on MDN](https://developer.mozilla.org/en-US/Add-ons/SDK/Tools/jpm)
+
+### Tweak
+
+Some preference can be switched using `about:config` :
+
+  - `extensions.verticaltabs.largetabs`
+    - `0` Never display tabs with thumbnails
+    - `1` Display thumbnails if there is not too many tabs open
+    - `2` Always display thumbnails
