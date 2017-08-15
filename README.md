@@ -1,5 +1,15 @@
 # TabCenter <a href="https://testpilot.firefox.com/experiments/tab-center"><img align="right" src="https://img.shields.io/badge/available_on-Test_Pilot-0996F8.svg"></a>
 
+## End of Life
+
+TabCenter is now end of life and no longer developed. It is not supported
+on Firefox 56+. You will have to switch to a WebExtension-based addon, such
+as [Tab Center Redux][redux].
+
+
+[redux]: https://addons.mozilla.org/en-US/firefox/addon/tab-center-redux/
+
+## About
 
 Tabbed browsing is a concept that has existed for a long time without
 being seriously re-evaluated. In that time, browsing behaviors have
