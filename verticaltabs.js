@@ -245,6 +245,12 @@ VerticalTabs.prototype = {
       aTab.dispatchEvent(evt);
     };
 
+    let oldUnpinTab = window.gBrowser.unpinTab;
+    window.gBrowser.unpinTab = (aTab) => {
+      this.oldUnpinTab.bind(window.gBrowser)(aTab);
+      window.gBrowser.moveTabTo(aTab, this._numPinnedTabs - 1);
+    };
+
     let oldPinTab = window.gBrowser.pinTab;
     window.gBrowser.pinTab = function (aTab) {
       if (aTab.pinned) {
@@ -519,6 +525,7 @@ VerticalTabs.prototype = {
       this.window.PrintPreviewListener.onExit = OldPrintPreviewListenerExit;
       this.window.gBrowser.moveTabTo = oldMoveTabTo;
       this.window.gBrowser.pintab = oldPinTab;
+      this.window.gBrowser.unpinTab = oldUnpinTab;
       this.window.gBrowser.addTab = oldAddTab;
       this.window.gBrowser.getTabsToTheEndFrom = oldGetTabsToTheEndFrom;
       window.gBrowser.warnAboutClosingTabs = oldWarnAboutClosingTabs;
