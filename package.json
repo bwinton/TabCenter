@@ -117,9 +117,6 @@
   "directories": {
     "doc": "docs"
   },
-  "engines": {
-    "firefox": ">=51.* || <=55.*"
-  },
   "icon": "resource://tabcenter/skin/icon.png",
   "id": "tabcentertest1@mozilla.com",
   "dependencies": {},
