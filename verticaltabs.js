@@ -245,12 +245,6 @@ VerticalTabs.prototype = {
       aTab.dispatchEvent(evt);
     };
 
-    let oldUnpinTab = window.gBrowser.unpinTab;
-    window.gBrowser.unpinTab = (aTab) => {
-      this.oldUnpinTab.bind(window.gBrowser)(aTab);
-      window.gBrowser.moveTabTo(aTab, this._numPinnedTabs - 1);
-    };
-
     let oldPinTab = window.gBrowser.pinTab;
     window.gBrowser.pinTab = function (aTab) {
       if (aTab.pinned) {
@@ -386,7 +380,9 @@ VerticalTabs.prototype = {
       let numPinned = window.VerticalTabs.numPinnedtabs();
 
       let t = oldAddTab.bind(window.gBrowser)(...args);
-      if (prefs.opentabstop) {
+      // opentabstop pref
+      // eslint-disable-next-line no-constant-condition
+      if (false) {
         let aRelatedToCurrent;
         let aReferrerURI;
         if (arguments.length === 2 && typeof arguments[1] === 'object' && !(arguments[1] instanceof Ci.nsIURI)) {
@@ -420,7 +416,9 @@ VerticalTabs.prototype = {
     require('sdk/simple-prefs').on('opentabstop', reverseTabsListener);
 
     let arrowscrollbox = document.getAnonymousElementByAttribute(tabs, 'anonid', 'arrowscrollbox');
-    if (tabCenterStartup && arrowscrollbox && prefs.opentabstop) {
+    // opentabstop pref
+    // eslint-disable-next-line no-constant-condition
+    if (tabCenterStartup && arrowscrollbox && false) {
       close_next_tabs_message.setAttribute('label', strings.closeTabsAbove);
       arrowscrollbox._isRTLScrollbox = true;
       tabs.setAttribute('opentabstop', 'true');
@@ -429,7 +427,9 @@ VerticalTabs.prototype = {
         window.gBrowser.moveTabTo(window.gBrowser.tabs[0], window.gBrowser.tabs.length - 1);
         i++;
       }
-    } else if (arrowscrollbox && prefs.opentabstop) {
+    // opentabstop pref
+    // eslint-disable-next-line no-constant-condition
+    } else if (arrowscrollbox && false) {
       window.VerticalTabs.reverseTabs(arrowscrollbox);
     } else {
       close_next_tabs_message.setAttribute('label', strings.closeTabsBelow);
@@ -525,7 +525,6 @@ VerticalTabs.prototype = {
       this.window.PrintPreviewListener.onExit = OldPrintPreviewListenerExit;
       this.window.gBrowser.moveTabTo = oldMoveTabTo;
       this.window.gBrowser.pintab = oldPinTab;
-      this.window.gBrowser.unpinTab = oldUnpinTab;
       this.window.gBrowser.addTab = oldAddTab;
       this.window.gBrowser.getTabsToTheEndFrom = oldGetTabsToTheEndFrom;
       window.gBrowser.warnAboutClosingTabs = oldWarnAboutClosingTabs;
@@ -1098,7 +1097,9 @@ VerticalTabs.prototype = {
     let document = this.document;
     let tabs = document.getElementById('tabbrowser-tabs');
     let close_next_tabs_message = document.getElementById('context_closeTabsToTheEnd');
-    if (prefs.opentabstop && document.getElementById('main-window').getAttribute('toggledon') === 'true') {
+    // opentabstop pref
+    // eslint-disable-next-line no-constant-condition
+    if (false && document.getElementById('main-window').getAttribute('toggledon') === 'true') {
       close_next_tabs_message.setAttribute('label', strings.closeTabsAbove);
       arrowscrollbox._isRTLScrollbox = true;
       tabs.setAttribute('opentabstop', 'true');
@@ -1247,7 +1248,9 @@ VerticalTabs.prototype = {
     let url = urlbar.value;
     let tabs = this.document.getElementById('tabbrowser-tabs');
 
-    if (prefs.opentabstop && this.document.getElementById('main-window').getAttribute('toggledon') !== 'true' && tabs.getAttribute('opentabstop')) {
+    // opentabstop pref
+    // eslint-disable-next-line no-constant-condition
+    if (false && this.document.getElementById('main-window').getAttribute('toggledon') !== 'true' && tabs.getAttribute('opentabstop')) {
       tabs.removeAttribute('opentabstop');
       window.gBrowser.tabs.forEach(function (tab) {
         if (tab.pinned) {
