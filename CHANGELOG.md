@@ -1,3 +1,10 @@
+# v1.37 - Ready for Shield
+
+### Changes:
+
+* Don't support tabs in reverse mode
+* Remove version restrictions
+
 # v1.36 - Sunset with Version 55
 
 ### Changes:
