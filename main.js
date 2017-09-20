@@ -516,7 +516,9 @@ exports.main = function (options, callbacks) {
     let win = viewFor(window);
     let mainWindow = win.document.getElementById('main-window');
     let tabbrowser = win.document.getElementById('tabbrowser-tabs');
-    if (mainWindow.getAttribute('doNotReverse') !== 'true' && options.loadReason === 'upgrade' && prefs.prefs.opentabstop === true) {
+    // opentabstop pref
+    // eslint-disable-next-line no-constant-condition
+    if (mainWindow.getAttribute('doNotReverse') !== 'true' && options.loadReason === 'upgrade' && false) {
       let reversedTabs = Array.prototype.slice.call(tabbrowser.children).reverse();
       for (let tab of reversedTabs) {
         tabbrowser.appendChild(tab, tabbrowser.firstChild);
@@ -611,7 +613,9 @@ exports.onUnload = function (reason) {
     let win = viewFor(window);
     if (win.VerticalTabs) {
       utils.removeStylesheet(win, 'resource://tabcenter/skin/persistant.css');
-      if (prefs.prefs.opentabstop && win.document.getElementById('main-window').getAttribute('toggledon') === 'true') {
+      // opentabstop pref
+      // eslint-disable-next-line no-constant-condition
+      if (false && win.document.getElementById('main-window').getAttribute('toggledon') === 'true') {
         win.document.getElementById('tabbrowser-tabs').removeAttribute('opentabstop');
         win.gBrowser.tabs.forEach(function (tab) {
           if (tab.pinned) {
