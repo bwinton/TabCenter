@@ -182,13 +182,6 @@
   "preferences-branch": "verticaltabs",
   "preferences": [
     {
-      "name": "opentabstop",
-      "title": "Reverse Tab Order",
-      "description": "Newest tabs are on top and Cmd-Tab and Ctrl-Tab will move through tabs in reverse direction",
-      "type": "bool",
-      "value": false
-    },
-    {
       "name": "largetabs",
       "hidden": true,
       "title": "Large Tabs",
