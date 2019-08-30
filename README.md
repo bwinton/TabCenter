@@ -4,10 +4,11 @@
 
 TabCenter is now end of life and no longer developed. It is not supported
 on Firefox 56+. You will have to switch to a WebExtension-based addon, such
-as [Tab Center Redux][redux].
+as [Tab Center Redux][redux] or [Tab Center Reborn][reborn].
 
 
-[redux]: https://addons.mozilla.org/en-US/firefox/addon/tab-center-redux/
+[redux]: https://addons.mozilla.org/firefox/addon/tab-center-redux/
+[reborn]: https://addons.mozilla.org/firefox/addon/tabcenter-reborn/
 
 ## About
 
