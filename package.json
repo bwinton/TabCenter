@@ -122,7 +122,7 @@
   "dependencies": {},
   "devDependencies": {
     "bw-changelog": "^1.0.1",
-    "eslint": "2.9.0",
+    "eslint": "6.6.0",
     "eslint-plugin-mozilla": "0.0.3",
     "glob": "^7.1.1",
     "jpm": "1.1.3",
